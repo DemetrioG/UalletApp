@@ -8,9 +8,17 @@ React Navigation
     - yarn add @react-navigation/native-stack
     - yarn add @react-navigation/bottom-tabs
 
-Font
-    - npm install expo-font
+Google Fonts
+    - npm install @expo-google-fonts/raleway
+    - npm install @expo-google-fonts/montserrat
 
 Carousel
     - npm install react-native-snap-carousel
     - npm install @types/react-native-snap-carousel
+
+Firebase
+    - expo install firebase@8.8.1
+
+Redux
+    - yarn add @reduxjs/toolkit
+    - yarn add redux

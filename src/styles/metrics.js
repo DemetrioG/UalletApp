@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from "react-native";
+import { Dimensions } from "react-native";
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,7 +13,8 @@ const metrics = {
     mediumRadius:     10,
     smallRadius:      6,
     smallestRadius:   4,
-    basePadding:      10,
+    basePadding:      15,
+    topPadding:       20,
 };
 
 export default metrics;
