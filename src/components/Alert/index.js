@@ -1,18 +1,24 @@
 import React from 'react';
 import { Modal, TouchableOpacity, View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 
 import { general } from '../../styles/index'
 import styles from './styles';
-import { editVisibility } from '../Actions/visibilityAction';
+import { editVisibilityAlert } from '../Actions/visibilityAlertAction';
 
-export function Alert({props, text, type}) {
+export function Alert({props, text, type, redirect}) {
 
     const typeIcon = type == 'error' ? require('../../../assets/icons/error.json') : require('../../../assets/icons/check.json');
+    const navigation = useNavigation();
 
     function handleAccept() {
-        props.editVisibility(false);
+        props.editVisibilityAlert(false);
+
+        if (redirect) {
+            navigation.navigate(redirect);
+        }
         return;
     }
 
@@ -42,6 +48,6 @@ const mapStateToProps = (state) => {
     }
   }
   
-const alertConnect = connect(mapStateToProps, { editVisibility })(Alert);
+const alertConnect = connect(mapStateToProps, { editVisibilityAlert })(Alert);
 
 export default alertConnect;
