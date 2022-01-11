@@ -54,10 +54,10 @@ export function Index(props) {
                 lockScrollWhileSnapping={true}
                 slideStyle={styles().carousel}
             />
-            <TouchableOpacity style={general().button} onPress={() => navigation.navigate('Register')}>
+            <TouchableOpacity style={general(null, metrics.smallMargin).button} onPress={() => navigation.navigate('Register')}>
                 <Text style={general().buttonText}>CRIAR CONTA</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[general(props.theme).buttonOutline, styles().buttonLogin]}>
+            <TouchableOpacity style={[general(props.theme, metrics.smallMargin).buttonOutline, styles().buttonLogin]} onPress={() => navigation.navigate('Login')}>
                 <Text style={general(props.theme).buttonOutlineText}>ENTRAR</Text>
             </TouchableOpacity>
         </View>
