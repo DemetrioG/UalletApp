@@ -3,7 +3,7 @@ import colors from "./colors"
 import metrics from "./metrics";
 import fonts from "./fonts";
 
-const general = (theme) => StyleSheet.create({
+const general = (theme, margin) => StyleSheet.create({
     card: {
         padding: metrics.basePadding,
     },
@@ -40,7 +40,7 @@ const general = (theme) => StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: colors.strongBlue,
         borderRadius: metrics.mediumRadius,
-        marginBottom: metrics.smallMargin,
+        marginBottom: margin,
         width: 250,
         height: 45,
     },
@@ -51,7 +51,7 @@ const general = (theme) => StyleSheet.create({
         borderWidth: 2,
         borderColor: theme == 'light' ? colors.strongBlue : colors.lightBlue,
         borderRadius: metrics.mediumRadius,
-        marginBottom: metrics.smallMargin,
+        marginBottom: margin,
         width: 250,
         height: 45,
     },
