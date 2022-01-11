@@ -22,3 +22,9 @@ Firebase
 Redux
     - yarn add @reduxjs/toolkit
     - yarn add redux
+
+AppLoading
+    - yarn add expo-app-loading
+
+Lottie
+    - expo install lottie-react-native
