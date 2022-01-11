@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import ThemeReducer from './themeReducer';
-import VisibilityReducer from './visibilityReducer';
+import AlertReducer from './alertReducer';
+import UserReducer from './userReducer';
 
 const Reducers  = combineReducers({
     theme: ThemeReducer,
-    modal: VisibilityReducer
+    modal: AlertReducer,
+    user: UserReducer
 });
 
 export default Reducers;
