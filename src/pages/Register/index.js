@@ -1,42 +1,95 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
+import CryptoJS from 'react-native-crypto-js';
 
 import { general, colors } from '../../styles';
 import firebase from '../../services/firebase';
 import { Alert } from '../../components/Alert';
-import { editVisibility } from '../../components/Actions/visibilityAction';
+import { editVisibilityAlert } from '../../components/Actions/visibilityAlertAction';
+import { editTitleAlert } from '../../components/Actions/titleAlertAction';
+import { editTypeAlert } from '../../components/Actions/typeAlertAction';
 
 export function Register(props) {
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [titleModal, setTitleModal] = useState('');
-    const [typeModal, setTypeModal] = useState('');
+    const [name, setName] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [confirmPassword, setConfirmPassword] = useState(null);
+    const [redirect, setRedirect] = useState(null);
+    const [register, setRegister] = useState(false);
 
     async function registerUser() {
+        if (!name || !email || !password || !confirmPassword) {
+            props.editTypeAlert('error');
+            props.editTitleAlert('Informe todos os campos');
+            props.editVisibilityAlert(true);
+            return; 
+        }
+
         if (password !== confirmPassword) {
-            setTitleModal('As senhas informadas são diferentes');
-            setTypeModal('error');
-            props.editVisibility(true);
+            props.editTypeAlert('error');
+            props.editTitleAlert('As senhas informadas são diferentes');
+            props.editVisibilityAlert(true);
             return;
         }
+
+        setRegister(true);
+        await firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((v) => {
+            firebase.firestore().collection('users').doc(v.user.uid).set({
+                name: name,
+                email: email,
+                password: CryptoJS.AES.encrypt(password, 'a1b2212914124').toString(),
+                dateRegister: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            setRegister(false);
+            props.editTypeAlert('check');
+            props.editTitleAlert('Usuário criado com sucesso');
+            props.editVisibilityAlert(true);
+            setRedirect('Login');
+        })
+        .catch((error) => {
+            switch (error.code) {
+                case 'auth/weak-password':
+                    props.editTypeAlert('error');
+                    props.editTitleAlert('Sua senha deve ter no mínimo 6 caracteres');
+                    props.editVisibilityAlert(true);
+                    break;
+            
+                case 'auth/invalid-email':
+                    props.editTypeAlert('error');
+                    props.editTitleAlert('O e-mail informado é inválido');
+                    props.editVisibilityAlert(true);
+                    break;
+                
+                case 'auth/email-already-in-use':
+                    props.editTypeAlert('error');
+                    props.editTitleAlert('Usuário já cadastrado');
+                    props.editVisibilityAlert(true);
+                    break;
+
+                default:
+                    props.editTypeAlert('error');
+                    props.editTitleAlert('Erro ao cadastrar usuário');
+                    props.editVisibilityAlert(true);
+                    break;
+            }
+            return;
+        })
     }
 
     return (
         <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="padding"
         style={general().flex}
-        keyboardVerticalOffset={-80}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? -80 : -280}
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={[general().flex, general().padding, general(props.theme).backgroundColor]}>
                 {
-                    props.modal &&
-                    <Alert props={props} text={titleModal} type={typeModal}/>
+                    props.visibility &&
+                    <Alert props={props} text={props.title} type={props.type} redirect={redirect ? redirect : null}/>
                 }
                     <View style={general().logoHeader}>
                         <Image
@@ -83,7 +136,11 @@ export function Register(props) {
                             onChangeText={(v) => setConfirmPassword(v)}
                         />
                         <TouchableOpacity style={general().button} onPress={registerUser}>
-                            <Text style={general().buttonText}>CRIAR CONTA</Text>
+                            {
+                                register ?
+                                <ActivityIndicator size={20} color={colors.white}/> : 
+                                <Text style={general().buttonText}>CRIAR CONTA</Text>
+                            }
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -95,11 +152,13 @@ export function Register(props) {
 const mapStateToProps = (state) => {
     return {
         theme: state.theme.theme,
-        modal: state.modal.modal
+        visibility: state.modal.visibility,
+        title: state.modal.title,
+        type: state.modal.type
     }
 }
 
-const registerConnect = connect(mapStateToProps, { editVisibility })(Register);
+const registerConnect = connect(mapStateToProps, { editVisibilityAlert, editTitleAlert, editTypeAlert })(Register);
 
 export default registerConnect;
 
