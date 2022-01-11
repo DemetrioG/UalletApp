@@ -14,7 +14,7 @@ const metrics = {
     smallRadius:      6,
     smallestRadius:   4,
     basePadding:      15,
-    topPadding:       20,
+    topBottomPadding: 20,
 };
 
 export default metrics;

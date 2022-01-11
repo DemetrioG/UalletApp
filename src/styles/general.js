@@ -9,7 +9,7 @@ const general = (theme) => StyleSheet.create({
     },
     padding: {
         paddingHorizontal: metrics.basePadding,
-        paddingTop: metrics.topPadding,
+        paddingTop: metrics.topBottomPadding,
     },
     containerCenter: {
         flex: 1,
@@ -32,7 +32,8 @@ const general = (theme) => StyleSheet.create({
         borderColor: colors.lightGray,
         fontFamily: fonts.ralewayExtraBold,
         fontSize: fonts.regular,
-        marginBottom: metrics.baseMargin
+        marginBottom: metrics.baseMargin,
+        color: theme == 'light' ? colors.darkPrimary : colors.white
     },
     button: {
         alignItems: 'center',

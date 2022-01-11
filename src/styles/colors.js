@@ -20,6 +20,8 @@ const colors = {
     strongRed:      '#FF2F45',
     lightRed:       '#FF4C5F',
     yellow:         '#FFFD82',
+    transpDark:     'rgba(49, 47, 66, 0.95)',
+    transpLight:    'rgba(227, 222, 222, 0.95)',
 };
 
 export default colors;
