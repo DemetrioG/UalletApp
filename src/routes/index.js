@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Appearance } from 'react-native';
+import { connect } from 'react-redux';
 
 import Index from '../pages/Index';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
-import { connect } from 'react-redux';
 import { editTheme } from '../components/Actions/themeAction';
 
 const Stack = createNativeStackNavigator();
