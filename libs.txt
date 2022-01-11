@@ -28,3 +28,18 @@ AppLoading
 
 Lottie
     - expo install lottie-react-native
+
+Crypto JS
+    - yarn add react-native-crypto-js
+
+Bottom Sheet
+    - yarn add @gorhom/bottom-sheet@^4
+
+Reanimated
+    - expo install react-native-reanimated
+
+Gesture Handler
+    - expo install react-native-gesture-handler
+
+Google Auth
+    - expo install expo-google-app-auth

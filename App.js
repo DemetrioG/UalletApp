@@ -1,4 +1,5 @@
 import React from 'react';
+import { LogBox } from 'react-native';
 import { Montserrat_500Medium, Montserrat_700Bold, Montserrat_800ExtraBold } from '@expo-google-fonts/montserrat';
 import { useFonts, Raleway_500Medium, Raleway_700Bold, Raleway_800ExtraBold } from "@expo-google-fonts/raleway";
 import { createStore } from 'redux';
@@ -9,6 +10,8 @@ import Reducers from './src/components/Reducers';
 import AppContent from './src/pages/App';
 
 let store = createStore(Reducers);
+
+LogBox.ignoreAllLogs(true);
 
 export default function App() {
 
