@@ -1,15 +1,12 @@
+import React from 'react';
 import { Montserrat_500Medium, Montserrat_700Bold, Montserrat_800ExtraBold } from '@expo-google-fonts/montserrat';
 import { useFonts, Raleway_500Medium, Raleway_700Bold, Raleway_800ExtraBold } from "@expo-google-fonts/raleway";
-import { Image, StatusBar, Appearance, Platform, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
-import SafeAreaView from 'react-native-safe-area-view';
-import { general, colors } from './src/styles';
-import React, { useState } from 'react';
-import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import Routes from './src/routes';
+import { Provider } from 'react-redux';
+import AppLoading from 'expo-app-loading';
+
 import Reducers from './src/components/Reducers';
+import AppContent from './src/pages/App';
 
 let store = createStore(Reducers);
 
@@ -26,23 +23,13 @@ export default function App() {
   
   if (!fontLoaded) {
     return (
-      <Image
-        source={require('./assets/images/splash.png')}
-      />
+      <AppLoading/>
     )
   } else {
     return (
       <Provider store={store}>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <SafeAreaView style={general().flex}>
-              <Routes/>
-            </SafeAreaView>
-          </NavigationContainer>
-        </SafeAreaProvider>
+        <AppContent/>
       </Provider>
     );
   }
 };
-
-
