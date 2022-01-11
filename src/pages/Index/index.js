@@ -1,10 +1,11 @@
+import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { general, metrics } from '../../styles/index';
-import Carousel from 'react-native-snap-carousel';
-import React from 'react';
-import styles from './styles';
 import { connect } from 'react-redux';
+import Carousel from 'react-native-snap-carousel';
+
+import { general, metrics } from '../../styles/index';
+import styles from './styles';
 
 const slides = [
     {
