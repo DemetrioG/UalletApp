@@ -14,6 +14,7 @@ const styles = (theme, background) => StyleSheet.create({
         backgroundColor: colors.lightGray
     },
     sheetBackground: {
+        borderRadius: metrics.largeRadius,
         backgroundColor: theme == 'light' ? colors.lightSecondary : colors.darkSecondary
     },
     sheetContainer: {
