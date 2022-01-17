@@ -2,6 +2,7 @@
   "expo": {
     "name": "Uallet",
     "slug": "Uallet",
+    "scheme": "uallet",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -28,6 +29,17 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "userInterfaceStyle": "automatic"
+    "userInterfaceStyle": "automatic",
+    "plugins": [
+      [
+        "expo-facebook",
+        {
+          "facebookScheme" : "fb623678532217571",
+          "facebookAppId" : "623678532217571",
+          "facebookDisplayName" : "Uallet"
+        }
+      ]
+    ]
+    
   }
 }

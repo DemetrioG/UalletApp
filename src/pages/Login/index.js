@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Image, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Image, TextInput, TouchableOpacity, ActivityIndicator, Platform, NativeModules } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import * as Google from 'expo-google-app-auth';
+import * as AuthSession from 'expo-auth-session';
+import * as Facebook from 'expo-facebook';
 
 import firebase from '../../services/firebase';
 import styles from './styles';
@@ -37,7 +38,7 @@ export function Login(props) {
         setLogin(true);
         await firebase.auth().signInWithEmailAndPassword(email, password)
         .then((v) => {
-            editUidUser(v.user.uid);
+            props.editUidUser(v.user.uid);
             setLogin(false);
             navigation.navigate('Home');
         })
@@ -48,21 +49,71 @@ export function Login(props) {
             return;
         })
     }
-
+    
     async function googleLogin() {
-        const config = 
-        { iosClientId : '1027938913805-4qdqjrdu21vcn0383i1j0epl5hiduru5.apps.googleusercontent.com',
-          androidClientId : '1027938913805-9938f3foql9etb4a5a6i5f5t4spa82j7.apps.googleusercontent.com',
-          scopes : ['profile', 'email']
+        const CLIENT_ID = '1027938913805-2uq44iec7nrr8p5c9qqu32nbapu5gfg6.apps.googleusercontent.com';
+        const REDIRECT_URI = 'https://auth.expo.io/@demetriog/Uallet';
+        const RESPONSE_TYPE = 'token';
+        const SCOPE = encodeURI('profile email');
+
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+
+        // Autenticação com o Google
+        const response = await AuthSession.startAsync({ authUrl });
+        
+        if (response.type === 'success') {
+
+            // Buscar informações do usuário
+            const user = await fetch(`https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${response.params.access_token}`);
+            const userInfo = await user.json();
+
+            // Cadastrar usuário no banco
+            await firebase.firestore().collection('users').doc(userInfo.id).get()
+            .then((v) => {
+               if (!v.data()) {
+                    firebase.firestore().collection('users').doc(userInfo.id).set({
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    typeUser: 'google',
+                    dateRegister: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+               }
+            })
+
+            props.editUidUser(userInfo.id);
+            navigation.navigate('Home');
+        }
+        return;
+    }
+
+    async function facebookLogin() {
+        // Autenticação com o Facebook
+        await Facebook.initializeAsync("623678532217571'");
+
+        const response = await Facebook.logInWithReadPermissionsAsync({
+            permissions: ['public_profile', 'email']
+        });
+
+        // Buscar informações do usuário
+        if (response.type === 'success') {
+            const data = await fetch(`https://graph.facebook.com/me?fields=id,name,picture.type(large),email&access_token=${response.token}`);
+            
+            const userInfo = await data.json();
+
+            // Cadastrar usuário no banco
+            await firebase.firestore().collection('users').doc(userInfo.id).get()
+            .then((v) => {
+                if (!v.data()) {
+                    firebase.firestore().collection('users').doc(userInfo.id).set({
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    typeUser: 'facebook',
+                    dateRegister: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                }
+            })
         }
 
-        await Google.logInAsync(config)
-        .then((v) => {
-            console.log(v);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
     }
 
     return (
@@ -116,7 +167,7 @@ export function Login(props) {
                         <TouchableOpacity onPress={() => setSheetOpen(true)}>
                             <Text style={styles(props.theme).actionText}>Prefere entrar com as redes sociais?</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
                             <Text style={styles(props.theme).actionText}>Esqueceu sua senha?</Text>
                         </TouchableOpacity>
                     </View>
@@ -135,28 +186,25 @@ export function Login(props) {
                 >
                     <BottomSheetView>
                         <View style={styles().sheetView}>
-                            <TouchableOpacity style={styles(null, colors.black).loginWithContainer}>
-                                <Image
-                                    source={require('../../../assets/images/appleIcon.png')}
-                                    style={{width: '82%', height: '100%'}}
-                                />
-                            </TouchableOpacity>
+                            {
+                                Platform.OS === 'ios' &&
+                                <TouchableOpacity style={styles(null, colors.black).loginWithContainer}>
+                                    <Image
+                                        source={require('../../../assets/images/appleIcon.png')}
+                                        style={{width: '52%', height: '100%'}}
+                                    />
+                                </TouchableOpacity>
+                            }
                             <TouchableOpacity style={styles(null, colors.white).loginWithContainer} onPress={googleLogin}>
                                 <Image
                                     source={require('../../../assets/images/googleIcon.png')}
-                                    style={{width: '100%', height: '100%'}}
+                                    style={{width: '60%', height: '100%'}}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles(null, colors.facebookBlue).loginWithContainer}>
+                            <TouchableOpacity style={styles(null, colors.facebookBlue).loginWithContainer} onPress={facebookLogin}>
                                 <Image
                                     source={require('../../../assets/images/facebookIcon.png')}
-                                    style={{width: '100%', height: '100%'}}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles(null, props.theme == 'light' ? colors.white : colors.black).loginWithContainer}>
-                                <Image
-                                    source={require('../../../assets/images/microsoftIcon.png')}
-                                    style={{width: '100%', height: '100%'}}
+                                    style={{width: '50%', height: '100%'}}
                                 />
                             </TouchableOpacity>
                         </View>

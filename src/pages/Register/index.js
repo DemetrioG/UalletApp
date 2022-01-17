@@ -40,7 +40,7 @@ export function Register(props) {
             firebase.firestore().collection('users').doc(v.user.uid).set({
                 name: name,
                 email: email,
-                password: CryptoJS.AES.encrypt(password, 'a1b2212914124').toString(),
+                typeUser: 'default',
                 dateRegister: firebase.firestore.FieldValue.serverTimestamp()
             })
             setRegister(false);

@@ -35,6 +35,19 @@ const general = (theme, margin) => StyleSheet.create({
         marginBottom: metrics.baseMargin,
         color: theme == 'light' ? colors.darkPrimary : colors.white
     },
+    inputNumber: {
+        width: 250,
+        height: 45,
+        paddingHorizontal: 20,
+        paddingVertical: 5,
+        borderRadius: metrics.mediumRadius,
+        borderWidth: 2,
+        borderColor: colors.lightGray,
+        fontFamily: fonts.montserratExtraBold,
+        fontSize: fonts.regular,
+        marginBottom: metrics.baseMargin,
+        color: theme == 'light' ? colors.darkPrimary : colors.white
+    },
     button: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -85,6 +98,12 @@ const general = (theme, margin) => StyleSheet.create({
         fontSize: fonts.big,
         color: theme == 'light' ? colors.darkPrimary : colors.white,
         marginLeft: metrics.baseMargin,
+    },
+    textHeader: {
+        fontFamily: fonts.ralewayExtraBold,
+        fontSize: fonts.largest,
+        color: theme == 'light' ? colors.darkPrimary : colors.white,
+        marginTop: metrics.baseMargin
     },
     containerHeaderTitle: {
         marginTop: metrics.doubleBaseMargin,

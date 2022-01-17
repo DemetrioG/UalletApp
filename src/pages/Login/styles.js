@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { fonts, colors, metrics } from "../../styles";
 
 const styles = (theme, background) => StyleSheet.create({
@@ -28,7 +28,7 @@ const styles = (theme, background) => StyleSheet.create({
     },
     loginWithContainer: {
         padding: 8,
-        width: 50,
+        width: Platform.OS === 'ios' ? 70 : 70,
         height: 50,
         alignItems: 'center',
         justifyContent: 'center',

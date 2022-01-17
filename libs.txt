@@ -41,5 +41,8 @@ Reanimated
 Gesture Handler
     - expo install react-native-gesture-handler
 
-Google Auth
-    - expo install expo-google-app-auth
+Expo Auth (Google)
+    - expo install expo-auth-session expo-random
+
+Facebook Auth
+    - expo install expo-facebook
