@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Appearance } from 'react-native';
 import { connect } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Index from '../pages/Index';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import ForgotPassword from '../pages/ForgotPassword';
-import Home from '../pages/Home';
 import { editTheme } from '../components/Actions/themeAction';
+import { editLogin } from '../components/Actions/loginAction';
+import { editUidUser } from '../components/Actions/uidUserAction';
+import AuthRoutes from './authRoutes';
+import AppRoutes from './appRoutes';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +16,21 @@ export function routes(props) {
 
     useEffect(() => {
         props.editTheme(Appearance.getColorScheme());
+
+        async function loadStorage() {
+            const storageUser = await AsyncStorage.getItem('authUser');
+
+            // Parseia as datas para numero e compara se a data do storage está expirada
+            if (Date.parse(JSON.parse(storageUser).date) > Date.parse(new Date(Date.now()))) {
+                props.editUidUser(JSON.parse(storageUser).uid)
+                props.editLogin(true);
+            }
+            else {
+                props.editLogin(false);
+            }
+        }
+
+        // loadStorage();
     });
 
     Appearance.addChangeListener(() => {
@@ -23,23 +38,18 @@ export function routes(props) {
     })
 
     return (
-        <Stack.Navigator>
-            <Stack.Screen name="Index" component={Index} options={{headerShown: false}}/>
-            <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
-            <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
-            <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
-            <Stack.Screen name="Forgot" component={ForgotPassword} options={{headerShown: false}}/>
-        </Stack.Navigator>
+        props.login ? <AppRoutes/> : <AuthRoutes/>
     );
 };
 
 const mapStateToProps = (state) => {
     return {
         theme: state.theme.theme,
+        login: state.login.signed
     }
   }
   
-const routesConnect = connect(mapStateToProps, { editTheme })(routes);
+const routesConnect = connect(mapStateToProps, { editTheme, editLogin, editUidUser })(routes);
 
 export default routesConnect;
   
