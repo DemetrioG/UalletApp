@@ -6,28 +6,34 @@ import Carousel from 'react-native-snap-carousel';
 
 import { general, metrics } from '../../styles/index';
 import styles from './styles';
+import { editTheme } from '../../components/Actions/themeAction';
 
 const slides = [
     {
         key: 1,
-        title: 'Titulo1',
-        image: require('../../../assets/images/iphoneMockup.png')
+        title: 'Suas finanças',
+        image: require('../../../assets/images/iphoneHome.png')
     },
     {
         key: 2,
-        title: 'Titulo2',
-        image: require('../../../assets/images/iphoneMockup.png')
+        title: 'Seus investimentos',
+        image: require('../../../assets/images/iphoneInvest.png')
     },
     {
         key: 3,
-        title: 'Titulo3',
-        image: require('../../../assets/images/iphoneMockup.png')
+        title: 'Integrações bancárias',
+        image: require('../../../assets/images/iphoneIntegracoes.png')
+    },
+    {
+        key: 4,
+        title: 'Tudo em um só lugar',
+        image: require('../../../assets/images/iphoneUallet.png')
     },
 ];
 
 export function Index(props) {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation();   
 
     function renderSlide({item, index}) {
         return (
@@ -70,6 +76,6 @@ const mapStateToProps = (state) => {
     }
   }
   
-const indexConnect = connect(mapStateToProps)(Index);
+const indexConnect = connect(mapStateToProps, { editTheme })(Index);
 
 export default indexConnect;
