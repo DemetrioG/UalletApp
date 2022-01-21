@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
-import CryptoJS from 'react-native-crypto-js';
 
 import { general, colors } from '../../styles';
 import firebase from '../../services/firebase';
@@ -133,7 +132,8 @@ export function Register(props) {
                             placeholderTextColor={colors.lightGray}
                             secureTextEntry={true}
                             value={confirmPassword}
-                            onChangeText={(v) => setConfirmPassword(v)}
+                            onSubmitEditing={registerUser}
+                            returnKeyType="done"
                         />
                         <TouchableOpacity style={general().button} onPress={registerUser}>
                             {
