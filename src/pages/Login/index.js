@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Image, TextInput, TouchableOpacity, ActivityIndicator, Platform, NativeModules } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Image, TextInput, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import * as AuthSession from 'expo-auth-session';
 import * as Facebook from 'expo-facebook';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import firebase from '../../services/firebase';
 import styles from './styles';
@@ -13,8 +14,8 @@ import { editVisibilityAlert } from '../../components/Actions/visibilityAlertAct
 import { editTitleAlert } from '../../components/Actions/titleAlertAction';
 import { editTypeAlert } from '../../components/Actions/typeAlertAction';
 import { editUidUser } from '../../components/Actions/uidUserAction';
+import { editLogin } from '../../components/Actions/loginAction';
 import { Alert } from '../../components/Alert';
-
 
 export function Login(props) {
 
@@ -38,14 +39,21 @@ export function Login(props) {
         setLogin(true);
         await firebase.auth().signInWithEmailAndPassword(email, password)
         .then((v) => {
+            let data = {
+                uid: v.user.uid,
+                // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
+                date: new Date(Date.now() + 15 * 24*60*60*1000)
+            }
             props.editUidUser(v.user.uid);
             setLogin(false);
-            navigation.navigate('Home');
+            storageUser(data);
+            props.editLogin(true);
         })
         .catch((error) => {
             props.editTypeAlert('error');
             props.editTitleAlert('Verifique os campos informados');
-            props.editVisibilityAlert(false);
+            props.editVisibilityAlert(true);
+            setLogin(false);
             return;
         })
     }
@@ -78,17 +86,23 @@ export function Login(props) {
                     dateRegister: firebase.firestore.FieldValue.serverTimestamp()
                     })
                }
-            })
+            });
 
+            let data = {
+                uid: userInfo.id,
+                // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
+                date: new Date(Date.now() + 15 * 24*60*60*1000)
+            }
+            storageUser(data);
             props.editUidUser(userInfo.id);
-            navigation.navigate('Home');
+            props.editLogin(true);
         }
         return;
     }
 
     async function facebookLogin() {
         // Autenticação com o Facebook
-        await Facebook.initializeAsync("623678532217571'");
+        await Facebook.initializeAsync("623678532217571");
 
         const response = await Facebook.logInWithReadPermissionsAsync({
             permissions: ['public_profile', 'email']
@@ -111,9 +125,22 @@ export function Login(props) {
                     dateRegister: firebase.firestore.FieldValue.serverTimestamp()
                     })
                 }
-            })
+            });
+
+            let dataStorage = {
+                uid: userInfo.id,
+                // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
+                date: new Date(Date.now() + 15 * 24*60*60*1000)
+            }
+            storageUser(dataStorage);
+            props.editUidUser(userInfo.id);
+            props.editLogin(true);
         }
 
+    }
+
+    async function storageUser(data) {
+        await AsyncStorage.setItem('authUser', JSON.stringify(data))
     }
 
     return (
@@ -156,6 +183,8 @@ export function Login(props) {
                             secureTextEntry={true}
                             value={password}
                             onChangeText={(v) => setPassword(v)}
+                            onSubmitEditing={loginUser}
+                            returnKeyType="done"
                         />
                         <TouchableOpacity style={general(null, metrics.doubleBaseMargin).button} onPress={loginUser}>
                             {
@@ -191,7 +220,7 @@ export function Login(props) {
                                 <TouchableOpacity style={styles(null, colors.black).loginWithContainer}>
                                     <Image
                                         source={require('../../../assets/images/appleIcon.png')}
-                                        style={{width: '52%', height: '100%'}}
+                                        style={{width: '48%', height: '90%', marginBottom: 2}}
                                     />
                                 </TouchableOpacity>
                             }
@@ -221,10 +250,11 @@ const mapStateToProps = (state) => {
         visibility: state.modal.visibility,
         title: state.modal.title,
         type: state.modal.type,
-        uid : state.user.uid
+        uid : state.user.uid,
+        login: state.login.signed
     }
 }
 
-const loginConnect = connect(mapStateToProps, { editVisibilityAlert, editTitleAlert, editTypeAlert, editUidUser })(Login);
+const loginConnect = connect(mapStateToProps, { editVisibilityAlert, editTitleAlert, editTypeAlert, editUidUser, editLogin })(Login);
 
 export default loginConnect;
