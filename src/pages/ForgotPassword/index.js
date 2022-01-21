@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, View, Platform, TouchableWithoutFeedback, Keyboard, Text, TextInput, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, View, Platform, TouchableWithoutFeedback, Keyboard, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 
 import firebase from '../../services/firebase';
@@ -11,7 +12,10 @@ import { Alert } from '../../components/Alert';
 
 export function ForgotPassword(props) {
 
+    const navigation = useNavigation();
+
     const [email, setEmail] = useState(null);
+    const [send, setSend] = useState(false);
 
     async function sendPassword() {
 
@@ -21,13 +25,20 @@ export function ForgotPassword(props) {
             props.editVisibilityAlert(true);
             return; 
         }
-
+        setSend(true);
         await firebase.auth().sendPasswordResetEmail(email)
         .then((v) => {
-            console.log(v);
+            setSend(false);
+            navigation.navigate('Login');
+            props.editTypeAlert('check');
+            props.editTitleAlert('E-mail de redefinição enviado!\nVerifique sua caixa de SPAM');
+            props.editVisibilityAlert(true);
         })
         .catch((error) => {
-            console.log(error);
+            setSend(false);
+            props.editTypeAlert('error');
+            props.editTitleAlert('E-mail não encontrado');
+            props.editVisibilityAlert(true);
         })
     }
 
@@ -61,7 +72,11 @@ export function ForgotPassword(props) {
                             onChangeText={(v) => setEmail(v)}
                         />
                         <TouchableOpacity style={general(null, metrics.doubleBaseMargin).button} onPress={sendPassword}>
+                            {
+                                send ?
+                                <ActivityIndicator size={20} color={colors.white}/> :
                                 <Text style={general().buttonText}>ENVIAR</Text>
+                            }
                         </TouchableOpacity>                        
                     </View>
                 </View>
