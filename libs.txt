@@ -46,3 +46,9 @@ Expo Auth (Google)
 
 Facebook Auth
     - expo install expo-facebook
+
+Async Storage
+    - yarn add @react-native-async-storage/async-storage
+
+Icons
+    - yarn add react-native-vector-icons

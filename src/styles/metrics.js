@@ -15,6 +15,7 @@ const metrics = {
     smallestRadius:   4,
     basePadding:      15,
     topBottomPadding: 20,
+    iconSize:         25
 };
 
 export default metrics;

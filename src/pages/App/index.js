@@ -24,11 +24,7 @@ export function App(props) {
             <StatusBar
                 barStyle={Platform.OS === 'ios' && props.theme == 'light' ? 'dark-content' : 'light-content'}
             />
-                <NavigationContainer>
-                    <SafeAreaView style={general().flex}>
-                        <Routes/>
-                    </SafeAreaView>
-                </NavigationContainer>
+            <Routes/>
         </SafeAreaProvider>
     );
 };
