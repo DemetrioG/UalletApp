@@ -5,7 +5,9 @@ import fonts from "./fonts";
 
 const general = (theme, margin) => StyleSheet.create({
     card: {
-        padding: metrics.basePadding,
+        padding: metrics.basePadding + 5,
+        backgroundColor: theme == 'light' ? colors.lightSecondary : colors.darkSecondary,
+        borderRadius: metrics.baseRadius
     },
     padding: {
         paddingHorizontal: metrics.basePadding,
