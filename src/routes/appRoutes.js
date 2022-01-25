@@ -19,6 +19,12 @@ export function AppRoutes(props) {
     
     useEffect(() => {
 
+        Animated.timing(opacity, {
+            toValue: 1,
+            duration: 1800,
+            useNativeDriver: true
+        }).start();
+
         // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
         Keyboard.addListener('keyboardDidShow', () => {
             setKeyboardVisible(true);
