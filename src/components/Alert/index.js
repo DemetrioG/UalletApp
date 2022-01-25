@@ -23,7 +23,7 @@ export function Alert({props, text, type, redirect}) {
     }
 
     return (
-        <Modal visible={true} transparent={true}>
+        <Modal visible={true} transparent={true} animationType='fade'>
             <View style={[general().containerCenter, styles(props.theme).backgroundModal]}>
                 <View style={styles(props.theme).modalView}>
                     <LottieView
