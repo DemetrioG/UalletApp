@@ -114,6 +114,11 @@ const general = (theme, margin) => StyleSheet.create({
         fontSize: fonts.medium,
         color: theme == 'light' ? colors.darkPrimary : colors.white,
     },
+    scrollViewCenter: {
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 });
 
 export default general;
