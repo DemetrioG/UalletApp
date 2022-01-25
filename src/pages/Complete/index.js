@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, Keyboard, TouchableWithoutFeedback, ScrollView, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { TextInputMask } from 'react-native-masked-text';
 import { connect } from 'react-redux';
 
+import firebase from '../../services/firebase';
 import { general, colors } from '../../styles';
 import { editTypeAlert } from '../../components/Actions/typeAlertAction';
 import { editTitleAlert } from '../../components/Actions/titleAlertAction';
 import { editVisibilityAlert } from '../../components/Actions/visibilityAlertAction';
 import Picker from '../../components/Picker';
+import { Alert } from '../../components/Alert';
 
 export function Complete(props) {
+
+    const navigation = useNavigation();
 
     const [birthDate, setBirthDate] = useState(null);
     const [income, setIncome] = useState(null);
@@ -24,7 +29,38 @@ export function Complete(props) {
     const optionsProfile = ['Investidor', 'Poupador', 'Gastador'];
 
     async function registerData() {
+        if (!birthDate || !gender || !income || !profile) {
+            props.editTypeAlert('error');
+            props.editTitleAlert('Informe todos os campos');
+            props.editVisibilityAlert(true);
+            return; 
+        } else if (income == 'R$0,00') {
+            props.editTitleAlert('Informe uma Renda Média');
+            props.editVisibilityAlert(true);
+            return; 
+        }
 
+        await firebase.firestore().collection('users').doc(props.uid).get()
+        .then((v) => {
+            if (v.data()) {
+                firebase.firestore().collection('users').doc(props.uid).set({
+                    birthDate: birthDate,
+                    gender: gender,
+                    income: income,
+                    profile: profile 
+                }, {merge: true})
+                .then((v) => {
+                    navigation.navigate('Home');
+                    props.editTypeAlert('success');
+                    props.editTitleAlert('Dados cadastrados com sucesso');
+                    props.editVisibilityAlert(true);
+                }).catch((error) => {
+                    props.editTypeAlert('error');
+                    props.editTitleAlert('Erro ao cadastrar as informações');
+                    props.editVisibilityAlert(true);
+                })
+            }
+        })
     }
 
     return (
