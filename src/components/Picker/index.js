@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import { colors, general, metrics } from '../../styles';
 import styles from './styles';
-import { editPicker } from '../Actions/pickerVisibility';
 
 export function Picker({ options, selectedValue, theme, value, type, visibility, setVisibility }) {
 
@@ -61,11 +60,10 @@ export function Picker({ options, selectedValue, theme, value, type, visibility,
 
 const mapStateToProps = (state) => {
     return {
-        theme: state.theme.theme,
-        picker: state.picker.modalVisibility
+        theme: state.theme.theme
     }
 }
 
-const pickerConnect = connect(mapStateToProps, { editPicker })(Picker);
+const pickerConnect = connect(mapStateToProps)(Picker);
 
 export default pickerConnect;
