@@ -29,7 +29,7 @@ export function Login(props) {
     const [login, setLogin] = useState(false);
 
     async function loginUser() {
-        if (!email || !password) {
+        if (!email || !password || email.replace(/ /g, '').length < 1 || password.replace(/ /g, '').length < 1) {
             props.editTypeAlert('error');
             props.editTitleAlert('Informe todos os campos');
             props.editVisibilityAlert(true);
@@ -45,7 +45,6 @@ export function Login(props) {
                 date: new Date(Date.now() + 15 * 24*60*60*1000)
             }
             props.editUidUser(v.user.uid);
-            setLogin(false);
             storageUser(data);
             props.editLogin(true);
         })
@@ -53,9 +52,9 @@ export function Login(props) {
             props.editTypeAlert('error');
             props.editTitleAlert('Verifique os campos informados');
             props.editVisibilityAlert(true);
-            setLogin(false);
-            return;
         })
+        setLogin(false);
+        return;
     }
     
     async function googleLogin() {
@@ -80,10 +79,10 @@ export function Login(props) {
             .then((v) => {
                if (!v.data()) {
                     firebase.firestore().collection('users').doc(userInfo.id).set({
-                    name: userInfo.name,
-                    email: userInfo.email,
-                    typeUser: 'google',
-                    dateRegister: firebase.firestore.FieldValue.serverTimestamp()
+                        name: userInfo.name,
+                        email: userInfo.email,
+                        typeUser: 'google',
+                        dateRegister: firebase.firestore.FieldValue.serverTimestamp()
                     })
                }
             });

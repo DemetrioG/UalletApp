@@ -19,7 +19,7 @@ export function Register(props) {
     const [register, setRegister] = useState(false);
 
     async function registerUser() {
-        if (!name || !email || !password || !confirmPassword) {
+        if (!name || !email || !password || !confirmPassword || name.replace(/ /g, '').length < 1 || email.replace(/ /g, '').length < 1 || password.replace(/ /g, '').length < 1) {
             props.editTypeAlert('error');
             props.editTitleAlert('Informe todos os campos');
             props.editVisibilityAlert(true);
@@ -42,7 +42,6 @@ export function Register(props) {
                 typeUser: 'default',
                 dateRegister: firebase.firestore.FieldValue.serverTimestamp()
             })
-            setRegister(false);
             props.editTypeAlert('check');
             props.editTitleAlert('Usuário criado com sucesso');
             props.editVisibilityAlert(true);
@@ -74,6 +73,7 @@ export function Register(props) {
                     props.editVisibilityAlert(true);
                     break;
             }
+            setRegister(false);
             return;
         })
     }
@@ -132,6 +132,7 @@ export function Register(props) {
                             placeholderTextColor={colors.lightGray}
                             secureTextEntry={true}
                             value={confirmPassword}
+                            onChangeText={(v) => setConfirmPassword(v)}
                             onSubmitEditing={registerUser}
                             returnKeyType="done"
                         />
