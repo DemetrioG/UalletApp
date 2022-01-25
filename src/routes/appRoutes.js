@@ -18,6 +18,8 @@ export function AppRoutes(props) {
     const opacity = useRef(new Animated.Value(0)).current;
     
     useEffect(() => {
+
+        // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
         Keyboard.addListener('keyboardDidShow', () => {
             setKeyboardVisible(true);
 

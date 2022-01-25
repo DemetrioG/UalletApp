@@ -30,7 +30,7 @@ export function routes(props) {
             }
         }
 
-        // loadStorage();
+        loadStorage();
     });
 
     Appearance.addChangeListener(() => {

@@ -29,9 +29,6 @@ AppLoading
 Lottie
     - expo install lottie-react-native
 
-Crypto JS
-    - yarn add react-native-crypto-js
-
 Bottom Sheet
     - yarn add @gorhom/bottom-sheet@^4
 
@@ -52,3 +49,6 @@ Async Storage
 
 Icons
     - yarn add react-native-vector-icons
+
+Masked Text
+    - yarn add react-native-masked-text
