@@ -1,19 +1,45 @@
-import React, { useRef } from 'react';
-import { Animated, Dimensions, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { Animated, Dimensions, View, Keyboard } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SafeAreaView from 'react-native-safe-area-view';
 import Feather from 'react-native-vector-icons/Feather';
 import { connect } from 'react-redux';
 
-import Home from '../pages/Home';
+import StackHome from '../pages/StackHome';
 import { general, colors, metrics } from '../styles';
-import { color } from 'react-native-reanimated';
 
 const Tab = createBottomTabNavigator();
 
 export function AppRoutes(props) {
+    
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
+    const opacity = useRef(new Animated.Value(0)).current;
+    
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', () => {
+            setKeyboardVisible(true);
+
+            Animated.timing(opacity, {
+                toValue: 0,
+                duration: 50,
+                useNativeDriver: true
+            }).start();
+        });
+
+        Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardVisible(false);
+
+            Animated.timing(opacity, {
+                toValue: 1,
+                duration: 1800,
+                useNativeDriver: true
+            }).start();
+        });
+
+    });
+    
     const tabOffsetValue = useRef(new Animated.Value(0)).current;
 
     function getWidth() {
@@ -39,6 +65,7 @@ export function AppRoutes(props) {
                             backgroundColor: props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary,
                             position: 'absolute',
                             marginHorizontal: metrics.basePadding,
+                            borderTopWidth: 0,
                             borderTopLeftRadius: metrics.baseRadius,
                             borderTopRightRadius: metrics.baseRadius,
                         },
@@ -46,7 +73,7 @@ export function AppRoutes(props) {
                 >
                     <Tab.Screen 
                         name="Investimentos" 
-                        component={Home}
+                        component={StackHome}
                         options={{
                             tabBarIcon: ({ focused }) => {
                                 return <Feather name="pie-chart" color={props.theme == 'light' ? colors.darkPrimary : colors.white} size={metrics.iconSize}/>
@@ -63,7 +90,7 @@ export function AppRoutes(props) {
                     />
                     <Tab.Screen 
                         name="Lançamentos" 
-                        component={Home}
+                        component={StackHome}
                         options={{
                             tabBarIcon: () => {
                                 return <Feather name="edit-3" color={props.theme == 'light' ? colors.darkPrimary : colors.white} size={metrics.iconSize}/>
@@ -80,29 +107,34 @@ export function AppRoutes(props) {
                     />
                     <Tab.Screen 
                         name="Home" 
-                        component={Home}
+                        component={StackHome}
                         options={{
                             tabBarIcon: () => (
-                                <TouchableOpacity>
-                                    <View style={{
-                                        width: 50,
-                                        height: 50,
-                                        backgroundColor: colors.strongBlue,
-                                        borderRadius: 50,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        marginBottom: 60
-                                    }}>
-                                        <Feather name="home" color={colors.white} size={metrics.iconSize}/>
-
-                                    </View>
-                                </TouchableOpacity>
+                                <View style={{
+                                    width: 50,
+                                    height: 50,
+                                    backgroundColor: colors.strongBlue,
+                                    borderRadius: 50,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: 37
+                                }}>
+                                    <Feather name="home" color={colors.white} size={metrics.iconSize}/>
+                                </View>
                             )
                         }}
+                        listeners={({ navigation, route }) => ({
+                            tabPress: e => {
+                                Animated.spring(tabOffsetValue,{
+                                    toValue: getWidth() * 2,
+                                    useNativeDriver: true
+                                }).start();
+                            }
+                        })}
                     />
-                    <Tab.Screen 
+                    <Tab.Screen
                         name="Integrações" 
-                        component={Home}
+                        component={StackHome}
                         options={{
                             tabBarIcon: () => {
                                 return <Feather name="refresh-cw" color={props.theme == 'light' ? colors.darkPrimary : colors.white} size={metrics.iconSize}/>
@@ -119,7 +151,7 @@ export function AppRoutes(props) {
                     />
                     <Tab.Screen 
                         name="Relatórios" 
-                        component={Home}
+                        component={StackHome}
                         options={{
                             tabBarIcon: () => {
                                 return <Feather name="list" color={props.theme == 'light' ? colors.darkPrimary : colors.white} size={metrics.iconSize}/>
@@ -135,20 +167,22 @@ export function AppRoutes(props) {
                         })}
                     />
                 </Tab.Navigator>
-                <Animated.View style={{
-                    width: getWidth() - 30,
-                    height: 3,
-                    backgroundColor: colors.strongBlue,
-                    position: 'absolute',
-                    bottom: 60,
-                    left: metrics.basePadding + 15,
-                    borderRadius: 50,
-                    transform: [
-                        { translateX: tabOffsetValue }
-                    ]
-                }}>
-
-                </Animated.View>
+                {
+                    !keyboardVisible &&
+                    <Animated.View style={{
+                        width: getWidth() - 30,
+                        height: 3,
+                        backgroundColor: colors.strongBlue,
+                        position: 'absolute',
+                        bottom: 60,
+                        left: metrics.basePadding + 15,
+                        borderRadius: 50,
+                        opacity,
+                        transform: [
+                            { translateX: tabOffsetValue }
+                        ]
+                    }}/>
+                }
             </SafeAreaView>
         </NavigationContainer>
     );
