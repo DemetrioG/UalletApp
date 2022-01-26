@@ -52,3 +52,7 @@ Icons
 
 Masked Text
     - yarn add react-native-masked-text
+
+Charts
+    - yarn add react-native-svg-charts
+    - yarn add react-native-svg

@@ -7,7 +7,8 @@ const general = (theme, margin) => StyleSheet.create({
     card: {
         padding: metrics.basePadding + 5,
         backgroundColor: theme == 'light' ? colors.lightSecondary : colors.darkSecondary,
-        borderRadius: metrics.baseRadius
+        borderRadius: metrics.baseRadius,
+        marginBottom: metrics.baseMargin
     },
     padding: {
         paddingHorizontal: metrics.basePadding,
@@ -120,6 +121,11 @@ const general = (theme, margin) => StyleSheet.create({
         flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    scrollViewTab: {
+        marginBottom: metrics.doubleBaseMargin * 2.5,
+        borderBottomLeftRadius: metrics.baseRadius,
+        borderBottomRightRadius: metrics.baseRadius
     }
 });
 
