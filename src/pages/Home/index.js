@@ -3,20 +3,26 @@ import { View, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Image
 import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
-import { LineChart, Grid } from 'react-native-svg-charts';
+import { LineChart, PieChart } from 'react-native-svg-charts';
+import { ForeignObject, Text as TextSVG }  from 'react-native-svg';
 
 import firebase from '../../services/firebase';
 import { general, metrics, colors, fonts } from '../../styles';
 import { Alert } from '../../components/Alert';
 import Header from '../../components/Header';
 import { editVisibilityAlert } from '../../components/Actions/visibilityAlertAction';
+import { editComplete } from '../../components/Actions/completeUserAction';
 import styles from './styles';
 
 export function Home(props) {
 
+    const navigation = useNavigation();
+
     const [hideBalance, setHideBalance] = useState(false);
     const [hideInvest, setHideInvest] = useState(false);
     const [status, setStatus] = useState();
+
+    // Dados para o gráfico de linha Receitas X Despesas
     const incomeChart = [50, 10, 40];
     const expenseChart = [10, 20, 10];
     const dataLineChart = [
@@ -30,18 +36,54 @@ export function Home(props) {
         }
     ];
 
+    // Dados para o gráfico de rosca Segmento de Despesas
+    const dataPieChart = [5, 10, 15, 5, 25];
+    const colorPieChartLight = [colors.darkPrimary, colors.strongPurple, colors.lightPurple, colors.strongRed, colors.lightRed];
+    const colorPieChartDark = [colors.darkPrimary, colors.strongRed, colors.lightRed, colors.lightBlue, colors.whiteBlue];
+    const finalDataPieChart = dataPieChart.map((value, index) => ({
+        value,
+        key: index,
+        svg: {
+            fill: props.theme == 'light' ? colorPieChartLight[index] : colorPieChartDark[index]
+        }
+    }));
+
+    // Criação de labels para o Pie Chart
+    const Label = ({ slices }) => {
+        return slices.map((slice, index) => {
+            const { pieCentroid, data } = slice;
+            return (
+                <ForeignObject
+                    key={index}
+                    // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
+                    x={dataPieChart[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
+                    y={pieCentroid[1] - 8}
+                    width={100}
+                    height={100}
+                >
+                    <View>
+                        <Text style={styles().labelPieChart}>{data.value}%</Text>
+                    </View>
+                </ForeignObject>
+            )
+        })
+    }
+
     useEffect(() => {
         async function getData() {
 
             await firebase.firestore().collection('users').doc(props.uid).get()
             .then((v) => {
+                props.editComplete(true);
                 // Verifica se tem todas as informações preenchidas no banco, se não, builda a tela de preenchimento
                 if (!v.data().birthDate) {
                     navigation.navigate('Complete');
                 }
             })
         }
-        getData();
+        if (!props.complete) {
+            getData();
+        }
 
     }, []);
 
@@ -100,11 +142,10 @@ export function Home(props) {
                 <View style={[general(props.theme).card, { flexDirection: 'row' }]}>
                     <View style={styles(props.theme).incomeChartView}>
                         <LineChart
-                            style={{ height: 60, shadowOpacity: 1, shadowOffset: { height: 2 }, shadowColor: props.theme == 'light' ? colors.strongGreen : colors.lightGreen }}
+                            style={{ height: 60 }}
                             contentInset={{ top: 5, bottom: 5 }}
                             data={dataLineChart}
-                        >
-                        </LineChart>
+                        />
                         <View style={styles(props.theme).incomeChartLabelView}>
                             <Text style={styles(props.theme).incomeChartLabelText}>Jan</Text>
                             <Text style={styles(props.theme).incomeChartLabelText}>Mar</Text>
@@ -115,7 +156,39 @@ export function Home(props) {
                             <Text style={styles(props.theme).incomeText}>Receita mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: props.theme == 'light' ? colors.strongGreen : colors.lightGreen }}>10%</Text><Feather name='arrow-up' size={15} color={props.theme == 'light' ? colors.strongGreen : colors.lightGreen}/></Text>
                         </View>
                         <View>
-                            <Text style={styles(props.theme).incomeText}>Custo mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: props.theme == 'light' ? colors.strongRed : colors.lightRed }}>-20%</Text><Feather name='arrow-down' size={15} color={props.theme == 'light' ? colors.darkRed : colors.lightRed}/></Text>
+                            <Text style={styles(props.theme).incomeText}>Despesa mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: props.theme == 'light' ? colors.strongRed : colors.lightRed }}>-20%</Text><Feather name='arrow-down' size={15} color={props.theme == 'light' ? colors.strongRed : colors.lightRed}/></Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={[general(props.theme).card, { flexDirection: 'row' }]}>
+                    <View style={styles().segmentChartView}>
+                        <PieChart
+                            style={{ height: 130 }}
+                            data={finalDataPieChart}
+                        >
+                            <Label/>
+                        </PieChart>
+                    </View>
+                    <View style={styles().segmentLabelView}>
+                        <View style={styles().contentLabel}>
+                            <View style={[styles().dotView, { backgroundColor: colors.darkPrimary }]}/>
+                            <Text style={styles(props.theme).segmentLabelText}>Lazer</Text>
+                        </View>
+                        <View style={styles().contentLabel}>
+                            <View style={[styles().dotView, { backgroundColor: props.theme == 'light' ? colors.lightPurple : colors.lightRed }]}/>
+                            <Text style={styles(props.theme).segmentLabelText}>Educação</Text>
+                        </View>
+                        <View style={styles().contentLabel}>
+                            <View style={[styles().dotView, { backgroundColor: props.theme == 'light' ? colors.strongPurple : colors.strongRed }]}/>
+                            <Text style={styles(props.theme).segmentLabelText}>Investimentos</Text>
+                        </View>
+                        <View style={styles().contentLabel}>
+                            <View style={[styles().dotView, { backgroundColor: props.theme == 'light' ? colors.lightRed : colors.whiteBlue }]}/>
+                            <Text style={styles(props.theme).segmentLabelText}>Necessidades</Text>
+                        </View>
+                        <View style={styles().contentLabel}>
+                            <View style={[styles().dotView, { backgroundColor: props.theme == 'light' ? colors.strongRed : colors.lightBlue }]}/>
+                            <Text style={styles(props.theme).segmentLabelText}>Curto e médio prazo</Text>
                         </View>
                     </View>
                 </View>
@@ -131,9 +204,10 @@ const mapStateToProps = (state) => {
         title: state.modal.title,
         type: state.modal.type,
         uid : state.user.uid,
+        complete: state.complete.complete
     }
   }
   
-const homeConnect = connect(mapStateToProps, { editVisibilityAlert })(Home);
+const homeConnect = connect(mapStateToProps, { editVisibilityAlert, editComplete })(Home);
 
 export default homeConnect;

@@ -73,7 +73,7 @@ const styles = (theme) => StyleSheet.create({
         padding: metrics.basePadding + 3,
         backgroundColor: theme == 'light' ? colors.lightPrimary : colors.darkPrimary,
         borderRadius: metrics.baseRadius,
-        width: '50%'
+        width: '45%'
     },
     incomeChartLabelView: {
         marginTop: 5,
@@ -89,15 +89,47 @@ const styles = (theme) => StyleSheet.create({
     incomeView: {
         flex: 1,
         paddingVertical: metrics.basePadding * 1.5,
+        marginLeft: metrics.baseMargin,
         flexDirection: 'column',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'flex-start'
     },
     incomeText: {
         fontFamily: fonts.ralewayMedium,
         fontSize: fonts.regular,
         color: theme == 'light' ? colors.darkPrimary : colors.white,
         marginRight: metrics.baseMargin / 2
+    },
+    segmentChartView: {
+        width: '50%'
+    },
+    labelPieChart: {
+        fontFamily: fonts.montserratMedium,
+        fontSize: fonts.medium,
+        color: colors.white,
+    },
+    segmentLabelView: {
+        width: '50%',
+        alignItems: 'flex-start',
+        justifyContent: 'center'
+    },
+    dotView: {
+        width: 10,
+        height: 10,
+        borderRadius: 100,
+        marginTop: 2,
+        marginRight: metrics.baseMargin / 2
+    },
+    segmentLabelText: {
+        fontFamily: fonts.ralewayMedium,
+        fontSize: fonts.regular,
+        color: theme == 'light' ? colors.darkPrimary : colors.white
+    },
+    contentLabel: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 3,
+        marginLeft: metrics.baseMargin
     }
 });
 

@@ -7,6 +7,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { connect } from 'react-redux';
 
 import StackHome from '../pages/StackHome';
+import StackEntry from '../pages/StackEntry';
 import { general, colors, metrics } from '../styles';
 
 const Tab = createBottomTabNavigator();
@@ -80,7 +81,7 @@ export function AppRoutes(props) {
                     }}
                 >
                     <Tab.Screen 
-                        name="Investimentos" 
+                        name="InvestimentosTab" 
                         component={StackHome}
                         options={{
                             tabBarIcon: ({ focused }) => {
@@ -97,8 +98,8 @@ export function AppRoutes(props) {
                         })}
                     />
                     <Tab.Screen 
-                        name="Lançamentos" 
-                        component={StackHome}
+                        name="LançamentosTab" 
+                        component={StackEntry}
                         options={{
                             tabBarIcon: () => {
                                 return <Feather name="edit-3" color={props.theme == 'light' ? colors.darkPrimary : colors.white} size={metrics.iconSize}/>
@@ -114,7 +115,7 @@ export function AppRoutes(props) {
                         })}
                     />
                     <Tab.Screen 
-                        name="Home" 
+                        name="HomeTab" 
                         component={StackHome}
                         options={{
                             tabBarIcon: () => (
@@ -141,7 +142,7 @@ export function AppRoutes(props) {
                         })}
                     />
                     <Tab.Screen
-                        name="Integrações" 
+                        name="IntegraçõesTab" 
                         component={StackHome}
                         options={{
                             tabBarIcon: () => {
@@ -158,7 +159,7 @@ export function AppRoutes(props) {
                         })}
                     />
                     <Tab.Screen 
-                        name="Relatórios" 
+                        name="RelatóriosTab" 
                         component={StackHome}
                         options={{
                             tabBarIcon: () => {
