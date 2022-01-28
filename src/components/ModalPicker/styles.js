@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { color } from "react-native-reanimated";
 import { colors, fonts, metrics } from "../../styles";
 
-const styles = (theme) => StyleSheet.create({
+const styles = (theme, type) => StyleSheet.create({
     alignVertical: {
         justifyContent: 'center'
     },
@@ -30,7 +30,7 @@ const styles = (theme) => StyleSheet.create({
         marginBottom: metrics.baseMargin
     },
     textItem: {
-        fontFamily: fonts.ralewayBold,
+        fontFamily: type == 'Ano' ? fonts.montserratBold : fonts.ralewayBold,
         fontSize: fonts.regular,
         color: theme == 'light' ? colors.darkPrimary : colors.white
     },

@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, Modal, Dimensions, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { connect } from 'react-redux';
 
 import { colors, general } from '../../styles';
 import styles from './styles';
-import { editMonth } from '../Actions/monthAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export function ModalPicker({ options, value, selectedValue, setVisibility, type, visibility, theme, next }) {
+export default function ModalPicker({ options, value, selectedValue, setVisibility, type, visibility, theme, next }) {
 
     /**
      * @options :array
@@ -16,12 +15,15 @@ export function ModalPicker({ options, value, selectedValue, setVisibility, type
 
     const onPressItem = (item, index) => {
         setVisibility(false);
-        selectedValue(type == 'Mês' ? index + 1 : item);
+        storageData(type == 'Mês' ? index + 1 : item);
         if (next) {
             next(true);
         }
     }
-    console.log(value);
+
+    async function storageData(data) {
+        await AsyncStorage.setItem(type, JSON.stringify(data))
+    }
 
     const option = OPTIONS.map((item, index) => {
         return (
@@ -30,11 +32,25 @@ export function ModalPicker({ options, value, selectedValue, setVisibility, type
                 key={index}
                 onPress={() => onPressItem(item, index)}
             >
-                <Text style={styles(theme).textItem}>{item}</Text>
+                <Text style={styles(theme, type).textItem}>{item}</Text>
                 <Feather name='chevron-right' size={20} color={theme == 'light' ? colors.darkPrimary : colors.white}/>
             </TouchableOpacity>
         )
     })
+
+    // Pega a referência de Mês e Ano, e joga para o Redux month e year
+    useEffect(() => {
+        async function loadStorage() {
+            const refMonth = await AsyncStorage.getItem('Mês');
+            const refYear = await AsyncStorage.getItem('Ano');
+
+            if (refMonth && refYear) {
+                selectedValue(type == 'Mês' ? refMonth : type == 'Ano' ? refYear : null);
+            }
+        }
+
+        loadStorage();
+    });
 
     return (
         <Modal

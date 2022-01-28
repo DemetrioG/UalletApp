@@ -9,7 +9,7 @@ import { metrics, colors } from '../../styles';
 import { editName } from '../Actions/nameAction';
 import { editMonth } from '../Actions/monthAction';
 import { editYear } from '../Actions/yearAction';
-import { ModalPicker } from '../ModalPicker';
+import ModalPicker from '../ModalPicker';
 
 export function Header(props) {
 

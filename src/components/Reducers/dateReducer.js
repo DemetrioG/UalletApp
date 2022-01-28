@@ -1,6 +1,6 @@
 const date = {
-    month: 1,
-    year: '',
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
 }
 
 const DateReducer = (state = [], action) => {
