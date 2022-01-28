@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect } from 'react';
 import { Appearance } from 'react-native';
 import { connect } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,8 +8,6 @@ import { editLogin } from '../components/Actions/loginAction';
 import { editUidUser } from '../components/Actions/uidUserAction';
 import AuthRoutes from './authRoutes';
 import AppRoutes from './appRoutes';
-
-const Stack = createNativeStackNavigator();
 
 export function routes(props) {
 
@@ -31,7 +28,7 @@ export function routes(props) {
         }
 
         loadStorage();
-    });
+    }, []);
 
     Appearance.addChangeListener(() => {
         props.editTheme(Appearance.getColorScheme());
