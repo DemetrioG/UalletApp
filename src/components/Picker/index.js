@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, View, Text, Modal, Dimensions, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, View, Text, Modal, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { connect } from 'react-redux';
 
@@ -16,6 +16,7 @@ export function Picker({ options, selectedValue, theme, value, type, visibility,
     const onPressItem = (option) => {
         setVisibility(false);
         selectedValue(option);
+        Keyboard.dismiss();
     }
 
     const option = OPTIONS.map((item, index) => {
