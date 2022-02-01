@@ -107,6 +107,7 @@ export function Register(props) {
                             placeholderTextColor={colors.lightGray}
                             value={name}
                             onChangeText={(v) => setName(v)}
+                            maxLength={40}
                         />
                         <TextInput
                             style={general(props.theme).input}
@@ -125,6 +126,7 @@ export function Register(props) {
                             secureTextEntry={true}
                             value={password}
                             onChangeText={(v) => setPassword(v)}
+                            maxLength={20}
                         />
                         <TextInput
                             style={general(props.theme).input}
@@ -135,6 +137,7 @@ export function Register(props) {
                             onChangeText={(v) => setConfirmPassword(v)}
                             onSubmitEditing={registerUser}
                             returnKeyType="done"
+                            maxLength={20}
                         />
                         <TouchableOpacity style={general().button} onPress={registerUser}>
                             {
