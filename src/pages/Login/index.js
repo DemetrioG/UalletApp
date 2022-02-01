@@ -184,6 +184,7 @@ export function Login(props) {
                             onChangeText={(v) => setPassword(v)}
                             onSubmitEditing={loginUser}
                             returnKeyType="done"
+                            maxLength={20}
                         />
                         <TouchableOpacity style={general(null, metrics.doubleBaseMargin).button} onPress={loginUser}>
                             {
