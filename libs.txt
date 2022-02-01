@@ -56,3 +56,6 @@ Masked Text
 Charts
     - yarn add react-native-svg-charts
     - yarn add react-native-svg
+
+Date Picker
+    - yarn add @react-native-community/datetimepicker
