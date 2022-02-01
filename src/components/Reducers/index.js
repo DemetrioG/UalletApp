@@ -6,6 +6,7 @@ import LoginReducer from './loginReducer';
 import NameReducer from './nameReducer';
 import DateReducer from './dateReducer';
 import CompleteUserReducer from './completeUserReducer';
+import ModalityReducer from './modalityReducer';
 
 const Reducers  = combineReducers({
     theme: ThemeReducer,
@@ -14,7 +15,8 @@ const Reducers  = combineReducers({
     login: LoginReducer,
     name: NameReducer,
     date: DateReducer,
-    complete: CompleteUserReducer
+    complete: CompleteUserReducer,
+    modality: ModalityReducer
 });
 
 export default Reducers;
