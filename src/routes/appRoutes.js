@@ -20,6 +20,11 @@ export function AppRoutes(props) {
     
     useEffect(() => {
 
+        Animated.spring(tabOffsetValue,{
+            toValue: getWidth() * 2,
+            useNativeDriver: true
+        }).start();
+
         Animated.timing(opacity, {
             toValue: 1,
             duration: 1800,
@@ -65,6 +70,7 @@ export function AppRoutes(props) {
         <NavigationContainer>
             <SafeAreaView style={general().flex}>
                 <Tab.Navigator
+                    initialRouteName='HomeTab'
                     screenOptions={{
                         headerShown: false,
                         tabBarHideOnKeyboard: true,
@@ -114,7 +120,7 @@ export function AppRoutes(props) {
                             }
                         })}
                     />
-                    <Tab.Screen 
+                    <Tab.Screen
                         name="HomeTab" 
                         component={StackHome}
                         options={{
