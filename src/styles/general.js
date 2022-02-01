@@ -38,6 +38,18 @@ const general = (theme, margin) => StyleSheet.create({
         marginBottom: metrics.baseMargin,
         color: theme == 'light' ? colors.darkPrimary : colors.white
     },
+    inputDate: {
+        width: 140,
+        height: 30,
+        paddingHorizontal: 20,
+        paddingVertical: 5,
+        borderRadius: metrics.smallRadius,
+        borderWidth: 2,
+        borderColor: colors.lightGray,
+        fontFamily: fonts.ralewayExtraBold,
+        fontSize: fonts.regular,
+        color: theme == 'light' ? colors.darkPrimary : colors.white
+    },
     inputNumber: {
         width: 250,
         height: 45,
@@ -80,6 +92,11 @@ const general = (theme, margin) => StyleSheet.create({
         color: theme == 'light' ? colors.strongBlue : colors.lightBlue,
         fontFamily: fonts.ralewayExtraBold,
         fontSize: fonts.regular,
+    },
+    buttonSmall: {
+        width: 80,
+        height: 30,
+        borderRadius: metrics.smallRadius
     },
     statusBar: {
         marginTop: Platform.OS === 'android' ? 25 : 0,
@@ -126,6 +143,41 @@ const general = (theme, margin) => StyleSheet.create({
         marginBottom: metrics.doubleBaseMargin * 2.5,
         borderBottomLeftRadius: metrics.baseRadius,
         borderBottomRightRadius: metrics.baseRadius
+    },
+    viewTab: {
+        flex: 1,
+        padding: metrics.basePadding * 1.5,
+        paddingBottom: 0,
+        marginBottom: metrics.doubleBaseMargin * 2.5,
+        borderRadius: metrics.baseRadius,
+        backgroundColor: theme == 'light' ? colors.lightSecondary : colors.darkSecondary,
+        minHeight: 500
+    },
+    viewTabContent: {
+        flex: 1,
+        paddingBottom: metrics.basePadding * 1.5,
+        backgroundColor: theme == 'light' ? colors.lightSecondary : colors.darkSecondary,
+    },
+    textHeaderScreen: {
+        fontFamily: fonts.ralewayBold,
+        fontSize: fonts.large,
+        color: theme == 'light' ? colors.darkPrimary : colors.white,
+        marginBottom: metrics.baseMargin,
+    },
+    spaceBetween: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    spaceAround: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around'
+    },
+    label: {
+        fontFamily: fonts.ralewayExtraBold,
+        fontSize: fonts.regular,
+        color: theme == 'light' ? colors.darkPrimary : colors.white
     }
 });
 
