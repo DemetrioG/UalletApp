@@ -108,7 +108,7 @@ export function Header(props) {
 const mapStateToProps = (state) => {
     return {
         theme: state.theme.theme,
-        uid : state.user.uid,
+        uid: state.user.uid,
         name: state.name.name,
         month: state.date.month,
         year: state.date.year,

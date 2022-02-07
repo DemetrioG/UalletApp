@@ -250,7 +250,7 @@ const mapStateToProps = (state) => {
         visibility: state.modal.visibility,
         title: state.modal.title,
         type: state.modal.type,
-        uid : state.user.uid,
+        uid: state.user.uid,
         login: state.login.signed
     }
 }
