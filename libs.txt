@@ -59,3 +59,6 @@ Charts
 
 Date Picker
     - yarn add @react-native-community/datetimepicker
+
+Intl
+    -yarn add intl
