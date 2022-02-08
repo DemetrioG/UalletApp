@@ -7,6 +7,7 @@ import { LineChart, PieChart } from 'react-native-svg-charts';
 import { ForeignObject, Text as TextSVG }  from 'react-native-svg';
 
 import firebase from '../../services/firebase';
+import { numberToReal } from '../../functions';
 import { general, metrics, colors, fonts } from '../../styles';
 import { Alert } from '../../components/Alert';
 import Header from '../../components/Header';
@@ -18,6 +19,7 @@ export function Home(props) {
 
     const navigation = useNavigation();
 
+    const [balance, setBalance] = useState('R$ 0,00');
     const [hideBalance, setHideBalance] = useState(false);
     const [hideInvest, setHideInvest] = useState(false);
     const [status, setStatus] = useState();
@@ -70,22 +72,34 @@ export function Home(props) {
     }
 
     useEffect(() => {
-        async function getData() {
+        async function completeData() {
 
             await firebase.firestore().collection('users').doc(props.uid).get()
             .then((v) => {
                 props.editComplete(true);
-                // Verifica se tem todas as informações preenchidas no banco, se não, builda a tela de preenchimento
+                // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
                 if (!v.data().birthDate) {
                     navigation.navigate('Complete');
                 }
             })
         }
         if (!props.complete) {
-            getData();
+            completeData();
         }
 
-    }, []);
+        async function getData() {
+            
+            await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').onSnapshot((snapshot) => {
+                if (snapshot.data()) {
+                    setBalance(numberToReal(snapshot.data().balance));
+                } else {
+                    setBalance('R$ 0,00');
+                }
+            })
+        }
+        getData();
+
+    }, [props.modality]);
 
     return (
         <View style={[general().flex, general().padding, general(props.theme).backgroundColor]}>
@@ -107,7 +121,7 @@ export function Home(props) {
                             <Image source={require('../../../assets/images/logoSmall.png')} width={1} style={styles().logoCard}/>
                         </View>
                     </View>
-                    <Text style={styles(props.theme).balance}>{ !hideBalance ? 'R$ 13.000,00' : '** ** ** ** **' }</Text>
+                    <Text style={styles(props.theme).balance}>{ !hideBalance ? balance : '** ** ** ** **' }</Text>
                 </View>
                 <View style={general(props.theme).card}>
                     <View style={styles().cardStatusView}>
@@ -204,7 +218,8 @@ const mapStateToProps = (state) => {
         title: state.modal.title,
         type: state.modal.type,
         uid : state.user.uid,
-        complete: state.complete.complete
+        complete: state.complete.complete,
+        modality: state.modality.modality
     }
   }
   
