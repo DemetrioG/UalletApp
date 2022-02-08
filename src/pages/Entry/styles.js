@@ -1,13 +1,60 @@
 import { StyleSheet } from "react-native";
 import { colors, fonts, metrics } from "../../styles";
 
-const styles = (theme) => StyleSheet.create({
+const styles = (theme, type) => StyleSheet.create({
     buttonHeaderView: {
         marginBottom: metrics.baseMargin
     },
-    scrollList: {
-        borderWidth: 1,
-        borderColor: 'red'
+    itemView: {
+        flexDirection: 'row',
+    },
+    descriptionView: {
+        width: '50%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRightWidth: 1,
+        borderRightColor: colors.lightPrimary,
+        padding: metrics. basePadding / 2
+    },
+    descriptionText: {
+        fontFamily: fonts.ralewayMedium,
+        fontSize: fonts.regular,
+        color: colors.gray
+    },
+    valueView: {
+        width: '40%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: metrics.basePadding / 2
+    },
+    valueText: {
+        fontFamily: fonts.montserratMedium,
+        fontSize: fonts.regular,
+        color: theme == 'light' ? (type == 'Receita' ? colors.strongGreen : colors.strongRed) : (type == 'Receita' ? colors.lightGreen : colors.lightRed)
+    },
+    moreView: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    loadingView: {
+        position: 'absolute',
+        top: 40,
+        padding: metrics.basePadding / 1.5,
+        borderRadius: metrics.mediumRadius,
+        backgroundColor: colors.strongBlue
+    },
+    loadingText: {
+        fontFamily: fonts.ralewayMedium,
+        fontSize: fonts.medium,
+        color: colors.white
+    },
+    iconEmpty: {
+        width: 230
+    },
+    iconLoading: {
+        width: 50
     },
     incomeView: {
         flexDirection: 'row',
