@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Platform, TouchableWithoutFeedback, Keyboard, Animated, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { TextInputMask } from 'react-native-masked-text';
 
 import firebase from '../../services/firebase';
-import { convertDate, convertDateToDatabase, realToNumber } from '../../functions/index';
+import { convertDate, convertDateToDatabase, realToNumber, convertDateFromDatabase } from '../../functions/index';
 import { general, metrics, colors } from '../../styles';
 import styles from './styles';
 import Picker from '../../components/Picker';
@@ -21,7 +21,14 @@ export function NewEntry(props) {
     const opacity = useRef(new Animated.Value(0)).current;
     
     const [register, setRegister] = useState(false);
+    const [exclude, setExclude] = useState(false);
 
+    /**
+     * @type new  Novo lançamento
+     * @type edit Editar lançamento
+     * @type fix  Nova despesa fixa
+     */
+    const [typeScreen, setTypeScreen] = useState('new');
     const [type, setType] = useState('Receita');
     const [date, setDate] = useState(null);
     const [description, setDescription] = useState(null);
@@ -34,6 +41,24 @@ export function NewEntry(props) {
     
     const optionsModality = ['Projetado', 'Real'];
     const optionsSegment = ['Lazer', 'Educação', 'Investimentos', 'Necessidades', 'Curto e médio prazo'];
+
+    useEffect(() => {
+        
+        // Verifica se é Edição e preenche os dados nos campos
+        if (props.route.params) {
+            setTypeScreen('edit');
+            setDate(convertDateFromDatabase(props.route.params.date));
+            setDescription(props.route.params.description);
+            setModality(props.route.params.modality);
+            setType(props.route.params.type);
+            setValue(props.route.params.value);
+
+            const segmentParam = props.route.params.segment;
+            if (segmentParam) {
+                setSegment(segmentParam);
+            }
+        }
+    }, []);
 
     function onChangeDate(date) {
         setCalendar(Platform.OS === 'ios');
@@ -62,7 +87,10 @@ export function NewEntry(props) {
         setCalendar(false);
     }
 
-    async function registerEntry() {
+    /**
+     * @param idRegister Id recebido em caso de edição de lançamento
+     */
+    async function registerEntry(idRegister) {
         if (!date || !description || !modality || type == 'Despesa' && !segment || !value) {
             props.editTypeAlert('error');
             props.editTitleAlert('Informe todos os campos');
@@ -77,34 +105,16 @@ export function NewEntry(props) {
         }
 
         setRegister(true);
-        // Atualiza o saldo atual no banco
-        let balance;
-        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').get()
-        .then((v) => {
-            balance = v.data().balance
-        })
-        .catch((error) => {
-            balance = 0;
-        })
-
-        if (type == 'Receita') {
-            balance += realToNumber(value);
-        } else {
-            balance -= realToNumber(value);
+        let id = typeof idRegister == 'number' ? idRegister : 1;
+        if (typeof idRegister !== 'number') {            
+            // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
+            await firebase.firestore().collection('entry').doc(props.uid).collection(modality).orderBy('id', 'desc').limit(1).get()
+            .then((v) => {
+                v.forEach((result) => {
+                    id += result.data().id;
+                });
+            })
         }
-        
-        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').set({
-            balance: balance
-        })
-
-        let id = 1;
-        // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-        await firebase.firestore().collection('entry').doc(props.uid).collection(modality).orderBy('id', 'desc').limit(1).get()
-        .then((v) => {
-            v.forEach((result) => {
-                id += result.data().id;
-            });
-        })
 
         // Registra o novo lançamento no banco
         await firebase.firestore().collection('entry').doc(props.uid).collection(modality).doc(id.toString()).set({
@@ -116,18 +126,84 @@ export function NewEntry(props) {
             segment: segment,
             value: value
         })
-        .then((v) => {
-            navigation.navigate('Lançamentos');
-            props.editTypeAlert('success');
-            props.editTitleAlert('Dados cadastrados com sucesso');
-            props.editVisibilityAlert(true);
-        })
         .catch((error) => {
             props.editTypeAlert('error');
-            props.editTitleAlert('Erro ao cadastrar as informações');
+            props.editTitleAlert(typeof idRegister == 'number' ? 'Erro ao atualizar as informações' : 'Erro ao cadastrar as informações');
             props.editVisibilityAlert(true);
+            setRegister(false);
+            return;
         })
-        setRegister(false);
+
+        // Atualiza o saldo atual no banco
+        let balance;
+        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').get()
+        .then((v) => {
+            balance = v.data().balance
+        })
+        .catch((error) => {
+            balance = 0;
+        })
+
+        if (typeScreen == 'new') {
+            if (type == 'Receita') {
+                balance += realToNumber(value);
+            } else {
+                balance -= realToNumber(value);
+            }
+        } else if (typeScreen == 'edit') {
+            if (type == 'Receita') {
+                balance += realToNumber(value) - realToNumber(props.route.params.value);
+            } else {
+                balance -= realToNumber(value) - realToNumber(props.route.params.value);
+            }
+        }
+        
+        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').set({
+            balance: balance
+        })
+        navigation.navigate('Lançamentos');
+        props.editTypeAlert('success');
+        props.editTitleAlert(typeof idRegister == 'number' ? 'Lançamento atualizado com sucesso' : 'Dados cadastrados com sucesso');
+        props.editVisibilityAlert(true);
+        return;
+    }
+
+    async function deleteEntry() {
+        setExclude(true);
+        await firebase.firestore().collection('entry').doc(props.uid).collection(props.route.params.modality).doc(props.route.params.id.toString()).delete()
+        .catch((error) => {
+            props.editTypeAlert('error');
+            props.editTitleAlert('Erro ao excluir o lançamento');
+            props.editVisibilityAlert(true);
+            setExclude(false);
+            return; 
+        })
+
+        // Atualiza o saldo atual no banco
+        let balance;
+        await firebase.firestore().collection('balance').doc(props.uid).collection(props.route.params.modality).doc('balance').get()
+        .then((v) => {
+            balance = v.data().balance
+        })
+        .catch((error) => {
+            balance = 0;
+        })
+
+        if (props.route.params.type == 'Despesa') {
+            balance += realToNumber(props.route.params.value);
+        } else {
+            balance -= realToNumber(props.route.params.value);
+        }
+        
+        firebase.firestore().collection('balance').doc(props.uid).collection(props.route.params.modality).doc('balance').set({
+            balance: balance
+        })
+
+        navigation.navigate('Lançamentos');
+        props.editTypeAlert('success');
+        props.editTitleAlert('Lançamento excluído com  sucesso');
+        props.editVisibilityAlert(true);
+        return;
     }
 
     return (
@@ -137,13 +213,16 @@ export function NewEntry(props) {
                     <TouchableOpacity onPress={() => navigation.navigate('Lançamentos')}>
                         <Feather name='chevron-left' size={metrics.iconSize} color={props.theme == 'light' ? colors.darkPrimary : colors. white} style={{ marginRight: 10 }}/>
                     </TouchableOpacity>
-                    <Text style={[general(props.theme).textHeaderScreen, { marginBottom: 0 }]}>Novo Lançamento</Text>
+                    <Text style={[general(props.theme).textHeaderScreen, { marginBottom: 0 }]}>{typeScreen == 'new' ? 'Novo Lançamento' : typeScreen == 'edit' ? 'Editar lançamento' : null}</Text>
                 </View>
                 <View style={styles().typeView}>
                     <Text style={styles(props.theme, type).typeText}>{type}</Text>
-                    <TouchableOpacity style={styles().changeType} onPress={() => type == 'Receita' ? setType('Despesa') : setType('Receita')}>
-                        <Feather name='refresh-cw' size={15} color={props.theme == 'light' ? colors.darkPrimary : colors.white}/>
-                    </TouchableOpacity>
+                    {
+                        typeScreen == 'new' &&
+                        <TouchableOpacity style={styles().changeType} onPress={() => type == 'Receita' ? setType('Despesa') : setType('Receita')}>
+                            <Feather name='refresh-cw' size={15} color={props.theme == 'light' ? colors.darkPrimary : colors.white}/>
+                        </TouchableOpacity>
+                    }
                 </View>
                 <View style={general().containerCenter}>
                     <View>
@@ -196,16 +275,40 @@ export function NewEntry(props) {
                             onChangeText={(v) => setValue(v)}
                             type='money'
                         />
-                        <TouchableOpacity style={general(null, metrics.smallMargin).button} onPress={registerEntry}>
-                            {
-                                register ?
-                                <ActivityIndicator size={20} color={colors.white}/> : 
-                                <Text style={general().buttonText}>CADASTRAR</Text>
-                            }
-                        </TouchableOpacity>
-                        <TouchableOpacity style={general(props.theme).buttonOutline}>
-                            <Text style={general(props.theme).buttonOutlineText}>CADASTRAR DESPESAS FIXAS</Text>
-                        </TouchableOpacity>
+                        {
+                            typeScreen == 'new' &&
+                            <View>
+                                <TouchableOpacity style={general(null, metrics.smallMargin).button} onPress={registerEntry}>
+                                    {
+                                        register ?
+                                        <ActivityIndicator size={20} color={colors.white}/> : 
+                                        <Text style={general().buttonText}>CADASTRAR</Text>
+                                    }
+                                </TouchableOpacity>
+                                <TouchableOpacity style={general(props.theme).buttonOutline}>
+                                    <Text style={general(props.theme).buttonOutlineText}>CADASTRAR DESPESAS FIXAS</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                        {
+                            typeScreen == 'edit' &&
+                            <View>
+                                <TouchableOpacity style={general(null, metrics.smallMargin).button} onPress={() => registerEntry(props.route.params.id)}>
+                                    {
+                                        register ?
+                                        <ActivityIndicator size={20} color={colors.white}/> : 
+                                        <Text style={general().buttonText}>ATUALIZAR</Text>
+                                    }
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[general(props.theme).button, { backgroundColor: colors.lightRed }]} onPress={deleteEntry}>
+                                    {
+                                        exclude ?
+                                        <ActivityIndicator size={20} color={colors.white}/> : 
+                                        <Text style={general(props.theme).buttonText}>EXCLUIR</Text>
+                                    }
+                                </TouchableOpacity>
+                            </View>
+                        }
                     </View>
                     {
                         calendar ?
