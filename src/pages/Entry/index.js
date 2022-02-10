@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 
-import { sleep, getBalance } from '../../functions/index';
+import { sleep, getBalance, getFinalDateMonth } from '../../functions/index';
 import firebase from '../../services/firebase';
 import { colors, general, metrics } from '../../styles';
 import styles from './styles';
@@ -21,17 +21,16 @@ export function Entry(props) {
     const [balance, setBalance] = useState('R$ 0,00');
     const empty = require('../../../assets/icons/emptyData.json');
     const loading = require('../../../assets/icons/blueLoading.json');
-    
-    // Pega o mês de referência do App para realizar a busca dos registros
-    const [initialDate, setInitialDate] = useState(Date.parse(`${new Date().getFullYear()}/${props.month}/1`));
-    const [finalDate, setFinalDate] = useState(Date.parse(`${new Date().getFullYear().toString()}/${props.month}/31`));
 
     const opacity = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         
         async function getEntry() {
-            
+            // Pega o mês de referência do App para realizar a busca dos registros
+            let initialDate = Date.parse(`${props.month}/01/${props.year}`);
+            let finalDate = Date.parse(`${props.month}/${getFinalDateMonth(props)}/${props.year}`);
+
             // Busca os registros dentro do período de referência
             setEmptyData(false);
             await sleep(1000);
@@ -46,10 +45,10 @@ export function Entry(props) {
                 }
             })
         } getEntry();
-
+        // Retorna o Saldo atual
         getBalance(firebase, props, setBalance);
 
-    }, [props.modality]);
+    }, [props.modality, props.month, props.year]);
 
     function ItemList({item}) {          
         return (
@@ -168,7 +167,8 @@ const mapStateToProps = (state) => {
         type: state.modal.type,
         uid: state.user.uid,
         modality: state.modality.modality,
-        month: state.date.month
+        month: state.date.month,
+        year: state.date.year
     }
   }
   

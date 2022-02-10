@@ -136,7 +136,7 @@ export function NewEntry(props) {
 
         // Atualiza o saldo atual no banco
         let balance;
-        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').get()
+        await firebase.firestore().collection('balance').doc(props.uid).collection(modality).doc(Number(date.slice(3, 5)).toString()).get()
         .then((v) => {
             balance = v.data().balance
         })
@@ -158,7 +158,7 @@ export function NewEntry(props) {
             }
         }
         
-        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').set({
+        await firebase.firestore().collection('balance').doc(props.uid).collection(modality).doc(Number(date.slice(3, 5)).toString()).set({
             balance: balance
         })
         navigation.navigate('Lançamentos');
@@ -181,7 +181,8 @@ export function NewEntry(props) {
 
         // Atualiza o saldo atual no banco
         let balance;
-        await firebase.firestore().collection('balance').doc(props.uid).collection(props.route.params.modality).doc('balance').get()
+        const dateMonth = Number(convertDateFromDatabase(props.route.params.date).slice(3, 5)).toString();
+        await firebase.firestore().collection('balance').doc(props.uid).collection(props.route.params.modality).doc(dateMonth).get()
         .then((v) => {
             balance = v.data().balance
         })
@@ -195,7 +196,7 @@ export function NewEntry(props) {
             balance -= realToNumber(props.route.params.value);
         }
         
-        firebase.firestore().collection('balance').doc(props.uid).collection(props.route.params.modality).doc('balance').set({
+        firebase.firestore().collection('balance').doc(props.uid).collection(props.route.params.modality).doc(dateMonth).set({
             balance: balance
         })
 
