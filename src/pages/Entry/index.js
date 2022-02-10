@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 
-import { sleep } from '../../functions/index';
+import { sleep, getBalance } from '../../functions/index';
 import firebase from '../../services/firebase';
 import { colors, general, metrics } from '../../styles';
 import styles from './styles';
@@ -18,6 +18,7 @@ export function Entry(props) {
     const [info, setInfo] = useState(false);
     const [entryList, setEntryList] = useState([]);
     const [emptyData, setEmptyData] = useState(false);
+    const [balance, setBalance] = useState('R$ 0,00');
     const empty = require('../../../assets/icons/emptyData.json');
     const loading = require('../../../assets/icons/blueLoading.json');
     
@@ -29,11 +30,12 @@ export function Entry(props) {
 
     useEffect(() => {
         
-        async function getEntry() {     
+        async function getEntry() {
             
+            // Busca os registros dentro do período de referência
             setEmptyData(false);
-            await sleep(1000)
-            await firebase.firestore().collection('entry').doc(props.uid).collection(props.modality).where('date', '>=', initialDate).orderBy('date', 'desc').onSnapshot((snapshot) => {
+            await sleep(1000);
+            await firebase.firestore().collection('entry').doc(props.uid).collection(props.modality).where('date', '>=', initialDate).where('date', '<=', finalDate).orderBy('date', 'desc').onSnapshot((snapshot) => {
                 setEntryList([]);
                 if (snapshot.docs.length > 0) {
                     snapshot.forEach((result) => {
@@ -43,8 +45,10 @@ export function Entry(props) {
                     setEmptyData(true);
                 }
             })
-        }
-        getEntry();
+        } getEntry();
+
+        getBalance(firebase, props, setBalance);
+
     }, [props.modality]);
 
     function ItemList({item}) {          
@@ -58,7 +62,7 @@ export function Entry(props) {
                     <Text style={styles(props.theme, item.type).valueText}>{item.value.replace('R$', '')}</Text>
                 </View>
                 <View style={styles().moreView}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('NovoLançamento', item)}>
                         <Feather name='more-horizontal' size={15} color={props.theme == 'light' ? colors.darkPrimary : colors.white}/>
                     </TouchableOpacity>
                 </View>
@@ -135,7 +139,7 @@ export function Entry(props) {
                 }
                 <View style={styles().incomeView}>
                     <Text style={general(props.theme).label}>Saldo atual:</Text>
-                    <Text style={styles(props.theme).incomeText}>R$ 13.000,00</Text>
+                    <Text style={styles(props.theme).incomeText}>{balance}</Text>
                 </View>
                 <View style={styles().autoEntryView}>
                     <Text style={[general(props.theme).textHeaderScreen, { marginTop: Platform.OS === 'ios' ? 13 : 10 }]}>Lançamentos automáticos</Text>

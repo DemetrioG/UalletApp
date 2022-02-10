@@ -7,7 +7,7 @@ import { LineChart, PieChart } from 'react-native-svg-charts';
 import { ForeignObject, Text as TextSVG }  from 'react-native-svg';
 
 import firebase from '../../services/firebase';
-import { numberToReal } from '../../functions';
+import { getBalance } from '../../functions';
 import { general, metrics, colors, fonts } from '../../styles';
 import { Alert } from '../../components/Alert';
 import Header from '../../components/Header';
@@ -87,17 +87,7 @@ export function Home(props) {
             completeData();
         }
 
-        async function getData() {
-            
-            await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc('balance').onSnapshot((snapshot) => {
-                if (snapshot.data()) {
-                    setBalance(numberToReal(snapshot.data().balance));
-                } else {
-                    setBalance('R$ 0,00');
-                }
-            })
-        }
-        getData();
+        getBalance(firebase, props, setBalance);
 
     }, [props.modality]);
 
