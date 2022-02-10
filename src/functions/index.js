@@ -5,5 +5,6 @@ import realToNumber from './realToNumber';
 import numberToReal from './numberToReal';
 import sleep from './sleep';
 import getBalance from './getBalance';
+import getFinalDateMonth from './getFinalDateMonth';
 
-export { convertDate, convertDateToDatabase, convertDateFromDatabase, realToNumber, numberToReal, sleep, getBalance };
+export { convertDate, convertDateToDatabase, convertDateFromDatabase, realToNumber, numberToReal, sleep, getBalance, getFinalDateMonth };
