@@ -86,10 +86,10 @@ export function Home(props) {
         if (!props.complete) {
             completeData();
         }
-
+        // Retorna o Saldo atual
         getBalance(firebase, props, setBalance);
 
-    }, [props.modality]);
+    }, [props.modality, props.month, props.year]);
 
     return (
         <View style={[general().flex, general().padding, general(props.theme).backgroundColor]}>
@@ -209,7 +209,8 @@ const mapStateToProps = (state) => {
         type: state.modal.type,
         uid : state.user.uid,
         complete: state.complete.complete,
-        modality: state.modality.modality
+        modality: state.modality.modality,
+        month: state.date.month
     }
   }
   
