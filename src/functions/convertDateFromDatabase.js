@@ -1,4 +1,7 @@
-// Conversão da data em número retornada do Banco, para DD/MM/YYYY
+/**
+ * @param date Data no padrão Numérico 
+ * @returns    Data no padrão DD/MM/YYY
+ */
 
 export default function convertDateFromDatabase(date) {
 

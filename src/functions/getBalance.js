@@ -1,9 +1,10 @@
 import { numberToReal } from ".";
 
 /**
- * @param firebase firebase connection
- * @param props Redux props
+ * @param firebase   firebase connection
+ * @param props      Redux props
  * @param setBalance Hook balance state
+ * @returns          Saldo atual
  */
 
 // Busca as informações de Saldo no banco

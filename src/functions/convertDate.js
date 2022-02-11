@@ -1,4 +1,7 @@
-// Conversão da data JS para DD/MM/YYY
+/**
+ * @param date Data no padrão 2022-02-10T19:03:54.685Z
+ * @returns    Data no padrão DD/MM/YYY
+ */
 
 export default function convertDate(date) {
     const newDate = date.toString();

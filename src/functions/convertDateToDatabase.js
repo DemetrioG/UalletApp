@@ -1,4 +1,7 @@
-// Converte a data DD/MM/YYY para Number para salvar no banco
+/**
+ * @param date Data no padrão DD/MM/YYY 
+ * @returns    Data no padrão Numérico
+ */
 
 export default function convertDateToDatabase(date) {
     const day   = date.slice(0, 2);

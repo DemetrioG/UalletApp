@@ -6,7 +6,10 @@ if (Platform.OS === 'android') {
     require('intl/locale-data/jsonp/en-IN');
 }
 
-// Conversão de tipo 100 para R$ 100,00
+/**
+ * @param number Valor no padrão Numérico
+ * @returns      Valor no padrão R$ 0,00
+ */
 
 export default function numberToReal(number) {
     let newValue = number.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});

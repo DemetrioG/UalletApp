@@ -1,4 +1,7 @@
-// Conversão de tipo R$100,00 para 100
+/**
+ * @param value Valor no padrão R$0,00 
+ * @returns     Valor no padrão Numérico
+ */
 
 export default function (value) {
     let newValue = value.replace('R$', '');

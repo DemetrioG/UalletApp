@@ -1,8 +1,7 @@
 /**
  * @param props Redux props
+ * @returns     Último dia do mês referente
  */
-
-// Função para retornar o último dia do mês de referência
 
 export default function getFinalDateMonth(props) {
     const date    = new Date;
