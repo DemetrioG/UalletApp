@@ -7,7 +7,7 @@ import { LineChart, PieChart } from 'react-native-svg-charts';
 import { ForeignObject, Text as TextSVG }  from 'react-native-svg';
 
 import firebase from '../../services/firebase';
-import { getBalance } from '../../functions';
+import { dateMonthNumber, getBalance, getFinalDateMonth, realToNumber } from '../../functions';
 import { general, metrics, colors, fonts } from '../../styles';
 import { Alert } from '../../components/Alert';
 import Header from '../../components/Header';
@@ -23,11 +23,16 @@ export function Home(props) {
     const [hideBalance, setHideBalance] = useState(false);
     const [hideInvest, setHideInvest] = useState(false);
     const [status, setStatus] = useState();
-
+    
     // Dados para o gráfico de linha Receitas X Despesas
-    const incomeChart = [50, 10, 40];
-    const expenseChart = [10, 20, 10];
-    const dataLineChart = [
+    let incomeChart = [0, 0, 0];
+    let expenseChart = [0, 0, 0];
+    const [incomePercentual, setIncomePercentual] = useState(0);
+    const [expensePercentual, setExpensePercentual] = useState(0);
+    const [initLabel, setInitLabel] = useState(null);
+    const [finalLabel, setFinalLabel] = useState(null); 
+    const [lineData, setLineData] = useState([]);
+    const [dataLineChart, setDataLineChart] = useState([
         {
             data: incomeChart,
             svg: { stroke: props.theme == 'light' ? colors.strongGreen : colors.lightGreen, strokeWidth: 2 }
@@ -36,7 +41,7 @@ export function Home(props) {
             data: expenseChart,
             svg: { stroke: props.theme == 'light' ? colors.strongRed : colors.lightRed, strokeWidth: 2 }
         }
-    ];
+    ]);
 
     // Dados para o gráfico de rosca Segmento de Despesas
     const dataPieChart = [5, 10, 15, 5, 25];
@@ -86,8 +91,103 @@ export function Home(props) {
         if (!props.complete) {
             completeData();
         }
+
         // Retorna o Saldo atual
         getBalance(firebase, props, setBalance);
+
+        // Retorna os dados para a montagem dos gráficos
+        async function getLineDatabase() {
+            
+            let initialMonth = props.month - 2;
+            let initialYear = props.year;
+            
+            if (initialMonth == -1) {
+                initialMonth = 11;
+                initialYear -= 1;
+            } else if (initialMonth == 0) {
+                initialMonth = 12;
+                initialYear -= 1;
+            }
+            let initialDate = Date.parse(`${initialMonth}/01/${initialYear}`);
+            let finalDate = Date.parse(`${props.month}/${getFinalDateMonth(props.month, props.year)}/${props.year}`);
+
+            await firebase.firestore().collection('entry').doc(props.uid).collection(props.modality).where('date', '>=', initialDate).where('date', '<=', finalDate).onSnapshot((snapshot) => {
+                setLineData([]);
+                snapshot.forEach((result) => {
+                    setLineData(oldArray => [...oldArray, result.data()]);
+                })
+            })
+        } getLineDatabase();
+
+        // Retorno dos dados para o gráfico de linha
+        async function getLineData() {
+            let firstMonth = props.month - 2;
+            let firstYear = props.year;
+            
+            if (firstMonth == -1) {
+                firstMonth = 11;
+                firstYear -= 1;
+            } else if (firstMonth == 0) {
+                firstMonth = 12;
+                firstYear -= 1;
+            }
+
+            let secondMonth = props.month - 1;
+            let secondYear = props.year;
+            
+            if (secondMonth == -1) {
+                secondMonth = 11;
+                secondYear -= 1;
+            } else if (secondMonth == 0) {
+                secondMonth = 12;
+                secondYear -= 1;
+            }
+
+            let initialDateFirstMonth = Date.parse(`${firstMonth}/01/${firstYear}`);
+            let finalDateFirstMonth = Date.parse(`${firstMonth}/${getFinalDateMonth(firstMonth, firstYear)}/${firstYear}`);
+            let initialDateSecondMonth = Date.parse(`${secondMonth}/01/${secondYear}`);
+            let finalDateSecondMonth = Date.parse(`${secondMonth}/${getFinalDateMonth(secondMonth, secondYear)}/${secondYear}`);
+            let initialDateThirdMonth = Date.parse(`${props.month}/01/${props.year}`);
+            let finalDateThirdMonth = Date.parse(`${props.month}/${getFinalDateMonth(props.month, props.year)}/${props.year}`);
+
+            // No banco, busca pelos dados acumulado dos meses, e abaixo, separa os valores de cada mês para gerar o gráfico
+            lineData.forEach((value) => {
+                let index; 
+
+                if (value.date >= initialDateFirstMonth && value.date <= finalDateFirstMonth) {
+                    index = 0;
+                } else if (value.date >= initialDateSecondMonth && value.date <= finalDateSecondMonth) {
+                    index = 1;
+                } else if (value.date >= initialDateThirdMonth && value.date <= finalDateThirdMonth) {
+                    index = 2;
+                }
+                switch (value.type) {
+                    case 'Receita':
+                        incomeChart[index] += realToNumber(value.value);
+                        break;
+                
+                    case 'Despesa':
+                        expenseChart[index] += realToNumber(value.value);
+                        break;
+                }
+            });
+
+            let newData = [...dataLineChart];
+            for (let i = 0; i < 3; i++) {
+                newData[0].data[i] = incomeChart[i];
+                newData[1].data[i] = expenseChart[i];
+            }
+            setDataLineChart(newData);
+
+            setInitLabel(dateMonthNumber('toMonth', props.month - 2, 'pt'));
+            setFinalLabel(dateMonthNumber('toMonth', props.month, 'pt'));
+
+            setIncomePercentual(incomeChart[0] == 0 ? incomeChart[2] : (incomeChart[2] - incomeChart[0]) / incomeChart[0] * 100);
+            setExpensePercentual(expenseChart[0] == 0 ? expenseChart[2] : (expenseChart[2] - expenseChart[0]) / expenseChart[0] * 100);
+            console.log(expenseChart[0]);
+            console.log(expenseChart[2]);
+
+        } getLineData();
 
     }, [props.modality, props.month, props.year]);
 
@@ -151,16 +251,16 @@ export function Home(props) {
                             data={dataLineChart}
                         />
                         <View style={styles(props.theme).incomeChartLabelView}>
-                            <Text style={styles(props.theme).incomeChartLabelText}>Jan</Text>
-                            <Text style={styles(props.theme).incomeChartLabelText}>Mar</Text>
+                            <Text style={styles(props.theme).incomeChartLabelText}>{initLabel}</Text>
+                            <Text style={styles(props.theme).incomeChartLabelText}>{finalLabel}</Text>
                         </View>
                     </View>
                     <View style={styles().incomeView}>
                         <View>
-                            <Text style={styles(props.theme).incomeText}>Receita mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: props.theme == 'light' ? colors.strongGreen : colors.lightGreen }}>10%</Text><Feather name='arrow-up' size={15} color={props.theme == 'light' ? colors.strongGreen : colors.lightGreen}/></Text>
+                            <Text style={styles(props.theme).incomeText}>Receita mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: incomePercentual > 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed }}>{incomePercentual}%</Text><Feather name={incomePercentual > 0 ? 'arrow-up' : 'arrow-down'} size={15} color={incomePercentual > 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed}/></Text>
                         </View>
                         <View>
-                            <Text style={styles(props.theme).incomeText}>Despesa mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: props.theme == 'light' ? colors.strongRed : colors.lightRed }}>-20%</Text><Feather name='arrow-down' size={15} color={props.theme == 'light' ? colors.strongRed : colors.lightRed}/></Text>
+                            <Text style={styles(props.theme).incomeText}>Despesa mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: expensePercentual < 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed }}>{expensePercentual}%</Text><Feather name={expensePercentual > 0 ? 'arrow-up' : 'arrow-down'} size={15} color={expensePercentual < 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed}/></Text>
                         </View>
                     </View>
                 </View>
@@ -210,7 +310,8 @@ const mapStateToProps = (state) => {
         uid : state.user.uid,
         complete: state.complete.complete,
         modality: state.modality.modality,
-        month: state.date.month
+        month: state.date.month,
+        year: state.date.year
     }
   }
   
