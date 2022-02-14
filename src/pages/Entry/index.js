@@ -29,7 +29,7 @@ export function Entry(props) {
         async function getEntry() {
             // Pega o mês de referência do App para realizar a busca dos registros
             let initialDate = Date.parse(`${props.month}/01/${props.year}`);
-            let finalDate = Date.parse(`${props.month}/${getFinalDateMonth(props)}/${props.year}`);
+            let finalDate = Date.parse(`${props.month}/${getFinalDateMonth(props.month, props.year)}/${props.year}`);
 
             // Busca os registros dentro do período de referência
             setEmptyData(false);
@@ -100,6 +100,10 @@ export function Entry(props) {
                 </View>
                 <Text style={general(props.theme).textHeaderScreen}>Últimos lançamentos</Text>
                 {
+                    emptyData &&
+                    <Text style={styles(props.theme).loadingText}>Seus lançamentos aparecerão aqui</Text>
+                }
+                {
                     !emptyData &&
                     <View style={general().spaceAround}>
                         <Text style={general(props.theme).label}>Descrição</Text>
@@ -122,17 +126,12 @@ export function Entry(props) {
                                 loop={true}
                                 style={styles().iconLoading}
                             /> :
-                            <View style={general().containerCenter}>
-                                <LottieView
-                                    source={empty}
-                                    autoPlay={true}
-                                    loop={false}
-                                    style={styles().iconEmpty}
-                                />
-                                <View style={styles(props.theme).loadingView}>
-                                    <Text style={styles(props.theme).loadingText}>Seus lançamentos aparecerão aqui</Text>
-                                </View>
-                            </View>
+                            <LottieView
+                                source={empty}
+                                autoPlay={true}
+                                loop={false}
+                                style={styles().iconEmpty}
+                            />
                         }
                     </View>
                 }

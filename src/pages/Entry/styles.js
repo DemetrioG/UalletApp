@@ -38,17 +38,9 @@ const styles = (theme, type) => StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    loadingView: {
-        position: 'absolute',
-        top: 40,
-        padding: metrics.basePadding / 1.5,
-        borderRadius: metrics.mediumRadius,
-        backgroundColor: colors.strongBlue
-    },
     loadingText: {
-        fontFamily: fonts.ralewayMedium,
-        fontSize: fonts.medium,
-        color: colors.white
+        fontFamily: fonts.ralewayExtraBold,
+        color: theme == 'light' ? colors.strongBlue : colors.lightBlue,
     },
     iconEmpty: {
         width: 230
