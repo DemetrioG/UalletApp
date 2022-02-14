@@ -59,16 +59,17 @@ export default function ModalPicker({ options, value, selectedValue, setVisibili
             visible={visibility}
             onRequestClose={() => setVisibility(false)}
         >
-            <TouchableWithoutFeedback onPress={() => setVisibility(false)}>
-                <View style={[general().containerCenter, styles(theme).backgroundModal]}>
-                    <View style={styles(theme).modalView}>
+            <View style={[general().containerCenter, styles(theme).backgroundModal]}>
+                <View style={styles(theme).modalView}>
+                    <View style={styles().headerView}>
                         <Text style={styles(theme).title}>{type} • {type == 'Mês' ? options[value - 1] : value}</Text>
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            {option}
-                        </ScrollView>
+                        <Feather name='x' size={20} color={colors.lightRed} onPress={() => setVisibility(false)}/>
                     </View>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {option}
+                    </ScrollView>
                 </View>
-            </TouchableWithoutFeedback>
+            </View>
         </Modal>
     );
 }

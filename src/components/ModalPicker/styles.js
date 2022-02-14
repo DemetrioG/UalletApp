@@ -38,8 +38,12 @@ const styles = (theme, type) => StyleSheet.create({
         fontFamily: fonts.ralewayExtraBold,
         fontSize: fonts.large,
         color: theme == 'light' ? colors.strongBlue : colors.lightBlue,
-        marginLeft: metrics.baseMargin,
-        marginBottom: metrics.baseMargin
+    },
+    headerView: {
+        flexDirection: 'row',
+        marginHorizontal: metrics.baseMargin,
+        marginBottom: metrics.baseMargin,
+        justifyContent: 'space-between'
     }
 });
 
