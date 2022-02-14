@@ -12,10 +12,11 @@ export default function dateMonthNumber(type, value, lang) {
     let data;
     let refMonth = value;
     
-    if (refMonth < 0) {
-        refMonth = 13 + refMonth;
+    if (refMonth == -1) {
+        refMonth = 11;
+    } else if (refMonth == 0) {
+        refMonth = 12;
     }
-    console.log(refMonth);
 
     switch (lang) {
         case 'pt':
