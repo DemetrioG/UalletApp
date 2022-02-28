@@ -7,5 +7,6 @@ import sleep from './sleep';
 import getBalance from './getBalance';
 import getFinalDateMonth from './getFinalDateMonth';
 import dateMonthNumber from './dateMonthNumber';
+import useStateCallback from './callbackState';
 
-export { convertDate, convertDateToDatabase, convertDateFromDatabase, realToNumber, numberToReal, sleep, getBalance, getFinalDateMonth, dateMonthNumber };
+export { convertDate, convertDateToDatabase, convertDateFromDatabase, realToNumber, numberToReal, sleep, getBalance, getFinalDateMonth, dateMonthNumber, useStateCallback };
