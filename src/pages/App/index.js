@@ -1,11 +1,9 @@
 import React from 'react';
 import { StatusBar, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import SafeAreaView from 'react-native-safe-area-view';
 import { connect } from 'react-redux';
 
-import { general, colors } from '../../styles/index';
+import { colors } from '../../styles/index';
 import Routes from '../../routes';
 
 export function App(props) {

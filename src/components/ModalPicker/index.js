@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View, Text, Modal, Dimensions, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import React, { useEffect } from 'react';
+import { TouchableOpacity, View, Text, Modal, ScrollView } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
 import { colors, general } from '../../styles';

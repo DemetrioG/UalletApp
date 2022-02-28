@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, Modal, ScrollView, TouchableWithoutFeedba
 import Feather from 'react-native-vector-icons/Feather';
 import { connect } from 'react-redux';
 
-import { colors, general, metrics } from '../../styles';
+import { colors, general } from '../../styles';
 import styles from './styles';
 
 export function Picker({ options, selectedValue, theme, value, type, visibility, setVisibility }) {

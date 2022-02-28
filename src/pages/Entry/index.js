@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Switch, Animated, Platform, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Switch, Animated, Platform, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
