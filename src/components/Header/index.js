@@ -11,6 +11,7 @@ import { editMonth } from '../Actions/monthAction';
 import { editYear } from '../Actions/yearAction';
 import { editModality } from '../Actions/modalityAction';
 import ModalPicker from '../ModalPicker';
+import Loader from '../Loader';
 
 export function Header(props) {
 
@@ -39,11 +40,17 @@ export function Header(props) {
         if (!props.name) {
             getData();
         }
-    }, []);
+
+        if (props.name != '' && props.setLoader) {
+            console.log('opa');
+            props.setLoader(false);
+        }
+    });
 
     function changeModality() {
         props.editModality(props.modality == 'Real' ? 'Projetado' : 'Real');
     }
+
 
     return (
         <View style={[styles().headerView, Platform.OS === 'ios' ? index : null]}>
@@ -66,7 +73,17 @@ export function Header(props) {
                 setVisibility={setPickerYearVisible}
                 value={props.year}
             />
-            <Text style={styles(props.theme).headerText}>Bem vindo, {props.name}!</Text>
+            {
+                props.loader ?
+                <Loader
+                    width={160}
+                    height={15}
+                    bg={props.theme == 'light' ? colors.lightPrimary : colors.darkPrimary}
+                    fg={props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary}
+                    radius={metrics.mediumRadius}
+                /> :
+                <Text style={styles(props.theme).headerText}>Bem vindo, {props.name}!</Text>
+            }
             <View style={styles().headerIconView}>
                 <TouchableOpacity>
                     <Feather name='calendar' size={metrics.iconSize} color={props.theme == 'light' ? colors.darkPrimary : colors.white} onPress={() => setPickerMonthVisible(true)}/>

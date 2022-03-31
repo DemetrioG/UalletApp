@@ -46,6 +46,8 @@ export default function ModalPicker({ options, value, selectedValue, setVisibili
 
             if (refMonth && refYear) {
                 selectedValue(type == 'Mês' ? refMonth : type == 'Ano' ? refYear : null);
+            } else {
+                selectedValue(type == 'Mês' ? new Date().getMonth() + 1 : type == 'Ano' ? new Date().getFullYear() : null);
             }
         }
 

@@ -14,12 +14,15 @@ import Header from '../../components/Header';
 import { editVisibilityAlert } from '../../components/Actions/visibilityAlertAction';
 import { editComplete } from '../../components/Actions/completeUserAction';
 import styles from './styles';
+import Loader from '../../components/Loader';
 
 export function Home(props) {
 
     const navigation = useNavigation();
 
-    const [balance, setBalance] = useState('R$ 0,00');
+    const [loader, setLoader] = useState(true);
+    const [headerLoader, setHeaderLoader] = useState(true);
+    const [balance, setBalance] = useState(null);
     const [hideBalance, setHideBalance] = useState(false);
     const [hideInvest, setHideInvest] = useState(false);
     const [status, setStatus] = useState();
@@ -27,8 +30,8 @@ export function Home(props) {
     // Dados para o gráfico de linha Receitas X Despesas
     let incomeChart = [0, 0, 0];
     let expenseChart = [0, 0, 0];
-    const [incomePercentual, setIncomePercentual] = useState(0);
-    const [expensePercentual, setExpensePercentual] = useState(0);
+    const [incomePercentual, setIncomePercentual] = useState(null);
+    const [expensePercentual, setExpensePercentual] = useState(null);
     const [initLabel, setInitLabel] = useState(null);
     const [finalLabel, setFinalLabel] = useState(null); 
     const [lineData, setLineData] = useStateCallback([]);
@@ -293,13 +296,17 @@ export function Home(props) {
         
     }, [props.modality, props.month, props.year]);
 
+    if (balance && renderLine && incomePercentual && expensePercentual && renderPie && loader && !headerLoader) {
+        setLoader(false);
+    }
+
     return (
         <View style={[general().flex, general().padding, general(props.theme).backgroundColor]}>
         {
             props.visibility &&
             <Alert props={props} text={props.title} type={props.type}/>
         }
-            <Header/>
+            <Header loader={loader} setLoader={setHeaderLoader}/>
             <ScrollView showsVerticalScrollIndicator={false} style={general().scrollViewTab}>
                 <View style={general(props.theme).card}>
                     <View style={styles().cardHeaderView}>
@@ -313,7 +320,17 @@ export function Home(props) {
                             <Image source={require('../../../assets/images/logoSmall.png')} width={1} style={styles().logoCard}/>
                         </View>
                     </View>
-                    <Text style={styles(props.theme).balance}>{ !hideBalance ? balance : '** ** ** ** **' }</Text>
+                    {
+                        loader ?
+                        <Loader
+                            width={160}
+                            height={30}
+                            fg={props.theme == 'light' ? colors.lightPrimary : colors.darkPrimary}
+                            bg={props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary}
+                            radius={metrics.mediumRadius}
+                        /> :
+                        <Text style={styles(props.theme).balance}>{ !hideBalance ? balance : '** ** ** ** **' }</Text>
+                    }
                 </View>
                 <View style={general(props.theme).card}>
                     <View style={styles().cardStatusView}>
@@ -346,33 +363,86 @@ export function Home(props) {
                     </View>
                 </View>
                 <View style={[general(props.theme).card, { flexDirection: 'row', minHeight: 150 }]}>
-                    <View style={styles(props.theme).incomeChartView}>
-                        {
-                            renderLine &&
-                            <LineChart
-                                style={{ height: 60 }}
-                                contentInset={{ top: 5, bottom: 5 }}
-                                data={dataLineChart}
-                            />
-                        }
-                        <View style={styles(props.theme).incomeChartLabelView}>
-                            <Text style={styles(props.theme).incomeChartLabelText}>{initLabel}</Text>
-                            <Text style={styles(props.theme).incomeChartLabelText}>{finalLabel}</Text>
+                    {
+                        loader ?
+                        <Loader
+                            width={145}
+                            height={120}
+                            fg={props.theme == 'light' ? colors.lightPrimary : colors.darkPrimary}
+                            bg={props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary}
+                            radius={metrics.mediumRadius}
+                        /> :
+                        <View style={styles(props.theme).incomeChartView}>
+                                <LineChart
+                                    style={{ height: 60 }}
+                                    contentInset={{ top: 5, bottom: 5 }}
+                                    data={dataLineChart}
+                                />
+                            <View style={styles(props.theme).incomeChartLabelView}>
+                                <Text style={styles(props.theme).incomeChartLabelText}>{initLabel}</Text>
+                                <Text style={styles(props.theme).incomeChartLabelText}>{finalLabel}</Text>
+                            </View>
                         </View>
-                    </View>
+                    }
                     <View style={styles().incomeView}>
-                        <View>
-                            <Text style={styles(props.theme).incomeText}>Receita mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: incomePercentual > 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed }}>{incomePercentual}%</Text><Feather name={incomePercentual > 0 ? 'arrow-up' : 'arrow-down'} size={15} color={incomePercentual > 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed}/></Text>
-                        </View>
-                        <View>
-                            <Text style={styles(props.theme).incomeText}>Despesa mensal <Text style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: expensePercentual < 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed }}>{expensePercentual}%</Text><Feather name={expensePercentual > 0 ? 'arrow-up' : 'arrow-down'} size={15} color={expensePercentual < 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed}/></Text>
-                        </View>
+                        {
+                            loader ?
+                            <Loader
+                                width={140}
+                                height={10}
+                                fg={props.theme == 'light' ? colors.lightPrimary : colors.darkPrimary}
+                                bg={props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary}
+                                radius={metrics.mediumRadius}
+                            /> :
+                            <View>
+                                <Text style={styles(props.theme).incomeText}>Receita mensal{'\u00A0'}
+                                    <Text 
+                                        style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: incomePercentual > 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed }}
+                                    >{incomePercentual}%
+                                    </Text>
+                                    <Feather 
+                                        name={incomePercentual > 0 ? 'arrow-up' : 'arrow-down'} 
+                                        size={15} 
+                                        color={incomePercentual > 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed}
+                                    />
+                                </Text>
+                            </View>
+                        }
+                        {
+                            loader ?
+                            <Loader
+                                width={140}
+                                height={10}
+                                fg={props.theme == 'light' ? colors.lightPrimary : colors.darkPrimary}
+                                bg={props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary}
+                                radius={metrics.mediumRadius}
+                            /> :
+                            <View>
+                                <Text style={styles(props.theme).incomeText}>Despesa mensal{'\u00A0'}
+                                    <Text 
+                                        style={{ fontFamily: fonts.montserratMedium, fontSize: fonts.regular, color: expensePercentual < 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed }}
+                                    >{expensePercentual}%
+                                    </Text>
+                                    <Feather 
+                                        name={expensePercentual > 0 ? 'arrow-up' : 'arrow-down'} 
+                                        size={15} color={expensePercentual < 0 ? props.theme == 'light' ? colors.strongGreen : colors.lightGreen : props.theme == 'light' ? colors.strongRed : colors.lightRed}
+                                    />
+                                </Text>
+                            </View>
+                        }
                     </View>
                 </View>
                 <View style={[general(props.theme).card, { flexDirection: 'row' }]}>
                     <View style={styles().segmentChartView}>
                         {
-                            renderPie &&
+                            loader ?
+                            <Loader
+                                width={140}
+                                height={140}
+                                fg={props.theme == 'light' ? colors.lightPrimary : colors.darkPrimary}
+                                bg={props.theme == 'light' ? colors.lightSecondary : colors.darkSecondary}
+                                radius={100}
+                            /> :
                             <PieChart
                                 style={{ height: 130 }}
                                 data={finalDataPieChart}

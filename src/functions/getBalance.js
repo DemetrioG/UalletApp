@@ -10,11 +10,13 @@ import { numberToReal } from ".";
 // Busca as informações de Saldo no banco
 
 export default async function getBalance(firebase, props, setBalance) {
-    await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc(props.month.toString()).onSnapshot((snapshot) => {
-        if (snapshot.data()) {
-            setBalance(numberToReal(snapshot.data().balance));
-        } else {
-            setBalance('R$ 0,00');
-        }
-    })
+    if (props.month) {        
+        await firebase.firestore().collection('balance').doc(props.uid).collection(props.modality).doc(props.month.toString()).onSnapshot((snapshot) => {
+            if (snapshot.data()) {
+                setBalance(numberToReal(snapshot.data().balance));
+            } else {
+                setBalance('R$ 0,00');
+            }
+        })
+    }
 }
