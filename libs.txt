@@ -60,5 +60,8 @@ Charts
 Date Picker
     - yarn add @react-native-community/datetimepicker
 
-Intl
+Intl (Moedas)
     -yarn add intl
+
+Styled Components
+    -npm install --save styled-components

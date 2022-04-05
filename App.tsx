@@ -1,5 +1,9 @@
-import React from "react";
-import { LogBox } from "react-native";
+import React, { useEffect, useState } from "react";
+import { LogBox, Appearance } from "react-native";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { ThemeProvider } from "styled-components";
+import AppLoading from "expo-app-loading";
 import {
   Montserrat_500Medium,
   Montserrat_700Bold,
@@ -11,18 +15,20 @@ import {
   Raleway_700Bold,
   Raleway_800ExtraBold,
 } from "@expo-google-fonts/raleway";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import AppLoading from "expo-app-loading";
 
 import Reducers from "./src/components/Reducers";
 import AppContent from "./src/pages/App";
+import { LIGHT, DARK } from "./src/styles/theme";
 
 const store = createStore(Reducers);
-
 LogBox.ignoreAllLogs(true);
 
-export default function App() {
+interface IThemeProvider {
+  default: Object;
+}
+
+export default function App(): JSX.Element {
+  const [theme, setTheme] = useState<IThemeProvider>();
   const [fontLoaded] = useFonts({
     Raleway_500Medium,
     Raleway_700Bold,
@@ -32,12 +38,30 @@ export default function App() {
     Montserrat_800ExtraBold,
   });
 
+  useEffect(() => {
+    setTheme(
+      Appearance.getColorScheme() == "light"
+        ? { default: LIGHT }
+        : { default: DARK }
+    );
+  }, []);
+
+  Appearance.addChangeListener(() => {
+    setTheme(
+      Appearance.getColorScheme() == "light"
+        ? { default: LIGHT }
+        : { default: DARK }
+    );
+  });
+
   if (!fontLoaded) {
     return <AppLoading />;
   } else {
     return (
       <Provider store={store}>
-        <AppContent />
+        <ThemeProvider theme={theme}>
+          <AppContent />
+        </ThemeProvider>
       </Provider>
     );
   }
