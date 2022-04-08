@@ -1,12 +1,8 @@
-import { Platform, SafeAreaView, StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
-
-export const SafeAreaContainer = styled(SafeAreaView)`
-  flex: 1;
-`;
 
 const general = (theme, margin) =>
   StyleSheet.create({

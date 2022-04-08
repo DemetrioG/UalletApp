@@ -29,7 +29,7 @@ export function routes(props: IReduxProps) {
       }
     }
 
-    loadStorage();
+    // loadStorage();
   }, []);
 
   Appearance.addChangeListener(() => {
@@ -39,7 +39,7 @@ export function routes(props: IReduxProps) {
   return props.login ? <AppRoutes /> : <AuthRoutes />;
 }
 
-const mapStateToProps = (state: IReduxProps) => {
+const mapStateToProps = (state: any) => {
   return {
     theme: state.theme.theme,
     login: state.login.signed,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LogBox, Appearance } from "react-native";
+import { LogBox, Appearance, useColorScheme } from "react-native";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
@@ -24,7 +24,7 @@ const store = createStore(Reducers);
 LogBox.ignoreAllLogs(true);
 
 interface IThemeProvider {
-  default: Object;
+  theme: Object;
 }
 
 export default function App(): JSX.Element {
@@ -38,21 +38,16 @@ export default function App(): JSX.Element {
     Montserrat_800ExtraBold,
   });
 
+  function setDefaultTheme(theme: string) {
+    setTheme(theme == "dark" ? { theme: DARK } : { theme: LIGHT });
+  }
+
   useEffect(() => {
-    setTheme(
-      Appearance.getColorScheme() == "light"
-        ? { default: LIGHT }
-        : { default: DARK }
+    setDefaultTheme(Appearance.getColorScheme() || "light");
+    Appearance.addChangeListener((preference) =>
+      setDefaultTheme(preference.colorScheme || "light")
     );
   }, []);
-
-  Appearance.addChangeListener(() => {
-    setTheme(
-      Appearance.getColorScheme() == "light"
-        ? { default: LIGHT }
-        : { default: DARK }
-    );
-  });
 
   if (!fontLoaded) {
     return <AppLoading />;

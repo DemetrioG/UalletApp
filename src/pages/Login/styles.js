@@ -1,40 +1,43 @@
-import { StyleSheet, Platform } from "react-native";
+import { StyleSheet, Platform, KeyboardAvoidingView } from "react-native";
 import { fonts, colors, metrics } from "../../styles";
+import styled from "styled-components";
 
-const styles = (theme, background) => StyleSheet.create({
+const styles = (theme, background) =>
+  StyleSheet.create({
     actionText: {
-        fontFamily: fonts.ralewayExtraBold,
-        fontSize: fonts.regular,
-        color: theme == 'light' ? colors.darkPrimary : colors.white,
-        marginBottom: metrics.baseMargin
+      fontFamily: fonts.ralewayExtraBold,
+      fontSize: fonts.regular,
+      color: theme == "light" ? colors.darkPrimary : colors.white,
+      marginBottom: metrics.baseMargin,
     },
     sheetIndicator: {
-        width: 30,
-        height: 5,
-        backgroundColor: colors.lightGray
+      width: 30,
+      height: 5,
+      backgroundColor: colors.lightGray,
     },
     sheetBackground: {
-        borderRadius: metrics.largeRadius,
-        backgroundColor: theme == 'light' ? colors.lightSecondary : colors.darkSecondary
+      borderRadius: metrics.largeRadius,
+      backgroundColor:
+        theme == "light" ? colors.lightSecondary : colors.darkSecondary,
     },
     sheetContainer: {
-        marginHorizontal: metrics.baseMargin,
-        padding: metrics.basePadding
+      marginHorizontal: metrics.baseMargin,
+      padding: metrics.basePadding,
     },
     sheetView: {
-        marginTop: metrics.baseMargin,
-        flexDirection: 'row',
-        justifyContent: 'space-around'
+      marginTop: metrics.baseMargin,
+      flexDirection: "row",
+      justifyContent: "space-around",
     },
     loginWithContainer: {
-        padding: 8,
-        width: Platform.OS === 'ios' ? 70 : 70,
-        height: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: metrics.baseRadius,
-        backgroundColor: background
-    }
-})
+      padding: 8,
+      width: Platform.OS === "ios" ? 70 : 70,
+      height: 50,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: metrics.baseRadius,
+      backgroundColor: background,
+    },
+  });
 
 export default styles;

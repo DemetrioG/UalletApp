@@ -6,14 +6,13 @@ import Index from "../pages/Index";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ForgotPassword from "../pages/ForgotPassword";
-import { general } from "../styles";
-import { SafeAreaContainer } from "../styles/general";
+import { SafeAreaContainer } from "../styles/generalStyled";
 
 const Stack = createNativeStackNavigator();
 export default function AuthRoutes() {
   return (
     <NavigationContainer>
-      <SafeAreaContainer style={general().flex}>
+      <SafeAreaContainer>
         <Stack.Navigator>
           <Stack.Screen
             name="Index"
