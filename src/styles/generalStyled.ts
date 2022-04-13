@@ -5,13 +5,18 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
+  TextInputProps,
   TouchableOpacity,
+  TouchableOpacityProps,
   View,
 } from "react-native";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
+import React from "react";
+import { DefaultTextInput } from "../components/TextInput";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -43,39 +48,48 @@ export const ContainerCenter = styled(View)`
   justify-content: center;
 `;
 
-export const StyledButton = styled(TouchableOpacity)`
+export const FormContainer = styled(View)`
+  width: 250px;
+`;
+
+export const StyledButton: React.FC<
+  TouchableOpacityProps & { additionalMargin: number }
+> = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   background-color: ${colors.strongBlue};
-  border-radius: ${metrics.mediumRadius};
-  margin-bottom: ${metrics.smallMargin};
-  width: 250;
-  height: 45;
+  border-radius: ${metrics.mediumRadius}px;
+  margin-bottom: ${({ additionalMargin }) =>
+    additionalMargin ? additionalMargin : metrics.smallMargin}px;
+  width: 250px;
+  height: 45px;
 `;
 
-export const StyledButtonOutline = styled(TouchableOpacity)`
+export const StyledButtonOutline: React.FC<
+  TouchableOpacityProps & { additionalMargin: number }
+> = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  border-width: 2;
+  border-width: 2px;
   border-color: ${({ theme }) => theme.theme.blue};
-  border-radius: ${metrics.mediumRadius};
+  border-radius: ${metrics.mediumRadius}px;
   margin-bottom: ${({ additionalMargin }) =>
-    additionalMargin ? additionalMargin : metrics.smallMargin};
-  width: 250;
-  height: 45;
+    additionalMargin ? additionalMargin : metrics.smallMargin}px;
+  width: 250px;
+  height: 45px;
 `;
 
 export const ButtonText = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.regular};
+  font-size: ${fonts.regular}px;
   color: ${colors.white};
 `;
 
 export const ButtonOutlineText = styled(Text)`
   color: ${({ theme }) => theme.theme.blue};
   font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.regular};
+  font-size: ${fonts.regular}px;
 `;
 
 export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
@@ -100,18 +114,34 @@ export const Logo = styled(Image)`
 
 export const TextUalletHeader = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.big};
+  font-size: ${fonts.big}px;
   color: ${({ theme }) => theme.theme.text};
-  margin-left: ${metrics.baseMargin};
+  margin-left: ${metrics.baseMargin}px;
 `;
 
 export const HeaderTitleContainer = styled(View)`
-  margin-top: ${metrics.doubleBaseMargin};
+  margin-top: ${metrics.doubleBaseMargin}px;
   padding: 0px ${metrics.basePadding}px;
 `;
 
 export const HeaderTitle = styled(Text)`
   font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.medium};
+  font-size: ${fonts.medium}px;
+  color: ${({ theme }) => theme.theme.text};
+`;
+
+export const StyledTextInput: typeof DefaultTextInput = styled(
+  DefaultTextInput
+).attrs(() => ({
+  placeholderTextColor: colors.lightGray,
+}))`
+  width: 100%;
+  height: 45px;
+  padding: 5px 20px;
+  border-radius: ${metrics.mediumRadius}px;
+  border: 2px solid ${colors.lightGray};
+  font-family: ${fonts.ralewayExtraBold};
+  font-size: ${fonts.regular}px;
+  margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme }) => theme.theme.text};
 `;

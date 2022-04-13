@@ -11,7 +11,7 @@ export const ImageCarousel = styled(Image).attrs(() => ({
 `;
 
 export const TitleCarousel = styled(Text)`
-  font-size: ${fonts.larger};
+  font-size: ${fonts.larger}px;
   font-family: ${fonts.ralewayExtraBold};
   text-align: center;
   margin-top: ${metrics.doubleBaseMargin}px;

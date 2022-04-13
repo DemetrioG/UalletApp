@@ -65,3 +65,9 @@ Intl (Moedas)
 
 Styled Components
     -npm install --save styled-components
+
+React Hook Form
+    -npm install react-hook-form
+
+Yup
+    -npm install @hookform/resolvers yup
