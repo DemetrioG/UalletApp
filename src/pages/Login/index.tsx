@@ -1,26 +1,28 @@
 import React, { useRef, useState } from "react";
 import {
-  View,
-  Text,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  Image,
-  TextInput,
   TouchableOpacity,
   ActivityIndicator,
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { connect } from "react-redux";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import * as AuthSession from "expo-auth-session";
 import * as Facebook from "expo-facebook";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import firebase from "../../services/firebase";
-import styles from "./styles";
-import { general, colors, metrics } from "../../styles";
+import {
+  ActionText,
+  AppleLogo,
+  FacebookLogo,
+  GoogleLogo,
+  SheetContainer,
+  SheetView,
+  SocialContainer,
+} from "./styles";
+import { colors, metrics } from "../../styles";
 import { editVisibilityAlert } from "../../components/Actions/visibilityAlertAction";
 import { editTitleAlert } from "../../components/Actions/titleAlertAction";
 import { editTypeAlert } from "../../components/Actions/typeAlertAction";
@@ -36,54 +38,74 @@ import {
   HeaderTitleContainer,
   HeaderTitle,
   ContainerCenter,
+  StyledTextInput,
+  FormContainer,
+  StyledButton,
+  ButtonText,
 } from "../../styles/generalStyled";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { setStorage } from "../../functions/storageData";
+interface IForm {
+  email: string;
+  password: string;
+}
+
+const schema = yup
+  .object({
+    email: yup.string().required(),
+    password: yup.string().required(),
+  })
+  .required();
 
 const LOGO = require("../../../assets/images/logo.png");
+const ICONS = {
+  apple: require("../../../assets/images/appleIcon.png"),
+  google: require("../../../assets/images/googleIcon.png"),
+  facebook: require("../../../assets/images/facebookIcon.png"),
+};
 
 export function Login(props) {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
   const sheetRef = useRef(null);
   const snapPoints = ["25%"];
 
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<IForm>({
+    resolver: yupResolver(schema),
+  });
+
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [login, setLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  async function loginUser() {
-    if (
-      !email ||
-      !password ||
-      email.replace(/ /g, "").length < 1 ||
-      password.replace(/ /g, "").length < 1
-    ) {
-      props.editTypeAlert("error");
-      props.editTitleAlert("Informe todos os campos");
-      props.editVisibilityAlert(true);
-      return;
-    }
-
-    setLogin(true);
+  async function loginUser({ email, password }: IForm) {
+    setLoading(true);
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((v) => {
         let data = {
-          uid: v.user.uid,
+          uid: v.user?.uid,
           // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
           date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         };
-        props.editUidUser(v.user.uid);
-        storageUser(data);
+        props.editUidUser(v.user?.uid);
+        setStorage("authUser", data);
         props.editLogin(true);
       })
       .catch((error) => {
         props.editTypeAlert("error");
         props.editTitleAlert("Verifique os campos informados");
         props.editVisibilityAlert(true);
-      });
-    setLogin(false);
-    return;
+      })
+      .finally(() => setLoading(false));
   }
 
   async function googleLogin() {
@@ -127,7 +149,7 @@ export function Login(props) {
         // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
         date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       };
-      storageUser(data);
+      setStorage("authUser", data);
       props.editUidUser(userInfo.id);
       props.editLogin(true);
     }
@@ -172,14 +194,10 @@ export function Login(props) {
         // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
         date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       };
-      storageUser(dataStorage);
+      setStorage("authUser", dataStorage);
       props.editUidUser(userInfo.id);
       props.editLogin(true);
     }
-  }
-
-  async function storageUser(data) {
-    await AsyncStorage.setItem("authUser", JSON.stringify(data));
   }
 
   return (
@@ -200,93 +218,75 @@ export function Login(props) {
             </HeaderTitle>
           </HeaderTitleContainer>
           <ContainerCenter>
-            <TextInput
-              style={general(props.theme).input}
-              placeholder="E-mail"
-              placeholderTextColor={colors.lightGray}
-              keyboardType="email-address"
-              autoCorrect={false}
-              autoCapitalize="none"
-              value={email}
-              onChangeText={(v) => setEmail(v)}
-            />
-            <TextInput
-              style={general(props.theme).input}
-              placeholder="Senha"
-              placeholderTextColor={colors.lightGray}
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(v) => setPassword(v)}
-              onSubmitEditing={loginUser}
-              returnKeyType="done"
-              maxLength={20}
-            />
-            <TouchableOpacity
-              style={general(null, metrics.doubleBaseMargin).button}
-              onPress={loginUser}
+            <FormContainer>
+              <StyledTextInput
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
+                name="email"
+                control={control}
+              />
+              <StyledTextInput
+                placeholder="Senha"
+                secureTextEntry={true}
+                onSubmitEditing={handleSubmit(loginUser)}
+                returnKeyType="done"
+                maxLength={20}
+                name="password"
+                control={control}
+                helperText={errors}
+              />
+            </FormContainer>
+            <StyledButton
+              additionalMargin={metrics.doubleBaseMargin}
+              onPress={handleSubmit(loginUser)}
             >
-              {login ? (
+              {loading ? (
                 <ActivityIndicator size={20} color={colors.white} />
               ) : (
-                <Text style={general().buttonText}>ENTRAR</Text>
+                <ButtonText>ENTRAR</ButtonText>
               )}
-            </TouchableOpacity>
+            </StyledButton>
             <TouchableOpacity onPress={() => setSheetOpen(true)}>
-              <Text style={styles(props.theme).actionText}>
-                Prefere entrar com as redes sociais?
-              </Text>
+              <ActionText>Prefere entrar com as redes sociais?</ActionText>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("Forgot")}>
-              <Text style={styles(props.theme).actionText}>
-                Esqueceu sua senha?
-              </Text>
+            <TouchableOpacity onPress={() => navigate("Forgot")}>
+              <ActionText>Esqueceu sua senha?</ActionText>
             </TouchableOpacity>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
+
       {sheetOpen && (
-        <BottomSheet
+        <SheetContainer
           ref={sheetRef}
           snapPoints={snapPoints}
           enablePanDownToClose={true}
           onClose={() => setSheetOpen(false)}
-          handleIndicatorStyle={styles().sheetIndicator}
-          backgroundStyle={styles(props.theme).sheetBackground}
-          style={styles().sheetContainer}
         >
           <BottomSheetView>
-            <View style={styles().sheetView}>
+            <SheetView>
               {Platform.OS === "ios" && (
-                <TouchableOpacity
-                  style={styles(null, colors.black).loginWithContainer}
-                >
-                  <Image
-                    source={require("../../../assets/images/appleIcon.png")}
-                    style={{ width: "48%", height: "90%", marginBottom: 2 }}
-                  />
-                </TouchableOpacity>
+                <SocialContainer backgroundColor={colors.black}>
+                  <AppleLogo source={ICONS.apple} />
+                </SocialContainer>
               )}
-              <TouchableOpacity
-                style={styles(null, colors.white).loginWithContainer}
+              <SocialContainer
+                backgroundColor={colors.white}
                 onPress={googleLogin}
               >
-                <Image
-                  source={require("../../../assets/images/googleIcon.png")}
-                  style={{ width: "60%", height: "100%" }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles(null, colors.facebookBlue).loginWithContainer}
+                <GoogleLogo source={ICONS.google} />
+              </SocialContainer>
+              <SocialContainer
+                backgroundColor={colors.facebookBlue}
                 onPress={facebookLogin}
               >
-                <Image
-                  source={require("../../../assets/images/facebookIcon.png")}
-                  style={{ width: "50%", height: "100%" }}
-                />
-              </TouchableOpacity>
-            </View>
+                <FacebookLogo source={ICONS.facebook} />
+              </SocialContainer>
+            </SheetView>
           </BottomSheetView>
-        </BottomSheet>
+        </SheetContainer>
       )}
     </StyledKeyboardAvoidingView>
   );
