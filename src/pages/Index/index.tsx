@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { metrics } from "../../styles/index";
 import {
   BackgroundContainerCenter,
   ButtonOutlineText,
@@ -11,6 +11,7 @@ import {
   StyledButtonOutline,
 } from "../../styles/generalStyled";
 import { ImageCarousel, TitleCarousel, StyledCarousel } from "./styles";
+import { metrics } from "../../styles/index";
 
 interface ISlidesMockup {
   key: number;
@@ -42,7 +43,7 @@ const slides: ISlidesMockup[] = [
 ];
 
 export default function Index() {
-  const { navigate } = useNavigation();
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   function renderSlide({ item }: any) {
     return (

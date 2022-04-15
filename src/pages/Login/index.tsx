@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import * as React from "react";
 import {
   TouchableWithoutFeedback,
   Keyboard,
@@ -7,12 +7,19 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { connect } from "react-redux";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import * as AuthSession from "expo-auth-session";
 import * as Facebook from "expo-facebook";
-
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import firebase from "../../services/firebase";
+
+import { UserContext } from "../../context/User/userContext";
+import { AlertContext } from "../../context/Alert/alertContext";
+import { setStorage } from "../../functions/storageData";
+import Alert from "../../components/Alert";
 import {
   ActionText,
   AppleLogo,
@@ -22,13 +29,6 @@ import {
   SheetView,
   SocialContainer,
 } from "./styles";
-import { colors, metrics } from "../../styles";
-import { editVisibilityAlert } from "../../components/Actions/visibilityAlertAction";
-import { editTitleAlert } from "../../components/Actions/titleAlertAction";
-import { editTypeAlert } from "../../components/Actions/typeAlertAction";
-import { editUidUser } from "../../components/Actions/uidUserAction";
-import { editLogin } from "../../components/Actions/loginAction";
-import { Alert } from "../../components/Alert";
 import {
   BackgroundContainer,
   Logo,
@@ -43,10 +43,7 @@ import {
   StyledButton,
   ButtonText,
 } from "../../styles/generalStyled";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { setStorage } from "../../functions/storageData";
+import { colors, metrics } from "../../styles";
 interface IForm {
   email: string;
   password: string;
@@ -66,24 +63,22 @@ const ICONS = {
   facebook: require("../../../assets/images/facebookIcon.png"),
 };
 
-export function Login(props) {
-  const { navigate } = useNavigation();
-  const sheetRef = useRef(null);
+export default function Login() {
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const { setUser } = React.useContext(UserContext);
+  const { alert, setAlert } = React.useContext(AlertContext);
+  const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const sheetRef = React.useRef(null);
   const snapPoints = ["25%"];
 
   const {
     control,
-    register,
     handleSubmit,
-    setValue,
-    getValues,
     formState: { errors },
   } = useForm<IForm>({
     resolver: yupResolver(schema),
   });
-
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   async function loginUser({ email, password }: IForm) {
     setLoading(true);
@@ -96,14 +91,20 @@ export function Login(props) {
           // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
           date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         };
-        props.editUidUser(v.user?.uid);
         setStorage("authUser", data);
-        props.editLogin(true);
+        setUser((userState) => ({
+          ...userState,
+          uid: v.user?.uid || "",
+          signed: true,
+        }));
       })
       .catch((error) => {
-        props.editTypeAlert("error");
-        props.editTitleAlert("Verifique os campos informados");
-        props.editVisibilityAlert(true);
+        setAlert(() => ({
+          visibility: true,
+          type: "error",
+          title: "Verifique os campos informados",
+          redirect: null,
+        }));
       })
       .finally(() => setLoading(false));
   }
@@ -150,10 +151,12 @@ export function Login(props) {
         date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       };
       setStorage("authUser", data);
-      props.editUidUser(userInfo.id);
-      props.editLogin(true);
+      setUser((userState) => ({
+        ...userState,
+        uid: userInfo.id,
+        signed: true,
+      }));
     }
-    return;
   }
 
   async function facebookLogin() {
@@ -195,8 +198,11 @@ export function Login(props) {
         date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       };
       setStorage("authUser", dataStorage);
-      props.editUidUser(userInfo.id);
-      props.editLogin(true);
+      setUser((userState) => ({
+        ...userState,
+        uid: userInfo.id,
+        signed: true,
+      }));
     }
   }
 
@@ -204,9 +210,7 @@ export function Login(props) {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          {props.visibility && (
-            <Alert props={props} text={props.title} type={props.type} />
-          )}
+          {alert.visibility && <Alert />}
           <LogoHeader>
             <Logo source={LOGO} />
             <TextUalletHeader>Uallet</TextUalletHeader>
@@ -291,24 +295,3 @@ export function Login(props) {
     </StyledKeyboardAvoidingView>
   );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    theme: state.theme.theme,
-    visibility: state.modal.visibility,
-    title: state.modal.title,
-    type: state.modal.type,
-    uid: state.user.uid,
-    login: state.login.signed,
-  };
-};
-
-const loginConnect = connect(mapStateToProps, {
-  editVisibilityAlert,
-  editTitleAlert,
-  editTypeAlert,
-  editUidUser,
-  editLogin,
-})(Login);
-
-export default loginConnect;
