@@ -1,55 +1,53 @@
-import React, { useEffect } from "react";
+import * as React from "react";
 import { Appearance } from "react-native";
 import { connect } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { editTheme } from "../components/Actions/themeAction";
-import { editLogin } from "../components/Actions/loginAction";
-import { editUidUser } from "../components/Actions/uidUserAction";
 import AuthRoutes from "./authRoutes";
 import AppRoutes from "./appRoutes";
 import { IReduxProps } from "../components/Reducers";
+import { getStorage } from "../functions/storageData";
+import { UserContext } from "../context/User/userContext";
 
 export function routes(props: IReduxProps) {
-  useEffect(() => {
+  const { user, setUser } = React.useContext(UserContext);
+
+  React.useEffect(() => {
     props.editTheme(Appearance.getColorScheme() || "light");
 
     async function loadStorage() {
-      const storageUser = (await AsyncStorage.getItem("authUser")) || "";
+      const storageUser = await getStorage("authUser");
 
       // Parseia as datas para numero e compara se a data do storage está expirada
       if (
-        Date.parse(JSON.parse(storageUser).date) >
+        Date.parse(storageUser.date) >
         Date.parse(new Date(Date.now()).toString())
       ) {
-        props.editUidUser(JSON.parse(storageUser).uid);
-        props.editLogin(true);
-      } else {
-        props.editLogin(false);
+        setUser((userState) => ({
+          ...userState,
+          uid: storageUser.uid,
+          signed: true,
+        }));
       }
     }
 
-    // loadStorage();
+    loadStorage();
   }, []);
 
   Appearance.addChangeListener(() => {
     props.editTheme(Appearance.getColorScheme() || "light");
   });
 
-  return props.login ? <AppRoutes /> : <AuthRoutes />;
+  return user.signed ? <AppRoutes /> : <AuthRoutes />;
 }
 
 const mapStateToProps = (state: any) => {
   return {
     theme: state.theme.theme,
-    login: state.login.signed,
   };
 };
 
 const routesConnect: React.FC = connect(mapStateToProps, {
   editTheme,
-  editLogin,
-  editUidUser,
 })(routes);
 
 export default routesConnect;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { LogBox, Appearance, useColorScheme } from "react-native";
+import * as React from "react";
+import { LogBox, Appearance } from "react-native";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
@@ -19,6 +19,8 @@ import {
 import Reducers from "./src/components/Reducers";
 import AppContent from "./src/pages/App";
 import { LIGHT, DARK } from "./src/styles/theme";
+import { UserContextProvider } from "./src/context/User/userContext";
+import { AlertContextProvider } from "./src/context/Alert/alertContext";
 
 const store = createStore(Reducers);
 LogBox.ignoreAllLogs(true);
@@ -28,7 +30,7 @@ interface IThemeProvider {
 }
 
 export default function App(): JSX.Element {
-  const [theme, setTheme] = useState<IThemeProvider>();
+  const [theme, setTheme] = React.useState<IThemeProvider>();
   const [fontLoaded] = useFonts({
     Raleway_500Medium,
     Raleway_700Bold,
@@ -42,7 +44,7 @@ export default function App(): JSX.Element {
     setTheme(theme == "dark" ? { theme: DARK } : { theme: LIGHT });
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     setDefaultTheme(Appearance.getColorScheme() || "light");
     Appearance.addChangeListener((preference) =>
       setDefaultTheme(preference.colorScheme || "light")
@@ -55,7 +57,11 @@ export default function App(): JSX.Element {
     return (
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <AppContent />
+          <UserContextProvider>
+            <AlertContextProvider>
+              <AppContent />
+            </AlertContextProvider>
+          </UserContextProvider>
         </ThemeProvider>
       </Provider>
     );
