@@ -3,6 +3,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ScrollView,
+  ScrollViewProps,
   StyleSheet,
   Text,
   TextInput,
@@ -17,6 +19,9 @@ import metrics from "./metrics";
 import fonts from "./fonts";
 import React from "react";
 import { DefaultTextInput } from "../components/TextInput";
+import Feather from "react-native-vector-icons/Feather";
+import { IconProps } from "react-native-vector-icons/Icon";
+import Loader from "../components/Loader";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -48,12 +53,18 @@ export const ContainerCenter = styled(View)`
   justify-content: center;
 `;
 
+export const ScrollViewTab: React.FC<ScrollViewProps> = styled(ScrollView)`
+  margin-bottom: ${metrics.doubleBaseMargin * 2.5}px;
+  border-bottom-left-radius: ${metrics.baseRadius}px;
+  border-bottom-right-radius: ${metrics.baseRadius}px;
+`;
+
 export const FormContainer = styled(View)`
   width: 250px;
 `;
 
 export const StyledButton: React.FC<
-  TouchableOpacityProps & { additionalMargin: number }
+  TouchableOpacityProps & { additionalMargin?: number }
 > = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
@@ -112,6 +123,13 @@ export const Logo = styled(Image)`
   height: 58px;
 `;
 
+export const TextHeader = styled(Text)`
+  font-family: ${fonts.ralewayExtraBold};
+  font-size: ${fonts.largest}px;
+  color: ${({ theme }) => theme.theme.text};
+  margin-top: ${metrics.baseMargin}px;
+`;
+
 export const TextUalletHeader = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.big}px;
@@ -145,3 +163,27 @@ export const StyledTextInput: typeof DefaultTextInput = styled(
   margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme }) => theme.theme.text};
 `;
+
+export const Card = styled(View)`
+  padding: 20px;
+  background-color: ${({ theme }) => theme.theme.secondary};
+  border-radius: ${metrics.baseRadius}px;
+  margin-bottom: ${metrics.baseMargin}px;
+`;
+
+export const StyledIcon: React.FC<
+  IconProps & { color?: string; size?: number }
+> = styled(Feather).attrs(({ theme, color, size }) => ({
+  color: color ? color : theme.theme.text,
+  size: size ? size : metrics.iconSize,
+}))``;
+
+export const StyledLoader: React.FC<{
+  width: number;
+  height: number;
+  radius?: number;
+}> = styled(Loader).attrs(({ theme, radius }) => ({
+  fg: theme.theme.primary,
+  bg: theme.theme.secondary,
+  radius: radius ? radius : metrics.mediumRadius,
+}))``;
