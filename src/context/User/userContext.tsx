@@ -3,14 +3,14 @@ import * as React from "react";
 interface IUser {
   signed: boolean;
   complete: boolean;
-  uid: string | null;
+  uid: string | undefined;
   name: string;
 }
 
 export const initialUserState: IUser = {
   signed: false,
   complete: false,
-  uid: null,
+  uid: undefined,
   name: "",
 };
 
