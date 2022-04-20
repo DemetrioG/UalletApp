@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   View,
+  ViewProps,
 } from "react-native";
 import styled from "styled-components";
 import colors from "./colors";
@@ -51,6 +52,24 @@ export const ContainerCenter = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
+`;
+
+export const ModalContainer = styled(View)`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.theme.transparency};
+`;
+
+export const ModalView: React.FC<
+  ViewProps & { height?: number; center?: boolean }
+> = styled(View)`
+  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
+  align-items: ${({ center }) => (center ? "center" : "null")};
+  width: 294px;
+  height: ${({ height }) => (height ? height : null)};
+  border-radius: ${metrics.baseRadius}px;
+  background-color: ${({ theme }) => theme.theme.primary};
 `;
 
 export const ScrollViewTab: React.FC<ScrollViewProps> = styled(ScrollView)`

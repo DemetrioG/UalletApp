@@ -4,21 +4,6 @@ import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { fonts, metrics } from "../../styles";
 
-export const AlertContainer = styled(View)`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme }) => theme.theme.transparency};
-`;
-
-export const AlertView = styled(View)`
-  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
-  align-items: center;
-  width: 294px;
-  border-radius: ${metrics.baseRadius}px;
-  background-color: ${({ theme }) => theme.theme.primary};
-`;
-
 export const StyledLottieView: React.FC<AnimatedLottieViewProps> = styled(
   LottieView
 )`

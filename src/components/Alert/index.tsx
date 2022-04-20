@@ -3,14 +3,14 @@ import { Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import {
-  AlertContainer,
-  AlertView,
-  StyledLottieView,
-  TextAlert,
-} from "./styles";
+import { StyledLottieView, TextAlert } from "./styles";
 import { AlertContext } from "../../context/Alert/alertContext";
-import { ButtonText, StyledButton } from "../../styles/generalStyled";
+import {
+  ButtonText,
+  StyledButton,
+  ModalContainer,
+  ModalView,
+} from "../../styles/generalStyled";
 
 const ERROR = require("../../../assets/icons/error.json");
 const SUCCESS = require("../../../assets/icons/check.json");
@@ -34,15 +34,15 @@ export default function Alert() {
 
   return (
     <Modal visible={true} transparent={true} animationType="fade">
-      <AlertContainer>
-        <AlertView>
+      <ModalContainer>
+        <ModalView center={true}>
           <StyledLottieView source={typeIcon} autoPlay={true} loop={false} />
           <TextAlert>{alert.title}</TextAlert>
           <StyledButton onPress={handleAccept}>
             <ButtonText>OK</ButtonText>
           </StyledButton>
-        </AlertView>
-      </AlertContainer>
+        </ModalView>
+      </ModalContainer>
     </Modal>
   );
 }

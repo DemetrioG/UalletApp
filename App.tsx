@@ -21,6 +21,7 @@ import AppContent from "./src/pages/App";
 import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";
+import { DateContextProvider } from "./src/context/Date/dateContext";
 
 const store = createStore(Reducers);
 LogBox.ignoreAllLogs(true);
@@ -58,9 +59,11 @@ export default function App(): JSX.Element {
       <Provider store={store}>
         <ThemeProvider theme={theme}>
           <UserContextProvider>
-            <AlertContextProvider>
-              <AppContent />
-            </AlertContextProvider>
+            <DateContextProvider>
+              <AlertContextProvider>
+                <AppContent />
+              </AlertContextProvider>
+            </DateContextProvider>
           </UserContextProvider>
         </ThemeProvider>
       </Provider>

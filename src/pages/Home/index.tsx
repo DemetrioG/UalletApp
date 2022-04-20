@@ -10,10 +10,10 @@ import { useTheme } from "styled-components";
 import firebase from "../../services/firebase";
 import {
   dateMonthNumber,
-  getBalance,
   getFinalDateMonth,
   realToNumber,
   useStateCallback,
+  numberToReal,
 } from "../../functions";
 import { general, metrics, colors, fonts } from "../../styles";
 import Alert from "../../components/Alert";
@@ -61,18 +61,20 @@ import {
   StyledLoader,
 } from "../../styles/generalStyled";
 import { IThemeProvider } from "../../../App";
+import { DateContext } from "../../context/Date/dateContext";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
-export function Home(props) {
+export default function Home() {
   const THEME: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { alert, setAlert } = React.useContext(AlertContext);
   const { user, setUser } = React.useContext(UserContext);
+  const { date, setDate } = React.useContext(DateContext);
+  const { alert, setAlert } = React.useContext(AlertContext);
 
   const [loader, setLoader] = React.useState(false);
   const [headerLoader, setHeaderLoader] = React.useState(true);
-  const [balance, setBalance] = React.useState(null);
+  const [balance, setBalance] = React.useState<string | null>(null);
   const [hideBalance, setHideBalance] = React.useState(false);
   const [hideInvest, setHideInvest] = React.useState(false);
   const [status, setStatus] = React.useState();
@@ -90,14 +92,14 @@ export function Home(props) {
     {
       data: incomeChart,
       svg: {
-        stroke: props.theme == "light" ? colors.strongGreen : colors.lightGreen,
+        stroke: THEME.theme?.green,
         strokeWidth: 2,
       },
     },
     {
       data: expenseChart,
       svg: {
-        stroke: props.theme == "light" ? colors.strongRed : colors.lightRed,
+        stroke: THEME.theme?.red,
         strokeWidth: 2,
       },
     },
@@ -124,11 +126,9 @@ export function Home(props) {
   ];
 
   async function getPieDatabase() {
-    let initialDate = Date.parse(`${props.month}/01/${props.year}`);
+    let initialDate = Date.parse(`${date.month}/01/${date.year}`);
     let finalDate = Date.parse(
-      `${props.month}/${getFinalDateMonth(props.month, props.year)}/${
-        props.year
-      }`
+      `${date.month}/${getFinalDateMonth(date.month, date.year)}/${date.year}`
     );
 
     // Busca no banco os dados referente ao Mês atual
@@ -136,7 +136,7 @@ export function Home(props) {
       .firestore()
       .collection("entry")
       .doc(user.uid)
-      .collection(props.modality)
+      .collection(date.modality)
       .where("type", "==", "Despesa")
       .where("date", ">=", initialDate)
       .where("date", "<=", finalDate)
@@ -199,10 +199,9 @@ export function Home(props) {
                         value,
                         key: index,
                         svg: {
-                          fill:
-                            props.theme == "light"
-                              ? colorPieChartLight[index]
-                              : colorPieChartDark[index],
+                          fill: THEME.theme?.isOnDarkTheme
+                            ? colorPieChartLight[index]
+                            : colorPieChartDark[index],
                         },
                       }));
                       setFinalDataPieChart(objPie, () => {
@@ -262,8 +261,8 @@ export function Home(props) {
 
   // Retorna os dados para a montagem do gráfico de Receita X Despesa
   async function getLineDatabase() {
-    let initialMonth = props.month - 2;
-    let initialYear = props.year;
+    let initialMonth = date.month! - 2;
+    let initialYear = date.year!;
 
     if (initialMonth == -1) {
       initialMonth = 11;
@@ -274,9 +273,7 @@ export function Home(props) {
     }
     let initialDate = Date.parse(`${initialMonth}/01/${initialYear}`);
     let finalDate = Date.parse(
-      `${props.month}/${getFinalDateMonth(props.month, props.year)}/${
-        props.year
-      }`
+      `${date.month}/${getFinalDateMonth(date.month, date.year)}/${date.year}`
     );
 
     // Busca no banco os dados referente ao Mês - 2 até Mês atual
@@ -284,7 +281,7 @@ export function Home(props) {
       .firestore()
       .collection("entry")
       .doc(user.uid)
-      .collection(props.modality)
+      .collection(date.modality)
       .where("date", ">=", initialDate)
       .where("date", "<=", finalDate)
       .onSnapshot((snapshot) => {
@@ -299,8 +296,8 @@ export function Home(props) {
                * Quando ela já tiver com o total de dados retornados do banco, aí é gerado o Gráfico na tela
                */
               if (v.length == snapshot.size - 1) {
-                let firstMonth = props.month - 2;
-                let firstYear = props.year;
+                let firstMonth = date.month - 2;
+                let firstYear = date.year;
 
                 if (firstMonth == -1) {
                   firstMonth = 11;
@@ -310,8 +307,8 @@ export function Home(props) {
                   firstYear -= 1;
                 }
 
-                let secondMonth = props.month - 1;
-                let secondYear = props.year;
+                let secondMonth = date.month - 1;
+                let secondYear = date.year;
 
                 if (secondMonth == -1) {
                   secondMonth = 11;
@@ -341,13 +338,12 @@ export function Home(props) {
                   )}/${secondYear}`
                 );
                 let initialDateThirdMonth = Date.parse(
-                  `${props.month}/01/${props.year}`
+                  `${date.month}/01/${date.year}`
                 );
                 let finalDateThirdMonth = Date.parse(
-                  `${props.month}/${getFinalDateMonth(
-                    props.month,
-                    props.year
-                  )}/${props.year}`
+                  `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+                    date.year
+                  }`
                 );
 
                 // No banco, busca pelos dados acumulado dos meses, e abaixo, separa os valores de cada mês para gerar o gráfico
@@ -394,8 +390,8 @@ export function Home(props) {
                 });
 
                 // Seta os labels do gráfico
-                setInitLabel(dateMonthNumber("toMonth", props.month - 2, "pt"));
-                setFinalLabel(dateMonthNumber("toMonth", props.month, "pt"));
+                setInitLabel(dateMonthNumber("toMonth", date.month - 2, "pt"));
+                setFinalLabel(dateMonthNumber("toMonth", date.month, "pt"));
 
                 // Seta os percentuais de Crescimento/Queda
                 setIncomePercentual(
@@ -416,6 +412,25 @@ export function Home(props) {
       });
   }
 
+  // Retorna o Saldo atual
+  async function getBalance() {
+    if (date.month) {
+      await firebase
+        .firestore()
+        .collection("balance")
+        .doc(user.uid)
+        .collection(date.modality)
+        .doc(date.month.toString())
+        .onSnapshot((snapshot) => {
+          if (snapshot.data()) {
+            setBalance(numberToReal(snapshot.data()?.balance));
+          } else {
+            setBalance("R$ 0,00");
+          }
+        });
+    }
+  }
+
   React.useEffect(() => {
     async function completeData() {
       await firebase
@@ -424,7 +439,10 @@ export function Home(props) {
         .doc(user.uid)
         .get()
         .then((v) => {
-          props.editComplete(true);
+          setUser((userState) => ({
+            ...userState,
+            complete: true,
+          }));
           // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
           if (!v.data()?.birthDate) {
             navigate("Complete");
@@ -435,15 +453,14 @@ export function Home(props) {
       completeData();
     }
 
-    // Retorna o Saldo atual
-    getBalance(firebase, props, setBalance);
+    getBalance();
 
     // Monta o gráfico de Receita X Despesa
     getLineDatabase();
 
     // Monta o gráfico de Segmento
     getPieDatabase();
-  }, [props.modality, props.month, props.year]);
+  }, [date.modality, date.month, date.year]);
 
   if (
     balance &&
@@ -468,9 +485,7 @@ export function Home(props) {
               <CardHeaderText>Saldo atual</CardHeaderText>
               <IconContainer
                 marginTop={4}
-                onPress={() =>
-                  !hideBalance ? setHideBalance(true) : setHideBalance(false)
-                }
+                onPress={() => setHideBalance(!hideBalance)}
               >
                 <StyledIcon name={!hideBalance ? "eye" : "eye-off"} size={15} />
               </IconContainer>
@@ -503,11 +518,7 @@ export function Home(props) {
           <CardHeaderView>
             <CardTextView>
               <CardHeaderText>Patrimônio investido</CardHeaderText>
-              <IconContainer
-                onPress={() =>
-                  !hideInvest ? setHideInvest(true) : setHideInvest(false)
-                }
-              >
+              <IconContainer onPress={() => setHideInvest(!hideInvest)}>
                 <StyledIcon name={!hideInvest ? "eye" : "eye-off"} size={15} />
               </IconContainer>
             </CardTextView>
@@ -587,7 +598,7 @@ export function Home(props) {
           <SegmentLabelView>
             <ContentLabel>
               <DotView backgroundColor={colors.darkPrimary} />
-              <Text style={styles(props.theme).segmentLabelText}>Lazer</Text>
+              <SegmentLabelText>Lazer</SegmentLabelText>
             </ContentLabel>
             <ContentLabel>
               <DotView
@@ -635,24 +646,3 @@ export function Home(props) {
     </BackgroundContainer>
   );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    theme: state.theme.theme,
-    visibility: state.modal.visibility,
-    title: state.modal.title,
-    type: state.modal.type,
-    uid: state.user.uid,
-    complete: state.complete.complete,
-    modality: state.modality.modality,
-    month: state.date.month,
-    year: state.date.year,
-  };
-};
-
-const homeConnect = connect(mapStateToProps, {
-  editVisibilityAlert,
-  editComplete,
-})(Home);
-
-export default homeConnect;
