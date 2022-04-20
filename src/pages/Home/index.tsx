@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Feather from "react-native-vector-icons/Feather";
 import { LineChart, PieChart } from "react-native-svg-charts";
 import { ForeignObject, Text as TextSVG } from "react-native-svg";
+import { useTheme } from "styled-components";
 
 import firebase from "../../services/firebase";
 import {
@@ -21,14 +22,32 @@ import { editVisibilityAlert } from "../../components/Actions/visibilityAlertAct
 import { editComplete } from "../../components/Actions/completeUserAction";
 import styles, {
   Balance,
+  CardFooterText,
   CardHeaderText,
   CardHeaderView,
   CardStatusView,
   CardTextView,
+  ContentLabel,
+  DotView,
   IconContainer,
+  IncomeChartLabelText,
+  IncomeChartLabelView,
+  IncomeChartView,
+  IncomeView,
+  Invest,
+  InvestPercentual,
   LogoCard,
+  PercentualIcon,
+  PercentualText,
+  PercentualValue,
   PieChartLabel,
+  SegmentChartView,
+  SegmentLabelText,
+  SegmentLabelView,
+  StatusPercentText,
   StatusText,
+  StyledLineChart,
+  StyledPieChart,
 } from "./styles";
 import Loader from "../../components/Loader";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -41,10 +60,12 @@ import {
   StyledIcon,
   StyledLoader,
 } from "../../styles/generalStyled";
+import { IThemeProvider } from "../../../App";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
 export function Home(props) {
+  const THEME: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { alert, setAlert } = React.useContext(AlertContext);
   const { user, setUser } = React.useContext(UserContext);
@@ -197,25 +218,46 @@ export function Home(props) {
       });
   }
 
+  interface ISlices {
+    slices?: [
+      slice: {
+        pieCentroid: number[];
+        data: {
+          key: number;
+          svg: object;
+        };
+        value: number;
+      }
+    ];
+  }
+
   // Criação de labels para o Pie Chart
-  const Label = ({ slices }) => {
-    return slices.map((slice, index) => {
-      const { pieCentroid, data, value } = slice;
-      return value !== 0 ? (
-        <ForeignObject
-          key={index}
-          // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
-          x={dataPieChart[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
-          y={pieCentroid[1] - 8}
-          width={100}
-          height={100}
-        >
-          <View>
-            <PieChartLabel>{data.value}%</PieChartLabel>
-          </View>
-        </ForeignObject>
-      ) : null;
-    });
+  const Label = ({ slices }: ISlices) => {
+    return (
+      <>
+        {slices?.map((slice, index) => {
+          const { pieCentroid, value } = slice;
+          return value !== 0 ? (
+            <ForeignObject
+              key={index}
+              // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
+              x={
+                dataPieChart[index] < 6
+                  ? pieCentroid[0] - 9
+                  : pieCentroid[0] - 12
+              }
+              y={pieCentroid[1] - 8}
+              width={100}
+              height={100}
+            >
+              <View>
+                <PieChartLabel>{value}%</PieChartLabel>
+              </View>
+            </ForeignObject>
+          ) : null;
+        })}
+      </>
+    );
   };
 
   // Retorna os dados para a montagem do gráfico de Receita X Despesa
@@ -425,6 +467,7 @@ export function Home(props) {
             <CardTextView>
               <CardHeaderText>Saldo atual</CardHeaderText>
               <IconContainer
+                marginTop={4}
                 onPress={() =>
                   !hideBalance ? setHideBalance(true) : setHideBalance(false)
                 }
@@ -447,329 +490,147 @@ export function Home(props) {
             <StatusText bold={true}>Você está indo bem</StatusText>
           </CardStatusView>
           <CardStatusView>
-            <StatusText bold={false}>
+            <StatusText>
               Sua média de gastos variáveis semanal está representando{" "}
-              <Text
-                style={{
-                  fontFamily: fonts.montserratExtraBold,
-                  color:
-                    props.theme == "light"
-                      ? colors.strongGreen
-                      : colors.lightGreen,
-                }}
-              >
-                3%
-              </Text>{" "}
-              de sua renda
+              <StatusPercentText>3%</StatusPercentText> de sua renda
             </StatusText>
           </CardStatusView>
           <View>
             <StatusText bold={true}>Continue!! ⚡</StatusText>
           </View>
         </Card>
-        <View style={general(props.theme).card}>
-          <View style={styles().cardHeaderView}>
-            <View style={styles().cardTextView}>
-              <Text style={styles(props.theme).cardHeaderText}>
-                Patrimônio investido
-              </Text>
-              <TouchableOpacity
-                style={[styles().spaceIcon, { marginTop: 4 }]}
+        <Card>
+          <CardHeaderView>
+            <CardTextView>
+              <CardHeaderText>Patrimônio investido</CardHeaderText>
+              <IconContainer
                 onPress={() =>
                   !hideInvest ? setHideInvest(true) : setHideInvest(false)
                 }
               >
-                <Feather
-                  name={!hideInvest ? "eye" : "eye-off"}
-                  size={15}
-                  color={
-                    props.theme == "light" ? colors.darkPrimary : colors.white
-                  }
-                />
-              </TouchableOpacity>
-            </View>
+                <StyledIcon name={!hideInvest ? "eye" : "eye-off"} size={15} />
+              </IconContainer>
+            </CardTextView>
             <TouchableOpacity>
-              <Feather
-                name="maximize-2"
-                size={metrics.iconSize}
-                color={
-                  props.theme == "light" ? colors.darkPrimary : colors.white
-                }
-              />
+              <StyledIcon name="maximize-2" size={metrics.iconSize} />
             </TouchableOpacity>
-          </View>
-          <Text style={styles(props.theme).invest}>
-            {!hideInvest ? "R$ 153.000,00" : "** ** ** ** **"}
-          </Text>
-          <View style={styles().cardTextView}>
-            <Text style={styles(props.theme).cardFooterText}>
-              Rendimento semanal
-            </Text>
-            <Text
-              style={{
-                fontFamily: fonts.montserratMedium,
-                fontSize: 14,
-                color:
-                  props.theme == "light"
-                    ? colors.strongGreen
-                    : colors.lightGreen,
-              }}
-            >
-              55%
-            </Text>
-            <Feather
-              name="arrow-up"
-              size={15}
-              color={
-                props.theme == "light" ? colors.strongGreen : colors.lightGreen
-              }
-            />
-          </View>
-        </View>
-        <View
-          style={[
-            general(props.theme).card,
-            { flexDirection: "row", minHeight: 150 },
-          ]}
-        >
+          </CardHeaderView>
+          <Invest>{!hideInvest ? "R$ 153.000,00" : "** ** ** ** **"}</Invest>
+          <CardTextView>
+            <CardFooterText>Rendimento semanal</CardFooterText>
+            <InvestPercentual>55%</InvestPercentual>
+            <StyledIcon name="arrow-up" size={15} />
+          </CardTextView>
+        </Card>
+        <Card style={{ flexDirection: "row", minHeight: 150 }}>
           {loader ? (
-            <Loader
-              width={145}
-              height={120}
-              fg={
-                props.theme == "light"
-                  ? colors.lightPrimary
-                  : colors.darkPrimary
-              }
-              bg={
-                props.theme == "light"
-                  ? colors.lightSecondary
-                  : colors.darkSecondary
-              }
-              radius={metrics.mediumRadius}
-            />
+            <StyledLoader width={145} height={120} />
           ) : (
-            <View style={styles(props.theme).incomeChartView}>
-              <LineChart
-                style={{ height: 60 }}
-                contentInset={{ top: 5, bottom: 5 }}
-                data={dataLineChart}
-              />
-              <View style={styles(props.theme).incomeChartLabelView}>
-                <Text style={styles(props.theme).incomeChartLabelText}>
-                  {initLabel}
-                </Text>
-                <Text style={styles(props.theme).incomeChartLabelText}>
-                  {finalLabel}
-                </Text>
-              </View>
-            </View>
+            <IncomeChartView>
+              <StyledLineChart data={dataLineChart} />
+              <IncomeChartLabelView>
+                <IncomeChartLabelText>{initLabel}</IncomeChartLabelText>
+                <IncomeChartLabelText>{finalLabel}</IncomeChartLabelText>
+              </IncomeChartLabelView>
+            </IncomeChartView>
           )}
-          <View style={styles().incomeView}>
+          <IncomeView>
             {loader ? (
-              <Loader
-                width={140}
-                height={10}
-                fg={
-                  props.theme == "light"
-                    ? colors.lightPrimary
-                    : colors.darkPrimary
-                }
-                bg={
-                  props.theme == "light"
-                    ? colors.lightSecondary
-                    : colors.darkSecondary
-                }
-                radius={metrics.mediumRadius}
-              />
+              <StyledLoader width={140} height={10} />
             ) : (
               <View>
-                <Text style={styles(props.theme).incomeText}>
+                <PercentualText>
                   Receita mensal{"\u00A0"}
-                  <Text
-                    style={{
-                      fontFamily: fonts.montserratMedium,
-                      fontSize: fonts.regular,
-                      color:
-                        incomePercentual > 0
-                          ? props.theme == "light"
-                            ? colors.strongGreen
-                            : colors.lightGreen
-                          : props.theme == "light"
-                          ? colors.strongRed
-                          : colors.lightRed,
-                    }}
-                  >
+                  <PercentualValue percentual={incomePercentual} type="income">
                     {incomePercentual}%
-                  </Text>
-                  <Feather
-                    name={incomePercentual > 0 ? "arrow-up" : "arrow-down"}
+                  </PercentualValue>
+                  <PercentualIcon
+                    percentual={incomePercentual}
+                    type="income"
                     size={15}
-                    color={
-                      incomePercentual > 0
-                        ? props.theme == "light"
-                          ? colors.strongGreen
-                          : colors.lightGreen
-                        : props.theme == "light"
-                        ? colors.strongRed
-                        : colors.lightRed
-                    }
                   />
-                </Text>
+                </PercentualText>
               </View>
             )}
             {loader ? (
-              <Loader
-                width={140}
-                height={10}
-                fg={
-                  props.theme == "light"
-                    ? colors.lightPrimary
-                    : colors.darkPrimary
-                }
-                bg={
-                  props.theme == "light"
-                    ? colors.lightSecondary
-                    : colors.darkSecondary
-                }
-                radius={metrics.mediumRadius}
-              />
+              <StyledLoader width={140} height={10} />
             ) : (
               <View>
-                <Text style={styles(props.theme).incomeText}>
+                <PercentualText>
                   Despesa mensal{"\u00A0"}
-                  <Text
-                    style={{
-                      fontFamily: fonts.montserratMedium,
-                      fontSize: fonts.regular,
-                      color:
-                        expensePercentual < 0
-                          ? props.theme == "light"
-                            ? colors.strongGreen
-                            : colors.lightGreen
-                          : props.theme == "light"
-                          ? colors.strongRed
-                          : colors.lightRed,
-                    }}
+                  <PercentualValue
+                    percentual={expensePercentual}
+                    type="expense"
                   >
                     {expensePercentual}%
-                  </Text>
-                  <Feather
-                    name={expensePercentual > 0 ? "arrow-up" : "arrow-down"}
+                  </PercentualValue>
+                  <PercentualIcon
+                    percentual={expensePercentual}
+                    type="expense"
                     size={15}
-                    color={
-                      expensePercentual < 0
-                        ? props.theme == "light"
-                          ? colors.strongGreen
-                          : colors.lightGreen
-                        : props.theme == "light"
-                        ? colors.strongRed
-                        : colors.lightRed
-                    }
                   />
-                </Text>
+                </PercentualText>
               </View>
             )}
-          </View>
-        </View>
-        <View style={[general(props.theme).card, { flexDirection: "row" }]}>
-          <View style={styles().segmentChartView}>
+          </IncomeView>
+        </Card>
+        <Card style={{ flexDirection: "row" }}>
+          <SegmentChartView>
             {loader ? (
-              <Loader
-                width={140}
-                height={140}
-                fg={
-                  props.theme == "light"
-                    ? colors.lightPrimary
-                    : colors.darkPrimary
-                }
-                bg={
-                  props.theme == "light"
-                    ? colors.lightSecondary
-                    : colors.darkSecondary
-                }
-                radius={100}
-              />
+              <StyledLoader width={140} height={140} radius={100} />
             ) : (
-              <PieChart style={{ height: 130 }} data={finalDataPieChart}>
+              <StyledPieChart data={finalDataPieChart}>
                 <Label />
-              </PieChart>
+              </StyledPieChart>
             )}
-          </View>
-          <View style={styles().segmentLabelView}>
-            <View style={styles().contentLabel}>
-              <View
-                style={[
-                  styles().dotView,
-                  { backgroundColor: colors.darkPrimary },
-                ]}
-              />
+          </SegmentChartView>
+          <SegmentLabelView>
+            <ContentLabel>
+              <DotView backgroundColor={colors.darkPrimary} />
               <Text style={styles(props.theme).segmentLabelText}>Lazer</Text>
-            </View>
-            <View style={styles().contentLabel}>
-              <View
-                style={[
-                  styles().dotView,
-                  {
-                    backgroundColor:
-                      props.theme == "light"
-                        ? colors.lightPurple
-                        : colors.lightRed,
-                  },
-                ]}
+            </ContentLabel>
+            <ContentLabel>
+              <DotView
+                backgroundColor={
+                  !THEME.theme?.isOnDarkTheme
+                    ? colors.lightPurple
+                    : colors.lightRed
+                }
               />
-              <Text style={styles(props.theme).segmentLabelText}>Educação</Text>
-            </View>
-            <View style={styles().contentLabel}>
-              <View
-                style={[
-                  styles().dotView,
-                  {
-                    backgroundColor:
-                      props.theme == "light"
-                        ? colors.strongPurple
-                        : colors.strongRed,
-                  },
-                ]}
+              <SegmentLabelText>Educação</SegmentLabelText>
+            </ContentLabel>
+            <ContentLabel>
+              <DotView
+                backgroundColor={
+                  !THEME.theme?.isOnDarkTheme
+                    ? colors.strongPurple
+                    : colors.strongRed
+                }
               />
-              <Text style={styles(props.theme).segmentLabelText}>
-                Investimentos
-              </Text>
-            </View>
-            <View style={styles().contentLabel}>
-              <View
-                style={[
-                  styles().dotView,
-                  {
-                    backgroundColor:
-                      props.theme == "light"
-                        ? colors.lightRed
-                        : colors.whiteBlue,
-                  },
-                ]}
+              <SegmentLabelText>Investimentos</SegmentLabelText>
+            </ContentLabel>
+            <ContentLabel>
+              <DotView
+                backgroundColor={
+                  !THEME.theme?.isOnDarkTheme
+                    ? colors.lightRed
+                    : colors.whiteBlue
+                }
               />
-              <Text style={styles(props.theme).segmentLabelText}>
-                Necessidades
-              </Text>
-            </View>
-            <View style={styles().contentLabel}>
-              <View
-                style={[
-                  styles().dotView,
-                  {
-                    backgroundColor:
-                      props.theme == "light"
-                        ? colors.strongRed
-                        : colors.lightBlue,
-                  },
-                ]}
+              <SegmentLabelText>Necessidades</SegmentLabelText>
+            </ContentLabel>
+            <ContentLabel>
+              <DotView
+                backgroundColor={
+                  !THEME.theme?.isOnDarkTheme
+                    ? colors.strongRed
+                    : colors.lightBlue
+                }
               />
-              <Text style={styles(props.theme).segmentLabelText}>
-                Curto e médio prazo
-              </Text>
-            </View>
-          </View>
-        </View>
+              <SegmentLabelText>Curto e médio prazo</SegmentLabelText>
+            </ContentLabel>
+          </SegmentLabelView>
+        </Card>
       </ScrollViewTab>
     </BackgroundContainer>
   );

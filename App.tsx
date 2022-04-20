@@ -25,8 +25,8 @@ import { AlertContextProvider } from "./src/context/Alert/alertContext";
 const store = createStore(Reducers);
 LogBox.ignoreAllLogs(true);
 
-interface IThemeProvider {
-  theme: Object;
+export interface IThemeProvider {
+  theme?: typeof LIGHT;
 }
 
 export default function App(): JSX.Element {
