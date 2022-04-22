@@ -1,15 +1,15 @@
 import * as React from "react";
 import { useStateCallback } from "../../functions";
 
-interface IDate {
-  month: number | null;
-  year: number | null;
+export interface IDate {
+  month: number;
+  year: number;
   modality: "Real" | "Projetado";
 }
 
 export const initialDateState: IDate = {
-  month: null,
-  year: null,
+  month: 0,
+  year: 0,
   modality: "Real",
 };
 

@@ -77,7 +77,7 @@ export default function DatePicker({
         <ModalView height={350}>
           <HeaderView>
             <Title>
-              {type} • {type == "Mês" ? options[date.month! - 1] : date.year}
+              {type} • {type == "Mês" ? options[date.month - 1] : date.year}
             </Title>
             <StyledIcon
               name="x"
