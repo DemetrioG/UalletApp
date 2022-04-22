@@ -5,10 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   ScrollViewProps,
-  StyleSheet,
   Text,
-  TextInput,
-  TextInputProps,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -23,6 +20,7 @@ import { DefaultTextInput } from "../components/TextInput";
 import Feather from "react-native-vector-icons/Feather";
 import { IconProps } from "react-native-vector-icons/Icon";
 import Loader from "../components/Loader";
+import { DefaultTextInputMask } from "../components/TextInputMask";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -67,7 +65,7 @@ export const ModalView: React.FC<
   padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
   align-items: ${({ center }) => (center ? "center" : "null")};
   width: 294px;
-  height: ${({ height }) => (height ? height : null)};
+  height: ${({ height }) => (height ? height : "auto")};
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme }) => theme.theme.primary};
 `;
@@ -169,6 +167,22 @@ export const HeaderTitle = styled(Text)`
 
 export const StyledTextInput: typeof DefaultTextInput = styled(
   DefaultTextInput
+).attrs(() => ({
+  placeholderTextColor: colors.lightGray,
+}))`
+  width: 100%;
+  height: 45px;
+  padding: 5px 20px;
+  border-radius: ${metrics.mediumRadius}px;
+  border: 2px solid ${colors.lightGray};
+  font-family: ${fonts.ralewayExtraBold};
+  font-size: ${fonts.regular}px;
+  margin-bottom: ${metrics.baseMargin}px;
+  color: ${({ theme }) => theme.theme.text};
+`;
+
+export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
+  DefaultTextInputMask
 ).attrs(() => ({
   placeholderTextColor: colors.lightGray,
 }))`

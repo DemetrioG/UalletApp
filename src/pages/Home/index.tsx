@@ -1,13 +1,21 @@
 import * as React from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { connect } from "react-redux";
-import Feather from "react-native-vector-icons/Feather";
-import { LineChart, PieChart } from "react-native-svg-charts";
-import { ForeignObject, Text as TextSVG } from "react-native-svg";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "styled-components";
 
 import firebase from "../../services/firebase";
+import { IThemeProvider } from "../../../App";
+import { UserContext } from "../../context/User/userContext";
+import { DateContext } from "../../context/Date/dateContext";
+import { AlertContext } from "../../context/Alert/alertContext";
+import Header from "../../components/Header";
+import Alert from "../../components/Alert";
+import {
+  colorPieChartDark,
+  colorPieChartLight,
+  Label,
+} from "../../components/PieChartComponents";
 import {
   dateMonthNumber,
   getFinalDateMonth,
@@ -15,12 +23,7 @@ import {
   useStateCallback,
   numberToReal,
 } from "../../functions";
-import { general, metrics, colors, fonts } from "../../styles";
-import Alert from "../../components/Alert";
-import Header from "../../components/Header";
-import { editVisibilityAlert } from "../../components/Actions/visibilityAlertAction";
-import { editComplete } from "../../components/Actions/completeUserAction";
-import styles, {
+import {
   Balance,
   CardFooterText,
   CardHeaderText,
@@ -40,7 +43,6 @@ import styles, {
   PercentualIcon,
   PercentualText,
   PercentualValue,
-  PieChartLabel,
   SegmentChartView,
   SegmentLabelText,
   SegmentLabelView,
@@ -49,10 +51,6 @@ import styles, {
   StyledLineChart,
   StyledPieChart,
 } from "./styles";
-import Loader from "../../components/Loader";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
 import {
   BackgroundContainer,
   Card,
@@ -60,32 +58,43 @@ import {
   StyledIcon,
   StyledLoader,
 } from "../../styles/generalStyled";
-import { IThemeProvider } from "../../../App";
-import { DateContext } from "../../context/Date/dateContext";
+import { metrics, colors } from "../../styles";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
+interface IEntryReturn {
+  date: number;
+  description: string;
+  id: number;
+  modality: string;
+  segment: string;
+  type: string;
+  value: string;
+}
 
 export default function Home() {
   const THEME: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
-  const { date, setDate } = React.useContext(DateContext);
-  const { alert, setAlert } = React.useContext(AlertContext);
+  const { date } = React.useContext(DateContext);
+  const { alert } = React.useContext(AlertContext);
 
   const [loader, setLoader] = React.useState(false);
   const [headerLoader, setHeaderLoader] = React.useState(true);
   const [balance, setBalance] = React.useState<string | null>(null);
   const [hideBalance, setHideBalance] = React.useState(false);
   const [hideInvest, setHideInvest] = React.useState(false);
-  const [status, setStatus] = React.useState();
 
   // Dados para o gráfico de linha Receitas X Despesas
   let incomeChart = [0, 0, 0];
   let expenseChart = [0, 0, 0];
   const [incomePercentual, setIncomePercentual] = React.useState<number>(0);
   const [expensePercentual, setExpensePercentual] = React.useState<number>(0);
-  const [initLabel, setInitLabel] = React.useState(null);
-  const [finalLabel, setFinalLabel] = React.useState(null);
+  const [initLabel, setInitLabel] = React.useState<null | string | number>(
+    null
+  );
+  const [finalLabel, setFinalLabel] = React.useState<null | string | number>(
+    null
+  );
   const [lineData, setLineData] = useStateCallback([]);
   const [renderLine, setRenderLine] = React.useState(false);
   const [dataLineChart, setDataLineChart] = useStateCallback([
@@ -110,22 +119,9 @@ export default function Home() {
   const [finalDataPieChart, setFinalDataPieChart] = useStateCallback([]);
   const [renderPie, setRenderPie] = React.useState(false);
   const [dataPieChart, setDataPieChart] = useStateCallback([0, 0, 0, 0, 0]); // INDEX 0: Lazer / 1: Investimentos / 2: Educação / 3: Curto e Médio Prazo / 4: Necessidades
-  const colorPieChartLight = [
-    colors.darkPrimary,
-    colors.strongPurple,
-    colors.lightPurple,
-    colors.strongRed,
-    colors.lightRed,
-  ];
-  const colorPieChartDark = [
-    colors.darkPrimary,
-    colors.strongRed,
-    colors.lightRed,
-    colors.lightBlue,
-    colors.whiteBlue,
-  ];
 
-  async function getPieDatabase() {
+  // Monta o gráfico de Segmento
+  function getPieDatabase() {
     let initialDate = Date.parse(`${date.month}/01/${date.year}`);
     let finalDate = Date.parse(
       `${date.month}/${getFinalDateMonth(date.month, date.year)}/${date.year}`
@@ -145,8 +141,8 @@ export default function Home() {
         snapshot.forEach((result) => {
           // Percorre os dados do banco colocando-os para a State
           setPieData(
-            (oldArray) => [...oldArray, result.data()],
-            (v) => {
+            (oldArray: number[]) => [...oldArray, result.data()],
+            (v: any) => {
               /**
                * Callback retorna os dados alterados da State.
                * Quando ela já tiver com o total de dados retornados do banco, aí é gerado o Gráfico na tela
@@ -154,60 +150,75 @@ export default function Home() {
               if (v.length == snapshot.size - 1) {
                 v = [...v, result.data()];
 
-                let L = 0;
-                let E = 0;
-                let I = 0;
-                let N = 0;
-                let CM = 0;
+                let LAZER = 0;
+                let EDUCACAO = 0;
+                let INVESTIMENTOS = 0;
+                let NECESSIDADES = 0;
+                let CURTOMEDIOPRAZO = 0;
 
                 // Percorre os itens verificando seu segmento para disposição do gráfico
-                v.forEach((value, index) => {
+                v.forEach((value: IEntryReturn, index: number) => {
                   switch (value.segment) {
                     case "Lazer":
-                      L++;
+                      LAZER++;
                       break;
 
                     case "Educação":
-                      E++;
+                      EDUCACAO++;
                       break;
 
                     case "Investimentos":
-                      I++;
+                      INVESTIMENTOS++;
                       break;
 
                     case "Necessidades":
-                      N++;
+                      NECESSIDADES++;
                       break;
 
                     case "Curto e médio prazo":
-                      CM++;
+                      CURTOMEDIOPRAZO++;
                       break;
                   }
 
                   if (index == v.length - 1) {
                     // Realiza o cálculo de percentuais
-                    const TOTAL = L + E + I + N + CM;
-                    L = (L / TOTAL) * 100;
-                    E = (E / TOTAL) * 100;
-                    I = (I / TOTAL) * 100;
-                    N = (N / TOTAL) * 100;
-                    CM = (CM / TOTAL) * 100;
+                    const TOTAL =
+                      LAZER +
+                      EDUCACAO +
+                      INVESTIMENTOS +
+                      NECESSIDADES +
+                      CURTOMEDIOPRAZO;
 
-                    setDataPieChart([L, I, E, CM, N], (data) => {
-                      // Mapeia os dados criando um objeto para renderização do gráfico
-                      let objPie = data.map((value, index) => ({
-                        value,
-                        key: index,
-                        svg: {
-                          fill: THEME.theme?.isOnDarkTheme
-                            ? colorPieChartLight[index]
-                            : colorPieChartDark[index],
-                        },
-                      }));
-                      setFinalDataPieChart(objPie, () => {
-                        setRenderPie(true);
-                      });
-                    });
+                    LAZER = (LAZER / TOTAL) * 100;
+                    EDUCACAO = (EDUCACAO / TOTAL) * 100;
+                    INVESTIMENTOS = (INVESTIMENTOS / TOTAL) * 100;
+                    NECESSIDADES = (NECESSIDADES / TOTAL) * 100;
+                    CURTOMEDIOPRAZO = (CURTOMEDIOPRAZO / TOTAL) * 100;
+
+                    setDataPieChart(
+                      [
+                        LAZER,
+                        INVESTIMENTOS,
+                        EDUCACAO,
+                        CURTOMEDIOPRAZO,
+                        NECESSIDADES,
+                      ],
+                      (data: number[]) => {
+                        // Mapeia os dados criando um objeto para renderização do gráfico
+                        let objPie = data.map((value, index) => ({
+                          value,
+                          key: index,
+                          svg: {
+                            fill: THEME.theme?.isOnDarkTheme
+                              ? colorPieChartLight[index]
+                              : colorPieChartDark[index],
+                          },
+                        }));
+                        setFinalDataPieChart(objPie, () => {
+                          setRenderPie(true);
+                        });
+                      }
+                    );
                   }
                 });
               }
@@ -217,52 +228,10 @@ export default function Home() {
       });
   }
 
-  interface ISlices {
-    slices?: [
-      slice: {
-        pieCentroid: number[];
-        data: {
-          key: number;
-          svg: object;
-        };
-        value: number;
-      }
-    ];
-  }
-
-  // Criação de labels para o Pie Chart
-  const Label = ({ slices }: ISlices) => {
-    return (
-      <>
-        {slices?.map((slice, index) => {
-          const { pieCentroid, value } = slice;
-          return value !== 0 ? (
-            <ForeignObject
-              key={index}
-              // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
-              x={
-                dataPieChart[index] < 6
-                  ? pieCentroid[0] - 9
-                  : pieCentroid[0] - 12
-              }
-              y={pieCentroid[1] - 8}
-              width={100}
-              height={100}
-            >
-              <View>
-                <PieChartLabel>{value}%</PieChartLabel>
-              </View>
-            </ForeignObject>
-          ) : null;
-        })}
-      </>
-    );
-  };
-
   // Retorna os dados para a montagem do gráfico de Receita X Despesa
-  async function getLineDatabase() {
-    let initialMonth = date.month! - 2;
-    let initialYear = date.year!;
+  function getLineDatabase() {
+    let initialMonth = date.month - 2;
+    let initialYear = date.year;
 
     if (initialMonth == -1) {
       initialMonth = 11;
@@ -289,8 +258,8 @@ export default function Home() {
         snapshot.forEach((result) => {
           // Percorre os dados do banco colocando-os para a State
           setLineData(
-            (oldArray) => [...oldArray, result.data()],
-            (v) => {
+            (oldArray: IEntryReturn[]) => [...oldArray, result.data()],
+            (v: IEntryReturn[]) => {
               /**
                * Callback retorna os dados alterados da State.
                * Quando ela já tiver com o total de dados retornados do banco, aí é gerado o Gráfico na tela
@@ -349,32 +318,32 @@ export default function Home() {
                 // No banco, busca pelos dados acumulado dos meses, e abaixo, separa os valores de cada mês para gerar o gráfico
                 incomeChart = [0, 0, 0];
                 expenseChart = [0, 0, 0];
-                v.forEach((value) => {
+                v.forEach(({ date, type, value }) => {
                   let index = 0;
 
                   if (
-                    value.date >= initialDateFirstMonth &&
-                    value.date <= finalDateFirstMonth
+                    date >= initialDateFirstMonth &&
+                    date <= finalDateFirstMonth
                   ) {
                     index = 0;
                   } else if (
-                    value.date >= initialDateSecondMonth &&
-                    value.date <= finalDateSecondMonth
+                    date >= initialDateSecondMonth &&
+                    date <= finalDateSecondMonth
                   ) {
                     index = 1;
                   } else if (
-                    value.date >= initialDateThirdMonth &&
-                    value.date <= finalDateThirdMonth
+                    date >= initialDateThirdMonth &&
+                    date <= finalDateThirdMonth
                   ) {
                     index = 2;
                   }
-                  switch (value.type) {
+                  switch (type) {
                     case "Receita":
-                      incomeChart[index] += realToNumber(value.value);
+                      incomeChart[index] += realToNumber(value);
                       break;
 
                     case "Despesa":
-                      expenseChart[index] += realToNumber(value.value);
+                      expenseChart[index] += realToNumber(value);
                       break;
                   }
                 });
@@ -413,9 +382,9 @@ export default function Home() {
   }
 
   // Retorna o Saldo atual
-  async function getBalance() {
+  function getBalance() {
     if (date.month) {
-      await firebase
+      firebase
         .firestore()
         .collection("balance")
         .doc(user.uid)
@@ -432,8 +401,8 @@ export default function Home() {
   }
 
   React.useEffect(() => {
-    async function completeData() {
-      await firebase
+    function completeData() {
+      firebase
         .firestore()
         .collection("users")
         .doc(user.uid)
@@ -454,11 +423,7 @@ export default function Home() {
     }
 
     getBalance();
-
-    // Monta o gráfico de Receita X Despesa
     getLineDatabase();
-
-    // Monta o gráfico de Segmento
     getPieDatabase();
   }, [date.modality, date.month, date.year]);
 
@@ -591,7 +556,7 @@ export default function Home() {
               <StyledLoader width={140} height={140} radius={100} />
             ) : (
               <StyledPieChart data={finalDataPieChart}>
-                <Label />
+                <Label data={dataPieChart} />
               </StyledPieChart>
             )}
           </SegmentChartView>
