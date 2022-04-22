@@ -1,10 +1,10 @@
 import * as React from "react";
-import { TextInput, TextInputProps } from "react-native";
+import { TextInputMask, TextInputMaskProps } from "react-native-masked-text";
 import { Control, Controller, FieldValues } from "react-hook-form";
 import { AlertContext } from "../../context/Alert/alertContext";
 
-const UTextInput = (
-  props: TextInputProps & {
+const UTextInputMask = (
+  props: TextInputMaskProps & {
     helperText?: object;
     required?: boolean;
   }
@@ -24,16 +24,16 @@ const UTextInput = (
 
   return (
     <>
-      <TextInput {...props} />
+      <TextInputMask {...props} />
     </>
   );
 };
 
-export const DefaultTextInput = ({
+export const DefaultTextInputMask = ({
   name,
   control,
   ...props
-}: React.ComponentProps<typeof UTextInput> & {
+}: React.ComponentProps<typeof UTextInputMask> & {
   name: string;
   control: Control<FieldValues | any>;
 }) => {
@@ -42,7 +42,7 @@ export const DefaultTextInput = ({
       name={name}
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
-        <UTextInput
+        <UTextInputMask
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}
