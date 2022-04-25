@@ -46,7 +46,7 @@ export const ActiveMenuIcon: React.FC<{
   height: 3px;
   background-color: ${colors.strongBlue};
   position: absolute;
-  bottom: 60;
-  left: 30;
+  bottom: 60px;
+  left: 30px;
   border-radius: 50px;
 `;
