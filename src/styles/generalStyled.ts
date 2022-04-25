@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   ScrollView,
   ScrollViewProps,
+  Switch,
+  SwitchProps,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -76,36 +78,44 @@ export const ScrollViewTab: React.FC<ScrollViewProps> = styled(ScrollView)`
   border-bottom-right-radius: ${metrics.baseRadius}px;
 `;
 
+export const ViewTab = styled(View)`
+  flex: 1;
+  padding: ${metrics.basePadding * 1.5}px;
+  padding-bottom: 0px;
+  margin-bottom: 75px;
+  border-radius: ${metrics.baseRadius};
+  background-color: ${({ theme }) => theme.theme.secondary};
+  min-height: 500px;
+`;
+
+export const ViewTabContent = styled(View)`
+  flex: 1;
+  padding-bottom: ${metrics.basePadding * 1.5};
+  background-color: ${({ theme }) => theme.theme.secondary};
+`;
+
 export const FormContainer = styled(View)`
   width: 250px;
 `;
 
 export const StyledButton: React.FC<
-  TouchableOpacityProps & { additionalMargin?: number }
+  TouchableOpacityProps & { additionalMargin?: number; small?: boolean }
 > = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   background-color: ${colors.strongBlue};
-  border-radius: ${metrics.mediumRadius}px;
+  border-radius: ${({ small }) =>
+    !small ? metrics.mediumRadius : metrics.smallRadius}px;
   margin-bottom: ${({ additionalMargin }) =>
     additionalMargin ? additionalMargin : metrics.smallMargin}px;
-  width: 250px;
-  height: 45px;
+  width: ${({ small }) => (!small ? 250 : 80)}px;
+  height: ${({ small }) => (!small ? 45 : 30)}px;
 `;
 
-export const StyledButtonOutline: React.FC<
-  TouchableOpacityProps & { additionalMargin: number }
-> = styled(TouchableOpacity)`
-  align-items: center;
-  justify-content: center;
+export const StyledButtonOutline: typeof StyledButton = styled(StyledButton)`
   background-color: transparent;
   border-width: 2px;
   border-color: ${({ theme }) => theme.theme.blue};
-  border-radius: ${metrics.mediumRadius}px;
-  margin-bottom: ${({ additionalMargin }) =>
-    additionalMargin ? additionalMargin : metrics.smallMargin}px;
-  width: 250px;
-  height: 45px;
 `;
 
 export const ButtonText = styled(Text)`
@@ -152,6 +162,13 @@ export const TextUalletHeader = styled(Text)`
   font-size: ${fonts.big}px;
   color: ${({ theme }) => theme.theme.text};
   margin-left: ${metrics.baseMargin}px;
+`;
+
+export const TextHeaderScreen = styled(Text)`
+  font-family: ${fonts.ralewayBold};
+  font-size: ${fonts.large};
+  color: ${({ theme }) => theme.theme.text};
+  margin-bottom: ${metrics.baseMargin};
 `;
 
 export const HeaderTitleContainer = styled(View)`
@@ -220,3 +237,34 @@ export const StyledLoader: React.FC<{
   bg: theme.theme.secondary,
   radius: radius ? radius : metrics.mediumRadius,
 }))``;
+
+export const ButtonHeaderView = styled(View)`
+  margin-bottom: ${metrics.baseMargin}px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const SpaceAroundView = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+`;
+
+export const Label = styled(Text)`
+  font-family: ${fonts.ralewayExtraBold};
+  font-size: ${fonts.regular};
+  color: ${({ theme }) => theme.theme.text};
+`;
+
+export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
+  ({ theme }) => ({
+    thumbColor: colors.strongBlue,
+    trackColor: {
+      true: colors.lightBlue,
+      false: theme.theme.isOnDarkTheme ? colors.infoBlack : colors.gray,
+    },
+  })
+)`
+  margin-left: 5px;
+`;
