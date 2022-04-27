@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -8,6 +9,7 @@ import {
   Switch,
   SwitchProps,
   Text,
+  TextProps,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -23,6 +25,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { IconProps } from "react-native-vector-icons/Icon";
 import Loader from "../components/Loader";
 import { DefaultTextInputMask } from "../components/TextInputMask";
+import { TextInputMask } from "react-native-masked-text";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -83,14 +86,17 @@ export const ViewTab = styled(View)`
   padding: ${metrics.basePadding * 1.5}px;
   padding-bottom: 0px;
   margin-bottom: 75px;
-  border-radius: ${metrics.baseRadius};
+  border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme }) => theme.theme.secondary};
   min-height: 500px;
 `;
 
-export const ViewTabContent = styled(View)`
+export const ViewTabContent: React.FC<
+  ViewProps & { noPaddingBottom?: boolean }
+> = styled(View)`
   flex: 1;
-  padding-bottom: ${metrics.basePadding * 1.5};
+  padding-bottom: ${({ noPaddingBottom }) =>
+    noPaddingBottom ? 0 : metrics.basePadding * 1.5}px;
   background-color: ${({ theme }) => theme.theme.secondary};
 `;
 
@@ -116,6 +122,10 @@ export const StyledButtonOutline: typeof StyledButton = styled(StyledButton)`
   background-color: transparent;
   border-width: 2px;
   border-color: ${({ theme }) => theme.theme.blue};
+`;
+
+export const DeleteButton: typeof StyledButton = styled(StyledButton)`
+  background-color: ${colors.lightRed};
 `;
 
 export const ButtonText = styled(Text)`
@@ -164,11 +174,14 @@ export const TextUalletHeader = styled(Text)`
   margin-left: ${metrics.baseMargin}px;
 `;
 
-export const TextHeaderScreen = styled(Text)`
+export const TextHeaderScreen: React.FC<
+  TextProps & { noMarginBottom?: boolean }
+> = styled(Text)`
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.large};
   color: ${({ theme }) => theme.theme.text};
-  margin-bottom: ${metrics.baseMargin};
+  margin-bottom: ${({ noMarginBottom }) =>
+    noMarginBottom ? 0 : metrics.baseMargin}px;
 `;
 
 export const HeaderTitleContainer = styled(View)`
@@ -213,6 +226,18 @@ export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
   margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme }) => theme.theme.text};
 `;
+
+export const StyledInputDate = styled(StyledTextInputMask)`
+  width: 140px;
+  height: 30px;
+  border-radius: ${metrics.smallRadius}px;
+  margin-bottom: 0px;
+`;
+
+export const StyledLoading = styled(ActivityIndicator).attrs(() => ({
+  size: 20,
+  color: colors.white,
+}))``;
 
 export const Card = styled(View)`
   padding: 20px;

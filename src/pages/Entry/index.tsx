@@ -39,10 +39,10 @@ import {
   ViewTabContent,
 } from "../../styles/generalStyled";
 
-interface IEntryList {
+export interface IEntryList {
   date: number;
   description: string;
-  id: number;
+  id: string;
   modality: "Real" | "Projetado";
   segment: string | null;
   type: "Receita" | "Despesa";
@@ -118,7 +118,7 @@ export default function Entry() {
     }
   }
 
-  function ItemList({ item }) {
+  function ItemList({ item }: { item: IEntryList }) {
     return (
       <ItemView>
         <DescriptionView>
