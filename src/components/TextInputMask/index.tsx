@@ -47,6 +47,7 @@ export const DefaultTextInputMask = ({
           onBlur={onBlur}
           value={value}
           {...props}
+          maxLength={props.type === "datetime" ? 10 : undefined}
         />
       )}
     />
