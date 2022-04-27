@@ -1,9 +1,5 @@
 import * as React from "react";
-import {
-  Keyboard,
-  TouchableWithoutFeedback,
-  ActivityIndicator,
-} from "react-native";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -25,6 +21,7 @@ import {
   LogoHeader,
   StyledButton,
   StyledKeyboardAvoidingView,
+  StyledLoading,
   StyledTextInputMask,
   TextHeader,
 } from "../../styles/generalStyled";
@@ -175,7 +172,7 @@ export default function Complete() {
               />
               <StyledButton onPress={handleSubmit(registerData)}>
                 {loading ? (
-                  <ActivityIndicator size={20} color={colors.white} />
+                  <StyledLoading />
                 ) : (
                   <ButtonText>CONFIRMAR</ButtonText>
                 )}

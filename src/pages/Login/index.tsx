@@ -3,7 +3,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
-  ActivityIndicator,
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -42,6 +41,7 @@ import {
   FormContainer,
   StyledButton,
   ButtonText,
+  StyledLoading,
 } from "../../styles/generalStyled";
 import { colors, metrics } from "../../styles";
 interface IForm {
@@ -246,11 +246,7 @@ export default function Login() {
               additionalMargin={metrics.doubleBaseMargin}
               onPress={handleSubmit(loginUser)}
             >
-              {loading ? (
-                <ActivityIndicator size={20} color={colors.white} />
-              ) : (
-                <ButtonText>ENTRAR</ButtonText>
-              )}
+              {loading ? <StyledLoading /> : <ButtonText>ENTRAR</ButtonText>}
             </StyledButton>
             <TouchableOpacity onPress={() => setSheetOpen(true)}>
               <ActionText>Prefere entrar com as redes sociais?</ActionText>

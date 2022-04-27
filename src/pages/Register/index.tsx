@@ -1,9 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  TouchableWithoutFeedback,
-  Keyboard,
-  ActivityIndicator,
-} from "react-native";
+import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -22,6 +18,7 @@ import {
   LogoHeader,
   StyledButton,
   StyledKeyboardAvoidingView,
+  StyledLoading,
   StyledTextInput,
   TextUalletHeader,
 } from "../../styles/generalStyled";
@@ -174,7 +171,7 @@ export default function Register() {
             </FormContainer>
             <StyledButton onPress={handleSubmit(registerUser)}>
               {loading ? (
-                <ActivityIndicator size={20} color={colors.white} />
+                <StyledLoading />
               ) : (
                 <ButtonText>CRIAR CONTA</ButtonText>
               )}
