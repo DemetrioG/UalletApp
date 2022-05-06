@@ -7,14 +7,16 @@ export const IphoneStatusBar = styled(View)`
   position: absolute;
   top: 0;
   left: 0;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
-export const StyledStatusBar = styled(StatusBar).attrs(({ theme }) => ({
-  barStyle:
-    Platform.OS === "ios"
-      ? !theme.theme.isOnDarkTheme
-        ? "dark-content"
-        : "light-content"
-      : null,
-}))``;
+export const StyledStatusBar = styled(StatusBar).attrs(
+  ({ theme: { theme } }) => ({
+    barStyle:
+      Platform.OS === "ios"
+        ? !theme.isOnDarkTheme
+          ? "dark-content"
+          : "light-content"
+        : null,
+  })
+)``;

@@ -41,14 +41,14 @@ export const BackgroundContainerCenter = styled(View)`
   justify-content: center;
   padding: 0px ${metrics.basePadding}px;
   padding-top: ${metrics.topBottomPadding}px;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
 export const BackgroundContainer = styled(View)`
   flex: 1;
   padding: 0px ${metrics.basePadding}px;
   padding-top: ${metrics.topBottomPadding}px;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
 export const ContainerCenter = styled(View)`
@@ -61,7 +61,7 @@ export const ModalContainer = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.theme.transparency};
+  background-color: ${({ theme: { theme } }) => theme.transparency};
 `;
 
 export const ModalView: React.FC<
@@ -72,7 +72,7 @@ export const ModalView: React.FC<
   width: 294px;
   height: ${({ height }) => (height ? height : "auto")}px;
   border-radius: ${metrics.baseRadius}px;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
 export const ScrollViewTab: React.FC<ScrollViewProps> = styled(ScrollView)`
@@ -87,7 +87,7 @@ export const ViewTab = styled(View)`
   padding-bottom: 0px;
   margin-bottom: 75px;
   border-radius: ${metrics.baseRadius}px;
-  background-color: ${({ theme }) => theme.theme.secondary};
+  background-color: ${({ theme: { theme } }) => theme.secondary};
   min-height: 500px;
 `;
 
@@ -97,7 +97,7 @@ export const ViewTabContent: React.FC<
   flex: 1;
   padding-bottom: ${({ noPaddingBottom }) =>
     noPaddingBottom ? 0 : metrics.basePadding * 1.5}px;
-  background-color: ${({ theme }) => theme.theme.secondary};
+  background-color: ${({ theme: { theme } }) => theme.secondary};
 `;
 
 export const FormContainer = styled(View)`
@@ -121,7 +121,7 @@ export const StyledButton: React.FC<
 export const StyledButtonOutline: typeof StyledButton = styled(StyledButton)`
   background-color: transparent;
   border-width: 2px;
-  border-color: ${({ theme }) => theme.theme.blue};
+  border-color: ${({ theme: { theme } }) => theme.blue};
 `;
 
 export const DeleteButton: typeof StyledButton = styled(StyledButton)`
@@ -135,7 +135,7 @@ export const ButtonText = styled(Text)`
 `;
 
 export const ButtonOutlineText = styled(Text)`
-  color: ${({ theme }) => theme.theme.blue};
+  color: ${({ theme: { theme } }) => theme.blue};
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
 `;
@@ -163,14 +163,14 @@ export const Logo = styled(Image)`
 export const TextHeader = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.largest}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
   margin-top: ${metrics.baseMargin}px;
 `;
 
 export const TextUalletHeader = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.big}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
   margin-left: ${metrics.baseMargin}px;
 `;
 
@@ -179,7 +179,7 @@ export const TextHeaderScreen: React.FC<
 > = styled(Text)`
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.large}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${({ noMarginBottom }) =>
     noMarginBottom ? 0 : metrics.baseMargin}px;
 `;
@@ -192,7 +192,7 @@ export const HeaderTitleContainer = styled(View)`
 export const HeaderTitle = styled(Text)`
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.medium}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StyledTextInput: typeof DefaultTextInput = styled(
@@ -208,7 +208,7 @@ export const StyledTextInput: typeof DefaultTextInput = styled(
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
   margin-bottom: ${metrics.baseMargin}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
@@ -224,7 +224,7 @@ export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
   margin-bottom: ${metrics.baseMargin}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StyledInputDate = styled(StyledTextInputMask)`
@@ -241,15 +241,15 @@ export const StyledLoading = styled(ActivityIndicator).attrs(() => ({
 
 export const Card = styled(View)`
   padding: 20px;
-  background-color: ${({ theme }) => theme.theme.secondary};
+  background-color: ${({ theme: { theme } }) => theme.secondary};
   border-radius: ${metrics.baseRadius}px;
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
 export const StyledIcon: React.FC<
   IconProps & { color?: string; size?: number }
-> = styled(Feather).attrs(({ theme, color, size }) => ({
-  color: color ? color : theme.theme.text,
+> = styled(Feather).attrs(({ theme: { theme }, color, size }) => ({
+  color: color ? color : theme.text,
   size: size ? size : metrics.iconSize,
 }))``;
 
@@ -257,9 +257,9 @@ export const StyledLoader: React.FC<{
   width: number;
   height: number;
   radius?: number;
-}> = styled(Loader).attrs(({ theme, radius }) => ({
-  fg: theme.theme.primary,
-  bg: theme.theme.secondary,
+}> = styled(Loader).attrs(({ theme: { theme }, radius }) => ({
+  fg: theme.primary,
+  bg: theme.secondary,
   radius: radius ? radius : metrics.mediumRadius,
 }))``;
 
@@ -279,15 +279,15 @@ export const SpaceAroundView = styled(View)`
 export const Label = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
-  ({ theme }) => ({
+  ({ theme: { theme } }) => ({
     thumbColor: colors.strongBlue,
     trackColor: {
       true: colors.lightBlue,
-      false: theme.theme.isOnDarkTheme ? colors.infoBlack : colors.gray,
+      false: theme.isOnDarkTheme ? colors.infoBlack : colors.gray,
     },
   })
 )`

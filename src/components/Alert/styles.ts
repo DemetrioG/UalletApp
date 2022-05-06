@@ -15,5 +15,5 @@ export const TextAlert = styled(Text)`
   font-size: ${fonts.large}px;
   margin-bottom: ${metrics.doubleBaseMargin}px;
   text-align: center;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;

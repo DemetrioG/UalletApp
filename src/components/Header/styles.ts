@@ -20,7 +20,7 @@ export const HeaderView = styled(View)`
 export const HeaderText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.medium}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const HeaderIconView = styled(View)`

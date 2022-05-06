@@ -17,7 +17,7 @@ export const TextItem: React.FC<TextProps & { type: "Mês" | "Ano" }> = styled(
   font-family: ${({ type }) =>
     type === "Ano" ? fonts.montserratBold : fonts.ralewayBold};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const HeaderView = styled(View)`
@@ -29,5 +29,5 @@ export const HeaderView = styled(View)`
 export const Title = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.large}px;
-  color: ${({ theme }) => theme.theme.blue};
+  color: ${({ theme: { theme } }) => theme.blue};
 `;

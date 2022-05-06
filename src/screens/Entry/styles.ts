@@ -47,7 +47,7 @@ export const MoreView = styled(View)`
 
 export const LoadingText = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
-  color: ${({ theme }) => theme.theme.blue};
+  color: ${({ theme: { theme } }) => theme.blue};
 `;
 
 export const IncomeView = styled(View)`
@@ -60,7 +60,7 @@ export const IncomeView = styled(View)`
 export const IncomeText = styled(Text)`
   font-family: ${fonts.montserratBold};
   font-size: ${fonts.medium}px;
-  color: ${({ theme }) => theme.theme.blue};
+  color: ${({ theme: { theme } }) => theme.blue};
   margin-left: ${metrics.baseMargin / 2}px;
 `;
 
