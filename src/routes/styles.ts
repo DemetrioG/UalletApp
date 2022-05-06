@@ -6,8 +6,15 @@ import { colors, metrics } from "../styles";
 
 const Tab = createBottomTabNavigator();
 
+interface ITabListener {
+  route: {
+    name: string;
+  };
+}
+
 export const StyledTabNavigation: React.FC<{
   initialRouteName: string;
+  screenListeners: ({ route: { name } }: ITabListener) => void;
 }> = styled(Tab.Navigator).attrs(({ theme: { theme } }) => ({
   screenOptions: {
     headerShown: false,
