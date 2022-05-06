@@ -2,10 +2,10 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Index from "../pages/Index";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import ForgotPassword from "../pages/ForgotPassword";
+import Index from "../screens/Index";
+import Login from "../screens/Login";
+import Register from "../screens/Register";
+import ForgotPassword from "../screens/ForgotPassword";
 import { SafeAreaContainer } from "../styles/general";
 
 const Stack = createNativeStackNavigator();

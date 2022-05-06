@@ -14,7 +14,7 @@ import {
   Raleway_800ExtraBold,
 } from "@expo-google-fonts/raleway";
 
-import AppContent from "./src/pages/App";
+import AppContent from "./src/screens/App";
 import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";

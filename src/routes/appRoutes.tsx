@@ -3,8 +3,8 @@ import { Animated, Dimensions, Keyboard } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import StackHome from "../pages/StackHome";
-import StackEntry from "../pages/StackEntry";
+import StackHome from "../screens/StackHome";
+import StackEntry from "../screens/StackEntry";
 import { SafeAreaContainer, StyledIcon } from "../styles/general";
 import {
   ActiveMenuIcon,
