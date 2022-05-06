@@ -15,8 +15,13 @@ import {
   LogoutText,
   MenuContainer,
 } from "./styles";
-import { StyledIcon, StyledLoader } from "../../styles/generalStyled";
+import { StyledIcon, StyledLoader } from "../../styles/general";
 import { colors } from "../../styles";
+
+interface IHeader {
+  loader?: boolean;
+  setLoader?: Function;
+}
 
 const optionsMonth = [
   "Janeiro",
@@ -34,7 +39,7 @@ const optionsMonth = [
 ];
 const optionsYear: number[] = [];
 
-export default function Header({ loader, setLoader }) {
+export default function Header({ loader, setLoader }: IHeader) {
   const { user, setUser } = React.useContext(UserContext);
   const { date, setDate } = React.useContext(DateContext);
   const [menu, setMenu] = React.useState(false);
@@ -78,39 +83,41 @@ export default function Header({ loader, setLoader }) {
   }
 
   return (
-    <HeaderView>
-      <DatePicker
-        options={optionsMonth}
-        type="Mês"
-        visibility={pickerMonthVisible}
-        setVisibility={setPickerMonthVisible}
-        next={setPickerYearVisible}
-      />
-      <DatePicker
-        options={optionsYear}
-        type="Ano"
-        visibility={pickerYearVisible}
-        setVisibility={setPickerYearVisible}
-      />
-      {loader ? (
-        <StyledLoader width={160} height={15} />
-      ) : (
-        <HeaderText>Bem vindo, {user.name}!</HeaderText>
-      )}
-      <HeaderIconView>
-        <TouchableOpacity>
-          <StyledIcon
-            name="calendar"
-            onPress={() => setPickerMonthVisible(true)}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <StyledIcon name="bell" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMenu(!menu)}>
-          <StyledIcon name="more-horizontal" />
-        </TouchableOpacity>
-      </HeaderIconView>
+    <>
+      <HeaderView>
+        <DatePicker
+          options={optionsMonth}
+          type="Mês"
+          visibility={pickerMonthVisible}
+          setVisibility={setPickerMonthVisible}
+          next={setPickerYearVisible}
+        />
+        <DatePicker
+          options={optionsYear}
+          type="Ano"
+          visibility={pickerYearVisible}
+          setVisibility={setPickerYearVisible}
+        />
+        {loader ? (
+          <StyledLoader width={160} height={15} />
+        ) : (
+          <HeaderText>Bem vindo, {user.name}!</HeaderText>
+        )}
+        <HeaderIconView>
+          <TouchableOpacity>
+            <StyledIcon
+              name="calendar"
+              onPress={() => setPickerMonthVisible(true)}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <StyledIcon name="bell" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setMenu(!menu)}>
+            <StyledIcon name="more-horizontal" />
+          </TouchableOpacity>
+        </HeaderIconView>
+      </HeaderView>
       {menu && (
         <MenuContainer>
           <ItemContainer>
@@ -133,6 +140,6 @@ export default function Header({ loader, setLoader }) {
           </ItemContainer>
         </MenuContainer>
       )}
-    </HeaderView>
+    </>
   );
 }
