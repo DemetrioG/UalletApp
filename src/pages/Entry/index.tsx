@@ -37,7 +37,7 @@ import {
   StyledSwitch,
   TextHeaderScreen,
   ViewTabContent,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 
 export interface IEntryList {
   date: number;

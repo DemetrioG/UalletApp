@@ -70,7 +70,7 @@ export const ModalView: React.FC<
   padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
   align-items: ${({ center }) => (center ? "center" : "null")};
   width: 294px;
-  height: ${({ height }) => (height ? height : "auto")};
+  height: ${({ height }) => (height ? height : "auto")}px;
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme }) => theme.theme.primary};
 `;
@@ -178,7 +178,7 @@ export const TextHeaderScreen: React.FC<
   TextProps & { noMarginBottom?: boolean }
 > = styled(Text)`
   font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.large};
+  font-size: ${fonts.large}px;
   color: ${({ theme }) => theme.theme.text};
   margin-bottom: ${({ noMarginBottom }) =>
     noMarginBottom ? 0 : metrics.baseMargin}px;
@@ -278,7 +278,7 @@ export const SpaceAroundView = styled(View)`
 
 export const Label = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.regular};
+  font-size: ${fonts.regular}px;
   color: ${({ theme }) => theme.theme.text};
 `;
 

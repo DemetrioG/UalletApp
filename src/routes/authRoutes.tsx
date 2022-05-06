@@ -6,7 +6,7 @@ import Index from "../pages/Index";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import ForgotPassword from "../pages/ForgotPassword";
-import { SafeAreaContainer } from "../styles/generalStyled";
+import { SafeAreaContainer } from "../styles/general";
 
 const Stack = createNativeStackNavigator();
 export default function AuthRoutes() {

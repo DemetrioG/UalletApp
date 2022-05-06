@@ -57,7 +57,7 @@ import {
   ScrollViewTab,
   StyledIcon,
   StyledLoader,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 import { metrics, colors } from "../../styles";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");

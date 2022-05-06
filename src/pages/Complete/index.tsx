@@ -24,7 +24,7 @@ import {
   StyledLoading,
   StyledTextInputMask,
   TextHeader,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 import { colors } from "../../styles";
 
 interface IForm {

@@ -15,7 +15,7 @@ import { IconProps } from "react-native-vector-icons/Icon";
 
 export const PieChartLabel = styled(Text)`
   font-family: ${fonts.montserratMedium};
-  font-size: ${fonts.medium};
+  font-size: ${fonts.medium}px;
   color: ${colors.white};
 `;
 
@@ -189,7 +189,7 @@ export const ContentLabel = styled(View)`
   flex-direction: row;
   align-items: center;
   margin-bottom: 3px;
-  margin-left: ${metrics.baseMargin};
+  margin-left: ${metrics.baseMargin}px;
 `;
 
 export const DotView: React.FC<{ backgroundColor: string }> = styled(
@@ -201,11 +201,11 @@ export const DotView: React.FC<{ backgroundColor: string }> = styled(
   height: 10px;
   border-radius: 100px;
   margin-top: 2px;
-  margin-right: ${metrics.baseMargin / 2};
+  margin-right: ${metrics.baseMargin / 2}px;
 `;
 
 export const SegmentLabelText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.regular};
+  font-size: ${fonts.regular}px;
   color: ${({ theme }) => theme.theme.text};
 `;

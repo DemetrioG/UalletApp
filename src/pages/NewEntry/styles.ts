@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  StyleSheet,
   Text,
   TextProps,
   TouchableOpacity,
@@ -8,7 +7,7 @@ import {
   ViewProps,
 } from "react-native";
 import styled from "styled-components";
-import { colors, fonts, metrics } from "../../styles";
+import { fonts, metrics } from "../../styles";
 
 export const HorizontalView: React.FC<
   ViewProps & { noMarginBottom?: boolean }
@@ -36,37 +35,5 @@ export const TypeText: React.FC<
 
 export const ChangeType = styled(TouchableOpacity)`
   margin-top: 5px;
-  margin-left: ${metrics.baseMargin};
+  margin-left: ${metrics.baseMargin}px;
 `;
-
-const styles = (theme: any, type: any) =>
-  StyleSheet.create({
-    horizontalView: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: metrics.baseMargin,
-    },
-    typeView: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginLeft: 35,
-    },
-    typeText: {
-      fontFamily: fonts.ralewayExtraBold,
-      fontSize: fonts.largeEmphasis,
-      color:
-        theme == "light"
-          ? type == "Receita"
-            ? colors.strongGreen
-            : colors.strongRed
-          : type == "Receita"
-          ? colors.lightGreen
-          : colors.lightRed,
-    },
-    changeType: {
-      marginTop: 5,
-      marginLeft: metrics.baseMargin,
-    },
-  });
-
-export default styles;

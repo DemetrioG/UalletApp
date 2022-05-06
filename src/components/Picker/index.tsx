@@ -7,7 +7,7 @@ import {
 } from "react-native";
 
 import { colors } from "../../styles";
-import { StyledIcon } from "../../styles/generalStyled";
+import { StyledIcon } from "../../styles/general";
 import {
   ContentView,
   ItemPicker,

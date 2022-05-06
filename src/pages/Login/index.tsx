@@ -42,7 +42,7 @@ import {
   StyledButton,
   ButtonText,
   StyledLoading,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 import { colors, metrics } from "../../styles";
 interface IForm {
   email: string;
