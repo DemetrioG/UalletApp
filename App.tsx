@@ -1,7 +1,5 @@
 import * as React from "react";
 import { LogBox, Appearance } from "react-native";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
 import AppLoading from "expo-app-loading";
 import {
@@ -16,14 +14,12 @@ import {
   Raleway_800ExtraBold,
 } from "@expo-google-fonts/raleway";
 
-import Reducers from "./src/components/Reducers";
 import AppContent from "./src/pages/App";
 import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";
 import { DateContextProvider } from "./src/context/Date/dateContext";
 
-const store = createStore(Reducers);
 LogBox.ignoreAllLogs(true);
 
 export interface IThemeProvider {
@@ -56,17 +52,15 @@ export default function App(): JSX.Element {
     return <AppLoading />;
   } else {
     return (
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <UserContextProvider>
-            <DateContextProvider>
-              <AlertContextProvider>
-                <AppContent />
-              </AlertContextProvider>
-            </DateContextProvider>
-          </UserContextProvider>
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <UserContextProvider>
+          <DateContextProvider>
+            <AlertContextProvider>
+              <AppContent />
+            </AlertContextProvider>
+          </DateContextProvider>
+        </UserContextProvider>
+      </ThemeProvider>
     );
   }
 }
