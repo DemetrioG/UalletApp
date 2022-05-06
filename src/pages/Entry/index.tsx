@@ -42,7 +42,7 @@ import {
 export interface IEntryList {
   date: number;
   description: string;
-  id: string;
+  id: number;
   modality: "Real" | "Projetado";
   segment: string | null;
   type: "Receita" | "Despesa";
@@ -179,7 +179,7 @@ export default function Entry() {
       {entryList.length > 0 ? (
         <FlatList
           data={entryList}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <ItemList item={item} />}
         />
       ) : (
