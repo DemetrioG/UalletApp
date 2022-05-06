@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useStateCallback } from "../../functions";
 
 export interface IDate {
   month: number;
@@ -28,7 +27,7 @@ export function DateContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [date, setDate] = useStateCallback({
+  const [date, setDate] = React.useState<IDate>({
     ...initialDateState,
   });
 
