@@ -6,7 +6,7 @@ import Entry from "../Entry";
 import NewEntry from "../NewEntry";
 import Alert from "../../components/Alert";
 import Header from "../../components/Header";
-import { BackgroundContainer, ViewTab } from "../../styles/generalStyled";
+import { BackgroundContainer, ViewTab } from "../../styles/general";
 
 const Stack = createNativeStackNavigator();
 

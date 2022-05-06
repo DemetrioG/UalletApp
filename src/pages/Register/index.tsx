@@ -21,7 +21,7 @@ import {
   StyledLoading,
   StyledTextInput,
   TextUalletHeader,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 import { colors } from "../../styles";
 
 interface IForm {

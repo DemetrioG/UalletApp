@@ -4,11 +4,7 @@ import { Modal, ScrollView } from "react-native";
 import { DateContext } from "../../context/Date/dateContext";
 import { getStorage, setStorage } from "../../functions/storageData";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
-import {
-  ModalContainer,
-  ModalView,
-  StyledIcon,
-} from "../../styles/generalStyled";
+import { ModalContainer, ModalView, StyledIcon } from "../../styles/general";
 import { colors } from "../../styles";
 
 interface IDatePicker {

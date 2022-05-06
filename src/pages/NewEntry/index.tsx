@@ -38,7 +38,7 @@ import {
   StyledTextInputMask,
   TextHeaderScreen,
   ViewTabContent,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 import { metrics, colors } from "../../styles";
 import { IEntryList } from "../Entry";
 

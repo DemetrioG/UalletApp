@@ -10,7 +10,7 @@ import {
   StyledButton,
   ModalContainer,
   ModalView,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 
 const ERROR = require("../../../assets/icons/error.json");
 const SUCCESS = require("../../../assets/icons/check.json");

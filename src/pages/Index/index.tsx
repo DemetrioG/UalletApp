@@ -9,7 +9,7 @@ import {
   FlexContainer,
   StyledButton,
   StyledButtonOutline,
-} from "../../styles/generalStyled";
+} from "../../styles/general";
 import { ImageCarousel, TitleCarousel, StyledCarousel } from "./styles";
 import { metrics } from "../../styles/index";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Animated, StyleSheet, Text, TextProps, View } from "react-native";
+import { Animated, Text, TextProps, View } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 
@@ -18,7 +18,7 @@ export const DescriptionView = styled(View)`
 
 export const DescriptionText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.regular};
+  font-size: ${fonts.regular}px;
   color: ${colors.gray};
 `;
 
@@ -52,23 +52,23 @@ export const LoadingText = styled(Text)`
 
 export const IncomeView = styled(View)`
   flex-direction: row;
-  padding-bottom: ${metrics.basePadding};
+  padding-bottom: ${metrics.basePadding}px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.lightPrimary};
 `;
 
 export const IncomeText = styled(Text)`
   font-family: ${fonts.montserratBold};
-  font-size: ${fonts.medium};
+  font-size: ${fonts.medium}px;
   color: ${({ theme }) => theme.theme.blue};
-  margin-left: ${metrics.baseMargin / 2};
+  margin-left: ${metrics.baseMargin / 2}px;
 `;
 
 export const AutoEntryView = styled(View)`
   flex-direction: row;
   align-items: center;
   position: relative;
-  margin-bottom: ${metrics.baseMargin};
+  margin-bottom: ${metrics.baseMargin}px;
 `;
 
 export const InfoView = styled(Animated.View)`
@@ -79,7 +79,7 @@ export const InfoView = styled(Animated.View)`
   width: 130px;
   height: 40px;
   background-color: ${colors.infoBlack};
-  border-radius: ${metrics.smallRadius};
+  border-radius: ${metrics.smallRadius}px;
 `;
 
 export const TriangleOfToolTip = styled(View)`
@@ -104,114 +104,3 @@ export const InfoText = styled(Text)`
   color: ${colors.white};
   text-align: center;
 `;
-
-const styles = (theme, type) =>
-  StyleSheet.create({
-    buttonHeaderView: {
-      marginBottom: metrics.baseMargin,
-    },
-    itemView: {
-      flexDirection: "row",
-    },
-    descriptionView: {
-      width: "50%",
-      alignItems: "center",
-      justifyContent: "center",
-      borderRightWidth: 1,
-      borderRightColor: colors.lightPrimary,
-      padding: metrics.basePadding / 2,
-    },
-    descriptionText: {
-      fontFamily: fonts.ralewayMedium,
-      fontSize: fonts.regular,
-      color: colors.gray,
-    },
-    valueView: {
-      width: "40%",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: metrics.basePadding / 2,
-    },
-    valueText: {
-      fontFamily: fonts.montserratMedium,
-      fontSize: fonts.regular,
-      color:
-        theme == "light"
-          ? type == "Receita"
-            ? colors.strongGreen
-            : colors.strongRed
-          : type == "Receita"
-          ? colors.lightGreen
-          : colors.lightRed,
-    },
-    moreView: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    loadingText: {
-      fontFamily: fonts.ralewayExtraBold,
-      color: theme == "light" ? colors.strongBlue : colors.lightBlue,
-    },
-    iconEmpty: {
-      width: 230,
-    },
-    iconLoading: {
-      width: 50,
-    },
-    incomeView: {
-      flexDirection: "row",
-      paddingBottom: metrics.basePadding,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.lightPrimary,
-    },
-    incomeText: {
-      fontFamily: fonts.montserratBold,
-      fontSize: fonts.medium,
-      color: theme == "light" ? colors.strongBlue : colors.lightBlue,
-      marginLeft: metrics.baseMargin / 2,
-    },
-    autoEntryView: {
-      flexDirection: "row",
-      alignItems: "center",
-      position: "relative",
-      marginBottom: metrics.baseMargin,
-    },
-    infoIcon: {
-      marginLeft: metrics.baseMargin,
-    },
-    infoView: {
-      padding: 5,
-      position: "absolute",
-      right: 5,
-      top: 45,
-      width: 130,
-      height: 40,
-      backgroundColor: colors.infoBlack,
-      borderRadius: metrics.smallRadius,
-    },
-    infoText: {
-      fontFamily: fonts.ralewayMedium,
-      fontSize: 10,
-      color: colors.white,
-      textAlign: "center",
-    },
-    triangle: {
-      position: "absolute",
-      width: 15,
-      height: 15,
-      top: -10,
-      right: 20,
-      borderTopWidth: 0,
-      borderRightWidth: 7,
-      borderBottomWidth: 13,
-      borderLeftWidth: 7,
-      borderTopColor: "transparent",
-      borderRightColor: "transparent",
-      borderBottomColor: colors.infoBlack,
-      borderLeftColor: "transparent",
-    },
-  });
-
-export default styles;
