@@ -70,7 +70,7 @@ export const ModalView: React.FC<
   padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
   align-items: ${({ center }) => (center ? "center" : "null")};
   width: 294px;
-  height: ${({ height }) => (height ? height : "auto")}px;
+  height: ${({ height }) => (height ? height + "px" : "auto")};
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
