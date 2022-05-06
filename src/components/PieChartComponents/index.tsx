@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { ForeignObject } from "react-native-svg";
-import { PieChartLabel } from "../../pages/Home/styles";
+import { PieChartLabel } from "../../screens/Home/styles";
 import { colors } from "../../styles";
 
 interface ISlices {
