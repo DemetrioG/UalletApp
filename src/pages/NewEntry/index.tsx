@@ -1,39 +1,28 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import * as React from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
-  TextInput,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  Animated,
-  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { connect } from "react-redux";
-import Feather from "react-native-vector-icons/Feather";
-import { TextInputMask } from "react-native-masked-text";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import firebase from "../../services/firebase";
+import { UserContext } from "../../context/User/userContext";
+import { AlertContext } from "../../context/Alert/alertContext";
+import Picker from "../../components/Picker";
+import Calendar from "../../components/Calendar";
 import {
   convertDate,
   convertDateToDatabase,
   realToNumber,
   convertDateFromDatabase,
 } from "../../functions/index";
-import { general, metrics, colors } from "../../styles";
-import styles, {
-  ChangeType,
-  HorizontalView,
-  TypeText,
-  TypeView,
-} from "./styles";
-import Picker from "../../components/Picker";
-import Calendar from "../../components/Calendar";
-import { editTitleAlert } from "../../components/Actions/titleAlertAction";
-import { editTypeAlert } from "../../components/Actions/typeAlertAction";
-import { editVisibilityAlert } from "../../components/Actions/visibilityAlertAction";
+import { ChangeType, HorizontalView, TypeText, TypeView } from "./styles";
 import {
   ButtonOutlineText,
   ButtonText,
@@ -50,12 +39,7 @@ import {
   TextHeaderScreen,
   ViewTabContent,
 } from "../../styles/generalStyled";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { AlertContext } from "../../context/Alert/alertContext";
-import { UserContext } from "../../context/User/userContext";
+import { metrics, colors } from "../../styles";
 import { IEntryList } from "../Entry";
 
 interface IForm {
@@ -78,27 +62,20 @@ export default function NewEntry({
   route: { params: IEntryList };
 }) {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { user, setUser } = useContext(UserContext);
-  const { alert, setAlert } = useContext(AlertContext);
-  const opacity = useRef(new Animated.Value(0)).current;
+  const { user } = React.useContext(UserContext);
+  const { setAlert } = React.useContext(AlertContext);
 
-  const [register, setRegister] = useState(false);
-  const [exclude, setExclude] = useState(false);
-
-  /**
-   * @type new  Novo lançamento
-   * @type edit Editar lançamento
-   * @type fix  Nova despesa fixa
-   */
-  const [typeScreen, setTypeScreen] = useState("new");
-  const [type, setType] = useState<"Receita" | "Despesa">("Receita");
-  const [date, setDate] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [modality, setModality] = useState<typeof optionsModality | null>(null);
-  const [segment, setSegment] = useState<typeof optionsSegment | null>(null);
-  const [modalityVisible, setModalityVisible] = useState(null);
-  const [segmentVisible, setSegmentVisible] = useState(null);
-  const [calendar, setCalendar] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isDelete, setIsDelete] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [type, setType] = React.useState<"Receita" | "Despesa">("Receita");
+  const [modality, setModality] = React.useState<"Projetado" | "Real" | null>(
+    null
+  );
+  const [segment, setSegment] = React.useState<string | null>(null);
+  const [modalityVisible, setModalityVisible] = React.useState(false);
+  const [segmentVisible, setSegmentVisible] = React.useState(false);
+  const [calendar, setCalendar] = React.useState(false);
 
   const optionsModality = ["Projetado", "Real"];
   const optionsSegment = [
@@ -118,48 +95,21 @@ export default function NewEntry({
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Verifica se é Edição e preenche os dados nos campos
     if (params) {
-      setTypeScreen("edit");
+      setIsEditing(true);
       setType(params.type);
       setModality(params.modality);
+      setSegment(params.segment || null);
       setValue("entrydate", convertDateFromDatabase(params.date));
       setValue("description", params.description);
       setValue("value", params.value);
-
-      const segmentParam = params.segment;
-      if (segmentParam) {
-        setSegment(segmentParam);
-      }
     }
   }, []);
 
-  function onChangeDate(date) {
-    setCalendar(Platform.OS === "ios");
+  function setDateToInput(date: Date) {
     setValue("entrydate", convertDate(date));
-  }
-
-  function dateFade() {
-    if (!calendar) {
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-      setCalendar(true);
-    } else {
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-      setCalendar(false);
-    }
-  }
-
-  function closeAndroid() {
-    setCalendar(false);
   }
 
   async function registerEntry(
@@ -184,7 +134,8 @@ export default function NewEntry({
       }));
     }
 
-    setRegister(true);
+    Keyboard.dismiss();
+    setIsLoading(true);
     let id = idRegister ? idRegister : 1;
 
     if (!idRegister) {
@@ -213,7 +164,7 @@ export default function NewEntry({
       .doc(id.toString())
       .set({
         id: id,
-        date: convertDateToDatabase(date),
+        date: convertDateToDatabase(entrydate),
         type: type,
         description: description,
         modality: modality,
@@ -229,32 +180,29 @@ export default function NewEntry({
             : "Erro ao cadastrar as informações",
           redirect: null,
         }));
-        return setRegister(false);
+        return setIsLoading(false);
       });
 
     // Atualiza o saldo atual no banco
-    let balance;
+    let balance = 0;
     await firebase
       .firestore()
       .collection("balance")
       .doc(user.uid)
       .collection(modality)
-      .doc(Number(date.slice(3, 5)).toString())
+      .doc(Number(entrydate.slice(3, 5)).toString())
       .get()
       .then((v) => {
-        balance = v.data().balance;
-      })
-      .catch(() => {
-        balance = 0;
+        balance = v.data()?.balance;
       });
 
-    if (typeScreen == "new") {
+    if (!isEditing) {
       if (type == "Receita") {
         balance += realToNumber(value);
       } else {
         balance -= realToNumber(value);
       }
-    } else if (typeScreen == "edit") {
+    } else {
       if (type == "Receita") {
         balance += realToNumber(value) - realToNumber(params.value);
       } else {
@@ -267,22 +215,26 @@ export default function NewEntry({
       .collection("balance")
       .doc(user.uid)
       .collection(modality)
-      .doc(Number(date.slice(3, 5)).toString())
+      .doc(Number(entrydate?.slice(3, 5)).toString())
       .set({
         balance: balance,
+      })
+      .then(() => {
+        setAlert(() => ({
+          visibility: true,
+          type: "success",
+          title: idRegister
+            ? "Lançamento atualizado com sucesso"
+            : "Dados cadastrados com sucesso",
+          redirect: "Lançamentos",
+        }));
       });
-    setAlert(() => ({
-      visibility: true,
-      type: "success",
-      title: idRegister
-        ? "Lançamento atualizado com sucesso"
-        : "Dados cadastrados com sucesso",
-      redirect: "Lançamentos",
-    }));
+
+    return setIsLoading(false);
   }
 
   async function deleteEntry() {
-    setExclude(true);
+    setIsDelete(true);
     await firebase
       .firestore()
       .collection("entry")
@@ -297,11 +249,11 @@ export default function NewEntry({
           title: "Erro ao excluir o lançamento",
           redirect: null,
         }));
-        return setExclude(false);
+        return setIsDelete(false);
       });
 
     // Atualiza o saldo atual no banco
-    let balance;
+    let balance = 0;
     const dateMonth = Number(
       convertDateFromDatabase(params.date).slice(3, 5)
     ).toString();
@@ -313,9 +265,9 @@ export default function NewEntry({
       .doc(dateMonth)
       .get()
       .then((v) => {
-        balance = v.data().balance;
+        balance = v.data()?.balance;
       })
-      .catch((error) => {
+      .catch(() => {
         balance = 0;
       });
 
@@ -325,7 +277,7 @@ export default function NewEntry({
       balance -= realToNumber(params.value);
     }
 
-    firebase
+    await firebase
       .firestore()
       .collection("balance")
       .doc(user.uid)
@@ -351,16 +303,12 @@ export default function NewEntry({
             <StyledIcon name="chevron-left" style={{ marginRight: 10 }} />
           </TouchableOpacity>
           <TextHeaderScreen noMarginBottom>
-            {typeScreen == "new"
-              ? "Novo Lançamento"
-              : typeScreen == "edit"
-              ? "Editar lançamento"
-              : null}
+            {isEditing ? "Editar lançamento" : "Novo lançamento"}
           </TextHeaderScreen>
         </HorizontalView>
         <TypeView>
           <TypeText type={type}>{type}</TypeText>
-          {typeScreen == "new" && (
+          {!isEditing && (
             <ChangeType
               onPress={() =>
                 type == "Receita" ? setType("Despesa") : setType("Receita")
@@ -380,7 +328,7 @@ export default function NewEntry({
                   type="datetime"
                   control={control}
                 />
-                <TouchableOpacity onPress={() => dateFade()}>
+                <TouchableOpacity onPress={() => setCalendar(!calendar)}>
                   <StyledIcon
                     name="calendar"
                     color={colors.lightGray}
@@ -420,10 +368,10 @@ export default function NewEntry({
                 helperText={errors}
               />
             </FormContainer>
-            {typeScreen == "new" && (
+            {!isEditing && (
               <View>
                 <StyledButton onPress={handleSubmit((e) => registerEntry(e))}>
-                  {register ? (
+                  {isLoading ? (
                     <StyledLoading />
                   ) : (
                     <ButtonText>CADASTRAR</ButtonText>
@@ -436,19 +384,19 @@ export default function NewEntry({
                 </StyledButtonOutline>
               </View>
             )}
-            {typeScreen == "edit" && (
+            {isEditing && (
               <View>
                 <StyledButton
                   onPress={handleSubmit((e) => registerEntry(e, params.id))}
                 >
-                  {register ? (
+                  {isLoading ? (
                     <StyledLoading />
                   ) : (
                     <ButtonText>ATUALIZAR</ButtonText>
                   )}
                 </StyledButton>
                 <DeleteButton onPress={deleteEntry}>
-                  {exclude ? (
+                  {isDelete ? (
                     <StyledLoading />
                   ) : (
                     <ButtonText>EXCLUIR</ButtonText>
@@ -457,23 +405,11 @@ export default function NewEntry({
               </View>
             )}
           </View>
-          {calendar ? (
-            <Animated.View
-              style={{
-                position: "absolute",
-                justifyContent: "flex-end",
-                width: "100%",
-                bottom: 0,
-                opacity,
-              }}
-            >
-              <Calendar
-                onClose={Platform.OS === "ios" ? dateFade : closeAndroid}
-                date={new Date()}
-                onChange={onChangeDate}
-              />
-            </Animated.View>
-          ) : null}
+          <Calendar
+            date={new Date()}
+            setDateToInput={setDateToInput}
+            calendarIsShow={calendar}
+          />
         </ContainerCenter>
       </ViewTabContent>
     </TouchableWithoutFeedback>
