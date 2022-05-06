@@ -2,22 +2,11 @@ import * as React from "react";
 import { TouchableOpacity } from "react-native";
 
 import { UserContext } from "../../context/User/userContext";
-import { DateContext } from "../../context/Date/dateContext";
 import firebase from "../../services/firebase";
 import DatePicker from "../DatePicker";
-import {
-  HeaderIconView,
-  HeaderText,
-  HeaderView,
-  ItemContainer,
-  ItemContent,
-  ItemText,
-  LogoutText,
-  MenuContainer,
-} from "./styles";
+import { HeaderIconView, HeaderText, HeaderView } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
-import { colors } from "../../styles";
-
+import Menu from "../Menu";
 interface IHeader {
   loader?: boolean;
   setLoader?: Function;
@@ -41,7 +30,6 @@ const optionsYear: number[] = [];
 
 export default function Header({ loader, setLoader }: IHeader) {
   const { user, setUser } = React.useContext(UserContext);
-  const { date, setDate } = React.useContext(DateContext);
   const [menu, setMenu] = React.useState(false);
   const [pickerMonthVisible, setPickerMonthVisible] = React.useState(false);
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
@@ -74,13 +62,6 @@ export default function Header({ loader, setLoader }: IHeader) {
       setLoader(false);
     }
   });
-
-  function changeModality() {
-    setDate((dateState) => ({
-      ...dateState,
-      modality: dateState.modality === "Real" ? "Projetado" : "Real",
-    }));
-  }
 
   return (
     <>
@@ -118,28 +99,7 @@ export default function Header({ loader, setLoader }: IHeader) {
           </TouchableOpacity>
         </HeaderIconView>
       </HeaderView>
-      {menu && (
-        <MenuContainer>
-          <ItemContainer>
-            <ItemContent onPress={changeModality}>
-              <ItemText>{date.modality}</ItemText>
-              <StyledIcon name="refresh-cw" size={15} color={colors.white} />
-            </ItemContent>
-          </ItemContainer>
-          <ItemContainer>
-            <ItemContent>
-              <ItemText>Configurações</ItemText>
-              <StyledIcon name="settings" size={15} color={colors.white} />
-            </ItemContent>
-          </ItemContainer>
-          <ItemContainer>
-            <ItemContent>
-              <LogoutText>LOGOUT</LogoutText>
-              <StyledIcon name="power" size={15} color={colors.lightRed} />
-            </ItemContent>
-          </ItemContainer>
-        </MenuContainer>
-      )}
+      <Menu visibility={menu} />
     </>
   );
 }
