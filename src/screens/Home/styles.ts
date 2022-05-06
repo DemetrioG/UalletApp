@@ -29,7 +29,7 @@ export const CardHeaderView = styled(View)`
 export const CardHeaderText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.medium}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const CardTextView = styled(View)`
@@ -52,15 +52,15 @@ export const LogoCard = styled(Image)`
 export const Balance = styled(Text)`
   font-family: ${fonts.montserratBold};
   font-size: ${fonts.larger}px;
-  color: ${({ theme }) => theme.theme.blue};
+  color: ${({ theme: { theme } }) => theme.blue};
 `;
 
 export const Invest = styled(Text)`
   font-family: ${fonts.montserratBold};
   font-size: ${fonts.larger}px;
   margin-bottom: ${metrics.baseMargin}px;
-  color: ${({ theme }) =>
-    !theme.theme.isOnDarkTheme ? colors.strongPurple : colors.yellow};
+  color: ${({ theme: { theme } }) =>
+    !theme.isOnDarkTheme ? colors.strongPurple : colors.yellow};
 `;
 
 export const CardStatusView = styled(View)`
@@ -73,30 +73,30 @@ export const StatusText: React.FC<TextProps & { bold?: boolean }> = styled(
   font-family: ${({ bold }) =>
     bold ? fonts.ralewayExtraBold : fonts.ralewayMedium};
   font-size: ${fonts.medium}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StatusPercentText = styled(Text)`
   font-family: ${fonts.montserratExtraBold};
-  color: ${({ theme }) => theme.theme.green};
+  color: ${({ theme: { theme } }) => theme.green};
 `;
 
 export const CardFooterText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
   margin-right: ${metrics.baseMargin / 2}px;
 `;
 
 export const InvestPercentual = styled(Text)`
   font-family: ${fonts.montserratMedium};
   font-size: 14px;
-  color: ${({ theme }) => theme.theme.green};
+  color: ${({ theme: { theme } }) => theme.green};
 `;
 
 export const IncomeChartView = styled(View)`
   padding: 18px;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
   border-radius: ${metrics.baseRadius}px;
   width: 45%;
 `;
@@ -116,13 +116,13 @@ export const IncomeChartLabelView = styled(View)`
   margin-top: 5px;
   flex-direction: row;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
 export const IncomeChartLabelText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const IncomeView = styled(View)`
@@ -137,7 +137,7 @@ export const IncomeView = styled(View)`
 export const PercentualText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
   margin-right: ${metrics.baseMargin / 2}px;
 `;
 
@@ -207,5 +207,5 @@ export const DotView: React.FC<{ backgroundColor: string }> = styled(
 export const SegmentLabelText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;

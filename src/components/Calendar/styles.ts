@@ -12,7 +12,7 @@ export const DateHeader = styled(View)`
   padding: ${metrics.basePadding}px;
   justify-content: flex-end;
   align-items: flex-end;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
   border-bottom-width: 1px;
   border-color: ${colors.lightGray};
   border-top-left-radius: ${metrics.baseRadius}px;
@@ -22,11 +22,11 @@ export const DateHeader = styled(View)`
 export const DateText = styled(Text)`
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StyledDatePicker: React.FC<
   AndroidNativeProps | IOSNativeProps
 > = styled(DateTimePicker)`
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;

@@ -19,7 +19,7 @@ export const StyledInput = styled(View)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
   margin-bottom: ${metrics.baseMargin}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const PickerText: React.FC<
@@ -35,20 +35,20 @@ export const ModalContainer = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.theme.transparency};
+  background-color: ${({ theme: { theme } }) => theme.transparency};
 `;
 
 export const ContentView = styled(View)`
   padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
   width: 294px;
-  background-color: ${({ theme }) => theme.theme.primary};
+  background-color: ${({ theme: { theme } }) => theme.primary};
   border-radius: ${metrics.baseRadius}px;
 `;
 
 export const Title = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.large}px;
-  color: ${({ theme }) => theme.theme.blue};
+  color: ${({ theme: { theme } }) => theme.blue};
   margin-left: ${metrics.baseMargin}px;
   margin-bottom: ${metrics.baseMargin}px;
 `;
@@ -65,5 +65,5 @@ export const ItemPicker = styled(TouchableOpacity)`
 export const ItemText = styled(Text)`
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;

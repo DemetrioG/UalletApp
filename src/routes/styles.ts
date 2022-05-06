@@ -8,14 +8,14 @@ const Tab = createBottomTabNavigator();
 
 export const StyledTabNavigation: React.FC<{
   initialRouteName: string;
-}> = styled(Tab.Navigator).attrs(({ theme }) => ({
+}> = styled(Tab.Navigator).attrs(({ theme: { theme } }) => ({
   screenOptions: {
     headerShown: false,
     tabBarHideOnKeyboard: true,
     tabBarShowLabel: false,
     tabBarStyle: {
       height: 60,
-      backgroundColor: theme.theme.secondary,
+      backgroundColor: theme.secondary,
       position: "absolute",
       marginHorizontal: metrics.basePadding,
       borderTopWidth: 0,

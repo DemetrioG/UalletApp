@@ -15,8 +15,8 @@ export const TitleCarousel = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   text-align: center;
   margin-top: ${metrics.doubleBaseMargin}px;
-  color: ${({ theme }) => theme.theme.text};
-  background-color: ${({ theme }) => theme.theme.primary};
+  color: ${({ theme: { theme } }) => theme.text};
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
 export const StyledCarousel = styled(Carousel).attrs((props) => ({

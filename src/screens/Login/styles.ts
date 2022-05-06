@@ -14,7 +14,7 @@ import { fonts, colors, metrics } from "../../styles";
 export const ActionText = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
-  color: ${({ theme }) => theme.theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
@@ -22,7 +22,7 @@ export const SheetContainer: React.MemoExoticComponent<
   React.ForwardRefExoticComponent<
     BottomSheetProps & React.RefAttributes<BottomSheetMethods>
   >
-> = styled(BottomSheet).attrs(({ theme }) => ({
+> = styled(BottomSheet).attrs(({ theme: { theme } }) => ({
   handleIndicatorStyle: {
     width: 30,
     height: 5,
@@ -30,7 +30,7 @@ export const SheetContainer: React.MemoExoticComponent<
   },
   backgroundStyle: {
     borderRadius: metrics.largeRadius,
-    backgroundColor: theme.theme.secondary,
+    backgroundColor: theme.secondary,
   },
 }))`
   margin: 0px ${metrics.baseMargin}px;
