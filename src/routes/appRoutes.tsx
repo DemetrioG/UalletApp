@@ -42,33 +42,99 @@ export default function AppRoutes() {
       duration: 1800,
       useNativeDriver: true,
     }).start();
+  }, []);
 
-    // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
-    Keyboard.addListener("keyboardDidShow", () => {
-      setKeyboardVisible(true);
+  // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
+  Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardVisible(true);
 
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 50,
-        useNativeDriver: true,
-      }).start();
-    });
-
-    Keyboard.addListener("keyboardDidHide", () => {
-      setKeyboardVisible(false);
-
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 1800,
-        useNativeDriver: true,
-      }).start();
-    });
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 50,
+      useNativeDriver: true,
+    }).start();
   });
+
+  Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardVisible(false);
+
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 1800,
+      useNativeDriver: true,
+    }).start();
+  });
+
+  function homeActive() {
+    Animated.spring(tabOffsetValue, {
+      toValue: getWidth() * 2,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function entryActive() {
+    Animated.spring(tabOffsetValue, {
+      toValue: getWidth(),
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function integrateActive() {
+    Animated.spring(tabOffsetValue, {
+      toValue: getWidth() * 3,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function investActive() {
+    Animated.spring(tabOffsetValue, {
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function reportsActive() {
+    Animated.spring(tabOffsetValue, {
+      toValue: getWidth() * 4,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function showActive(name: string) {
+    switch (name) {
+      case "InvestimentosTab":
+        investActive();
+        break;
+
+      case "LançamentosTab":
+        entryActive();
+        break;
+
+      case "HomeTab":
+        homeActive();
+        break;
+
+      case "IntegraçõesTab":
+        integrateActive();
+        break;
+
+      case "RelatóriosTab":
+        reportsActive();
+        break;
+
+      default:
+        homeActive();
+        break;
+    }
+  }
 
   return (
     <NavigationContainer>
       <SafeAreaContainer>
-        <StyledTabNavigation initialRouteName="HomeTab">
+        <StyledTabNavigation
+          initialRouteName="HomeTab"
+          screenListeners={({ route: { name } }) => showActive(name)}
+        >
           <Tab.Screen
             name="InvestimentosTab"
             component={StackHome}
@@ -77,14 +143,6 @@ export default function AppRoutes() {
                 return <StyledIcon name="pie-chart" />;
               },
             }}
-            listeners={({ navigation, route }) => ({
-              tabPress: (e) => {
-                Animated.spring(tabOffsetValue, {
-                  toValue: 0,
-                  useNativeDriver: true,
-                }).start();
-              },
-            })}
           />
           <Tab.Screen
             name="LançamentosTab"
@@ -94,14 +152,6 @@ export default function AppRoutes() {
                 return <StyledIcon name="edit-3" />;
               },
             }}
-            listeners={({ navigation, route }) => ({
-              tabPress: (e) => {
-                Animated.spring(tabOffsetValue, {
-                  toValue: getWidth(),
-                  useNativeDriver: true,
-                }).start();
-              },
-            })}
           />
           <Tab.Screen
             name="HomeTab"
@@ -113,14 +163,6 @@ export default function AppRoutes() {
                 </HomeIconContainer>
               ),
             }}
-            listeners={({ navigation, route }) => ({
-              tabPress: (e) => {
-                Animated.spring(tabOffsetValue, {
-                  toValue: getWidth() * 2,
-                  useNativeDriver: true,
-                }).start();
-              },
-            })}
           />
           <Tab.Screen
             name="IntegraçõesTab"
@@ -130,14 +172,6 @@ export default function AppRoutes() {
                 return <StyledIcon name="refresh-cw" />;
               },
             }}
-            listeners={({ navigation, route }) => ({
-              tabPress: (e) => {
-                Animated.spring(tabOffsetValue, {
-                  toValue: getWidth() * 3,
-                  useNativeDriver: true,
-                }).start();
-              },
-            })}
           />
           <Tab.Screen
             name="RelatóriosTab"
@@ -147,14 +181,6 @@ export default function AppRoutes() {
                 return <StyledIcon name="list" />;
               },
             }}
-            listeners={({ navigation, route }) => ({
-              tabPress: (e) => {
-                Animated.spring(tabOffsetValue, {
-                  toValue: getWidth() * 4,
-                  useNativeDriver: true,
-                }).start();
-              },
-            })}
           />
         </StyledTabNavigation>
         {!keyboardVisible && (
