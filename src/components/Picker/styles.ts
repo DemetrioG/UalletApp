@@ -59,7 +59,7 @@ export const ItemPicker = styled(TouchableOpacity)`
   padding: ${metrics.basePadding}px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.lightGray};
-  margin-bottom: ${metrics.baseMargin};
+  margin-bottom: ${metrics.baseMargin}px;
 `;
 
 export const ItemText = styled(Text)`
