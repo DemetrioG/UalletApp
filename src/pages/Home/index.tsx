@@ -78,7 +78,7 @@ export default function Home() {
   const { date } = React.useContext(DateContext);
   const { alert } = React.useContext(AlertContext);
 
-  const [loader, setLoader] = React.useState(false);
+  const [loader, setLoader] = React.useState(true);
   const [headerLoader, setHeaderLoader] = React.useState(true);
   const [balance, setBalance] = React.useState<string | null>(null);
   const [hideBalance, setHideBalance] = React.useState(false);
@@ -401,8 +401,8 @@ export default function Home() {
   }
 
   React.useEffect(() => {
-    function completeData() {
-      firebase
+    async function completeData() {
+      await firebase
         .firestore()
         .collection("users")
         .doc(user.uid)
@@ -427,15 +427,7 @@ export default function Home() {
     getPieDatabase();
   }, [date.modality, date.month, date.year]);
 
-  if (
-    balance &&
-    renderLine &&
-    incomePercentual &&
-    expensePercentual &&
-    renderPie &&
-    loader &&
-    !headerLoader
-  ) {
+  if (balance && renderLine && loader && renderPie && !headerLoader) {
     setLoader(false);
   }
 
