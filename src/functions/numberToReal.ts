@@ -15,9 +15,12 @@ export default function numberToReal(number: number) {
     style: "currency",
     currency: "BRL",
   });
-  newValue = newValue.replace(",", "-");
-  newValue = newValue.replace(".", ",");
-  newValue = newValue.replace("-", ".");
+
+  if (Platform.OS === "android") {
+    newValue = newValue.replace(",", "-");
+    newValue = newValue.replace(".", ",");
+    newValue = newValue.replace("-", ".");
+  }
 
   return newValue;
 }
