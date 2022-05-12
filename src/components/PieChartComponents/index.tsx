@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import { ForeignObject } from "react-native-svg";
 import { PieChartLabel } from "../../screens/Home/styles";
-import { colors } from "../../styles";
 
 interface ISlices {
   slices?: [
@@ -16,21 +15,6 @@ interface ISlices {
   ];
   data: number[];
 }
-
-export const colorPieChartLight = [
-  colors.darkPrimary,
-  colors.strongPurple,
-  colors.lightPurple,
-  colors.strongRed,
-  colors.lightRed,
-];
-export const colorPieChartDark = [
-  colors.darkPrimary,
-  colors.strongRed,
-  colors.lightRed,
-  colors.lightBlue,
-  colors.whiteBlue,
-];
 
 // Criação de labels para o Pie Chart
 export const Label = ({ slices, data }: ISlices) => {

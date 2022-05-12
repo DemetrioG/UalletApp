@@ -12,6 +12,7 @@ export const LIGHT = {
   green: "#536F34",
   transparency: "rgba(227, 222, 222, 0.95)",
   statusBar: "dark-content",
+  colorPieChart: ["#252333", "#8F47AD", "#AA6EC4", "#FF2F45", "#FF4C5F"],
 };
 
 export const DARK = {
@@ -24,4 +25,5 @@ export const DARK = {
   green: "#98BC71",
   transparency: "rgba(49, 47, 66, 0.95)",
   statusBar: "light-content",
+  colorPieChart: ["#252333", "#FF2F45", "#FF4C5F", "#6499E3", "#98BBEC"],
 };
