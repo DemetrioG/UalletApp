@@ -7,10 +7,7 @@ import DatePicker from "../DatePicker";
 import { HeaderIconView, HeaderText, HeaderView } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
 import Menu from "../Menu";
-interface IHeader {
-  loader?: boolean;
-  setLoader?: Function;
-}
+import { LoaderContext } from "../../context/Loader/loaderContext";
 
 const optionsMonth = [
   "Janeiro",
@@ -28,8 +25,9 @@ const optionsMonth = [
 ];
 const optionsYear: number[] = [];
 
-export default function Header({ loader, setLoader }: IHeader) {
+export default function Header() {
   const { user, setUser } = React.useContext(UserContext);
+  const { loader, setLoader } = React.useContext(LoaderContext);
   const [menu, setMenu] = React.useState(false);
   const [pickerMonthVisible, setPickerMonthVisible] = React.useState(false);
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
@@ -38,30 +36,33 @@ export default function Header({ loader, setLoader }: IHeader) {
     optionsYear.push(new Date().getFullYear() + index);
   }
 
-  React.useEffect(() => {
-    async function getData() {
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .get()
-        .then((v) => {
-          // Pega o primeiro nome do usuário
-          setUser((userState) => ({
-            ...userState,
-            name: v.data()?.name.split(" ", 1),
-          }));
-        });
-    }
+  async function getData() {
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(user.uid)
+      .get()
+      .then((v) => {
+        // Pega o primeiro nome do usuário
+        setUser((userState) => ({
+          ...userState,
+          name: v.data()?.name.split(" ", 1),
+        }));
+      });
+  }
 
+  React.useEffect(() => {
     if (!user.name) {
       getData();
     }
 
-    if (user.name != "" && setLoader) {
-      setLoader(false);
+    if (user.name != "") {
+      setLoader((loaderState) => ({
+        ...loaderState,
+        name: true,
+      }));
     }
-  });
+  }, [user]);
 
   return (
     <>
@@ -79,8 +80,8 @@ export default function Header({ loader, setLoader }: IHeader) {
           visibility={pickerYearVisible}
           setVisibility={setPickerYearVisible}
         />
-        {loader ? (
-          <StyledLoader width={160} height={15} />
+        {loader.visible ? (
+          <StyledLoader width={160} height={15} radius={6} />
         ) : (
           <HeaderText>Bem vindo, {user.name}!</HeaderText>
         )}

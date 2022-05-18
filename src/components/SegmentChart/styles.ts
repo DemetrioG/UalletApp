@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { Text as TextSVG, TextProps, Svg } from "react-native-svg";
 import { PieChart } from "react-native-svg-charts";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
@@ -44,10 +45,21 @@ export const ChartContainer = styled(View)`
   justify-content: center;
 `;
 
-export const PieChartLabel = styled(Text)`
-  font-family: ${fonts.montserratMedium};
-  font-size: ${fonts.medium}px;
-  color: ${colors.white};
+export const PieChartLabel: React.FC<
+  TextProps & {
+    index: number;
+    pieCentroId: object;
+  }
+> = styled(TextSVG).attrs(({ index, pieCentroId }) => ({
+  key: index,
+  x: pieCentroId[0],
+  y: pieCentroId[1],
+  textAnchor: "middle",
+  alignmentBaseline: "middle",
+  fill: "white",
+}))`
+  font-size: ${fonts.regular}px;
+  font-family: ${fonts.ralewayBold};
 `;
 
 export const SegmentChartView = styled(View)`

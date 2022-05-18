@@ -33,24 +33,24 @@ import {
   StyledIcon,
   StyledLoader,
 } from "../../styles/general";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
 export default function Home() {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
+  const { loader, setLoader } = React.useContext(LoaderContext);
   const { date } = React.useContext(DateContext);
   const { alert } = React.useContext(AlertContext);
 
-  const [loader, setLoader] = React.useState(false);
-  const [headerLoader, setHeaderLoader] = React.useState(true);
   const [balance, setBalance] = React.useState<string | null>(null);
   const [hideBalance, setHideBalance] = React.useState(false);
   const [hideInvest, setHideInvest] = React.useState(false);
 
   // Retorna o Saldo atual
   function getBalance() {
-    if (date.month) {
+    if (date.year !== 0) {
       firebase
         .firestore()
         .collection("balance")
@@ -63,6 +63,12 @@ export default function Home() {
           } else {
             setBalance("R$ 0,00");
           }
+          !loader.balance
+            ? setLoader((loaderState) => ({
+                ...loaderState,
+                balance: true,
+              }))
+            : null;
         });
     }
   }
@@ -86,21 +92,28 @@ export default function Home() {
   }
 
   React.useEffect(() => {
+    getBalance();
     if (!user.complete) {
       completeData();
     }
-
-    getBalance();
-  }, [date]);
-
-  if (balance && loader && !headerLoader) {
-    setLoader(false);
-  }
+    if (
+      loader.name &&
+      loader.balance &&
+      loader.lineChart &&
+      loader.segmentChart &&
+      loader.visible
+    ) {
+      setLoader((loaderState) => ({
+        ...loaderState,
+        visible: false,
+      }));
+    }
+  }, [date, loader]);
 
   return (
     <BackgroundContainer>
       {alert.visibility && <Alert />}
-      <Header loader={loader} setLoader={setHeaderLoader} />
+      <Header />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
         <Card>
           <CardHeaderView>
@@ -117,8 +130,8 @@ export default function Home() {
               <LogoCard source={LOGO_SMALL} width={1} />
             </View>
           </CardHeaderView>
-          {loader ? (
-            <StyledLoader width={160} height={30} />
+          {loader.visible ? (
+            <StyledLoader width={160} height={30} radius={10} />
           ) : (
             <Balance>{!hideBalance ? balance : "** ** ** ** **"}</Balance>
           )}
@@ -160,11 +173,7 @@ export default function Home() {
           <LineChart />
         </Card>
         <Card>
-          {loader ? (
-            <StyledLoader width={140} height={140} radius={100} />
-          ) : (
-            <SegmentChart />
-          )}
+          <SegmentChart />
         </Card>
       </ScrollViewTab>
     </BackgroundContainer>

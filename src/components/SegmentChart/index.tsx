@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import { ForeignObject } from "react-native-svg";
+import Svg, { ForeignObject, Text } from "react-native-svg";
 import { DateContext } from "../../context/Date/dateContext";
 import { UserContext } from "../../context/User/userContext";
 import { getFinalDateMonth } from "../../functions";
@@ -16,6 +16,8 @@ import {
   ChartContainer,
 } from "./styles";
 import EmptyChart from "../EmptyChart";
+import { LoaderContext } from "../../context/Loader/loaderContext";
+import { StyledLoader } from "../../styles/general";
 
 interface ISlices {
   slices?: [
@@ -38,18 +40,21 @@ export const Label = ({ slices, data }: ISlices) => {
       {slices?.map((slice, index) => {
         const { pieCentroid, value } = slice;
         return value !== 0 ? (
-          <ForeignObject
-            key={index}
-            // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
-            x={data[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
-            y={pieCentroid[1] - 8}
-            width={100}
-            height={100}
-          >
-            <View>
-              <PieChartLabel>{value}%</PieChartLabel>
-            </View>
-          </ForeignObject>
+          // <ForeignObject
+          //   key={index}
+          //   // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
+          //   x={data[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
+          //   y={pieCentroid[1] - 8}
+          //   width={100}
+          //   height={100}
+          // >
+          //   <View style={{ borderWidth: 1, borderColor: "red" }}>
+          //     <PieChartLabel>{value}%</PieChartLabel>
+          //   </View>
+          // </ForeignObject>
+          <PieChartLabel index={index} pieCentroId={pieCentroid}>
+            {value}%
+          </PieChartLabel>
         ) : null;
       })}
     </>
@@ -59,6 +64,7 @@ export const Label = ({ slices, data }: ISlices) => {
 export default function SegmentChart() {
   const { date, setDate } = React.useContext(DateContext);
   const { user, setUser } = React.useContext(UserContext);
+  const { loader, setLoader } = React.useContext(LoaderContext);
   /**
    * INDEX
    * 0: Leisure
@@ -69,7 +75,6 @@ export default function SegmentChart() {
    */
   const [data, setData] = React.useState([0, 0, 0, 0, 0]);
   const [empty, setEmpty] = React.useState(false);
-  const notInitialRender = React.useRef(false);
 
   async function getData() {
     if (date.year !== 0) {
@@ -152,6 +157,10 @@ export default function SegmentChart() {
           } else {
             setEmpty(true);
           }
+          setLoader((loaderState) => ({
+            ...loaderState,
+            segmentChart: true,
+          }));
         });
     }
   }
@@ -161,44 +170,50 @@ export default function SegmentChart() {
   }, [date]);
 
   return (
-    <ChartContainer>
-      {empty ? (
-        <EmptyChart
-          emphasisText="Parece que você não cadastrou nenhuma despesa para o período"
-          iconName="pie-chart"
-          helperText="Realize seu primeiro lançamento!"
-        />
+    <>
+      {loader.visible ? (
+        <StyledLoader width={140} height={140} radius={100} />
       ) : (
-        <>
-          <SegmentChartView>
-            <StyledPieChart data={data}>
-              <Label data={data} />
-            </StyledPieChart>
-          </SegmentChartView>
-          <SegmentLabelView>
-            <ContentLabel>
-              <DotView index={0} />
-              <SegmentLabelText>Lazer</SegmentLabelText>
-            </ContentLabel>
-            <ContentLabel>
-              <DotView index={2} />
-              <SegmentLabelText>Educação</SegmentLabelText>
-            </ContentLabel>
-            <ContentLabel>
-              <DotView index={1} />
-              <SegmentLabelText>Investimentos</SegmentLabelText>
-            </ContentLabel>
-            <ContentLabel>
-              <DotView index={4} />
-              <SegmentLabelText>Necessidades</SegmentLabelText>
-            </ContentLabel>
-            <ContentLabel>
-              <DotView index={3} />
-              <SegmentLabelText>Curto e médio prazo</SegmentLabelText>
-            </ContentLabel>
-          </SegmentLabelView>
-        </>
+        <ChartContainer>
+          {empty ? (
+            <EmptyChart
+              emphasisText="Parece que você não cadastrou nenhuma despesa para o período"
+              iconName="pie-chart"
+              helperText="Realize seu primeiro lançamento!"
+            />
+          ) : (
+            <>
+              <SegmentChartView>
+                <StyledPieChart data={data}>
+                  <Label data={data} />
+                </StyledPieChart>
+              </SegmentChartView>
+              <SegmentLabelView>
+                <ContentLabel>
+                  <DotView index={0} />
+                  <SegmentLabelText>Lazer</SegmentLabelText>
+                </ContentLabel>
+                <ContentLabel>
+                  <DotView index={2} />
+                  <SegmentLabelText>Educação</SegmentLabelText>
+                </ContentLabel>
+                <ContentLabel>
+                  <DotView index={1} />
+                  <SegmentLabelText>Investimentos</SegmentLabelText>
+                </ContentLabel>
+                <ContentLabel>
+                  <DotView index={4} />
+                  <SegmentLabelText>Necessidades</SegmentLabelText>
+                </ContentLabel>
+                <ContentLabel>
+                  <DotView index={3} />
+                  <SegmentLabelText>Curto e médio prazo</SegmentLabelText>
+                </ContentLabel>
+              </SegmentLabelView>
+            </>
+          )}
+        </ChartContainer>
       )}
-    </ChartContainer>
+    </>
   );
 }

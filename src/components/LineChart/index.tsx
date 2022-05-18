@@ -1,6 +1,7 @@
 import * as React from "react";
 import { View } from "react-native";
 import { DateContext } from "../../context/Date/dateContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 import { UserContext } from "../../context/User/userContext";
 import {
   dateMonthNumber,
@@ -8,6 +9,7 @@ import {
   realToNumber,
 } from "../../functions";
 import firebase from "../../services/firebase";
+import { StyledLoader } from "../../styles/general";
 import EmptyChart from "../EmptyChart";
 import {
   ChartContainer,
@@ -24,6 +26,7 @@ import {
 export default function LineChart() {
   const { date, setDate } = React.useContext(DateContext);
   const { user, setUser } = React.useContext(UserContext);
+  const { loader, setLoader } = React.useContext(LoaderContext);
 
   const [data, setData] = React.useState([
     [0, 0, 0],
@@ -147,6 +150,10 @@ export default function LineChart() {
           } else {
             setEmpty(true);
           }
+          setLoader((loaderState) => ({
+            ...loaderState,
+            lineChart: true,
+          }));
         });
     }
   }
@@ -157,43 +164,57 @@ export default function LineChart() {
 
   return (
     <>
-      {empty ? (
-        <EmptyChart
-          emphasisText="Parece que não há dados registrados para o balanço"
-          iconName="bar-chart-2"
-          helperText="Realize seu primeiro lançamento!"
-        />
+      {loader.visible ? (
+        <StyledLoader width={140} height={114} radius={15} />
       ) : (
         <ChartContainer>
-          <ChartView>
-            <StyledLineChart data={data} />
-            <LabelView>
-              <LabelText>{initLabel}</LabelText>
-              <LabelText>{finalLabel}</LabelText>
-            </LabelView>
-          </ChartView>
-          <PercentualView>
-            <View>
-              <PercentualText>
-                Receita mensal{"\u00A0"}
-                {"\u00A0"}
-                {"\u00A0"}
-                <PercentualValue type="income" percentual={income}>
-                  {income}%
-                </PercentualValue>
-                <PercentualIcon percentual={income} type="income" size={15} />
-              </PercentualText>
-            </View>
-            <View>
-              <PercentualText>
-                Despesa mensal{"\u00A0"}
-                <PercentualValue type="expense" percentual={expense}>
-                  {expense}%
-                </PercentualValue>
-                <PercentualIcon percentual={expense} type="expense" size={15} />
-              </PercentualText>
-            </View>
-          </PercentualView>
+          {empty ? (
+            <EmptyChart
+              emphasisText="Parece que não há dados registrados para o balanço"
+              iconName="bar-chart-2"
+              helperText="Realize seu primeiro lançamento!"
+            />
+          ) : (
+            <>
+              <ChartView>
+                <StyledLineChart data={data} />
+                <LabelView>
+                  <LabelText>{initLabel}</LabelText>
+                  <LabelText>{finalLabel}</LabelText>
+                </LabelView>
+              </ChartView>
+              <PercentualView>
+                <View>
+                  <PercentualText>
+                    Receita mensal{"\u00A0"}
+                    {"\u00A0"}
+                    {"\u00A0"}
+                    <PercentualValue type="income" percentual={income}>
+                      {income}%
+                    </PercentualValue>
+                    <PercentualIcon
+                      percentual={income}
+                      type="income"
+                      size={15}
+                    />
+                  </PercentualText>
+                </View>
+                <View>
+                  <PercentualText>
+                    Despesa mensal{"\u00A0"}
+                    <PercentualValue type="expense" percentual={expense}>
+                      {expense}%
+                    </PercentualValue>
+                    <PercentualIcon
+                      percentual={expense}
+                      type="expense"
+                      size={15}
+                    />
+                  </PercentualText>
+                </View>
+              </PercentualView>
+            </>
+          )}
         </ChartContainer>
       )}
     </>

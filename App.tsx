@@ -19,6 +19,7 @@ import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";
 import { DateContextProvider } from "./src/context/Date/dateContext";
+import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -56,7 +57,9 @@ export default function App(): JSX.Element {
         <UserContextProvider>
           <DateContextProvider>
             <AlertContextProvider>
-              <AppContent />
+              <LoaderContextProvider>
+                <AppContent />
+              </LoaderContextProvider>
             </AlertContextProvider>
           </DateContextProvider>
         </UserContextProvider>
