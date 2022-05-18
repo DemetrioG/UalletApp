@@ -8,6 +8,7 @@ import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { sleep, getFinalDateMonth, numberToReal } from "../../functions/index";
+import { ITimestamp } from "../../functions/convertDateFromDatabase";
 import { colors, metrics } from "../../styles";
 import {
   ItemView,
@@ -40,7 +41,7 @@ import {
 } from "../../styles/general";
 
 export interface IEntryList {
-  date: number;
+  date: ITimestamp;
   description: string;
   id: number;
   modality: "Real" | "Projetado";
@@ -68,9 +69,11 @@ export default function Entry() {
   React.useEffect(() => {
     async function getEntry() {
       // Pega o mês de referência do App para realizar a busca dos registros
-      let initialDate = Date.parse(`${date.month}/01/${date.year}`);
-      let finalDate = Date.parse(
-        `${date.month}/${getFinalDateMonth(date.month, date.year)}/${date.year}`
+      const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+      const finalDate = new Date(
+        `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+          date.year
+        } 23:59:59`
       );
 
       // Busca os registros dentro do período de referência
