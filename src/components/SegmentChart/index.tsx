@@ -1,6 +1,5 @@
 import * as React from "react";
-import { View } from "react-native";
-import Svg, { ForeignObject, Text } from "react-native-svg";
+import { ForeignObject } from "react-native-svg";
 import { DateContext } from "../../context/Date/dateContext";
 import { UserContext } from "../../context/User/userContext";
 import { getFinalDateMonth } from "../../functions";
@@ -40,21 +39,16 @@ export const Label = ({ slices, data }: ISlices) => {
       {slices?.map((slice, index) => {
         const { pieCentroid, value } = slice;
         return value !== 0 ? (
-          // <ForeignObject
-          //   key={index}
-          //   // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
-          //   x={data[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
-          //   y={pieCentroid[1] - 8}
-          //   width={100}
-          //   height={100}
-          // >
-          //   <View style={{ borderWidth: 1, borderColor: "red" }}>
-          //     <PieChartLabel>{value}%</PieChartLabel>
-          //   </View>
-          // </ForeignObject>
-          <PieChartLabel index={index} pieCentroId={pieCentroid}>
-            {value}%
-          </PieChartLabel>
+          <ForeignObject
+            key={index}
+            // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
+            x={data[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
+            y={pieCentroid[1] - 8}
+            width={100}
+            height={100}
+          >
+            <PieChartLabel>{value}%</PieChartLabel>
+          </ForeignObject>
         ) : null;
       })}
     </>
