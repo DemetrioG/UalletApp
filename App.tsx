@@ -2,13 +2,13 @@ import * as React from "react";
 import { LogBox, Appearance } from "react-native";
 import { ThemeProvider } from "styled-components";
 import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
 import {
   Montserrat_500Medium,
   Montserrat_700Bold,
   Montserrat_800ExtraBold,
 } from "@expo-google-fonts/montserrat";
 import {
-  useFonts,
   Raleway_500Medium,
   Raleway_700Bold,
   Raleway_800ExtraBold,
@@ -19,6 +19,7 @@ import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";
 import { DateContextProvider } from "./src/context/Date/dateContext";
+import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -56,7 +57,9 @@ export default function App(): JSX.Element {
         <UserContextProvider>
           <DateContextProvider>
             <AlertContextProvider>
-              <AppContent />
+              <LoaderContextProvider>
+                <AppContent />
+              </LoaderContextProvider>
             </AlertContextProvider>
           </DateContextProvider>
         </UserContextProvider>

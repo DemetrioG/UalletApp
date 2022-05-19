@@ -3,8 +3,13 @@
  * @returns    Data no padrão DD/MM/YYY
  */
 
-export default function convertDateFromDatabase(date: number) {
-  const newDate = new Date(date).toString();
+export interface ITimestamp {
+  nanoseconds: number;
+  seconds: number;
+}
+
+export default function convertDateFromDatabase({ seconds }: ITimestamp) {
+  const newDate = new Date(seconds * 1000).toString();
 
   const day = newDate.slice(8, 10);
   let month = newDate.slice(4, 7);
