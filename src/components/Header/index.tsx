@@ -8,6 +8,7 @@ import { HeaderIconView, HeaderText, HeaderView } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
 import Menu from "../Menu";
 import { LoaderContext } from "../../context/Loader/loaderContext";
+import { setStorage } from "../../functions/storageData";
 
 const optionsMonth = [
   "Janeiro",
@@ -51,6 +52,14 @@ export default function Header() {
       });
   }
 
+  function handleHide() {
+    setStorage("hideNumbers", !user.hideNumbers);
+    setUser((userState) => ({
+      ...userState,
+      hideNumbers: !userState.hideNumbers,
+    }));
+  }
+
   React.useEffect(() => {
     if (!user.name) {
       getData();
@@ -86,6 +95,9 @@ export default function Header() {
           <HeaderText>Bem vindo, {user.name}!</HeaderText>
         )}
         <HeaderIconView>
+          <TouchableOpacity onPress={handleHide}>
+            <StyledIcon name={!user.hideNumbers ? "eye" : "eye-off"} />
+          </TouchableOpacity>
           <TouchableOpacity>
             <StyledIcon
               name="calendar"

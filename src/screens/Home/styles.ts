@@ -28,13 +28,6 @@ export const CardTextView = styled(View)`
   align-items: center;
 `;
 
-export const IconContainer: React.FC<
-  TouchableOpacityProps & { marginTop?: number }
-> = styled(TouchableOpacity)`
-  margin-left: ${metrics.baseMargin}px;
-  margin-top: ${({ marginTop }) => (marginTop ? marginTop : 0)}px;
-`;
-
 export const LogoCard = styled(Image)`
   width: 20px;
   height: 25px;

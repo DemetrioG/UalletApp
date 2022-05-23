@@ -1,10 +1,12 @@
 import * as React from "react";
+import { getStorage } from "../../functions/storageData";
 
 interface IUser {
   signed: boolean;
   complete: boolean;
   uid: string | undefined;
   name: string;
+  hideNumbers: boolean;
 }
 
 export const initialUserState: IUser = {
@@ -12,6 +14,7 @@ export const initialUserState: IUser = {
   complete: false,
   uid: undefined,
   name: "",
+  hideNumbers: false,
 };
 
 export const UserContext = React.createContext<{
@@ -32,6 +35,18 @@ export function UserContextProvider({
   const [user, setUser] = React.useState<IUser>({
     ...initialUserState,
   });
+
+  React.useEffect(() => {
+    (async () => {
+      const storedData = await getStorage("hideNumbers");
+      console.log(storedData);
+
+      setUser((userState) => ({
+        ...userState,
+        hideNumbers: storedData,
+      }));
+    })();
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
