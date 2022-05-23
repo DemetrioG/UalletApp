@@ -25,16 +25,16 @@ const optionsMonth = [
 ];
 const optionsYear: number[] = [];
 
+for (let index = 0; index < 5; index++) {
+  optionsYear.push(new Date().getFullYear() + index);
+}
+
 export default function Header() {
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
   const [menu, setMenu] = React.useState(false);
   const [pickerMonthVisible, setPickerMonthVisible] = React.useState(false);
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
-
-  for (let index = 0; index < 15; index++) {
-    optionsYear.push(new Date().getFullYear() + index);
-  }
 
   async function getData() {
     await firebase

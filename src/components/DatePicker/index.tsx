@@ -39,26 +39,27 @@ export default function DatePicker({
     );
   });
 
+  async function loadStorage() {
+    const storedMonth = await getStorage("Mês");
+    const storedYear = await getStorage("Ano");
+
+    if (storedMonth && storedYear) {
+      setDate((dateState) => ({
+        ...dateState,
+        month: type == "Mês" ? storedMonth : dateState.month,
+        year: type == "Ano" ? storedYear : dateState.year,
+      }));
+    } else {
+      setDate((dateState) => ({
+        ...dateState,
+        month: type == "Mês" ? new Date().getMonth() + 1 : dateState.month,
+        year: type == "Ano" ? new Date().getFullYear() : dateState.year,
+      }));
+    }
+  }
+
   // Pega a referência de Mês e Ano, e coloca no Contexto
   React.useEffect(() => {
-    async function loadStorage() {
-      const storedMonth = await getStorage("Mês");
-      const storedYear = await getStorage("Ano");
-
-      if (storedMonth && storedYear) {
-        setDate((dateState) => ({
-          ...dateState,
-          month: type == "Mês" ? storedMonth : dateState.month,
-          year: type == "Ano" ? storedYear : dateState.year,
-        }));
-      } else {
-        setDate((dateState) => ({
-          ...dateState,
-          month: type == "Mês" ? new Date().getMonth() + 1 : dateState.month,
-          year: type == "Ano" ? new Date().getFullYear() : dateState.year,
-        }));
-      }
-    }
     loadStorage();
   }, [visibility]);
 
