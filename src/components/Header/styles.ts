@@ -21,4 +21,5 @@ export const HeaderIconView = styled(View)`
   width: 110px;
   flex-direction: row;
   justify-content: space-between;
+  min-width: 140px;
 `;

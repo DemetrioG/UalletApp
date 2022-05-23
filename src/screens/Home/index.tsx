@@ -19,7 +19,6 @@ import {
   CardHeaderView,
   CardStatusView,
   CardTextView,
-  IconContainer,
   Invest,
   InvestPercentual,
   LogoCard,
@@ -45,8 +44,6 @@ export default function Home() {
   const { alert } = React.useContext(AlertContext);
 
   const [balance, setBalance] = React.useState<string | null>(null);
-  const [hideBalance, setHideBalance] = React.useState(false);
-  const [hideInvest, setHideInvest] = React.useState(false);
 
   // Retorna o Saldo atual
   function getBalance() {
@@ -119,12 +116,6 @@ export default function Home() {
           <CardHeaderView>
             <CardTextView>
               <CardHeaderText>Saldo atual</CardHeaderText>
-              <IconContainer
-                marginTop={4}
-                onPress={() => setHideBalance(!hideBalance)}
-              >
-                <StyledIcon name={!hideBalance ? "eye" : "eye-off"} size={15} />
-              </IconContainer>
             </CardTextView>
             <View>
               <LogoCard source={LOGO_SMALL} width={1} />
@@ -133,7 +124,7 @@ export default function Home() {
           {loader.visible ? (
             <StyledLoader width={160} height={30} radius={10} />
           ) : (
-            <Balance>{!hideBalance ? balance : "** ** ** ** **"}</Balance>
+            <Balance>{!user.hideNumbers ? balance : "** ** ** ** **"}</Balance>
           )}
         </Card>
         <Card>
@@ -154,15 +145,14 @@ export default function Home() {
           <CardHeaderView>
             <CardTextView>
               <CardHeaderText>Patrimônio investido</CardHeaderText>
-              <IconContainer onPress={() => setHideInvest(!hideInvest)}>
-                <StyledIcon name={!hideInvest ? "eye" : "eye-off"} size={15} />
-              </IconContainer>
             </CardTextView>
             <TouchableOpacity>
               <StyledIcon name="maximize-2" />
             </TouchableOpacity>
           </CardHeaderView>
-          <Invest>{!hideInvest ? "R$ 153.000,00" : "** ** ** ** **"}</Invest>
+          <Invest>
+            {!user.hideNumbers ? "R$ 153.000,00" : "** ** ** ** **"}
+          </Invest>
           <CardTextView>
             <CardFooterText>Rendimento semanal</CardFooterText>
             <InvestPercentual>55%</InvestPercentual>
