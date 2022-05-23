@@ -39,6 +39,7 @@ import {
   TextHeaderScreen,
   ViewTabContent,
 } from "../../styles/general";
+import Filter from "../../components/Filter";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -47,7 +48,7 @@ export interface IEntryList {
   modality: "Real" | "Projetado";
   segment: string | null;
   type: "Receita" | "Despesa";
-  value: string;
+  value: number;
 }
 
 const EMPTY = require("../../../assets/icons/emptyData.json");
@@ -63,6 +64,7 @@ export default function Entry() {
   const [entryList, setEntryList] = React.useState<Array<IEntryList>>([]);
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
   const [balance, setBalance] = React.useState<string>("R$ 0,00");
+  const [filter, setFilter] = React.useState(false);
 
   const opacity = React.useRef(new Animated.Value(0)).current;
 
@@ -129,9 +131,9 @@ export default function Entry() {
         </DescriptionView>
         <ValueView>
           <ValueText type={item.type}>
-            {item.type == "Receita" ? "+R$" : "-R$"}
+            {item.type == "Receita" ? "+" : "-"}
           </ValueText>
-          <ValueText type={item.type}>{item.value.replace("R$", "")}</ValueText>
+          <ValueText type={item.type}>{numberToReal(item.value)}</ValueText>
         </ValueView>
         <MoreView>
           <TouchableOpacity onPress={() => navigate("NovoLançamento", item)}>
@@ -164,9 +166,16 @@ export default function Entry() {
     <ViewTabContent>
       <TextHeaderScreen>Lançamentos</TextHeaderScreen>
       <ButtonHeaderView>
-        <StyledButtonOutline small={true}>
+        <StyledButtonOutline small={true} onPress={() => setFilter(true)}>
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
         </StyledButtonOutline>
+        <Filter
+          visible={filter}
+          setVisible={setFilter}
+          type="entry"
+          setList={setEntryList}
+          empty={setEmptyData}
+        />
         <StyledButton small={true} onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
         </StyledButton>
@@ -206,7 +215,9 @@ export default function Entry() {
       )}
       <IncomeView>
         <Label>Saldo atual:</Label>
-        <IncomeText>{balance}</IncomeText>
+        <IncomeText>
+          {!user.hideNumbers ? balance : "** ** ** ** **"}
+        </IncomeText>
       </IncomeView>
       <AutoEntryView>
         <TextHeaderScreen

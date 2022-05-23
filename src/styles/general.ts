@@ -25,7 +25,7 @@ import Feather from "react-native-vector-icons/Feather";
 import { IconProps } from "react-native-vector-icons/Icon";
 import Loader from "../components/Loader";
 import { DefaultTextInputMask } from "../components/TextInputMask";
-import { TextInputMask } from "react-native-masked-text";
+import Slider, { SliderProps } from "@react-native-community/slider";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -65,11 +65,12 @@ export const ModalContainer = styled(View)`
 `;
 
 export const ModalView: React.FC<
-  ViewProps & { height?: number; center?: boolean }
+  ViewProps & { height?: number; center?: boolean; filter?: boolean }
 > = styled(View)`
-  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
+  padding: ${metrics.topBottomPadding}px
+    ${({ filter }) => (!filter ? `${metrics.basePadding}px` : null)};
   align-items: ${({ center }) => (center ? "center" : "null")};
-  width: 294px;
+  width: ${({ filter }) => (filter ? "350" : "294")}px;
   height: ${({ height }) => (height ? height + "px" : "auto")};
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
@@ -103,6 +104,14 @@ export const ViewTabContent: React.FC<
 export const FormContainer = styled(View)`
   width: 250px;
 `;
+
+export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
+  ({ theme: { theme } }) => ({
+    thumbTintColor: theme.blue,
+    minimumTrackTintColor: theme.blue,
+    maximumTrackTintColor: colors.gray,
+  })
+)``;
 
 export const StyledButton: React.FC<
   TouchableOpacityProps & { additionalMargin?: number; small?: boolean }
