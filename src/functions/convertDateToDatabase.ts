@@ -2,7 +2,7 @@ import firebase from "../services/firebase";
 
 /**
  * @param date Data no padrão DD/MM/YYY
- * @returns    Data no padrão Numérico
+ * @returns    Data no padrão Firebase
  */
 
 export default function convertDateToDatabase(date: string) {
