@@ -118,13 +118,9 @@ export default function LineChart() {
                   }
 
                   if (result.data().type === "Receita") {
-                    incomeData[index] += Math.round(
-                      realToNumber(result.data().value)
-                    );
+                    incomeData[index] += Math.round(result.data().value);
                   } else {
-                    expenseData[index] += Math.round(
-                      realToNumber(result.data().value)
-                    );
+                    expenseData[index] += Math.round(result.data().value);
                   }
                 });
 
