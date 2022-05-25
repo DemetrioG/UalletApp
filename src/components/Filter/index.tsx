@@ -321,13 +321,13 @@ export default function Filter({
                 <DateContainer>
                   <StyledInputDate
                     name="initialdate"
-                    placeholder="Data Inicial"
+                    placeholder="Data Inicial *"
                     type="datetime"
                     control={control}
                   />
                   <StyledInputDate
                     name="finaldate"
-                    placeholder="Data Final"
+                    placeholder="Data Final *"
                     type="datetime"
                     control={control}
                   />
