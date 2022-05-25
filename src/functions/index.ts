@@ -6,7 +6,7 @@ import numberToReal from "./numberToReal";
 import sleep from "./sleep";
 import getFinalDateMonth from "./getFinalDateMonth";
 import dateMonthNumber from "./dateMonthNumber";
-import useStateCallback from "./callbackState";
+import dateValidation from "./dateValidation";
 
 export {
   convertDate,
@@ -17,5 +17,5 @@ export {
   sleep,
   getFinalDateMonth,
   dateMonthNumber,
-  useStateCallback,
+  dateValidation,
 };
