@@ -25,7 +25,7 @@ import {
   StyledTextInputMask,
   TextHeader,
 } from "../../styles/general";
-import { colors } from "../../styles";
+import { dateValidation } from "../../functions";
 
 interface IForm {
   birthdate: string;
@@ -64,21 +64,26 @@ export default function Complete() {
 
   function registerData({ birthdate, income }: IForm) {
     if (!gender || !profile) {
-      setAlert(() => ({
+      return setAlert(() => ({
         visibility: true,
         type: "error",
         title: "Informe todos os campos",
         redirect: null,
       }));
-      return;
     } else if (income == "R$0,00") {
-      setAlert(() => ({
+      return setAlert(() => ({
         visibility: true,
         type: "error",
         title: "Informe uma renda média",
         redirect: null,
       }));
-      return;
+    } else if (!dateValidation(birthdate)) {
+      return setAlert(() => ({
+        visibility: true,
+        type: "error",
+        title: "Verifique a data de nascimento informada",
+        redirect: null,
+      }));
     }
 
     setLoading(true);

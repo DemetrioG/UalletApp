@@ -5,6 +5,9 @@ import getFinalDateMonth from "./getFinalDateMonth";
  */
 
 export default function dateValidation(date: string) {
+  if (date.length < 10) {
+    return false;
+  }
   const day = Number(date.slice(0, 2));
   const month = Number(date.slice(3, 5));
   const year = Number(date.slice(6, 10));
