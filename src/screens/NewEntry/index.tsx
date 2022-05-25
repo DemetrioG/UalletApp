@@ -366,7 +366,7 @@ export default function NewEntry({
                 placeholder="Valor"
                 control={control}
                 type="money"
-                helperText={errors}
+                errors={errors}
               />
             </FormContainer>
             {!isEditing && (

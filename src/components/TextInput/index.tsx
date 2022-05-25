@@ -5,22 +5,32 @@ import { AlertContext } from "../../context/Alert/alertContext";
 
 const UTextInput = (
   props: TextInputProps & {
-    helperText?: object;
+    errors?: object | undefined;
+    helperText?: string | undefined;
     required?: boolean;
   }
 ) => {
   const { setAlert } = React.useContext(AlertContext);
 
   React.useEffect(() => {
-    if (props.helperText && Object.keys(props.helperText).length > 0) {
-      setAlert(() => ({
-        visibility: true,
-        type: "error",
-        title: "Informe todos os campos",
-        redirect: null,
-      }));
+    if (props.errors && Object.keys(props.errors).length > 0) {
+      if (props.helperText) {
+        setAlert(() => ({
+          visibility: true,
+          type: "error",
+          title: props.helperText!,
+          redirect: null,
+        }));
+      } else {
+        setAlert(() => ({
+          visibility: true,
+          type: "error",
+          title: "Informe todos os campos",
+          redirect: null,
+        }));
+      }
     }
-  }, [props.helperText]);
+  }, [props.errors]);
 
   return (
     <>

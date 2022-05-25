@@ -96,7 +96,7 @@ export default function ForgotPassword() {
                 autoCapitalize="none"
                 name="email"
                 control={control}
-                helperText={errors}
+                errors={errors}
               />
             </FormContainer>
             <StyledButton onPress={handleSubmit(sendPassword)}>

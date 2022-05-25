@@ -166,7 +166,7 @@ export default function Register() {
                 maxLength={20}
                 name="confirm"
                 control={control}
-                helperText={errors}
+                errors={errors}
               />
             </FormContainer>
             <StyledButton onPress={handleSubmit(registerUser)}>
