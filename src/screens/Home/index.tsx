@@ -156,7 +156,7 @@ export default function Home() {
           <CardTextView>
             <CardFooterText>Rendimento semanal</CardFooterText>
             <InvestPercentual>55%</InvestPercentual>
-            <StyledIcon name="arrow-up" size={15} />
+            <StyledIcon name="arrow-up" size={15} colorVariant="green" />
           </CardTextView>
         </Card>
         <Card>

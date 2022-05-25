@@ -256,11 +256,16 @@ export const Card = styled(View)`
 `;
 
 export const StyledIcon: React.FC<
-  IconProps & { color?: string; size?: number }
-> = styled(Feather).attrs(({ theme: { theme }, color, size }) => ({
-  color: color ? color : theme.text,
-  size: size ? size : metrics.iconSize,
-}))``;
+  IconProps & { color?: string; size?: number; colorVariant?: string }
+> = styled(Feather).attrs(
+  ({ theme: { theme }, color, size, colorVariant }) => ({
+    color: colorVariant ? theme[colorVariant] : color ? color : theme.text,
+    size: size ? size : metrics.iconSize,
+  })
+)`
+  text-align: center;
+  text-align-vertical: bottom;
+`;
 
 export const StyledLoader: React.FC<{
   width: number;
