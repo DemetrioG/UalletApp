@@ -22,6 +22,7 @@ import {
   realToNumber,
   convertDateFromDatabase,
   numberToReal,
+  dateValidation,
 } from "../../functions/index";
 import { ChangeType, HorizontalView, TypeText, TypeView } from "./styles";
 import {
@@ -126,7 +127,7 @@ export default function NewEntry({
       }));
     }
 
-    if (entrydate.length < 10) {
+    if (!dateValidation(entrydate)) {
       return setAlert(() => ({
         visibility: true,
         type: "error",
