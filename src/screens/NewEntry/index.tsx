@@ -21,6 +21,7 @@ import {
   convertDateToDatabase,
   realToNumber,
   convertDateFromDatabase,
+  numberToReal,
 } from "../../functions/index";
 import { ChangeType, HorizontalView, TypeText, TypeView } from "./styles";
 import {
@@ -104,7 +105,7 @@ export default function NewEntry({
       setSegment(params.segment || null);
       setValue("entrydate", convertDateFromDatabase(params.date));
       setValue("description", params.description);
-      setValue("value", params.value);
+      setValue("value", numberToReal(params.value));
     }
   }, []);
 
@@ -169,7 +170,7 @@ export default function NewEntry({
         description: description,
         modality: modality,
         segment: segment,
-        value: value,
+        value: realToNumber(value),
       })
       .catch(() => {
         setAlert(() => ({
@@ -204,9 +205,9 @@ export default function NewEntry({
       }
     } else {
       if (type == "Receita") {
-        balance += realToNumber(value) - realToNumber(params.value);
+        balance += realToNumber(value) - params.value;
       } else {
-        balance -= realToNumber(value) - realToNumber(params.value);
+        balance -= realToNumber(value) - params.value;
       }
     }
 
@@ -272,9 +273,9 @@ export default function NewEntry({
       });
 
     if (params.type == "Despesa") {
-      balance += realToNumber(params.value);
+      balance += params.value;
     } else {
-      balance -= realToNumber(params.value);
+      balance -= params.value;
     }
 
     await firebase
@@ -365,7 +366,7 @@ export default function NewEntry({
                 placeholder="Valor"
                 control={control}
                 type="money"
-                helperText={errors}
+                errors={errors}
               />
             </FormContainer>
             {!isEditing && (

@@ -160,7 +160,7 @@ export default function Complete() {
                 type="money"
                 name="income"
                 control={control}
-                helperText={errors}
+                errors={errors}
               />
               <Picker
                 options={optionsProfile}

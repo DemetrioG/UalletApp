@@ -28,14 +28,7 @@ export const PickerText: React.FC<
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
   color: ${({ theme, value, type }) =>
-    value === type ? colors.lightGray : theme.theme.text};
-`;
-
-export const ModalContainer = styled(View)`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme: { theme } }) => theme.transparency};
+    value.replace(" *", "") === type ? colors.lightGray : theme.theme.text};
 `;
 
 export const ContentView = styled(View)`

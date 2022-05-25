@@ -7,12 +7,11 @@ import {
 } from "react-native";
 
 import { colors } from "../../styles";
-import { StyledIcon } from "../../styles/general";
+import { StyledIcon, ModalContainer } from "../../styles/general";
 import {
   ContentView,
   ItemPicker,
   ItemText,
-  ModalContainer,
   PickerText,
   SpaceItems,
   StyledInput,

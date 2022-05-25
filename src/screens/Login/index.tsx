@@ -239,7 +239,7 @@ export default function Login() {
                 maxLength={20}
                 name="password"
                 control={control}
-                helperText={errors}
+                errors={errors}
               />
             </FormContainer>
             <StyledButton

@@ -24,6 +24,9 @@ import {
   InfoView,
   TriangleOfToolTip,
   InfoText,
+  RemoveFilterContainer,
+  RemoveFilterText,
+  RemoveFilterButton,
 } from "./styles";
 import {
   ButtonHeaderView,
@@ -39,6 +42,7 @@ import {
   TextHeaderScreen,
   ViewTabContent,
 } from "../../styles/general";
+import Filter from "../../components/Filter";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -47,7 +51,7 @@ export interface IEntryList {
   modality: "Real" | "Projetado";
   segment: string | null;
   type: "Receita" | "Despesa";
-  value: string;
+  value: number;
 }
 
 const EMPTY = require("../../../assets/icons/emptyData.json");
@@ -63,44 +67,42 @@ export default function Entry() {
   const [entryList, setEntryList] = React.useState<Array<IEntryList>>([]);
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
   const [balance, setBalance] = React.useState<string>("R$ 0,00");
+  const [filter, setFilter] = React.useState(false);
+  const [isFiltered, setIsFiltered] = React.useState(false);
 
   const opacity = React.useRef(new Animated.Value(0)).current;
 
-  React.useEffect(() => {
-    async function getEntry() {
-      // Pega o mês de referência do App para realizar a busca dos registros
-      const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
-      const finalDate = new Date(
-        `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-          date.year
-        } 23:59:59`
-      );
+  async function getEntry() {
+    // Pega o mês de referência do App para realizar a busca dos registros
+    const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+    const finalDate = new Date(
+      `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+        date.year
+      } 23:59:59`
+    );
 
-      // Busca os registros dentro do período de referência
-      setEmptyData(false);
-      await sleep(1000);
-      firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection(date.modality)
-        .where("date", ">=", initialDate)
-        .where("date", "<=", finalDate)
-        .orderBy("date", "desc")
-        .onSnapshot((snapshot) => {
-          setEntryList([]);
-          if (snapshot.docs.length > 0) {
-            snapshot.forEach((result) => {
-              setEntryList((oldArray: any) => [...oldArray, result.data()]);
-            });
-          } else {
-            setEmptyData(true);
-          }
-        });
-    }
-    getEntry();
-    getBalance();
-  }, [date.modality, date.month, date.year]);
+    // Busca os registros dentro do período de referência
+    setEntryList([]);
+    setEmptyData(false);
+    await sleep(1000);
+    firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection(date.modality)
+      .where("date", ">=", initialDate)
+      .where("date", "<=", finalDate)
+      .orderBy("date", "desc")
+      .onSnapshot((snapshot) => {
+        if (snapshot.docs.length > 0) {
+          snapshot.forEach((result) => {
+            setEntryList((oldArray: any) => [...oldArray, result.data()]);
+          });
+        } else {
+          setEmptyData(true);
+        }
+      });
+  }
 
   // Retorna o Saldo atual
   function getBalance() {
@@ -121,6 +123,11 @@ export default function Entry() {
     }
   }
 
+  function handleRemoveFilter() {
+    setIsFiltered(false);
+    getEntry();
+  }
+
   function ItemList({ item }: { item: IEntryList }) {
     return (
       <ItemView>
@@ -129,9 +136,9 @@ export default function Entry() {
         </DescriptionView>
         <ValueView>
           <ValueText type={item.type}>
-            {item.type == "Receita" ? "+R$" : "-R$"}
+            {item.type == "Receita" ? "+" : "-"}
           </ValueText>
-          <ValueText type={item.type}>{item.value.replace("R$", "")}</ValueText>
+          <ValueText type={item.type}>{numberToReal(item.value)}</ValueText>
         </ValueView>
         <MoreView>
           <TouchableOpacity onPress={() => navigate("NovoLançamento", item)}>
@@ -160,17 +167,39 @@ export default function Entry() {
     }
   }
 
+  React.useEffect(() => {
+    getEntry();
+    getBalance();
+  }, [date.modality, date.month, date.year]);
+
   return (
     <ViewTabContent>
       <TextHeaderScreen>Lançamentos</TextHeaderScreen>
       <ButtonHeaderView>
-        <StyledButtonOutline small={true}>
+        <StyledButtonOutline small={true} onPress={() => setFilter(true)}>
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
         </StyledButtonOutline>
+        <Filter
+          visible={filter}
+          setVisible={setFilter}
+          type="entry"
+          setList={setEntryList}
+          empty={setEmptyData}
+          isFiltered={isFiltered}
+          setIsFiltered={setIsFiltered}
+        />
         <StyledButton small={true} onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
         </StyledButton>
       </ButtonHeaderView>
+      {isFiltered && (
+        <RemoveFilterContainer>
+          <RemoveFilterButton onPress={handleRemoveFilter}>
+            <RemoveFilterText>Remover filtros</RemoveFilterText>
+            <StyledIcon name="x" size={20} colorVariant="red" />
+          </RemoveFilterButton>
+        </RemoveFilterContainer>
+      )}
       <TextHeaderScreen>Últimos lançamentos</TextHeaderScreen>
       {emptyData && <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>}
       {!emptyData && (
@@ -206,7 +235,9 @@ export default function Entry() {
       )}
       <IncomeView>
         <Label>Saldo atual:</Label>
-        <IncomeText>{balance}</IncomeText>
+        <IncomeText>
+          {!user.hideNumbers ? balance : "** ** ** ** **"}
+        </IncomeText>
       </IncomeView>
       <AutoEntryView>
         <TextHeaderScreen

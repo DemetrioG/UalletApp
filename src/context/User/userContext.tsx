@@ -39,8 +39,6 @@ export function UserContextProvider({
   React.useEffect(() => {
     (async () => {
       const storedData = await getStorage("hideNumbers");
-      console.log(storedData);
-
       setUser((userState) => ({
         ...userState,
         hideNumbers: storedData,

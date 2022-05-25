@@ -1,5 +1,12 @@
 import React from "react";
-import { Animated, Text, TextProps, View } from "react-native";
+import {
+  Animated,
+  Text,
+  TextProps,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 
@@ -103,4 +110,23 @@ export const InfoText = styled(Text)`
   font-size: 10px;
   color: ${colors.white};
   text-align: center;
+`;
+
+export const RemoveFilterContainer = styled(View)`
+  padding-bottom: ${metrics.basePadding}px;
+`;
+
+export const RemoveFilterText = styled(Text)`
+  font-family: ${fonts.ralewayMedium};
+  font-size: ${fonts.medium}px;
+  color: ${({ theme: { theme } }) => theme.text};
+  margin-right: 3px;
+  margin-bottom: 3px;
+`;
+
+export const RemoveFilterButton: React.FC<TouchableOpacityProps> = styled(
+  TouchableOpacity
+)`
+  flex-direction: row;
+  align-items: center;
 `;
