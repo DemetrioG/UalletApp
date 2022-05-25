@@ -4,7 +4,11 @@ import { useForm } from "react-hook-form";
 
 import firebase from "../../services/firebase";
 import Picker from "../Picker";
-import { convertDateToDatabase, numberToReal } from "../../functions";
+import {
+  convertDateToDatabase,
+  dateValidation,
+  numberToReal,
+} from "../../functions";
 import {
   ButtonText,
   ModalContainer,
@@ -12,6 +16,7 @@ import {
   StyledButton,
   StyledIcon,
   StyledInputDate,
+  StyledLoading,
   StyledSlider,
   StyledTextInput,
 } from "../../styles/general";
@@ -44,6 +49,27 @@ interface IForm {
   description: string;
 }
 
+interface IActiveFilter {
+  initialdate: string | null;
+  finaldate: string | null;
+  description: string | null;
+  modality: string | null;
+  typeEntry: string | null;
+  segment: string | null;
+  initialvalue: number;
+  finalvalue: number;
+}
+
+const defaultFilter: IActiveFilter = {
+  initialdate: null,
+  finaldate: null,
+  description: null,
+  modality: null,
+  typeEntry: null,
+  segment: null,
+  initialvalue: 0,
+  finalvalue: 0,
+};
 const optionsType = ["Receita", "Despesa"];
 const optionsModality = ["Projetado", "Real"];
 const optionsSegment = [
@@ -61,8 +87,10 @@ export default function Filter({
   setList,
   empty,
 }: IFilter) {
-  const { user, setUser } = React.useContext(UserContext);
+  const { user } = React.useContext(UserContext);
   const { alert, setAlert } = React.useContext(AlertContext);
+  const [filter, setFilter] = React.useState(defaultFilter);
+  const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
   const [typeEntryVisible, setTypeEntryVisible] = React.useState(false);
   const [modality, setModality] = React.useState<string | null>(null);
@@ -71,38 +99,64 @@ export default function Filter({
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [initialLabel, setInitialLabel] = React.useState(0);
   const [finalLabel, setFinalLabel] = React.useState(0);
+  const [maxValue, setMaxValue] = React.useState(0);
+  const [isSliding, setIsSliding] = React.useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<IForm>();
-
-  function closeFilter() {
-    setVisible(false);
-    setInitialLabel(0);
-    setFinalLabel(0);
-    setTypeEntry(null);
-    setModality(null);
-    setSegment(null);
-  }
+  const { control, handleSubmit, setValue } = useForm<IForm>();
 
   async function handleFilter({ description, initialdate, finaldate }: IForm) {
+    if (
+      !initialdate ||
+      !finaldate ||
+      initialdate.length !== 10 ||
+      finaldate!.length !== 10
+    ) {
+      return setAlert(() => ({
+        type: "error",
+        title: "Informe o período dos filtros",
+        visibility: true,
+        redirect: null,
+      }));
+    }
+    if (!dateValidation(initialdate) || !dateValidation(finaldate)) {
+      return setAlert(() => ({
+        type: "error",
+        title: "Verifique o período informado",
+        visibility: true,
+        redirect: null,
+      }));
+    }
     if (!modality) {
-      setAlert(() => ({
+      return setAlert(() => ({
         type: "error",
         title: "Informe a modalidade",
         visibility: true,
         redirect: null,
       }));
     }
+
+    empty(false);
+    setLoading(true);
     let baseQuery: firebase.firestore.Query = firebase
       .firestore()
       .collection("entry")
       .doc(user.uid)
       .collection(modality!);
 
+    if (description) {
+      baseQuery = baseQuery.where("description", "==", description);
+    }
+    if (segment) {
+      baseQuery = baseQuery.where("segment", "==", segment);
+    }
+    if (typeEntry) {
+      baseQuery = baseQuery.where("type", "==", typeEntry);
+    }
+
+    /**
+     * O Firebase não permite realizar a query filtrando por data e valor, retornando um erro.
+     * Sendo assim, caso o usuário tenha filtrado pelos dois, na query retornamos somente com filtro por data, e pelo código, é filtrado se os valores estão dentro do filtrado.
+     */
     if (initialdate) {
       baseQuery = baseQuery.where(
         "date",
@@ -117,36 +171,121 @@ export default function Filter({
         convertDateToDatabase(finaldate)
       );
     }
-    if (description) {
-      baseQuery = baseQuery.where("description", "==", description);
-    }
-    if (segment) {
-      baseQuery = baseQuery.where("segment", "==", segment);
-    }
-    if (typeEntry) {
-      baseQuery = baseQuery.where("type", "==", typeEntry);
-    }
-    if (initialLabel > 0) {
+
+    if (initialLabel > 0 && !initialdate) {
       baseQuery = baseQuery.where("value", ">=", initialLabel);
     }
-    if (finalLabel > 0) {
+    if (finalLabel > 0 && !finaldate) {
       baseQuery = baseQuery.where("value", "<=", finalLabel);
     }
 
     baseQuery.onSnapshot((snapshot) => {
+      setList([]);
       if (snapshot.docs.length > 0) {
-        setList([]);
-        empty(false);
         snapshot.forEach((result) => {
-          setList((oldArray: any) => [...oldArray, result.data()]);
+          if (
+            (initialLabel > 0 || finalLabel > 0) &&
+            (initialdate || finaldate)
+          ) {
+            const { value } = result.data();
+            let add = 0;
+            if (initialLabel > 0 && finalLabel === 0) {
+              if (value >= initialLabel) {
+                setList((oldArray: any) => [...oldArray, result.data()]);
+                add++;
+              }
+            } else if (finalLabel > 0 && initialLabel === 0) {
+              if (value <= finalLabel) {
+                setList((oldArray: any) => [...oldArray, result.data()]);
+                add++;
+              }
+            } else {
+              if (value >= initialLabel && value <= finalLabel) {
+                setList((oldArray: any) => [...oldArray, result.data()]);
+                add++;
+              }
+            }
+            if (add === 0) {
+              empty(true);
+            }
+          } else {
+            setList((oldArray: any) => [...oldArray, result.data()]);
+          }
         });
       } else {
-        setList([]);
         empty(true);
       }
-      setVisible(false);
     });
+
+    setFilter(() => ({
+      description: description,
+      modality: modality,
+      segment: segment,
+      typeEntry: typeEntry,
+      initialdate: initialdate,
+      finaldate: finaldate,
+      initialvalue: initialLabel,
+      finalvalue: finalLabel,
+    }));
+    setLoading(false);
+    setVisible(false);
   }
+
+  async function getMaxValue() {
+    let maxValue = 0;
+    await firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection("Real")
+      .orderBy("value", "desc")
+      .limit(1)
+      .get()
+      .then((v) => {
+        v.forEach((result) => {
+          const { value } = result.data();
+          maxValue = value || 0;
+        });
+      });
+
+    await firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection("Projetado")
+      .orderBy("value", "desc")
+      .limit(1)
+      .get()
+      .then((v) => {
+        v.forEach((result) => {
+          const { value } = result.data();
+          if (value > maxValue) {
+            maxValue = value || 0;
+          }
+        });
+      });
+
+    if (maxValue > 0) {
+      setMaxValue(maxValue);
+    } else {
+      setMaxValue(100);
+    }
+  }
+
+  React.useEffect(() => {
+    if (visible) {
+      setValue("initialdate", filter.initialdate!);
+      setValue("finaldate", filter.finaldate!);
+      setValue("description", filter.description!);
+      setInitialLabel(filter.initialvalue);
+      setFinalLabel(filter.finalvalue);
+      setIsSliding(false);
+    }
+
+    if (maxValue === 0) {
+      getMaxValue();
+    }
+  }, [visible]);
 
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
@@ -155,7 +294,7 @@ export default function Filter({
         <ModalView filter height={470}>
           <HeaderContainer>
             <Title>Filtros</Title>
-            <TouchableOpacity onPress={closeFilter}>
+            <TouchableOpacity onPress={() => setVisible(false)}>
               <StyledIcon name="x" />
             </TouchableOpacity>
           </HeaderContainer>
@@ -216,8 +355,14 @@ export default function Filter({
               </LabelContainer>
               <StyledSlider
                 minimumValue={0}
-                maximumValue={100}
-                onValueChange={(value) => setInitialLabel(value)}
+                maximumValue={maxValue}
+                value={filter.initialvalue}
+                onTouchStart={() => setIsSliding(true)}
+                onValueChange={(value) => {
+                  if (isSliding) {
+                    setInitialLabel(value);
+                  }
+                }}
                 tapToSeek
                 step={1}
               />
@@ -229,8 +374,14 @@ export default function Filter({
               </LabelContainer>
               <StyledSlider
                 minimumValue={0}
-                maximumValue={100}
-                onValueChange={(value) => setFinalLabel(value)}
+                maximumValue={maxValue}
+                value={filter.finalvalue}
+                onTouchStart={() => setIsSliding(true)}
+                onValueChange={(value) => {
+                  if (isSliding) {
+                    setFinalLabel(value);
+                  }
+                }}
                 tapToSeek
                 step={1}
               />
@@ -238,7 +389,7 @@ export default function Filter({
           </ScrollView>
           <ButtonContainer>
             <StyledButton onPress={handleSubmit(handleFilter)}>
-              <ButtonText>APLICAR</ButtonText>
+              {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
             </StyledButton>
           </ButtonContainer>
         </ModalView>
