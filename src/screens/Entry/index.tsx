@@ -24,6 +24,9 @@ import {
   InfoView,
   TriangleOfToolTip,
   InfoText,
+  RemoveFilterContainer,
+  RemoveFilterText,
+  RemoveFilterButton,
 } from "./styles";
 import {
   ButtonHeaderView,
@@ -65,44 +68,41 @@ export default function Entry() {
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
   const [balance, setBalance] = React.useState<string>("R$ 0,00");
   const [filter, setFilter] = React.useState(false);
+  const [isFiltered, setIsFiltered] = React.useState(false);
 
   const opacity = React.useRef(new Animated.Value(0)).current;
 
-  React.useEffect(() => {
-    async function getEntry() {
-      // Pega o mês de referência do App para realizar a busca dos registros
-      const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
-      const finalDate = new Date(
-        `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-          date.year
-        } 23:59:59`
-      );
+  async function getEntry() {
+    // Pega o mês de referência do App para realizar a busca dos registros
+    const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+    const finalDate = new Date(
+      `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+        date.year
+      } 23:59:59`
+    );
 
-      // Busca os registros dentro do período de referência
-      setEmptyData(false);
-      await sleep(1000);
-      firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection(date.modality)
-        .where("date", ">=", initialDate)
-        .where("date", "<=", finalDate)
-        .orderBy("date", "desc")
-        .onSnapshot((snapshot) => {
-          setEntryList([]);
-          if (snapshot.docs.length > 0) {
-            snapshot.forEach((result) => {
-              setEntryList((oldArray: any) => [...oldArray, result.data()]);
-            });
-          } else {
-            setEmptyData(true);
-          }
-        });
-    }
-    getEntry();
-    getBalance();
-  }, [date.modality, date.month, date.year]);
+    // Busca os registros dentro do período de referência
+    setEntryList([]);
+    setEmptyData(false);
+    await sleep(1000);
+    firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection(date.modality)
+      .where("date", ">=", initialDate)
+      .where("date", "<=", finalDate)
+      .orderBy("date", "desc")
+      .onSnapshot((snapshot) => {
+        if (snapshot.docs.length > 0) {
+          snapshot.forEach((result) => {
+            setEntryList((oldArray: any) => [...oldArray, result.data()]);
+          });
+        } else {
+          setEmptyData(true);
+        }
+      });
+  }
 
   // Retorna o Saldo atual
   function getBalance() {
@@ -121,6 +121,11 @@ export default function Entry() {
           }
         });
     }
+  }
+
+  function handleRemoveFilter() {
+    setIsFiltered(false);
+    getEntry();
   }
 
   function ItemList({ item }: { item: IEntryList }) {
@@ -162,6 +167,11 @@ export default function Entry() {
     }
   }
 
+  React.useEffect(() => {
+    getEntry();
+    getBalance();
+  }, [date.modality, date.month, date.year]);
+
   return (
     <ViewTabContent>
       <TextHeaderScreen>Lançamentos</TextHeaderScreen>
@@ -175,11 +185,21 @@ export default function Entry() {
           type="entry"
           setList={setEntryList}
           empty={setEmptyData}
+          isFiltered={isFiltered}
+          setIsFiltered={setIsFiltered}
         />
         <StyledButton small={true} onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
         </StyledButton>
       </ButtonHeaderView>
+      {isFiltered && (
+        <RemoveFilterContainer>
+          <RemoveFilterButton onPress={handleRemoveFilter}>
+            <RemoveFilterText>Remover filtros</RemoveFilterText>
+            <StyledIcon name="x" size={20} colorVariant="red" />
+          </RemoveFilterButton>
+        </RemoveFilterContainer>
+      )}
       <TextHeaderScreen>Últimos lançamentos</TextHeaderScreen>
       {emptyData && <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>}
       {!emptyData && (

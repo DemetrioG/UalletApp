@@ -16,6 +16,7 @@ import {
   StyledButton,
   StyledIcon,
   StyledInputDate,
+  StyledKeyboardAvoidingView,
   StyledLoading,
   StyledSlider,
   StyledTextInput,
@@ -38,9 +39,11 @@ import { IEntryList } from "../../screens/Entry";
 interface IFilter {
   visible: boolean;
   type: "entry";
+  isFiltered: boolean;
   empty: React.Dispatch<React.SetStateAction<boolean>>;
   setList: React.Dispatch<React.SetStateAction<IEntryList[]>>;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IForm {
@@ -50,25 +53,27 @@ interface IForm {
 }
 
 interface IActiveFilter {
-  initialdate: string | null;
-  finaldate: string | null;
+  initialDate: string | null;
+  finalDate: string | null;
   description: string | null;
   modality: string | null;
   typeEntry: string | null;
   segment: string | null;
-  initialvalue: number;
-  finalvalue: number;
+  initialValue: number;
+  finalValue: number;
+  isFiltered: boolean;
 }
 
 const defaultFilter: IActiveFilter = {
-  initialdate: null,
-  finaldate: null,
+  initialDate: null,
+  finalDate: null,
   description: null,
   modality: null,
   typeEntry: null,
   segment: null,
-  initialvalue: 0,
-  finalvalue: 0,
+  initialValue: 0,
+  finalValue: 0,
+  isFiltered: false,
 };
 const optionsType = ["Receita", "Despesa"];
 const optionsModality = ["Projetado", "Real"];
@@ -86,6 +91,8 @@ export default function Filter({
   type,
   setList,
   empty,
+  isFiltered,
+  setIsFiltered,
 }: IFilter) {
   const { user } = React.useContext(UserContext);
   const { alert, setAlert } = React.useContext(AlertContext);
@@ -182,13 +189,13 @@ export default function Filter({
     baseQuery.onSnapshot((snapshot) => {
       setList([]);
       if (snapshot.docs.length > 0) {
+        let add = 0;
         snapshot.forEach((result) => {
           if (
             (initialLabel > 0 || finalLabel > 0) &&
             (initialdate || finaldate)
           ) {
             const { value } = result.data();
-            let add = 0;
             if (initialLabel > 0 && finalLabel === 0) {
               if (value >= initialLabel) {
                 setList((oldArray: any) => [...oldArray, result.data()]);
@@ -205,13 +212,15 @@ export default function Filter({
                 add++;
               }
             }
-            if (add === 0) {
-              empty(true);
-            }
           } else {
             setList((oldArray: any) => [...oldArray, result.data()]);
+            add++;
           }
         });
+
+        if (add === 0) {
+          empty(true);
+        }
       } else {
         empty(true);
       }
@@ -222,12 +231,14 @@ export default function Filter({
       modality: modality,
       segment: segment,
       typeEntry: typeEntry,
-      initialdate: initialdate,
-      finaldate: finaldate,
-      initialvalue: initialLabel,
-      finalvalue: finalLabel,
+      initialDate: initialdate,
+      finalDate: finaldate,
+      initialValue: initialLabel,
+      finalValue: finalLabel,
+      isFiltered: true,
     }));
     setLoading(false);
+    setIsFiltered(true);
     setVisible(false);
   }
 
@@ -274,126 +285,134 @@ export default function Filter({
 
   React.useEffect(() => {
     if (visible) {
-      setValue("initialdate", filter.initialdate!);
-      setValue("finaldate", filter.finaldate!);
+      setValue("initialdate", filter.initialDate!);
+      setValue("finaldate", filter.finalDate!);
       setValue("description", filter.description!);
-      setInitialLabel(filter.initialvalue);
-      setFinalLabel(filter.finalvalue);
+      setInitialLabel(filter.initialValue);
+      setFinalLabel(filter.finalValue);
       setIsSliding(false);
     }
 
     if (maxValue === 0) {
       getMaxValue();
     }
-  }, [visible]);
+
+    if (!isFiltered) {
+      setFilter(() => ({
+        ...defaultFilter,
+      }));
+    }
+  }, [visible, isFiltered]);
 
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
       {alert.visibility && <Alert />}
-      <ModalContainer>
-        <ModalView filter height={470}>
-          <HeaderContainer>
-            <Title>Filtros</Title>
-            <TouchableOpacity onPress={() => setVisible(false)}>
-              <StyledIcon name="x" />
-            </TouchableOpacity>
-          </HeaderContainer>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <InputContainer>
-              <DateContainer>
-                <StyledInputDate
-                  name="initialdate"
-                  placeholder="Data Inicial"
-                  type="datetime"
+      <StyledKeyboardAvoidingView>
+        <ModalContainer>
+          <ModalView filter height={470}>
+            <HeaderContainer>
+              <Title>Filtros</Title>
+              <TouchableOpacity onPress={() => setVisible(false)}>
+                <StyledIcon name="x" />
+              </TouchableOpacity>
+            </HeaderContainer>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <InputContainer>
+                <DateContainer>
+                  <StyledInputDate
+                    name="initialdate"
+                    placeholder="Data Inicial"
+                    type="datetime"
+                    control={control}
+                  />
+                  <StyledInputDate
+                    name="finaldate"
+                    placeholder="Data Final"
+                    type="datetime"
+                    control={control}
+                  />
+                </DateContainer>
+              </InputContainer>
+              <InputContainer>
+                <StyledTextInput
+                  name="description"
+                  placeholder="Descrição"
                   control={control}
                 />
-                <StyledInputDate
-                  name="finaldate"
-                  placeholder="Data Final"
-                  type="datetime"
-                  control={control}
-                />
-              </DateContainer>
-            </InputContainer>
-            <InputContainer>
-              <StyledTextInput
-                name="description"
-                placeholder="Descrição"
-                control={control}
-              />
-            </InputContainer>
-            <Picker
-              options={optionsModality}
-              selectedValue={setModality}
-              value={!modality ? "Modalidade *" : modality}
-              type="Modalidade"
-              visibility={modalityVisible}
-              setVisibility={setModalityVisible}
-            />
-            <Picker
-              options={optionsType}
-              selectedValue={setTypeEntry}
-              value={!typeEntry ? "Tipo" : typeEntry}
-              type="Tipo"
-              visibility={typeEntryVisible}
-              setVisibility={setTypeEntryVisible}
-            />
-            {typeEntry !== "Receita" && (
+              </InputContainer>
               <Picker
-                options={optionsSegment}
-                selectedValue={setSegment}
-                value={!segment ? "Segmento" : segment}
-                type="Segmento"
-                visibility={segmentVisible}
-                setVisibility={setSegmentVisible}
+                options={optionsModality}
+                selectedValue={setModality}
+                value={!modality ? "Modalidade *" : modality}
+                type="Modalidade"
+                visibility={modalityVisible}
+                setVisibility={setModalityVisible}
               />
-            )}
-            <View>
-              <LabelContainer>
-                <LabelText>Valor inicial</LabelText>
-                <LabelValue>{numberToReal(initialLabel)}</LabelValue>
-              </LabelContainer>
-              <StyledSlider
-                minimumValue={0}
-                maximumValue={maxValue}
-                value={filter.initialvalue}
-                onTouchStart={() => setIsSliding(true)}
-                onValueChange={(value) => {
-                  if (isSliding) {
-                    setInitialLabel(value);
-                  }
-                }}
-                tapToSeek
-                step={1}
+              <Picker
+                options={optionsType}
+                selectedValue={setTypeEntry}
+                value={!typeEntry ? "Tipo" : typeEntry}
+                type="Tipo"
+                visibility={typeEntryVisible}
+                setVisibility={setTypeEntryVisible}
               />
-            </View>
-            <View>
-              <LabelContainer>
-                <LabelText>Valor final</LabelText>
-                <LabelValue>{numberToReal(finalLabel)}</LabelValue>
-              </LabelContainer>
-              <StyledSlider
-                minimumValue={0}
-                maximumValue={maxValue}
-                value={filter.finalvalue}
-                onTouchStart={() => setIsSliding(true)}
-                onValueChange={(value) => {
-                  if (isSliding) {
-                    setFinalLabel(value);
-                  }
-                }}
-                tapToSeek
-                step={1}
-              />
-            </View>
-          </ScrollView>
-          <ButtonContainer>
-            <StyledButton onPress={handleSubmit(handleFilter)}>
-              {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
-            </StyledButton>
-          </ButtonContainer>
-        </ModalView>
-      </ModalContainer>
+              {typeEntry !== "Receita" && (
+                <Picker
+                  options={optionsSegment}
+                  selectedValue={setSegment}
+                  value={!segment ? "Segmento" : segment}
+                  type="Segmento"
+                  visibility={segmentVisible}
+                  setVisibility={setSegmentVisible}
+                />
+              )}
+              <View>
+                <LabelContainer>
+                  <LabelText>Valor inicial</LabelText>
+                  <LabelValue>{numberToReal(initialLabel)}</LabelValue>
+                </LabelContainer>
+                <StyledSlider
+                  minimumValue={0}
+                  maximumValue={maxValue}
+                  value={filter.initialValue}
+                  onTouchStart={() => setIsSliding(true)}
+                  onValueChange={(value) => {
+                    if (isSliding) {
+                      setInitialLabel(value);
+                    }
+                  }}
+                  tapToSeek
+                  step={1}
+                />
+              </View>
+              <View>
+                <LabelContainer>
+                  <LabelText>Valor final</LabelText>
+                  <LabelValue>{numberToReal(finalLabel)}</LabelValue>
+                </LabelContainer>
+                <StyledSlider
+                  minimumValue={0}
+                  maximumValue={maxValue}
+                  value={filter.finalValue}
+                  onTouchStart={() => setIsSliding(true)}
+                  onValueChange={(value) => {
+                    if (isSliding) {
+                      setFinalLabel(value);
+                    }
+                  }}
+                  tapToSeek
+                  step={1}
+                />
+              </View>
+            </ScrollView>
+            <ButtonContainer>
+              <StyledButton onPress={handleSubmit(handleFilter)}>
+                {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
+              </StyledButton>
+            </ButtonContainer>
+          </ModalView>
+        </ModalContainer>
+      </StyledKeyboardAvoidingView>
     </Modal>
   );
 }
