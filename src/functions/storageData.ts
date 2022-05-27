@@ -8,10 +8,18 @@ export async function setStorage(
 }
 
 export async function getStorage(key: string) {
-  const response = (await AsyncStorage.getItem(key)) || "";
-  return JSON.parse(response);
+  const response = (await AsyncStorage.getItem(key)) || null;
+  return response ? JSON.parse(response) : null;
+}
+
+export async function getAllStorage() {
+  return await AsyncStorage.getAllKeys();
 }
 
 export async function removeStorage(key: string) {
   await AsyncStorage.removeItem(key);
+}
+
+export async function removeAllStorage() {
+  await AsyncStorage.multiRemove(["Ano", "Mês", "authUser", "hideNumbers"]);
 }
