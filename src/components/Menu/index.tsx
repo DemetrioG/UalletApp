@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DateContext } from "../../context/Date/dateContext";
 import { UserContext } from "../../context/User/userContext";
-import { removeStorage } from "../../functions/storageData";
+import { removeAllStorage } from "../../functions/storageData";
 import { colors } from "../../styles";
 import { StyledIcon } from "../../styles/general";
 import {
@@ -23,13 +23,14 @@ export default function Menu({ visibility }: { visibility: boolean }) {
     }));
   }
 
-  function logout() {
-    removeStorage("authUser");
-    setUser((userState) => ({
+  async function logout() {
+    removeAllStorage();
+    setUser(() => ({
       signed: false,
       complete: false,
       uid: undefined,
       name: "",
+      hideNumbers: false,
     }));
   }
 

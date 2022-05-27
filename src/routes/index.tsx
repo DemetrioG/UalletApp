@@ -1,7 +1,7 @@
 import * as React from "react";
 import AuthRoutes from "./authRoutes";
 import AppRoutes from "./appRoutes";
-import { getStorage } from "../functions/storageData";
+import { getStorage, removeAllStorage } from "../functions/storageData";
 import { UserContext } from "../context/User/userContext";
 
 export default function routes() {
@@ -13,14 +13,16 @@ export default function routes() {
 
       // Parseia as datas para numero e compara se a data do storage está expirada
       if (
-        Date.parse(storageUser.date) >
+        Date.parse(storageUser?.date) >
         Date.parse(new Date(Date.now()).toString())
       ) {
-        setUser((userState) => ({
+        return setUser((userState) => ({
           ...userState,
           uid: storageUser.uid,
           signed: true,
         }));
+      } else {
+        return removeAllStorage();
       }
     }
 
