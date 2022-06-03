@@ -338,11 +338,13 @@ export default function Entry() {
     if (isFocused) {
       getEntry(filter);
     }
-  }, [filter, isFocused]);
+  }, [date.modality, date.month, date.year, filter, isFocused]);
 
   React.useEffect(() => {
-    getBalance();
-  }, [date.modality, date.month, date.year]);
+    if (isFocused) {
+      getBalance();
+    }
+  }, [date.modality, date.month, date.year, isFocused]);
 
   return (
     <ViewTabContent>
