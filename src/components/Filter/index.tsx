@@ -4,11 +4,7 @@ import { useForm } from "react-hook-form";
 
 import firebase from "../../services/firebase";
 import Picker from "../Picker";
-import {
-  convertDateToDatabase,
-  dateValidation,
-  numberToReal,
-} from "../../functions";
+import { dateValidation, numberToReal } from "../../functions";
 import {
   ButtonText,
   ModalContainer,
