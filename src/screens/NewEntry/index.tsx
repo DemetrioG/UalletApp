@@ -195,7 +195,7 @@ export default function NewEntry({
       .doc(Number(entrydate.slice(3, 5)).toString())
       .get()
       .then((v) => {
-        balance = v.data()?.balance;
+        balance = v.data()?.balance || 0;
       });
 
     if (!isEditing) {

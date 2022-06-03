@@ -1,13 +1,18 @@
 import * as React from "react";
 import { TouchableOpacity, Animated, Platform, FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
 
 import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
-import { sleep, getFinalDateMonth, numberToReal } from "../../functions/index";
+import {
+  sleep,
+  getFinalDateMonth,
+  numberToReal,
+  convertDateToDatabase,
+} from "../../functions/index";
 import { ITimestamp } from "../../functions/convertDateFromDatabase";
 import { colors, metrics } from "../../styles";
 import {
@@ -54,6 +59,30 @@ export interface IEntryList {
   value: number;
 }
 
+export interface IActiveFilter {
+  initialDate: string | null;
+  finalDate: string | null;
+  description: string | null;
+  modality: string | null;
+  typeEntry: string | null;
+  segment: string | null;
+  initialValue: number;
+  finalValue: number;
+  isFiltered: boolean;
+}
+
+const defaultFilter: IActiveFilter = {
+  initialDate: null,
+  finalDate: null,
+  description: null,
+  modality: null,
+  typeEntry: null,
+  segment: null,
+  initialValue: 0,
+  finalValue: 0,
+  isFiltered: false,
+};
+
 const EMPTY = require("../../../assets/icons/emptyData.json");
 const LOADING = require("../../../assets/icons/blueLoading.json");
 
@@ -64,44 +93,183 @@ export default function Entry() {
 
   const [SWITCH, setSWITCH] = React.useState<boolean>(false);
   const [info, setInfo] = React.useState<boolean>(false);
-  const [entryList, setEntryList] = React.useState<Array<IEntryList>>([]);
+  const [entryList, setEntryList] = React.useState<
+    Array<IEntryList | firebase.firestore.DocumentData>
+  >([]);
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
   const [balance, setBalance] = React.useState<string>("R$ 0,00");
-  const [filter, setFilter] = React.useState(false);
-  const [isFiltered, setIsFiltered] = React.useState(false);
+  const [filter, setFilter] = React.useState(defaultFilter);
+  const [filterVisible, setFilterVisible] = React.useState(false);
 
   const opacity = React.useRef(new Animated.Value(0)).current;
+  const isFocused = useIsFocused();
 
-  async function getEntry() {
-    // Pega o mês de referência do App para realizar a busca dos registros
-    const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
-    const finalDate = new Date(
-      `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-        date.year
-      } 23:59:59`
-    );
-
-    // Busca os registros dentro do período de referência
+  async function getEntry({
+    description,
+    finalDate,
+    finalValue,
+    initialDate,
+    initialValue,
+    isFiltered,
+    modality,
+    segment,
+    typeEntry,
+  }: IActiveFilter) {
     setEntryList([]);
     setEmptyData(false);
-    await sleep(1000);
-    firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(date.modality)
-      .where("date", ">=", initialDate)
-      .where("date", "<=", finalDate)
-      .orderBy("date", "desc")
-      .onSnapshot((snapshot) => {
+    if (!isFiltered) {
+      // Pega o mês de referência do App para realizar a busca dos registros
+      const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+      const finalDate = new Date(
+        `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+          date.year
+        } 23:59:59`
+      );
+
+      // Busca os registros dentro do período de referência
+      await sleep(1000);
+      firebase
+        .firestore()
+        .collection("entry")
+        .doc(user.uid)
+        .collection(date.modality)
+        .where("date", ">=", initialDate)
+        .where("date", "<=", finalDate)
+        .orderBy("date", "desc")
+        .get()
+        .then((snapshot) => {
+          if (snapshot.docs.length > 0) {
+            let index = 0;
+            snapshot.forEach((result) => {
+              if (index === 0) {
+                setEntryList([result.data()]);
+              } else {
+                setEntryList((oldArray: any) => [...oldArray, result.data()]);
+              }
+              index++;
+            });
+          } else {
+            setEmptyData(true);
+          }
+        });
+    } else {
+      let baseQuery: firebase.firestore.Query = firebase
+        .firestore()
+        .collection("entry")
+        .doc(user.uid)
+        .collection(modality!);
+
+      if (description) {
+        baseQuery = baseQuery.where("description", "==", description);
+      }
+      if (segment) {
+        baseQuery = baseQuery.where("segment", "==", segment);
+      }
+      if (typeEntry) {
+        baseQuery = baseQuery.where("type", "==", typeEntry);
+      }
+
+      /**
+       * O Firebase não permite realizar a query filtrando por data e valor, retornando um erro.
+       * Sendo assim, caso o usuário tenha filtrado pelos dois, na query retornamos somente com filtro por data, e pelo código, é filtrado se os valores estão dentro do filtrado.
+       */
+      if (initialDate) {
+        baseQuery = baseQuery.where(
+          "date",
+          ">=",
+          convertDateToDatabase(initialDate)
+        );
+      }
+      if (finalDate) {
+        baseQuery = baseQuery.where(
+          "date",
+          "<=",
+          convertDateToDatabase(finalDate)
+        );
+      }
+
+      if (initialValue > 0 && !initialDate) {
+        baseQuery = baseQuery.where("value", ">=", initialValue);
+      }
+      if (finalValue > 0 && !finalDate) {
+        baseQuery = baseQuery.where("value", "<=", finalValue);
+      }
+
+      baseQuery.get().then((snapshot) => {
         if (snapshot.docs.length > 0) {
+          let index = 0;
+          let add = 0;
           snapshot.forEach((result) => {
-            setEntryList((oldArray: any) => [...oldArray, result.data()]);
+            if (
+              (initialValue > 0 || finalValue > 0) &&
+              (initialDate || finalDate)
+            ) {
+              const { value } = result.data();
+              if (initialValue > 0 && finalValue === 0) {
+                if (value >= initialValue) {
+                  if (index === 0) {
+                    setEntryList([result.data()]);
+                  } else {
+                    setEntryList((oldArray: any) => [
+                      ...oldArray,
+                      result.data(),
+                    ]);
+                  }
+                  index++;
+                  add++;
+                }
+              } else if (finalValue > 0 && initialValue === 0) {
+                if (value <= finalValue) {
+                  if (index === 0) {
+                    setEntryList([result.data()]);
+                  } else {
+                    setEntryList((oldArray: any) => [
+                      ...oldArray,
+                      result.data(),
+                    ]);
+                  }
+                  index++;
+                  add++;
+                }
+              } else {
+                if (value >= initialValue && value <= finalValue) {
+                  if (index === 0) {
+                    setEntryList([result.data()]);
+                  } else {
+                    setEntryList((oldArray: any) => [
+                      ...oldArray,
+                      result.data(),
+                    ]);
+                  }
+                  index++;
+                  add++;
+                }
+              }
+            } else {
+              if (index === 0) {
+                setEntryList([result.data()]);
+              } else {
+                setEntryList((oldArray: any) => [...oldArray, result.data()]);
+              }
+              index++;
+              add++;
+            }
           });
+
+          if (add === 0) {
+            setEmptyData(true);
+          }
         } else {
           setEmptyData(true);
         }
       });
+    }
+  }
+
+  function handleRemoveFilter() {
+    setFilter(() => ({
+      ...defaultFilter,
+    }));
   }
 
   // Retorna o Saldo atual
@@ -123,12 +291,11 @@ export default function Entry() {
     }
   }
 
-  function handleRemoveFilter() {
-    setIsFiltered(false);
-    getEntry();
-  }
-
-  function ItemList({ item }: { item: IEntryList }) {
+  function ItemList({
+    item,
+  }: {
+    item: IEntryList | firebase.firestore.DocumentData;
+  }) {
     return (
       <ItemView>
         <DescriptionView>
@@ -168,31 +335,39 @@ export default function Entry() {
   }
 
   React.useEffect(() => {
-    getEntry();
-    getBalance();
-  }, [date.modality, date.month, date.year]);
+    if (isFocused) {
+      getEntry(filter);
+    }
+  }, [date.modality, date.month, date.year, filter, isFocused]);
+
+  React.useEffect(() => {
+    if (isFocused) {
+      getBalance();
+    }
+  }, [date.modality, date.month, date.year, isFocused]);
 
   return (
     <ViewTabContent>
       <TextHeaderScreen>Lançamentos</TextHeaderScreen>
       <ButtonHeaderView>
-        <StyledButtonOutline small={true} onPress={() => setFilter(true)}>
+        <StyledButtonOutline
+          small={true}
+          onPress={() => setFilterVisible(true)}
+        >
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
         </StyledButtonOutline>
         <Filter
-          visible={filter}
-          setVisible={setFilter}
+          visible={filterVisible}
+          setVisible={setFilterVisible}
           type="entry"
-          setList={setEntryList}
-          empty={setEmptyData}
-          isFiltered={isFiltered}
-          setIsFiltered={setIsFiltered}
+          filter={filter}
+          setFilter={setFilter}
         />
         <StyledButton small={true} onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
         </StyledButton>
       </ButtonHeaderView>
-      {isFiltered && (
+      {filter.isFiltered && (
         <RemoveFilterContainer>
           <RemoveFilterButton onPress={handleRemoveFilter}>
             <RemoveFilterText>Remover filtros</RemoveFilterText>

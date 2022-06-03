@@ -110,6 +110,7 @@ export default function Login() {
   }
 
   async function googleLogin() {
+    setLoading(true);
     const CLIENT_ID =
       "1027938913805-2uq44iec7nrr8p5c9qqu32nbapu5gfg6.apps.googleusercontent.com";
     const REDIRECT_URI = "https://auth.expo.io/@demetriog/Uallet";
@@ -156,10 +157,12 @@ export default function Login() {
         uid: userInfo.id,
         signed: true,
       }));
+      setLoading(false);
     }
   }
 
   async function facebookLogin() {
+    setLoading(true);
     // Autenticação com o Facebook
     await Facebook.initializeAsync("623678532217571");
 
@@ -203,6 +206,7 @@ export default function Login() {
         uid: userInfo.id,
         signed: true,
       }));
+      setLoading(false);
     }
   }
 

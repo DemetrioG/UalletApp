@@ -9,12 +9,7 @@ export default function convertDateToDatabase(date: string) {
   const day = date.slice(0, 2);
   const month = date.slice(3, 5);
   const year = date.slice(6, 10);
-  const hour = new Date().getHours();
-  const minutes = new Date().getMinutes();
-  const seconds = new Date().getSeconds();
-  const finalDate = new Date(
-    `${month}/${day}/${year} ${hour}:${minutes}:${seconds}`
-  );
+  const finalDate = new Date(`${month}/${day}/${year} 00:00:01`);
 
   return firebase.firestore.Timestamp.fromDate(finalDate);
 }
