@@ -34,16 +34,14 @@ import {
 import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import Alert from "../Alert";
-import { IEntryList } from "../../screens/Entry";
+import { IActiveFilter } from "../../screens/Entry";
 
 interface IFilter {
   visible: boolean;
   type: "entry";
-  isFiltered: boolean;
-  empty: React.Dispatch<React.SetStateAction<boolean>>;
-  setList: React.Dispatch<React.SetStateAction<IEntryList[]>>;
+  filter: IActiveFilter;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsFiltered: React.Dispatch<React.SetStateAction<boolean>>;
+  setFilter: React.Dispatch<React.SetStateAction<IActiveFilter>>;
 }
 
 interface IForm {
@@ -52,32 +50,10 @@ interface IForm {
   description: string;
 }
 
-interface IActiveFilter {
-  initialDate: string | null;
-  finalDate: string | null;
-  description: string | null;
-  modality: string | null;
-  typeEntry: string | null;
-  segment: string | null;
-  initialValue: number;
-  finalValue: number;
-  isFiltered: boolean;
-}
-
-const defaultFilter: IActiveFilter = {
-  initialDate: null,
-  finalDate: null,
-  description: null,
-  modality: null,
-  typeEntry: null,
-  segment: null,
-  initialValue: 0,
-  finalValue: 0,
-  isFiltered: false,
-};
-const optionsType = ["Receita", "Despesa"];
+const optionsType = ["Todos", "Receita", "Despesa"];
 const optionsModality = ["Projetado", "Real"];
 const optionsSegment = [
+  "Todos",
   "Lazer",
   "Educação",
   "Investimentos",
@@ -89,14 +65,11 @@ export default function Filter({
   visible,
   setVisible,
   type,
-  setList,
-  empty,
-  isFiltered,
-  setIsFiltered,
+  filter,
+  setFilter,
 }: IFilter) {
   const { user } = React.useContext(UserContext);
   const { alert, setAlert } = React.useContext(AlertContext);
-  const [filter, setFilter] = React.useState(defaultFilter);
   const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
   const [typeEntryVisible, setTypeEntryVisible] = React.useState(false);
@@ -142,95 +115,12 @@ export default function Filter({
       }));
     }
 
-    empty(false);
     setLoading(true);
-    let baseQuery: firebase.firestore.Query = firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(modality!);
-
-    if (description) {
-      baseQuery = baseQuery.where("description", "==", description);
-    }
-    if (segment) {
-      baseQuery = baseQuery.where("segment", "==", segment);
-    }
-    if (typeEntry) {
-      baseQuery = baseQuery.where("type", "==", typeEntry);
-    }
-
-    /**
-     * O Firebase não permite realizar a query filtrando por data e valor, retornando um erro.
-     * Sendo assim, caso o usuário tenha filtrado pelos dois, na query retornamos somente com filtro por data, e pelo código, é filtrado se os valores estão dentro do filtrado.
-     */
-    if (initialdate) {
-      baseQuery = baseQuery.where(
-        "date",
-        ">=",
-        convertDateToDatabase(initialdate)
-      );
-    }
-    if (finaldate) {
-      baseQuery = baseQuery.where(
-        "date",
-        "<=",
-        convertDateToDatabase(finaldate)
-      );
-    }
-
-    if (initialLabel > 0 && !initialdate) {
-      baseQuery = baseQuery.where("value", ">=", initialLabel);
-    }
-    if (finalLabel > 0 && !finaldate) {
-      baseQuery = baseQuery.where("value", "<=", finalLabel);
-    }
-
-    baseQuery.onSnapshot((snapshot) => {
-      setList([]);
-      if (snapshot.docs.length > 0) {
-        let add = 0;
-        snapshot.forEach((result) => {
-          if (
-            (initialLabel > 0 || finalLabel > 0) &&
-            (initialdate || finaldate)
-          ) {
-            const { value } = result.data();
-            if (initialLabel > 0 && finalLabel === 0) {
-              if (value >= initialLabel) {
-                setList((oldArray: any) => [...oldArray, result.data()]);
-                add++;
-              }
-            } else if (finalLabel > 0 && initialLabel === 0) {
-              if (value <= finalLabel) {
-                setList((oldArray: any) => [...oldArray, result.data()]);
-                add++;
-              }
-            } else {
-              if (value >= initialLabel && value <= finalLabel) {
-                setList((oldArray: any) => [...oldArray, result.data()]);
-                add++;
-              }
-            }
-          } else {
-            setList((oldArray: any) => [...oldArray, result.data()]);
-            add++;
-          }
-        });
-
-        if (add === 0) {
-          empty(true);
-        }
-      } else {
-        empty(true);
-      }
-    });
-
     setFilter(() => ({
       description: description,
       modality: modality,
-      segment: segment,
-      typeEntry: typeEntry,
+      segment: segment !== "Todos" ? segment : null,
+      typeEntry: typeEntry !== "Todos" ? typeEntry : null,
       initialDate: initialdate,
       finalDate: finaldate,
       initialValue: initialLabel,
@@ -238,7 +128,6 @@ export default function Filter({
       isFiltered: true,
     }));
     setLoading(false);
-    setIsFiltered(true);
     setVisible(false);
   }
 
@@ -296,13 +185,7 @@ export default function Filter({
     if (maxValue === 0) {
       getMaxValue();
     }
-
-    if (!isFiltered) {
-      setFilter(() => ({
-        ...defaultFilter,
-      }));
-    }
-  }, [visible, isFiltered]);
+  }, [visible]);
 
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
