@@ -104,35 +104,38 @@ export default function SegmentChart() {
                 let education = 0;
                 let shortAndMediumTime = 0;
                 let total = 0;
+                if (snapshot.docs.length > 0) {
+                  snapshot.forEach((result) => {
+                    const segmentData = [result.data()];
+                    segmentData.forEach(({ segment }, index) => {
+                      switch (segment) {
+                        case "Necessidades":
+                          needs++;
+                          break;
 
-                snapshot.forEach((result) => {
-                  const segmentData = [result.data()];
-                  segmentData.forEach(({ segment }, index) => {
-                    switch (segment) {
-                      case "Necessidades":
-                        needs++;
-                        break;
+                        case "Investimentos":
+                          invest++;
+                          break;
 
-                      case "Investimentos":
-                        invest++;
-                        break;
+                        case "Lazer":
+                          leisure++;
+                          break;
 
-                      case "Lazer":
-                        leisure++;
-                        break;
+                        case "Educação":
+                          education++;
+                          break;
 
-                      case "Educação":
-                        education++;
-                        break;
+                        case "Curto e médio prazo":
+                          shortAndMediumTime++;
+                          break;
+                      }
 
-                      case "Curto e médio prazo":
-                        shortAndMediumTime++;
-                        break;
-                    }
-
-                    total++;
+                      total++;
+                    });
                   });
-                });
+                } else {
+                  setEmpty(true);
+                }
 
                 needs = (needs / total) * 100;
                 invest = (invest / total) * 100;
