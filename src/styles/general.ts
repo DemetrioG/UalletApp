@@ -65,7 +65,7 @@ export const ModalContainer = styled(View)`
 `;
 
 export const ModalView: React.FC<
-  ViewProps & { height?: number; center?: boolean; filter?: boolean }
+  ViewProps & { height?: number | null; center?: boolean; filter?: boolean }
 > = styled(View)`
   padding: ${metrics.topBottomPadding}px
     ${({ filter }) => (!filter ? `${metrics.basePadding}px` : null)};
