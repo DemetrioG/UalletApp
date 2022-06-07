@@ -379,7 +379,7 @@ export default function NewEntry({
                     <ButtonText>CADASTRAR</ButtonText>
                   )}
                 </StyledButton>
-                <StyledButtonOutline>
+                <StyledButtonOutline onPress={() => navigate("LançamentoFixo")}>
                   <ButtonOutlineText>
                     CADASTRAR DESPESAS FIXAS
                   </ButtonOutlineText>
