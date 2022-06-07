@@ -1,4 +1,5 @@
 /**
+ * @param month 1 à 12
  * @returns     Último dia do mês referente
  */
 

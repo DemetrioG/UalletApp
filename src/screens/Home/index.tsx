@@ -33,6 +33,7 @@ import {
   StyledLoader,
 } from "../../styles/general";
 import { LoaderContext } from "../../context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -40,10 +41,9 @@ export default function Home() {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
+  const { data, setData } = React.useContext(DataContext);
   const { date } = React.useContext(DateContext);
   const { alert } = React.useContext(AlertContext);
-
-  const [balance, setBalance] = React.useState<string | null>(null);
 
   // Retorna o Saldo atual
   function getBalance() {
@@ -55,11 +55,13 @@ export default function Home() {
         .collection(date.modality)
         .doc(date.month.toString())
         .onSnapshot((snapshot) => {
-          if (snapshot.data()) {
-            setBalance(numberToReal(snapshot.data()?.balance));
-          } else {
-            setBalance("R$ 0,00");
-          }
+          setData((dataState) => ({
+            ...dataState,
+            balance: snapshot.data()
+              ? numberToReal(snapshot.data()?.balance)
+              : "R$ 0,00",
+          }));
+
           !loader.balance
             ? setLoader((loaderState) => ({
                 ...loaderState,
@@ -124,7 +126,9 @@ export default function Home() {
           {loader.visible ? (
             <StyledLoader width={160} height={30} radius={10} />
           ) : (
-            <Balance>{!user.hideNumbers ? balance : "** ** ** ** **"}</Balance>
+            <Balance negative={data.balance?.includes("-")}>
+              {!user.hideNumbers ? data.balance : "** ** ** ** **"}
+            </Balance>
           )}
         </Card>
         <Card>

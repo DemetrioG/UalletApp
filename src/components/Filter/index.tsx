@@ -183,6 +183,14 @@ export default function Filter({
     }
   }, [visible]);
 
+  React.useEffect(() => {
+    if (!filter.isFiltered) {
+      setTypeEntry(null);
+      setModality(null);
+      setSegment(null);
+    }
+  }, [filter]);
+
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
       {alert.visibility && <Alert />}

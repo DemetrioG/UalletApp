@@ -7,9 +7,8 @@ import {
 } from "react-native";
 
 import { colors } from "../../styles";
-import { StyledIcon, ModalContainer } from "../../styles/general";
+import { StyledIcon, ModalContainer, ModalView } from "../../styles/general";
 import {
-  ContentView,
   ItemPicker,
   ItemText,
   PickerText,
@@ -68,10 +67,10 @@ export default function Picker({
       >
         <TouchableWithoutFeedback onPress={() => setVisibility(false)}>
           <ModalContainer>
-            <ContentView>
+            <ModalView height={OPTIONS.length > 4 ? 350 : null}>
               <Title>{type}</Title>
               <ScrollView>{option}</ScrollView>
-            </ContentView>
+            </ModalView>
           </ModalContainer>
         </TouchableWithoutFeedback>
       </Modal>

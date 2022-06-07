@@ -1,5 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
+import { DataContext } from "../../context/Data/dataContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { UserContext } from "../../context/User/userContext";
@@ -24,8 +25,9 @@ import {
 } from "./styles";
 
 export default function LineChart() {
-  const { date, setDate } = React.useContext(DateContext);
-  const { user, setUser } = React.useContext(UserContext);
+  const { date } = React.useContext(DateContext);
+  const { user } = React.useContext(UserContext);
+  const { data: userData } = React.useContext(DataContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
 
   const [data, setData] = React.useState([
@@ -156,7 +158,7 @@ export default function LineChart() {
 
   React.useEffect(() => {
     getData();
-  }, [date]);
+  }, [date, userData.balance]);
 
   return (
     <>

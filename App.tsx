@@ -20,6 +20,7 @@ import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";
 import { DateContextProvider } from "./src/context/Date/dateContext";
 import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
+import { DataContextProvider } from "./src/context/Data/dataContext";
 
 LogBox.ignoreAllLogs(true);
 
@@ -56,11 +57,13 @@ export default function App(): JSX.Element {
       <ThemeProvider theme={theme}>
         <UserContextProvider>
           <DateContextProvider>
-            <AlertContextProvider>
-              <LoaderContextProvider>
-                <AppContent />
-              </LoaderContextProvider>
-            </AlertContextProvider>
+            <DataContextProvider>
+              <AlertContextProvider>
+                <LoaderContextProvider>
+                  <AppContent />
+                </LoaderContextProvider>
+              </AlertContextProvider>
+            </DataContextProvider>
           </DateContextProvider>
         </UserContextProvider>
       </ThemeProvider>

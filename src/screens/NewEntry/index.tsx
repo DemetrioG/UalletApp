@@ -267,7 +267,7 @@ export default function NewEntry({
       .doc(dateMonth)
       .get()
       .then((v) => {
-        balance = v.data()?.balance;
+        balance = v.data()?.balance || 0;
       })
       .catch(() => {
         balance = 0;
@@ -379,7 +379,7 @@ export default function NewEntry({
                     <ButtonText>CADASTRAR</ButtonText>
                   )}
                 </StyledButton>
-                <StyledButtonOutline>
+                <StyledButtonOutline onPress={() => navigate("LançamentoFixo")}>
                   <ButtonOutlineText>
                     CADASTRAR DESPESAS FIXAS
                   </ButtonOutlineText>

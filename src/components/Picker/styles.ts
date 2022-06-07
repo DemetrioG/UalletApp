@@ -31,13 +31,6 @@ export const PickerText: React.FC<
     value.replace(" *", "") === type ? colors.lightGray : theme.theme.text};
 `;
 
-export const ContentView = styled(View)`
-  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
-  width: 294px;
-  background-color: ${({ theme: { theme } }) => theme.primary};
-  border-radius: ${metrics.baseRadius}px;
-`;
-
 export const Title = styled(Text)`
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.large}px;

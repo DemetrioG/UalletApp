@@ -12,6 +12,7 @@ import {
   getFinalDateMonth,
   numberToReal,
   convertDateToDatabase,
+  dateMonthNumber,
 } from "../../functions/index";
 import { ITimestamp } from "../../functions/convertDateFromDatabase";
 import { colors, metrics } from "../../styles";
@@ -32,6 +33,8 @@ import {
   RemoveFilterContainer,
   RemoveFilterText,
   RemoveFilterButton,
+  InfoMonthText,
+  HeaderContainer,
 } from "./styles";
 import {
   ButtonHeaderView,
@@ -48,6 +51,7 @@ import {
   ViewTabContent,
 } from "../../styles/general";
 import Filter from "../../components/Filter";
+import { DataContext } from "../../context/Data/dataContext";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -89,6 +93,7 @@ const LOADING = require("../../../assets/icons/blueLoading.json");
 export default function Entry() {
   const { user } = React.useContext(UserContext);
   const { date } = React.useContext(DateContext);
+  const { data, setData } = React.useContext(DataContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   const [SWITCH, setSWITCH] = React.useState<boolean>(false);
@@ -97,7 +102,6 @@ export default function Entry() {
     Array<IEntryList | firebase.firestore.DocumentData>
   >([]);
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
-  const [balance, setBalance] = React.useState<string>("R$ 0,00");
   const [filter, setFilter] = React.useState(defaultFilter);
   const [filterVisible, setFilterVisible] = React.useState(false);
 
@@ -282,11 +286,12 @@ export default function Entry() {
         .collection(date.modality)
         .doc(date.month.toString())
         .onSnapshot((snapshot) => {
-          if (snapshot.data()) {
-            setBalance(numberToReal(snapshot.data()?.balance));
-          } else {
-            setBalance("R$ 0,00");
-          }
+          setData((dataState) => ({
+            ...dataState,
+            balance: snapshot.data()
+              ? numberToReal(snapshot.data()?.balance)
+              : "R$ 0,00",
+          }));
         });
     }
   }
@@ -348,7 +353,12 @@ export default function Entry() {
 
   return (
     <ViewTabContent>
-      <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+      <HeaderContainer>
+        <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+        <InfoMonthText>
+          {dateMonthNumber("toMonth", date.month, "pt", true)}
+        </InfoMonthText>
+      </HeaderContainer>
       <ButtonHeaderView>
         <StyledButtonOutline
           small={true}
@@ -410,8 +420,8 @@ export default function Entry() {
       )}
       <IncomeView>
         <Label>Saldo atual:</Label>
-        <IncomeText>
-          {!user.hideNumbers ? balance : "** ** ** ** **"}
+        <IncomeText negative={data.balance.includes("-")}>
+          {!user.hideNumbers ? data.balance : "** ** ** ** **"}
         </IncomeText>
       </IncomeView>
       <AutoEntryView>
