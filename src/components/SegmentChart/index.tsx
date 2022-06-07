@@ -47,7 +47,7 @@ export const Label = ({ slices, data }: ISlices) => {
             width={100}
             height={100}
           >
-            <PieChartLabel>{value}%</PieChartLabel>
+            <PieChartLabel>{Math.round(value)}%</PieChartLabel>
           </ForeignObject>
         ) : null;
       })}
