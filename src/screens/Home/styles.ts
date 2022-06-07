@@ -33,10 +33,13 @@ export const LogoCard = styled(Image)`
   height: 25px;
 `;
 
-export const Balance = styled(Text)`
+export const Balance: React.FC<TextProps & { negative?: boolean }> = styled(
+  Text
+)`
   font-family: ${fonts.montserratBold};
   font-size: ${fonts.larger}px;
-  color: ${({ theme: { theme } }) => theme.blue};
+  color: ${({ theme: { theme }, negative }) =>
+    !negative ? theme.blue : theme.red};
 `;
 
 export const Invest = styled(Text)`

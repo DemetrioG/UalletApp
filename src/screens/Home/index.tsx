@@ -124,7 +124,9 @@ export default function Home() {
           {loader.visible ? (
             <StyledLoader width={160} height={30} radius={10} />
           ) : (
-            <Balance>{!user.hideNumbers ? balance : "** ** ** ** **"}</Balance>
+            <Balance negative={balance?.includes("-")}>
+              {!user.hideNumbers ? balance : "** ** ** ** **"}
+            </Balance>
           )}
         </Card>
         <Card>

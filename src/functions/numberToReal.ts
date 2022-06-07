@@ -17,9 +17,9 @@ export default function numberToReal(number: number) {
   });
 
   if (Platform.OS === "android") {
-    newValue = newValue.replace(",", "-");
+    newValue = newValue.replace(",", "[");
     newValue = newValue.replace(".", ",");
-    newValue = newValue.replace("-", ".");
+    newValue = newValue.replace("[", ".");
   }
 
   return newValue;
