@@ -17,6 +17,7 @@ import {
 import EmptyChart from "../EmptyChart";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { StyledLoader } from "../../styles/general";
+import { DataContext } from "../../context/Data/dataContext";
 
 interface ISlices {
   slices?: [
@@ -56,8 +57,9 @@ export const Label = ({ slices, data }: ISlices) => {
 };
 
 export default function SegmentChart() {
-  const { date, setDate } = React.useContext(DateContext);
-  const { user, setUser } = React.useContext(UserContext);
+  const { date } = React.useContext(DateContext);
+  const { user } = React.useContext(UserContext);
+  const { data: userData } = React.useContext(DataContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
   /**
    * INDEX
@@ -164,7 +166,7 @@ export default function SegmentChart() {
 
   React.useEffect(() => {
     getData();
-  }, [date]);
+  }, [date, userData.balance]);
 
   return (
     <>
