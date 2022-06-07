@@ -64,10 +64,13 @@ export const IncomeView = styled(View)`
   border-bottom-color: ${colors.lightPrimary};
 `;
 
-export const IncomeText = styled(Text)`
+export const IncomeText: React.FC<TextProps & { negative?: boolean }> = styled(
+  Text
+)`
   font-family: ${fonts.montserratBold};
   font-size: ${fonts.medium}px;
-  color: ${({ theme: { theme } }) => theme.blue};
+  color: ${({ theme: { theme }, negative }) =>
+    !negative ? theme.blue : theme.red};
   margin-left: ${metrics.baseMargin / 2}px;
 `;
 
@@ -129,4 +132,16 @@ export const RemoveFilterButton: React.FC<TouchableOpacityProps> = styled(
 )`
   flex-direction: row;
   align-items: center;
+`;
+
+export const HeaderContainer = styled(View)`
+  flex-direction: row;
+  align-items: baseline;
+`;
+
+export const InfoMonthText = styled(Text)`
+  font-family: ${fonts.ralewayExtraBold};
+  font-size: ${fonts.large}px;
+  color: ${({ theme: { theme } }) => theme.text};
+  margin-left: 5px;
 `;

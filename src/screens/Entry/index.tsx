@@ -12,6 +12,7 @@ import {
   getFinalDateMonth,
   numberToReal,
   convertDateToDatabase,
+  dateMonthNumber,
 } from "../../functions/index";
 import { ITimestamp } from "../../functions/convertDateFromDatabase";
 import { colors, metrics } from "../../styles";
@@ -32,6 +33,8 @@ import {
   RemoveFilterContainer,
   RemoveFilterText,
   RemoveFilterButton,
+  InfoMonthText,
+  HeaderContainer,
 } from "./styles";
 import {
   ButtonHeaderView,
@@ -348,7 +351,12 @@ export default function Entry() {
 
   return (
     <ViewTabContent>
-      <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+      <HeaderContainer>
+        <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+        <InfoMonthText>
+          {dateMonthNumber("toMonth", date.month, "pt", true)}
+        </InfoMonthText>
+      </HeaderContainer>
       <ButtonHeaderView>
         <StyledButtonOutline
           small={true}
@@ -410,7 +418,7 @@ export default function Entry() {
       )}
       <IncomeView>
         <Label>Saldo atual:</Label>
-        <IncomeText>
+        <IncomeText negative={balance.includes("-")}>
           {!user.hideNumbers ? balance : "** ** ** ** **"}
         </IncomeText>
       </IncomeView>
