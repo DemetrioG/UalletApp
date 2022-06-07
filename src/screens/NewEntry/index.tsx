@@ -267,7 +267,7 @@ export default function NewEntry({
       .doc(dateMonth)
       .get()
       .then((v) => {
-        balance = v.data()?.balance;
+        balance = v.data()?.balance || 0;
       })
       .catch(() => {
         balance = 0;

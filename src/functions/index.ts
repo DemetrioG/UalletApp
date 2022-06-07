@@ -7,6 +7,7 @@ import sleep from "./sleep";
 import getFinalDateMonth from "./getFinalDateMonth";
 import dateMonthNumber from "./dateMonthNumber";
 import dateValidation from "./dateValidation";
+import futureDate from "./futureDate";
 
 export {
   convertDate,
@@ -18,4 +19,5 @@ export {
   getFinalDateMonth,
   dateMonthNumber,
   dateValidation,
+  futureDate,
 };
