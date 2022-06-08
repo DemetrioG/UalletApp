@@ -31,6 +31,7 @@ import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import Alert from "../Alert";
 import { IActiveFilter } from "../../screens/Entry";
+import { DateContext } from "../../context/Date/dateContext";
 
 interface IFilter {
   visible: boolean;
@@ -65,6 +66,7 @@ export default function Filter({
   setFilter,
 }: IFilter) {
   const { user } = React.useContext(UserContext);
+  const { date } = React.useContext(DateContext);
   const { alert, setAlert } = React.useContext(AlertContext);
   const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
@@ -133,7 +135,7 @@ export default function Filter({
       .firestore()
       .collection("entry")
       .doc(user.uid)
-      .collection("Real")
+      .collection(date.modality)
       .orderBy("value", "desc")
       .limit(1)
       .get()
@@ -141,23 +143,6 @@ export default function Filter({
         v.forEach((result) => {
           const { value } = result.data();
           maxValue = value || 0;
-        });
-      });
-
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection("Projetado")
-      .orderBy("value", "desc")
-      .limit(1)
-      .get()
-      .then((v) => {
-        v.forEach((result) => {
-          const { value } = result.data();
-          if (value > maxValue) {
-            maxValue = value || 0;
-          }
         });
       });
 
@@ -176,9 +161,6 @@ export default function Filter({
       setInitialLabel(filter.initialValue);
       setFinalLabel(filter.finalValue);
       setIsSliding(false);
-    }
-
-    if (maxValue === 0) {
       getMaxValue();
     }
   }, [visible]);

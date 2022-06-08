@@ -95,6 +95,9 @@ export default function Home() {
     if (!user.complete) {
       completeData();
     }
+  }, [date]);
+
+  React.useEffect(() => {
     if (
       loader.name &&
       loader.balance &&
@@ -107,7 +110,7 @@ export default function Home() {
         visible: false,
       }));
     }
-  }, [date, loader]);
+  }, [loader]);
 
   return (
     <BackgroundContainer>

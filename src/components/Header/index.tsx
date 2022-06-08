@@ -65,7 +65,7 @@ export default function Header() {
       getData();
     }
 
-    if (user.name != "") {
+    if (user.name !== "") {
       setLoader((loaderState) => ({
         ...loaderState,
         name: true,
