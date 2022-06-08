@@ -195,7 +195,7 @@ export default function FixedEntry() {
           balance: balance,
         })
         .then(() => {
-          setAlert(() => ({
+          return setAlert(() => ({
             visibility: true,
             type: "success",
             title: "Dados cadastrados com sucesso",
