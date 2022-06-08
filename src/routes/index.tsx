@@ -10,20 +10,19 @@ export default function routes() {
   React.useEffect(() => {
     async function loadStorage() {
       const storageUser = await getStorage("authUser");
+      const storageDate = Date.parse(storageUser?.date);
+      const today = Date.parse(new Date(Date.now()).toString());
 
       // Parseia as datas para numero e compara se a data do storage está expirada
-      if (
-        Date.parse(storageUser?.date) >
-        Date.parse(new Date(Date.now()).toString())
-      ) {
+      if (storageDate > today) {
         return setUser((userState) => ({
           ...userState,
           uid: storageUser.uid,
           signed: true,
         }));
-      } else {
-        return removeAllStorage();
       }
+
+      return removeAllStorage();
     }
 
     loadStorage();

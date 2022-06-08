@@ -45,7 +45,7 @@ const slides: ISlidesMockup[] = [
 export default function Index() {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
-  function renderSlide({ item }: any) {
+  function renderSlide({ item }: { item: ISlidesMockup }) {
     return (
       <FlexContainer>
         <ImageCarousel source={item.image} />

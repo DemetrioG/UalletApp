@@ -86,7 +86,7 @@ export default function Login() {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((v) => {
-        let data = {
+        const data = {
           uid: v.user?.uid,
           // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
           date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
@@ -98,7 +98,7 @@ export default function Login() {
           signed: true,
         }));
       })
-      .catch((error) => {
+      .catch(() => {
         setAlert(() => ({
           visibility: true,
           type: "error",
@@ -146,7 +146,7 @@ export default function Login() {
           }
         });
 
-      let data = {
+      const data = {
         uid: userInfo.id,
         // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
         date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
@@ -195,7 +195,7 @@ export default function Login() {
           }
         });
 
-      let dataStorage = {
+      const dataStorage = {
         uid: userInfo.id,
         // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
         date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
