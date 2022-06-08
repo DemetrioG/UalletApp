@@ -15,7 +15,7 @@ export const StyledInput = styled(View)`
   padding: 5px 20px;
   justify-content: center;
   border-radius: ${metrics.mediumRadius}px;
-  border: 2px solid ${colors.lightGray};
+  border: 1px solid ${colors.lightGray};
   font-family: ${fonts.ralewayExtraBold};
   font-size: ${fonts.regular}px;
   margin-bottom: ${metrics.baseMargin}px;

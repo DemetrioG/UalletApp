@@ -129,7 +129,7 @@ export const StyledButton: React.FC<
 
 export const StyledButtonOutline: typeof StyledButton = styled(StyledButton)`
   background-color: transparent;
-  border-width: 2px;
+  border-width: 1px;
   border-color: ${({ theme: { theme } }) => theme.blue};
 `;
 
@@ -213,8 +213,8 @@ export const StyledTextInput: typeof DefaultTextInput = styled(
   height: 45px;
   padding: 5px 20px;
   border-radius: ${metrics.mediumRadius}px;
-  border: 2px solid ${colors.lightGray};
-  font-family: ${fonts.ralewayExtraBold};
+  border: 1px solid ${colors.lightGray};
+  font-family: ${fonts.ralewayBold};
   font-size: ${fonts.regular}px;
   margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) => theme.text};
@@ -229,8 +229,8 @@ export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
   height: 45px;
   padding: 5px 20px;
   border-radius: ${metrics.mediumRadius}px;
-  border: 2px solid ${colors.lightGray};
-  font-family: ${fonts.ralewayExtraBold};
+  border: 1px solid ${colors.lightGray};
+  font-family: ${fonts.montserratBold};
   font-size: ${fonts.regular}px;
   margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) => theme.text};
