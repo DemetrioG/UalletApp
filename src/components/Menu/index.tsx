@@ -1,6 +1,7 @@
 import * as React from "react";
+import { AlertContext } from "../../context/Alert/alertContext";
 import { DateContext } from "../../context/Date/dateContext";
-import { UserContext } from "../../context/User/userContext";
+import { initialUserState, UserContext } from "../../context/User/userContext";
 import { removeAllStorage } from "../../functions/storageData";
 import { colors } from "../../styles";
 import { StyledIcon } from "../../styles/general";
@@ -14,24 +15,30 @@ import {
 
 export default function Menu({ visibility }: { visibility: boolean }) {
   const { date, setDate } = React.useContext(DateContext);
-  const { user, setUser } = React.useContext(UserContext);
+  const { setAlert } = React.useContext(AlertContext);
+  const { setUser } = React.useContext(UserContext);
 
   function changeModality() {
-    setDate((dateState) => ({
+    return setDate((dateState) => ({
       ...dateState,
       modality: dateState.modality === "Real" ? "Projetado" : "Real",
     }));
   }
 
-  async function logout() {
-    removeAllStorage();
-    setUser(() => ({
-      signed: false,
-      complete: false,
-      uid: undefined,
-      name: "",
-      hideNumbers: false,
+  function handleLogout() {
+    return setAlert(() => ({
+      title: "Deseja realmente sair do app?",
+      type: "confirm",
+      visibility: true,
+      callbackFunction: logout,
     }));
+  }
+
+  function logout() {
+    setUser(() => ({
+      ...initialUserState,
+    }));
+    removeAllStorage();
   }
 
   return (
@@ -51,7 +58,7 @@ export default function Menu({ visibility }: { visibility: boolean }) {
             </ItemContent>
           </ItemContainer>
           <ItemContainer>
-            <ItemContent onPress={logout}>
+            <ItemContent onPress={handleLogout}>
               <LogoutText>LOGOUT</LogoutText>
               <StyledIcon name="power" size={15} color={colors.lightRed} />
             </ItemContent>
