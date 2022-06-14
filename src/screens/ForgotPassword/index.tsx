@@ -88,7 +88,7 @@ export default function ForgotPassword() {
           <ContainerCenter>
             <FormContainer>
               <StyledTextInput
-                placeholder="E-mail"
+                placeholder="E-mail *"
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"

@@ -17,7 +17,6 @@ import firebase from "../../services/firebase";
 
 import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
-import { setStorage } from "../../functions/storageData";
 import Alert from "../../components/Alert";
 import {
   ActionText,
@@ -44,6 +43,7 @@ import {
   StyledLoading,
 } from "../../styles/general";
 import { colors, metrics } from "../../styles";
+import { setStorage } from "../../utils/storage.helper";
 interface IForm {
   email: string;
   password: string;
@@ -227,7 +227,7 @@ export default function Login() {
           <ContainerCenter>
             <FormContainer>
               <StyledTextInput
-                placeholder="E-mail"
+                placeholder="E-mail *"
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -235,7 +235,7 @@ export default function Login() {
                 control={control}
               />
               <StyledTextInput
-                placeholder="Senha"
+                placeholder="Senha *"
                 secureTextEntry={true}
                 onSubmitEditing={handleSubmit(loginUser)}
                 returnKeyType="done"

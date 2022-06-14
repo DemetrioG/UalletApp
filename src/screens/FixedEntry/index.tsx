@@ -16,13 +16,6 @@ import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
-import {
-  convertDate,
-  convertDateToDatabase,
-  realToNumber,
-  dateValidation,
-  futureDate,
-} from "../../functions/index";
 import { HorizontalView, TypeText, TypeView } from "./styles";
 import {
   ButtonText,
@@ -38,6 +31,13 @@ import {
   ViewTabContent,
 } from "../../styles/general";
 import { metrics, colors } from "../../styles";
+import {
+  dateValidation,
+  convertDate,
+  convertDateToDatabase,
+  futureDate,
+} from "../../utils/date.helper";
+import { realToNumber } from "../../utils/number.helper";
 
 interface IForm {
   entrydate: string;

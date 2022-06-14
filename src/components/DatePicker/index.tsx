@@ -2,10 +2,10 @@ import * as React from "react";
 import { Modal, ScrollView } from "react-native";
 
 import { DateContext } from "../../context/Date/dateContext";
-import { getStorage, setStorage } from "../../functions/storageData";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
 import { ModalContainer, ModalView, StyledIcon } from "../../styles/general";
 import { colors } from "../../styles";
+import { getStorage, setStorage } from "../../utils/storage.helper";
 
 interface IDatePicker {
   options: string[] | number[];

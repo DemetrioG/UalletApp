@@ -133,13 +133,13 @@ export default function Register() {
           <ContainerCenter>
             <FormContainer>
               <StyledTextInput
-                placeholder="Nome completo"
+                placeholder="Nome completo *"
                 maxLength={40}
                 name="name"
                 control={control}
               />
               <StyledTextInput
-                placeholder="E-mail"
+                placeholder="E-mail *"
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
@@ -147,14 +147,14 @@ export default function Register() {
                 control={control}
               />
               <StyledTextInput
-                placeholder="Senha"
+                placeholder="Senha *"
                 secureTextEntry={true}
                 maxLength={20}
                 name="password"
                 control={control}
               />
               <StyledTextInput
-                placeholder="Confirme sua senha"
+                placeholder="Confirme sua senha *"
                 secureTextEntry={true}
                 onSubmitEditing={handleSubmit(registerUser)}
                 returnKeyType="done"
