@@ -63,10 +63,9 @@ export default function NewEntry({
 }: {
   route: { params: IEntryList };
 }) {
-  const notInitialRender = React.useRef(false);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
-  const { alert, setAlert } = React.useContext(AlertContext);
+  const { setAlert } = React.useContext(AlertContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDelete, setIsDelete] = React.useState(false);
