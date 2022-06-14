@@ -102,7 +102,6 @@ export default function FixedEntry() {
         visibility: true,
         type: "error",
         title: "Informe todos os campos",
-        redirect: null,
       }));
     }
 
@@ -111,7 +110,6 @@ export default function FixedEntry() {
         visibility: true,
         type: "error",
         title: "Verifique a data informada",
-        redirect: null,
       }));
     }
 

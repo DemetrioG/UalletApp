@@ -97,19 +97,6 @@ export default function NewEntry({
     resolver: yupResolver(schema),
   });
 
-  React.useEffect(() => {
-    // Verifica se é Edição e preenche os dados nos campos
-    if (params) {
-      setIsEditing(true);
-      setType(params.type);
-      setModality(params.modality);
-      setSegment(params.segment || null);
-      setValue("entrydate", convertDateFromDatabase(params.date));
-      setValue("description", params.description);
-      setValue("value", numberToReal(params.value));
-    }
-  }, []);
-
   function setDateToInput(date: Date) {
     setValue("entrydate", convertDate(date));
   }
@@ -123,7 +110,6 @@ export default function NewEntry({
         visibility: true,
         type: "error",
         title: "Informe todos os campos",
-        redirect: null,
       }));
     }
 
@@ -132,7 +118,6 @@ export default function NewEntry({
         visibility: true,
         type: "error",
         title: "Verifique a data informada",
-        redirect: null,
       }));
     }
 
@@ -180,7 +165,6 @@ export default function NewEntry({
           title: idRegister
             ? "Erro ao atualizar as informações"
             : "Erro ao cadastrar as informações",
-          redirect: null,
         }));
         return setIsLoading(false);
       });
@@ -235,6 +219,15 @@ export default function NewEntry({
     return setIsLoading(false);
   }
 
+  function handleDelete() {
+    return setAlert(() => ({
+      title: "Deseja excluir este lançamento?",
+      type: "confirm",
+      visibility: true,
+      callbackFunction: deleteEntry,
+    }));
+  }
+
   async function deleteEntry() {
     setIsDelete(true);
     await firebase
@@ -249,7 +242,6 @@ export default function NewEntry({
           visibility: true,
           type: "error",
           title: "Erro ao excluir o lançamento",
-          redirect: null,
         }));
         return setIsDelete(false);
       });
@@ -296,6 +288,19 @@ export default function NewEntry({
       redirect: "Lançamentos",
     }));
   }
+
+  React.useEffect(() => {
+    // Verifica se é Edição e preenche os dados nos campos
+    if (params) {
+      setIsEditing(true);
+      setType(params.type);
+      setModality(params.modality);
+      setSegment(params.segment || null);
+      setValue("entrydate", convertDateFromDatabase(params.date));
+      setValue("description", params.description);
+      setValue("value", numberToReal(params.value));
+    }
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -397,7 +402,7 @@ export default function NewEntry({
                     <ButtonText>ATUALIZAR</ButtonText>
                   )}
                 </StyledButton>
-                <DeleteButton onPress={deleteEntry}>
+                <DeleteButton onPress={handleDelete}>
                   {isDelete ? (
                     <StyledLoading />
                   ) : (

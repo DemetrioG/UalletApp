@@ -93,7 +93,6 @@ export default function Filter({
         type: "error",
         title: "Informe o período dos filtros",
         visibility: true,
-        redirect: null,
       }));
     }
     if (!dateValidation(initialdate) || !dateValidation(finaldate)) {
@@ -101,7 +100,6 @@ export default function Filter({
         type: "error",
         title: "Verifique o período informado",
         visibility: true,
-        redirect: null,
       }));
     }
     if (!modality) {
@@ -109,7 +107,6 @@ export default function Filter({
         type: "error",
         title: "Informe a modalidade",
         visibility: true,
-        redirect: null,
       }));
     }
 
@@ -175,7 +172,7 @@ export default function Filter({
 
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
-      {alert.visibility && <Alert />}
+      <Alert />
       <StyledKeyboardAvoidingView>
         <ModalContainer>
           <ModalView filter height={470}>

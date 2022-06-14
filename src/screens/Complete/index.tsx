@@ -68,21 +68,18 @@ export default function Complete() {
         visibility: true,
         type: "error",
         title: "Informe todos os campos",
-        redirect: null,
       }));
     } else if (income == "R$0,00") {
       return setAlert(() => ({
         visibility: true,
         type: "error",
         title: "Informe uma renda média",
-        redirect: null,
       }));
     } else if (!dateValidation(birthdate)) {
       return setAlert(() => ({
         visibility: true,
         type: "error",
         title: "Verifique a data de nascimento informada",
-        redirect: null,
       }));
     }
 
@@ -121,7 +118,6 @@ export default function Complete() {
                 visibility: true,
                 type: "error",
                 title: "Erro ao cadastrar as informações",
-                redirect: null,
               }));
             });
         }
@@ -133,7 +129,7 @@ export default function Complete() {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          {alert.visibility && <Alert />}
+          <Alert />
           <LogoHeader>
             <TextHeader>Complete seu cadastro</TextHeader>
           </LogoHeader>

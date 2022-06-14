@@ -2,9 +2,11 @@ import * as React from "react";
 
 interface IAlert {
   visibility: boolean;
-  type: "success" | "error";
+  type: "success" | "error" | "confirm";
   title: string;
-  redirect: string | null;
+  redirect?: string | null;
+  callback?: boolean;
+  callbackFunction?: Function;
 }
 
 export const initialAlertState: IAlert = {

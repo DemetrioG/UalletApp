@@ -103,7 +103,6 @@ export default function Login() {
           visibility: true,
           type: "error",
           title: "Verifique os campos informados",
-          redirect: null,
         }));
       })
       .finally(() => setLoading(false));
@@ -214,7 +213,7 @@ export default function Login() {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          {alert.visibility && <Alert />}
+          <Alert />
           <LogoHeader>
             <Logo source={LOGO} />
             <TextUalletHeader>Uallet</TextUalletHeader>

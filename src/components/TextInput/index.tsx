@@ -19,14 +19,12 @@ const UTextInput = (
           visibility: true,
           type: "error",
           title: props.helperText!,
-          redirect: null,
         }));
       } else {
         setAlert(() => ({
           visibility: true,
           type: "error",
           title: "Informe todos os campos",
-          redirect: null,
         }));
       }
     }

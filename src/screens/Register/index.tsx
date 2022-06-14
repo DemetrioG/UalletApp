@@ -58,7 +58,6 @@ export default function Register() {
         visibility: true,
         type: "error",
         title: "As senhas informadas são diferentes",
-        redirect: null,
       }));
       return;
     }
@@ -88,7 +87,6 @@ export default function Register() {
               visibility: true,
               type: "error",
               title: "Sua senha deve ter no mínimo 6 caracteres",
-              redirect: null,
             }));
             break;
           case "auth/invalid-email":
@@ -96,7 +94,6 @@ export default function Register() {
               visibility: true,
               type: "error",
               title: "O e-mail informado é inválido",
-              redirect: null,
             }));
             break;
           case "auth/email-already-in-use":
@@ -104,7 +101,6 @@ export default function Register() {
               visibility: true,
               type: "error",
               title: "Usuário já cadastrado",
-              redirect: null,
             }));
             break;
           default:
@@ -112,7 +108,6 @@ export default function Register() {
               visibility: true,
               type: "error",
               title: "Erro ao cadastrar usuário",
-              redirect: null,
             }));
             break;
         }
@@ -125,7 +120,7 @@ export default function Register() {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          {alert.visibility && <Alert />}
+          <Alert />
           <LogoHeader>
             <Logo source={require("../../../assets/images/logo.png")} />
             <TextUalletHeader>Uallet</TextUalletHeader>
