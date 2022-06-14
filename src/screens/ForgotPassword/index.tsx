@@ -59,7 +59,6 @@ export default function ForgotPassword() {
           visibility: true,
           type: "success",
           title: "E-mail de redefinição enviado!\nVerifique sua caixa de SPAM",
-          redirect: null,
         }));
       })
       .catch((error) => {
@@ -67,7 +66,6 @@ export default function ForgotPassword() {
           visibility: true,
           type: "error",
           title: "E-mail não encontrado",
-          redirect: null,
         }));
       })
       .finally(() => setLoading(false));
@@ -77,7 +75,7 @@ export default function ForgotPassword() {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          {alert.visibility && <Alert />}
+          <Alert />
           <LogoHeader>
             <TextHeader>Recuperar senha</TextHeader>
           </LogoHeader>

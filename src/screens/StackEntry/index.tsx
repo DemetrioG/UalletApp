@@ -16,7 +16,7 @@ export default function StackEntry() {
 
   return (
     <BackgroundContainer>
-      {alert.visibility && <Alert />}
+      <Alert />
       <Header />
       <ViewTab>
         <Stack.Navigator>

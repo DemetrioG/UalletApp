@@ -114,7 +114,7 @@ export default function Home() {
 
   return (
     <BackgroundContainer>
-      {alert.visibility && <Alert />}
+      <Alert />
       <Header />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
         <Card>
