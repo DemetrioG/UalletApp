@@ -4,13 +4,9 @@ import { DataContext } from "../../context/Data/dataContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { UserContext } from "../../context/User/userContext";
-import {
-  dateMonthNumber,
-  getFinalDateMonth,
-  realToNumber,
-} from "../../functions";
 import firebase from "../../services/firebase";
 import { StyledLoader } from "../../styles/general";
+import { dateMonthNumber, getFinalDateMonth } from "../../utils/date.helper";
 import EmptyChart from "../EmptyChart";
 import {
   ChartContainer,

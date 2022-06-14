@@ -10,7 +10,7 @@ if (Platform.OS === "android") {
  * @returns      Valor no padrão R$ 0,00
  */
 
-export default function numberToReal(number: number) {
+export function numberToReal(number: number) {
   let newValue = number.toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL",
@@ -23,4 +23,16 @@ export default function numberToReal(number: number) {
   }
 
   return newValue;
+}
+
+/**
+ * @param value Valor no padrão R$0,00
+ * @returns     Valor no padrão Numérico
+ */
+
+export function realToNumber(value: string) {
+  let newValue = value.replace("R$", "");
+  newValue = newValue.replace(".", "");
+
+  return Number(newValue.replace(",", "."));
 }

@@ -8,7 +8,7 @@ import { HeaderIconView, HeaderText, HeaderView } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
 import Menu from "../Menu";
 import { LoaderContext } from "../../context/Loader/loaderContext";
-import { setStorage } from "../../functions/storageData";
+import { setStorage } from "../../utils/storage.helper";
 
 const optionsMonth = [
   "Janeiro",

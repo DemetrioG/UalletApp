@@ -25,7 +25,7 @@ import {
   StyledTextInputMask,
   TextHeader,
 } from "../../styles/general";
-import { dateValidation } from "../../functions";
+import { dateValidation } from "../../utils/date.helper";
 
 interface IForm {
   birthdate: string;

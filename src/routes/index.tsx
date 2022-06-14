@@ -1,8 +1,8 @@
 import * as React from "react";
 import AuthRoutes from "./authRoutes";
 import AppRoutes from "./appRoutes";
-import { getStorage, removeAllStorage } from "../functions/storageData";
 import { UserContext } from "../context/User/userContext";
+import { getStorage, removeAllStorage } from "../utils/storage.helper";
 
 export default function routes() {
   const { user, setUser } = React.useContext(UserContext);

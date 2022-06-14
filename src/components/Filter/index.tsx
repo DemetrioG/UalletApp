@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 
 import firebase from "../../services/firebase";
 import Picker from "../Picker";
-import { dateValidation, numberToReal } from "../../functions";
 import {
   ButtonText,
   ModalContainer,
@@ -32,6 +31,8 @@ import { AlertContext } from "../../context/Alert/alertContext";
 import Alert from "../Alert";
 import { IActiveFilter } from "../../screens/Entry";
 import { DateContext } from "../../context/Date/dateContext";
+import { dateValidation } from "../../utils/date.helper";
+import { numberToReal } from "../../utils/number.helper";
 
 interface IFilter {
   visible: boolean;

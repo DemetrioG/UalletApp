@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getStorage } from "../../functions/storageData";
+import { getStorage } from "../../utils/storage.helper";
 
 interface IUser {
   signed: boolean;

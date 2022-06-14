@@ -7,14 +7,6 @@ import LottieView from "lottie-react-native";
 import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
-import {
-  sleep,
-  getFinalDateMonth,
-  numberToReal,
-  convertDateToDatabase,
-  dateMonthNumber,
-} from "../../functions/index";
-import { ITimestamp } from "../../functions/convertDateFromDatabase";
 import { colors, metrics } from "../../styles";
 import {
   ItemView,
@@ -52,6 +44,13 @@ import {
 } from "../../styles/general";
 import Filter from "../../components/Filter";
 import { DataContext } from "../../context/Data/dataContext";
+import {
+  convertDateToDatabase,
+  dateMonthNumber,
+  getFinalDateMonth,
+  ITimestamp,
+} from "../../utils/date.helper";
+import { numberToReal } from "../../utils/number.helper";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -131,7 +130,7 @@ export default function Entry() {
       );
 
       // Busca os registros dentro do período de referência
-      await sleep(1000);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       firebase
         .firestore()
         .collection("entry")
@@ -346,10 +345,8 @@ export default function Entry() {
   }, [date.modality, date.month, date.year, filter, isFocused]);
 
   React.useEffect(() => {
-    if (isFocused) {
-      getBalance();
-    }
-  }, [date.modality, date.month, date.year, isFocused]);
+    getBalance();
+  }, [date.modality, date.month, date.year]);
 
   return (
     <ViewTabContent>

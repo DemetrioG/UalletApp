@@ -2,7 +2,6 @@ import * as React from "react";
 import { ForeignObject } from "react-native-svg";
 import { DateContext } from "../../context/Date/dateContext";
 import { UserContext } from "../../context/User/userContext";
-import { getFinalDateMonth } from "../../functions";
 import firebase from "../../services/firebase";
 import {
   StyledPieChart,
@@ -18,6 +17,7 @@ import EmptyChart from "../EmptyChart";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { StyledLoader } from "../../styles/general";
 import { DataContext } from "../../context/Data/dataContext";
+import { getFinalDateMonth } from "../../utils/date.helper";
 
 interface ISlices {
   slices?: [

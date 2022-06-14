@@ -11,7 +11,6 @@ import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
-import { numberToReal } from "../../functions";
 import {
   Balance,
   CardFooterText,
@@ -34,6 +33,7 @@ import {
 } from "../../styles/general";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
+import { numberToReal } from "../../utils/number.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
