@@ -16,7 +16,10 @@ import {
   HeaderTitleContainer,
   Logo,
   LogoHeader,
+  PasswordContainer,
+  PasswordLook,
   StyledButton,
+  StyledIcon,
   StyledKeyboardAvoidingView,
   StyledLoading,
   StyledTextInput,
@@ -41,7 +44,8 @@ const schema = yup
   .required();
 
 export default function Register() {
-  const { alert, setAlert } = useContext(AlertContext);
+  const { setAlert } = useContext(AlertContext);
+  const [lookPassword, setLookPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -146,16 +150,25 @@ export default function Register() {
                 name="email"
                 control={control}
               />
-              <StyledTextInput
-                placeholder="Senha *"
-                secureTextEntry={true}
-                maxLength={20}
-                name="password"
-                control={control}
-              />
+              <PasswordContainer>
+                <StyledTextInput
+                  placeholder="Senha *"
+                  secureTextEntry={!lookPassword}
+                  maxLength={20}
+                  name="password"
+                  control={control}
+                />
+                <PasswordLook onPress={() => setLookPassword(!lookPassword)}>
+                  <StyledIcon
+                    name={!lookPassword ? "eye" : "eye-off"}
+                    size={17}
+                    color={colors.gray}
+                  />
+                </PasswordLook>
+              </PasswordContainer>
               <StyledTextInput
                 placeholder="Confirme sua senha *"
-                secureTextEntry={true}
+                secureTextEntry={!lookPassword}
                 onSubmitEditing={handleSubmit(registerUser)}
                 returnKeyType="done"
                 maxLength={20}

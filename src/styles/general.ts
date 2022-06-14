@@ -307,3 +307,12 @@ export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
 )`
   margin-left: 5px;
 `;
+
+export const PasswordContainer = styled(View)``;
+
+export const PasswordLook = styled(TouchableOpacity)`
+  padding: 14px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+`;

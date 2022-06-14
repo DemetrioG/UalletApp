@@ -41,6 +41,9 @@ import {
   StyledButton,
   ButtonText,
   StyledLoading,
+  StyledIcon,
+  PasswordContainer,
+  PasswordLook,
 } from "../../styles/general";
 import { colors, metrics } from "../../styles";
 import { setStorage } from "../../utils/storage.helper";
@@ -66,8 +69,9 @@ const ICONS = {
 export default function Login() {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setUser } = React.useContext(UserContext);
-  const { alert, setAlert } = React.useContext(AlertContext);
+  const { setAlert } = React.useContext(AlertContext);
   const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [lookPassword, setLookPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const sheetRef = React.useRef(null);
   const snapPoints = ["25%"];
@@ -234,16 +238,25 @@ export default function Login() {
                 name="email"
                 control={control}
               />
-              <StyledTextInput
-                placeholder="Senha *"
-                secureTextEntry={true}
-                onSubmitEditing={handleSubmit(loginUser)}
-                returnKeyType="done"
-                maxLength={20}
-                name="password"
-                control={control}
-                errors={errors}
-              />
+              <PasswordContainer>
+                <StyledTextInput
+                  placeholder="Senha *"
+                  secureTextEntry={!lookPassword}
+                  onSubmitEditing={handleSubmit(loginUser)}
+                  returnKeyType="done"
+                  maxLength={20}
+                  name="password"
+                  control={control}
+                  errors={errors}
+                />
+                <PasswordLook onPress={() => setLookPassword(!lookPassword)}>
+                  <StyledIcon
+                    name={!lookPassword ? "eye" : "eye-off"}
+                    size={17}
+                    color={colors.gray}
+                  />
+                </PasswordLook>
+              </PasswordContainer>
             </FormContainer>
             <StyledButton
               additionalMargin={metrics.doubleBaseMargin}
