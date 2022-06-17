@@ -176,7 +176,7 @@ export default function Filter({
       <Alert />
       <StyledKeyboardAvoidingView>
         <ModalContainer>
-          <ModalView filter height={470}>
+          <ModalView large height={470}>
             <HeaderContainer>
               <Title>Filtros</Title>
               <TouchableOpacity onPress={() => setVisible(false)}>

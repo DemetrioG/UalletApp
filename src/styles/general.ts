@@ -65,12 +65,12 @@ export const ModalContainer = styled(View)`
 `;
 
 export const ModalView: React.FC<
-  ViewProps & { height?: number | null; center?: boolean; filter?: boolean }
+  ViewProps & { height?: number | null; center?: boolean; large?: boolean }
 > = styled(View)`
   padding: ${metrics.topBottomPadding}px
-    ${({ filter }) => (!filter ? `${metrics.basePadding}px` : null)};
+    ${({ large }) => (!large ? `${metrics.basePadding}px` : null)};
   align-items: ${({ center }) => (center ? "center" : "null")};
-  width: ${({ filter }) => (filter ? "350" : "294")}px;
+  width: ${({ large }) => (large ? "350" : "294")}px;
   height: ${({ height }) => (height ? height + "px" : "auto")};
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
