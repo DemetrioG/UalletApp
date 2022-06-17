@@ -141,6 +141,20 @@ export default function NewEntry({
         });
     }
 
+    const items: IEntryList & { consolidated?: boolean } = {
+      id: id,
+      date: convertDateToDatabase(entrydate),
+      type: type,
+      description: description,
+      modality: modality,
+      segment: segment,
+      value: realToNumber(value),
+    };
+
+    if (modality === "Projetado") {
+      items["consolidated"] = false;
+    }
+
     // Registra o novo lançamento no banco
     await firebase
       .firestore()
@@ -148,15 +162,7 @@ export default function NewEntry({
       .doc(user.uid)
       .collection(modality)
       .doc(id.toString())
-      .set({
-        id: id,
-        date: convertDateToDatabase(entrydate),
-        type: type,
-        description: description,
-        modality: modality,
-        segment: segment,
-        value: realToNumber(value),
-      })
+      .set(items)
       .catch(() => {
         setAlert(() => ({
           visibility: true,
