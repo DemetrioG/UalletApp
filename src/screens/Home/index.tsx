@@ -6,7 +6,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
-import { AlertContext } from "../../context/Alert/alertContext";
+
+import Consolidate from "../../components/Consolidate";
 import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
@@ -43,7 +44,7 @@ export default function Home() {
   const { loader, setLoader } = React.useContext(LoaderContext);
   const { data, setData } = React.useContext(DataContext);
   const { date } = React.useContext(DateContext);
-  const { alert } = React.useContext(AlertContext);
+  const [consolidate, setConsolidate] = React.useState(false);
 
   // Retorna o Saldo atual
   function getBalance() {
@@ -91,6 +92,23 @@ export default function Home() {
   }
 
   React.useEffect(() => {
+    (async () => {
+      await firebase
+        .firestore()
+        .collection("entry")
+        .doc(user.uid)
+        .collection("Projetado")
+        .where("consolidated", "==", false)
+        .get()
+        .then((v) => {
+          v.forEach((result) => {
+            result.data() && setConsolidate(true);
+          });
+        });
+    })();
+  }, []);
+
+  React.useEffect(() => {
     getBalance();
     if (!user.complete) {
       completeData();
@@ -114,6 +132,7 @@ export default function Home() {
 
   return (
     <BackgroundContainer>
+      <Consolidate visible={consolidate} setVisible={setConsolidate} />
       <Alert />
       <Header />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
