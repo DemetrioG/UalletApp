@@ -289,3 +289,21 @@ export function futureDate(date: string, index: number) {
 
   return `${day}/${month}/${year}`;
 }
+
+export function getAtualDate() {
+  const date = new Date();
+  const dateInfo = [];
+  const atualDate = `${
+    date.getMonth() + 1
+  }/${date.getDate()}/${date.getFullYear()}`;
+  const initialDate = atualDate + " 00:00:01";
+  const finalDate = atualDate + " 23:59:59";
+
+  dateInfo.push(
+    new Date(atualDate),
+    new Date(initialDate),
+    new Date(finalDate)
+  );
+
+  return dateInfo;
+}

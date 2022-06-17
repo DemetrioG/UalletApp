@@ -303,7 +303,11 @@ export default function Entry() {
     return (
       <ItemView>
         <DescriptionView>
-          <DescriptionText>{item.description}</DescriptionText>
+          <DescriptionText>
+            {item.description.length > 18
+              ? `${item.description.slice(0, 18)}...`
+              : item.description}
+          </DescriptionText>
         </DescriptionView>
         <ValueView>
           <ValueText type={item.type}>
