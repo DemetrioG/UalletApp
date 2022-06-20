@@ -22,6 +22,8 @@ import {
   Invest,
   InvestPercentual,
   LogoCard,
+  Section,
+  SectionText,
   StatusPercentText,
   StatusText,
 } from "./styles";
@@ -35,6 +37,7 @@ import {
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
+import { getAtualDate } from "../../utils/date.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -93,11 +96,17 @@ export default function Home() {
 
   React.useEffect(() => {
     (async () => {
+      const date = getAtualDate();
+      const initialDate = date[1];
+      const finalDate = date[2];
+
       await firebase
         .firestore()
         .collection("entry")
         .doc(user.uid)
         .collection("Projetado")
+        .where("date", ">=", initialDate)
+        .where("date", "<=", finalDate)
         .where("consolidated", "==", false)
         .get()
         .then((v) => {
@@ -136,6 +145,10 @@ export default function Home() {
       <Alert />
       <Header />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
+        <Section>
+          <SectionText>Finanças</SectionText>
+          <StyledIcon name="chevron-down" colorVariant="tertiary" />
+        </Section>
         <Card>
           <CardHeaderView>
             <CardTextView>
@@ -168,6 +181,16 @@ export default function Home() {
           </View>
         </Card>
         <Card>
+          <LineChart />
+        </Card>
+        <Card>
+          <SegmentChart />
+        </Card>
+        <Section>
+          <SectionText>Investimentos</SectionText>
+          <StyledIcon name="chevron-down" colorVariant="tertiary" />
+        </Section>
+        <Card>
           <CardHeaderView>
             <CardTextView>
               <CardHeaderText>Patrimônio investido</CardHeaderText>
@@ -184,12 +207,6 @@ export default function Home() {
             <InvestPercentual>55%</InvestPercentual>
             <StyledIcon name="arrow-up" size={15} colorVariant="green" />
           </CardTextView>
-        </Card>
-        <Card>
-          <LineChart />
-        </Card>
-        <Card>
-          <SegmentChart />
         </Card>
       </ScrollViewTab>
     </BackgroundContainer>

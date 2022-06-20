@@ -80,3 +80,14 @@ export const InvestPercentual = styled(Text)`
   font-size: 14px;
   color: ${({ theme: { theme } }) => theme.green};
 `;
+
+export const Section = styled(View)`
+  flex-direction: row;
+  padding: ${metrics.basePadding}px;
+`;
+
+export const SectionText = styled(Text)`
+  font-family: ${fonts.montserratMedium};
+  font-size: 20px;
+  color: ${({ theme: { theme } }) => theme.tertiary};
+`;
