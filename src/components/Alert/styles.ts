@@ -36,3 +36,11 @@ export const StyledButtonDelete: typeof StyledButton = styled(DeleteButton)`
   width: 100px;
   height: 35px;
 `;
+
+export const HelperText = styled(Text)`
+  text-align: center;
+  font-family: ${fonts.ralewayExtraBold};
+  font-size: ${fonts.medium}px;
+  color: ${({ theme: { theme } }) => theme.text};
+  margin-bottom: ${metrics.doubleBaseMargin}px;
+`;

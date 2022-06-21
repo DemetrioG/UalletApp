@@ -1,10 +1,12 @@
 import * as React from "react";
 import { Modal } from "react-native";
+import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import {
   ButtonContainer,
+  HelperText,
   StyledButtonConfirm,
   StyledButtonDelete,
   StyledLottieView,
@@ -18,15 +20,28 @@ import {
   ModalView,
 } from "../../styles/general";
 
-const ERROR = require("../../../assets/icons/error.json");
-const SUCCESS = require("../../../assets/icons/check.json");
-const CONFIRM = require("../../../assets/icons/confirm.json");
+import ERROR from "../../../assets/icons/error.json";
+import SUCCESS from "../../../assets/icons/check.json";
+import CONFIRM from "../../../assets/icons/confirm.json";
+import NETWORK_LIGHT from "../../../assets/icons/networkLight.json";
+import NETWORK_DARK from "../../../assets/icons/networkDark.json";
+import { IThemeProvider } from "../../../App";
 
 export default function Alert() {
+  const { theme }: IThemeProvider = useTheme();
+  const { isOnDarkTheme } = theme!;
+
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { alert, setAlert } = React.useContext(AlertContext);
   const notInitialRender = React.useRef(false);
-  const typeIcon = alert.type === "error" ? ERROR : SUCCESS;
+  const typeIcon =
+    alert.type === "error"
+      ? ERROR
+      : alert.type === "network"
+      ? isOnDarkTheme
+        ? NETWORK_DARK
+        : NETWORK_LIGHT
+      : SUCCESS;
 
   function handleAccept() {
     if (alert.redirect) {
@@ -96,6 +111,7 @@ export default function Alert() {
                 type={alert.type}
               />
               <TextAlert>{alert.title}</TextAlert>
+              {alert.helperText && <HelperText>{alert.helperText}</HelperText>}
               <StyledButton onPress={handleAccept}>
                 <ButtonText>OK</ButtonText>
               </StyledButton>
