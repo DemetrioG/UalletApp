@@ -14,11 +14,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "entitlements": {
+        "com.apple.developer.networking.wifi-info": true
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -34,12 +35,11 @@
       [
         "expo-facebook",
         {
-          "facebookScheme" : "fb623678532217571",
-          "facebookAppId" : "623678532217571",
-          "facebookDisplayName" : "Uallet"
+          "facebookScheme": "fb623678532217571",
+          "facebookAppId": "623678532217571",
+          "facebookDisplayName": "Uallet"
         }
       ]
     ]
-    
   }
 }
