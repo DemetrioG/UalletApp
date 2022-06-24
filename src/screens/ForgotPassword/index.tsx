@@ -8,6 +8,7 @@ import * as yup from "yup";
 import firebase from "../../services/firebase";
 
 import { AlertContext } from "../../context/Alert/alertContext";
+import { DataContext } from "../../context/Data/dataContext";
 import Alert from "../../components/Alert";
 import {
   BackgroundContainer,
@@ -23,8 +24,7 @@ import {
   StyledTextInput,
   TextHeader,
 } from "../../styles/general";
-import { colors } from "../../styles";
-
+import { networkConnection } from "../../utils/network.helper";
 interface IForm {
   email: string;
 }
@@ -37,7 +37,10 @@ const schema = yup
 
 export default function ForgotPassword() {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { alert, setAlert } = React.useContext(AlertContext);
+  const {
+    data: { isNetworkConnected },
+  } = React.useContext(DataContext);
+  const { setAlert } = React.useContext(AlertContext);
   const [loading, setLoading] = React.useState(false);
 
   const {
@@ -49,26 +52,29 @@ export default function ForgotPassword() {
   });
 
   async function sendPassword({ email }: IForm) {
-    setLoading(true);
-    await firebase
-      .auth()
-      .sendPasswordResetEmail(email)
-      .then((v) => {
-        navigate("Login");
-        setAlert(() => ({
-          visibility: true,
-          type: "success",
-          title: "E-mail de redefinição enviado!\nVerifique sua caixa de SPAM",
-        }));
-      })
-      .catch((error) => {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "E-mail não encontrado",
-        }));
-      })
-      .finally(() => setLoading(false));
+    if (networkConnection(isNetworkConnected!, setAlert)) {
+      setLoading(true);
+      await firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then((v) => {
+          navigate("Login");
+          setAlert(() => ({
+            visibility: true,
+            type: "success",
+            title:
+              "E-mail de redefinição enviado!\nVerifique sua caixa de SPAM",
+          }));
+        })
+        .catch(() => {
+          setAlert(() => ({
+            visibility: true,
+            type: "error",
+            title: "E-mail não encontrado",
+          }));
+        })
+        .finally(() => setLoading(false));
+    }
   }
 
   return (

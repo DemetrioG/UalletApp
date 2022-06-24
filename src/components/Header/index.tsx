@@ -51,6 +51,12 @@ export default function Header() {
           ...userState,
           name: v.data()?.name.split(" ", 1),
         }));
+      })
+      .catch(() => {
+        setUser((userState) => ({
+          ...userState,
+          name: "",
+        }));
       });
   }
 
@@ -67,7 +73,7 @@ export default function Header() {
       getData();
     }
 
-    if (user.name !== "") {
+    if (user.name.length) {
       setLoader((loaderState) => ({
         ...loaderState,
         name: true,

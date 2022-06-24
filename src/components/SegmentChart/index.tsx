@@ -156,11 +156,11 @@ export default function SegmentChart() {
           } else {
             setEmpty(true);
           }
-          setLoader((loaderState) => ({
-            ...loaderState,
-            segmentChart: true,
-          }));
         });
+      setLoader((loaderState) => ({
+        ...loaderState,
+        segmentChart: true,
+      }));
     }
   }
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, TouchableOpacity, Alert as NativeAlert } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -58,26 +58,20 @@ export default function Home() {
         .doc(user.uid)
         .collection(date.modality)
         .doc(date.month.toString())
-        .onSnapshot(
-          (snapshot) => {
-            setData((dataState) => ({
-              ...dataState,
-              balance: snapshot.data()
-                ? numberToReal(snapshot.data()?.balance)
-                : "R$ 0,00",
-            }));
+        .onSnapshot((snapshot) => {
+          setData((dataState) => ({
+            ...dataState,
+            balance: snapshot.data()
+              ? numberToReal(snapshot.data()?.balance)
+              : "R$ 0,00",
+          }));
+        });
 
-            !loader.balance
-              ? setLoader((loaderState) => ({
-                  ...loaderState,
-                  balance: true,
-                }))
-              : null;
-          },
-          (error) => {
-            NativeAlert.alert(error);
-          }
-        );
+      !loader.balance &&
+        setLoader((loaderState) => ({
+          ...loaderState,
+          balance: true,
+        }));
     }
   }
 

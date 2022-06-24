@@ -239,7 +239,7 @@ export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
 `;
 
 export const StyledInputDate = styled(StyledTextInputMask)`
-  width: 140px;
+  width: 150px;
   height: 30px;
   border-radius: ${metrics.smallRadius}px;
   margin-bottom: 0px;

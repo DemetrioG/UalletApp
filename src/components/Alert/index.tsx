@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Modal } from "react-native";
-import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -23,14 +22,9 @@ import {
 import ERROR from "../../../assets/icons/error.json";
 import SUCCESS from "../../../assets/icons/check.json";
 import CONFIRM from "../../../assets/icons/confirm.json";
-import NETWORK_LIGHT from "../../../assets/icons/networkLight.json";
-import NETWORK_DARK from "../../../assets/icons/networkDark.json";
-import { IThemeProvider } from "../../../App";
+import NETWORK from "../../../assets/icons/network.json";
 
 export default function Alert() {
-  const { theme }: IThemeProvider = useTheme();
-  const { isOnDarkTheme } = theme!;
-
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { alert, setAlert } = React.useContext(AlertContext);
   const notInitialRender = React.useRef(false);
@@ -38,9 +32,7 @@ export default function Alert() {
     alert.type === "error"
       ? ERROR
       : alert.type === "network"
-      ? isOnDarkTheme
-        ? NETWORK_DARK
-        : NETWORK_LIGHT
+      ? NETWORK
       : SUCCESS;
 
   function handleAccept() {

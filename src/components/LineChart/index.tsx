@@ -144,11 +144,11 @@ export default function LineChart() {
           } else {
             setEmpty(true);
           }
-          setLoader((loaderState) => ({
-            ...loaderState,
-            lineChart: true,
-          }));
         });
+      setLoader((loaderState) => ({
+        ...loaderState,
+        lineChart: true,
+      }));
     }
   }
 

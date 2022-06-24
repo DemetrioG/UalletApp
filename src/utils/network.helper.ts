@@ -6,12 +6,15 @@ export function networkConnection(
   alertContext: React.Dispatch<React.SetStateAction<IAlert>>
 ) {
   if (!isConnected) {
-    return alertContext(() => ({
+    alertContext(() => ({
       title: "Falha na conexão com a internet",
       type: "network",
       helperText:
         "Reestabeleça a conexão para prosseguir com os lançamentos e consultas!",
       visibility: true,
     }));
+    return false;
+  } else {
+    return true;
   }
 }

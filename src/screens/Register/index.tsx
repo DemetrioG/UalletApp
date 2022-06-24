@@ -7,6 +7,7 @@ import firebase from "../../services/firebase";
 
 import { AlertContext } from "../../context/Alert/alertContext";
 import Alert from "../../components/Alert";
+import { DataContext } from "../../context/Data/dataContext";
 import {
   BackgroundContainer,
   ButtonText,
@@ -26,6 +27,7 @@ import {
   TextUalletHeader,
 } from "../../styles/general";
 import { colors } from "../../styles";
+import { networkConnection } from "../../utils/network.helper";
 
 interface IForm {
   name: string;
@@ -45,6 +47,9 @@ const schema = yup
 
 export default function Register() {
   const { setAlert } = useContext(AlertContext);
+  const {
+    data: { isNetworkConnected },
+  } = useContext(DataContext);
   const [lookPassword, setLookPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -57,67 +62,68 @@ export default function Register() {
   });
 
   async function registerUser({ name, email, password, confirm }: IForm) {
-    if (password !== confirm) {
-      setAlert(() => ({
-        visibility: true,
-        type: "error",
-        title: "As senhas informadas são diferentes",
-      }));
-      return;
-    }
-
-    setLoading(true);
-    await firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((v) => {
-        firebase.firestore().collection("users").doc(v.user?.uid).set({
-          name: name,
-          email: email,
-          typeUser: "default",
-          dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+    if (networkConnection(isNetworkConnected!, setAlert)) {
+      if (password !== confirm) {
         setAlert(() => ({
           visibility: true,
-          type: "success",
-          title: "Usuário criado com sucesso",
-          redirect: "Login",
+          type: "error",
+          title: "As senhas informadas são diferentes",
         }));
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case "auth/weak-password":
-            setAlert(() => ({
-              visibility: true,
-              type: "error",
-              title: "Sua senha deve ter no mínimo 6 caracteres",
-            }));
-            break;
-          case "auth/invalid-email":
-            setAlert(() => ({
-              visibility: true,
-              type: "error",
-              title: "O e-mail informado é inválido",
-            }));
-            break;
-          case "auth/email-already-in-use":
-            setAlert(() => ({
-              visibility: true,
-              type: "error",
-              title: "Usuário já cadastrado",
-            }));
-            break;
-          default:
-            setAlert(() => ({
-              visibility: true,
-              type: "error",
-              title: "Erro ao cadastrar usuário",
-            }));
-            break;
-        }
-        setLoading(false);
         return;
-      });
+      }
+
+      setLoading(true);
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((v) => {
+          firebase.firestore().collection("users").doc(v.user?.uid).set({
+            name: name,
+            email: email,
+            typeUser: "default",
+            dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+          setAlert(() => ({
+            visibility: true,
+            type: "success",
+            title: "Usuário criado com sucesso",
+            redirect: "Login",
+          }));
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/weak-password":
+              setAlert(() => ({
+                visibility: true,
+                type: "error",
+                title: "Sua senha deve ter no mínimo 6 caracteres",
+              }));
+              break;
+            case "auth/invalid-email":
+              setAlert(() => ({
+                visibility: true,
+                type: "error",
+                title: "O e-mail informado é inválido",
+              }));
+              break;
+            case "auth/email-already-in-use":
+              setAlert(() => ({
+                visibility: true,
+                type: "error",
+                title: "Usuário já cadastrado",
+              }));
+              break;
+            default:
+              setAlert(() => ({
+                visibility: true,
+                type: "error",
+                title: "Erro ao cadastrar usuário",
+              }));
+              break;
+          }
+          return setLoading(false);
+        });
+    }
   }
 
   return (
