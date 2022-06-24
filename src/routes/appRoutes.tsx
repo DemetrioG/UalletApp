@@ -143,6 +143,9 @@ export default function AppRoutes() {
                 return <StyledIcon name="pie-chart" />;
               },
             }}
+            listeners={{
+              tabPress: (e) => e.preventDefault(),
+            }}
           />
           <Tab.Screen
             name="LançamentosTab"
@@ -172,6 +175,9 @@ export default function AppRoutes() {
                 return <StyledIcon name="refresh-cw" />;
               },
             }}
+            listeners={{
+              tabPress: (e) => e.preventDefault(),
+            }}
           />
           <Tab.Screen
             name="RelatóriosTab"
@@ -180,6 +186,9 @@ export default function AppRoutes() {
               tabBarIcon: () => {
                 return <StyledIcon name="list" />;
               },
+            }}
+            listeners={{
+              tabPress: (e) => e.preventDefault(),
             }}
           />
         </StyledTabNavigation>

@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "Uallet",
-    "slug": "Uallet",
+    "slug": "uallet",
     "scheme": "uallet",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/src/icon.png",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/src/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,16 +19,20 @@
       "supportsTablet": true,
       "entitlements": {
         "com.apple.developer.networking.wifi-info": true
-      }
+      },
+      "bundleIdentifier": "com.uallet.uallet",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "./assets/images/src/adaptive-icon.png",
+        "backgroundColor": "#266DD3"
+      },
+      "package": "com.uallet.uallet",
+      "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/src/favicon.png"
     },
     "userInterfaceStyle": "automatic",
     "plugins": [
