@@ -65,14 +65,13 @@ export default function Home() {
               ? numberToReal(snapshot.data()?.balance)
               : "R$ 0,00",
           }));
-
-          !loader.balance
-            ? setLoader((loaderState) => ({
-                ...loaderState,
-                balance: true,
-              }))
-            : null;
         });
+
+      !loader.balance &&
+        setLoader((loaderState) => ({
+          ...loaderState,
+          balance: true,
+        }));
     }
   }
 

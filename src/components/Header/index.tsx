@@ -4,11 +4,12 @@ import { TouchableOpacity } from "react-native";
 import { UserContext } from "../../context/User/userContext";
 import firebase from "../../services/firebase";
 import DatePicker from "../DatePicker";
-import { HeaderIconView, HeaderText, HeaderView } from "./styles";
+import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
 import Menu from "../Menu";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { setStorage } from "../../utils/storage.helper";
+import { DataContext } from "../../context/Data/dataContext";
 
 const optionsMonth = [
   "Janeiro",
@@ -31,6 +32,7 @@ for (let index = 0; index < 5; index++) {
 }
 
 export default function Header() {
+  const { data } = React.useContext(DataContext);
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
   const [menu, setMenu] = React.useState(false);
@@ -49,6 +51,12 @@ export default function Header() {
           ...userState,
           name: v.data()?.name.split(" ", 1),
         }));
+      })
+      .catch(() => {
+        setUser((userState) => ({
+          ...userState,
+          name: "",
+        }));
       });
   }
 
@@ -65,7 +73,7 @@ export default function Header() {
       getData();
     }
 
-    if (user.name !== "") {
+    if (user.name.length) {
       setLoader((loaderState) => ({
         ...loaderState,
         name: true,
@@ -112,6 +120,12 @@ export default function Header() {
           </TouchableOpacity>
         </HeaderIconView>
       </HeaderView>
+      {!data.isNetworkConnected && (
+        <NetworkCard>
+          <HeaderText>Sem conexão com a internet</HeaderText>
+          <StyledIcon name="wifi-off" colorVariant="red" />
+        </NetworkCard>
+      )}
       <Menu visibility={menu} />
     </>
   );

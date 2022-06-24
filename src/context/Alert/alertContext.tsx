@@ -1,9 +1,10 @@
 import * as React from "react";
 
-interface IAlert {
+export interface IAlert {
   visibility: boolean;
-  type: "success" | "error" | "confirm";
+  type: "success" | "error" | "confirm" | "network";
   title: string;
+  helperText?: string;
   redirect?: string | null;
   callback?: boolean;
   callbackFunction?: Function;

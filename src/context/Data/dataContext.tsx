@@ -2,10 +2,12 @@ import * as React from "react";
 
 export interface IData {
   balance: string;
+  isNetworkConnected: boolean | null;
 }
 
 export const initialDataState: IData = {
   balance: "R$ 0,00",
+  isNetworkConnected: null,
 };
 
 export const DataContext = React.createContext<{

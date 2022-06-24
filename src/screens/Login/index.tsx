@@ -16,6 +16,7 @@ import * as yup from "yup";
 import firebase from "../../services/firebase";
 
 import { UserContext } from "../../context/User/userContext";
+import { DataContext } from "../../context/Data/dataContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import Alert from "../../components/Alert";
 import {
@@ -47,6 +48,7 @@ import {
 } from "../../styles/general";
 import { colors, metrics } from "../../styles";
 import { setStorage } from "../../utils/storage.helper";
+import { networkConnection } from "../../utils/network.helper";
 interface IForm {
   email: string;
   password: string;
@@ -68,6 +70,9 @@ const ICONS = {
 
 export default function Login() {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const {
+    data: { isNetworkConnected },
+  } = React.useContext(DataContext);
   const { setUser } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
   const [sheetOpen, setSheetOpen] = React.useState(false);
@@ -85,131 +90,137 @@ export default function Login() {
   });
 
   async function loginUser({ email, password }: IForm) {
-    setLoading(true);
-    await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((v) => {
+    if (networkConnection(isNetworkConnected!, setAlert)) {
+      setLoading(true);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((v) => {
+          const data = {
+            uid: v.user?.uid,
+            // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
+            date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+          };
+          setStorage("authUser", data);
+          setUser((userState) => ({
+            ...userState,
+            uid: v.user?.uid || "",
+            signed: true,
+          }));
+        })
+        .catch(() => {
+          setAlert(() => ({
+            visibility: true,
+            type: "error",
+            title: "Verifique os campos informados",
+          }));
+        })
+        .finally(() => setLoading(false));
+    }
+  }
+
+  async function googleLogin() {
+    if (networkConnection(isNetworkConnected!, setAlert)) {
+      setLoading(true);
+      const CLIENT_ID =
+        "1027938913805-2uq44iec7nrr8p5c9qqu32nbapu5gfg6.apps.googleusercontent.com";
+      const REDIRECT_URI = "https://auth.expo.io/@demetriog/Uallet";
+      const RESPONSE_TYPE = "token";
+      const SCOPE = encodeURI("profile email");
+
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+
+      // Autenticação com o Google
+      const response = await AuthSession.startAsync({ authUrl });
+
+      if (response.type === "success") {
+        // Buscar informações do usuário
+        const user = await fetch(
+          `https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${response.params.access_token}`
+        );
+        const userInfo = await user.json();
+
+        // Cadastrar usuário no banco
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(userInfo.id)
+          .get()
+          .then((v) => {
+            if (!v.data()) {
+              firebase.firestore().collection("users").doc(userInfo.id).set({
+                name: userInfo.name,
+                email: userInfo.email,
+                typeUser: "google",
+                dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
+              });
+            }
+          });
+
         const data = {
-          uid: v.user?.uid,
+          uid: userInfo.id,
           // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
           date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
         };
         setStorage("authUser", data);
         setUser((userState) => ({
           ...userState,
-          uid: v.user?.uid || "",
+          uid: userInfo.id,
           signed: true,
         }));
-      })
-      .catch(() => {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Verifique os campos informados",
-        }));
-      })
-      .finally(() => setLoading(false));
-  }
-
-  async function googleLogin() {
-    setLoading(true);
-    const CLIENT_ID =
-      "1027938913805-2uq44iec7nrr8p5c9qqu32nbapu5gfg6.apps.googleusercontent.com";
-    const REDIRECT_URI = "https://auth.expo.io/@demetriog/Uallet";
-    const RESPONSE_TYPE = "token";
-    const SCOPE = encodeURI("profile email");
-
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
-
-    // Autenticação com o Google
-    const response = await AuthSession.startAsync({ authUrl });
-
-    if (response.type === "success") {
-      // Buscar informações do usuário
-      const user = await fetch(
-        `https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${response.params.access_token}`
-      );
-      const userInfo = await user.json();
-
-      // Cadastrar usuário no banco
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(userInfo.id)
-        .get()
-        .then((v) => {
-          if (!v.data()) {
-            firebase.firestore().collection("users").doc(userInfo.id).set({
-              name: userInfo.name,
-              email: userInfo.email,
-              typeUser: "google",
-              dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-          }
-        });
-
-      const data = {
-        uid: userInfo.id,
-        // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
-        date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-      };
-      setStorage("authUser", data);
-      setUser((userState) => ({
-        ...userState,
-        uid: userInfo.id,
-        signed: true,
-      }));
-      setLoading(false);
+        return setLoading(false);
+      }
     }
   }
 
   async function facebookLogin() {
-    setLoading(true);
-    // Autenticação com o Facebook
-    await Facebook.initializeAsync("623678532217571");
+    if (networkConnection(isNetworkConnected!, setAlert)) {
+      setLoading(true);
+      // Autenticação com o Facebook
+      await Facebook.initializeAsync("623678532217571");
 
-    const response = await Facebook.logInWithReadPermissionsAsync({
-      permissions: ["public_profile", "email"],
-    });
+      const response = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email"],
+      });
 
-    // Buscar informações do usuário
-    if (response.type === "success") {
-      const data = await fetch(
-        `https://graph.facebook.com/me?fields=id,name,picture.type(large),email&access_token=${response.token}`
-      );
+      // Buscar informações do usuário
+      if (response.type === "success") {
+        const data = await fetch(
+          `https://graph.facebook.com/me?fields=id,name,picture.type(large),email&access_token=${response.token}`
+        );
 
-      const userInfo = await data.json();
+        const userInfo = await data.json();
 
-      // Cadastrar usuário no banco
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(userInfo.id)
-        .get()
-        .then((v) => {
-          if (!v.data()) {
-            firebase.firestore().collection("users").doc(userInfo.id).set({
-              name: userInfo.name,
-              email: userInfo.email,
-              typeUser: "facebook",
-              dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-          }
-        });
+        // Cadastrar usuário no banco
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(userInfo.id)
+          .get()
+          .then((v) => {
+            if (!v.data()) {
+              firebase.firestore().collection("users").doc(userInfo.id).set({
+                name: userInfo.name,
+                email: userInfo.email,
+                typeUser: "facebook",
+                dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
+              });
+            }
+          });
 
-      const dataStorage = {
-        uid: userInfo.id,
-        // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
-        date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-      };
-      setStorage("authUser", dataStorage);
-      setUser((userState) => ({
-        ...userState,
-        uid: userInfo.id,
-        signed: true,
-      }));
-      setLoading(false);
+        const dataStorage = {
+          uid: userInfo.id,
+          // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
+          date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+        };
+        setStorage("authUser", dataStorage);
+        setUser((userState) => ({
+          ...userState,
+          uid: userInfo.id,
+          signed: true,
+        }));
+        return setLoading(false);
+      }
     }
   }
 

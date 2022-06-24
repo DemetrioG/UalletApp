@@ -67,7 +67,7 @@ export default function Picker({
       >
         <TouchableWithoutFeedback onPress={() => setVisibility(false)}>
           <ModalContainer>
-            <ModalView height={OPTIONS.length > 4 ? 350 : null}>
+            <ModalView>
               <Title>{type}</Title>
               <ScrollView>{option}</ScrollView>
             </ModalView>
