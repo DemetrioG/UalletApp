@@ -1,19 +1,19 @@
 import * as React from "react";
 import { Platform } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-navigation";
 
 import Routes from "../../routes";
 import { IphoneStatusBar, StyledStatusBar } from "./styles";
 
 export default function App() {
   return (
-    <SafeAreaProvider>
+    <SafeAreaView style={{ flex: 1 }}>
       {Platform.OS === "ios" && (
         // Backgound da StatusBar no iPhone
         <IphoneStatusBar />
       )}
       <StyledStatusBar />
       <Routes />
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 }

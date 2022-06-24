@@ -3,7 +3,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   ScrollViewProps,
   Switch,
@@ -26,6 +25,8 @@ import { IconProps } from "react-native-vector-icons/Icon";
 import Loader from "../components/Loader";
 import { DefaultTextInputMask } from "../components/TextInputMask";
 import Slider, { SliderProps } from "@react-native-community/slider";
+import { SafeAreaView } from "react-navigation";
+import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -69,6 +70,7 @@ export const ModalView: React.FC<
 > = styled(View)`
   padding: ${metrics.topBottomPadding}px
     ${({ large }) => (!large ? `${metrics.basePadding}px` : null)};
+  margin: 180px 0px;
   align-items: ${({ center }) => (center ? "center" : "null")};
   width: ${({ large }) => (large ? "350" : "294")}px;
   height: ${({ height }) => (height ? height + "px" : "auto")};
@@ -86,7 +88,7 @@ export const ViewTab = styled(View)`
   flex: 1;
   padding: ${metrics.basePadding * 1.5}px;
   padding-bottom: 0px;
-  margin-bottom: 75px;
+  margin-bottom: ${IPHONE_BOTTOM_TAB ? 100 : 75}px;
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.secondary};
   min-height: 500px;

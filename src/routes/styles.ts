@@ -3,6 +3,7 @@ import { Animated, View } from "react-native";
 import styled from "styled-components";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors, metrics } from "../styles";
+import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,25 +22,26 @@ export const StyledTabNavigation: React.FC<{
     tabBarHideOnKeyboard: true,
     tabBarShowLabel: false,
     tabBarStyle: {
-      height: 60,
+      height: IPHONE_BOTTOM_TAB ? 80 : 60,
       backgroundColor: theme.secondary,
       position: "absolute",
       marginHorizontal: metrics.basePadding,
       borderTopWidth: 0,
       borderTopLeftRadius: metrics.baseRadius,
       borderTopRightRadius: metrics.baseRadius,
+      paddingTop: IPHONE_BOTTOM_TAB ? 15 : 0,
     },
   },
 }))``;
 
 export const HomeIconContainer = styled(View)`
-  width: 50px;
-  height: 50px;
+  width: ${IPHONE_BOTTOM_TAB ? 54 : 50}px;
+  height: ${IPHONE_BOTTOM_TAB ? 54 : 50}px;
   background-color: ${colors.strongBlue};
   border-radius: 50px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 37px;
+  margin-bottom: ${IPHONE_BOTTOM_TAB ? 43.5 : 37}px;
 `;
 
 export const ActiveMenuIcon: React.FC<{
@@ -53,7 +55,7 @@ export const ActiveMenuIcon: React.FC<{
   height: 3px;
   background-color: ${colors.strongBlue};
   position: absolute;
-  bottom: 60px;
+  bottom: ${IPHONE_BOTTOM_TAB ? 80 : 60}px;
   left: 30px;
   border-radius: 50px;
 `;
