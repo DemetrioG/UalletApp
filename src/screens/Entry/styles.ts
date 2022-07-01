@@ -59,6 +59,7 @@ export const LoadingText = styled(Text)`
 
 export const IncomeView = styled(View)`
   flex-direction: row;
+  align-items: baseline;
   padding-bottom: ${metrics.basePadding}px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.lightPrimary};
@@ -144,4 +145,18 @@ export const InfoMonthText = styled(Text)`
   font-size: ${fonts.large}px;
   color: ${({ theme: { theme } }) => theme.text};
   margin-left: 5px;
+`;
+
+export const LastEntryText = styled(Text)`
+  font-family: ${fonts.ralewayMedium};
+  font-size: ${fonts.large}px;
+  color: ${({ theme: { theme } }) => theme.text};
+  margin-bottom: ${metrics.baseMargin}px;
+`;
+
+export const BalanceLabelText = styled(Text)`
+  font-family: ${fonts.ralewayMedium};
+  font-size: ${fonts.regular}px;
+  color: ${({ theme: { theme } }) => theme.text};
+  margin-right: 10px;
 `;

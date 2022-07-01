@@ -88,7 +88,7 @@ export default function ForgotPassword() {
           <HeaderTitleContainer>
             <HeaderTitle>
               Digite o e-mail cadastrado na sua conta.{"\n"}Enviaremos um e-mail
-              para recuperação{"\n"}da senha.
+              para recuperação da senha.
             </HeaderTitle>
           </HeaderTitleContainer>
           <ContainerCenter>

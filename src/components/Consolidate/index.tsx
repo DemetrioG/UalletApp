@@ -86,7 +86,6 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
 
   async function handleSubmit() {
     setIsLoading(true);
-    const list = entryList.filter((item) => item.checked);
     let newId = 1;
 
     // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
@@ -104,88 +103,93 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
         });
       });
 
-    list.forEach(async ({ date, description, segment, type, value, id }) => {
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection("Projetado")
-        .doc(id.toString())
-        .set(
-          {
-            consolidated: true,
-          },
-          { merge: true }
-        )
-        .catch(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "error",
-            title: "Erro ao consolidar as informações",
-          }));
-          return setIsLoading(false);
-        });
+    entryList.forEach(
+      async ({ date, description, segment, type, value, id, checked }) => {
+        await firebase
+          .firestore()
+          .collection("entry")
+          .doc(user.uid)
+          .collection("Projetado")
+          .doc(id.toString())
+          .set(
+            {
+              consolidated: {
+                consolidated: checked,
+                wasActionShown: true,
+              },
+            },
+            { merge: true }
+          )
+          .catch(() => {
+            setAlert(() => ({
+              visibility: true,
+              type: "error",
+              title: "Erro ao consolidar as informações",
+            }));
+            return setIsLoading(false);
+          });
 
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection("Real")
-        .doc(newId.toString())
-        .set({
-          id: newId,
-          date: date,
-          type: type,
-          description: description,
-          modality: "Real",
-          segment: segment,
-          value: value,
-        })
-        .catch(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "error",
-            title: "Erro ao consolidar as informações",
-          }));
-          return setIsLoading(false);
-        });
+        if (checked) {
+          await firebase
+            .firestore()
+            .collection("entry")
+            .doc(user.uid)
+            .collection("Real")
+            .doc(newId.toString())
+            .set({
+              id: newId,
+              date: date,
+              type: type,
+              description: description,
+              modality: "Real",
+              segment: segment,
+              value: value,
+            })
+            .catch(() => {
+              setAlert(() => ({
+                visibility: true,
+                type: "error",
+                title: "Erro ao consolidar as informações",
+              }));
+              return setIsLoading(false);
+            });
 
-      // Atualiza o saldo atual no banco
-      let balance = 0;
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection("Real")
-        .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
-        .get()
-        .then((v) => {
-          balance = v.data()?.balance || 0;
-        });
+          // Atualiza o saldo atual no banco
+          let balance = 0;
+          await firebase
+            .firestore()
+            .collection("balance")
+            .doc(user.uid)
+            .collection("Real")
+            .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
+            .get()
+            .then((v) => {
+              balance = v.data()?.balance || 0;
+            });
 
-      if (type == "Receita") {
-        balance += value;
-      } else {
-        balance -= value;
+          if (type == "Receita") {
+            balance += value;
+          } else {
+            balance -= value;
+          }
+
+          await firebase
+            .firestore()
+            .collection("balance")
+            .doc(user.uid)
+            .collection("Real")
+            .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
+            .set({
+              balance: balance,
+            });
+        }
       }
-
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection("Real")
-        .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
-        .set({
-          balance: balance,
-        })
-        .then(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "success",
-            title: "Dados consolidados com sucesso",
-          }));
-        });
-    });
+    );
+    setAlert(() => ({
+      visibility: true,
+      type: "success",
+      title: "Dados consolidados com sucesso",
+    }));
     return setVisible(false);
   }
 
@@ -202,7 +206,7 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
       .collection("Projetado")
       .where("date", ">=", initialDate)
       .where("date", "<=", finalDate)
-      .where("consolidated", "==", false)
+      .where("consolidated.wasActionShown", "==", false)
       .get()
       .then((v) => {
         v.forEach((result) => {
@@ -294,13 +298,13 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
               <DataContainer>
                 <LabelContainer>
                   <DescriptionSize>
-                    <Label>Descrição</Label>
+                    <Label>DESCRIÇÃO</Label>
                   </DescriptionSize>
                   <ValueSize>
-                    <Label>Valor</Label>
+                    <Label>VALOR</Label>
                   </ValueSize>
                   <ActionSize>
-                    <Label>Ação</Label>
+                    <Label>AÇÃO</Label>
                   </ActionSize>
                 </LabelContainer>
                 <FlatList
