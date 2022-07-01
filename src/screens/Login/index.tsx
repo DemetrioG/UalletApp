@@ -168,8 +168,8 @@ export default function Login() {
           uid: userInfo.id,
           signed: true,
         }));
-        return setLoading(false);
       }
+      return setLoading(false);
     }
   }
 

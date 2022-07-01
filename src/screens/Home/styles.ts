@@ -1,25 +1,20 @@
 import * as React from "react";
-import {
-  Image,
-  Text,
-  TextProps,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from "react-native";
+import { Image, Text, TextProps, View, ViewProps } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 
-export const CardHeaderView = styled(View)`
+export const CardHeaderView: React.FC<
+  ViewProps & { balance?: boolean }
+> = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${metrics.baseMargin / 2}px;
+  margin-bottom: ${({ balance }) => (balance ? metrics.baseMargin : 20)}px;
 `;
 
 export const CardHeaderText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
+  font-size: ${fonts.large}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 

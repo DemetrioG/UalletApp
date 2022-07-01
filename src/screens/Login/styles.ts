@@ -12,7 +12,7 @@ import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { fonts, colors, metrics } from "../../styles";
 
 export const ActionText = styled(Text)`
-  font-family: ${fonts.ralewayExtraBold};
+  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${metrics.baseMargin}px;

@@ -27,6 +27,8 @@ import {
   RemoveFilterButton,
   InfoMonthText,
   HeaderContainer,
+  LastEntryText,
+  BalanceLabelText,
 } from "./styles";
 import {
   ButtonHeaderView,
@@ -386,12 +388,12 @@ export default function Entry() {
           </RemoveFilterButton>
         </RemoveFilterContainer>
       )}
-      <TextHeaderScreen>Últimos lançamentos</TextHeaderScreen>
+      <LastEntryText>Últimos lançamentos</LastEntryText>
       {emptyData && <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>}
       {!emptyData && (
         <SpaceAroundView>
-          <Label>Descrição</Label>
-          <Label>Valor</Label>
+          <Label>DESCRIÇÃO</Label>
+          <Label>VALOR</Label>
         </SpaceAroundView>
       )}
       {entryList.length > 0 ? (
@@ -420,7 +422,7 @@ export default function Entry() {
         </ContainerCenter>
       )}
       <IncomeView>
-        <Label>Saldo atual:</Label>
+        <BalanceLabelText>Saldo atual</BalanceLabelText>
         <IncomeText negative={data.balance.includes("-")}>
           {!user.hideNumbers ? data.balance : "** ** ** ** **"}
         </IncomeText>
@@ -431,7 +433,15 @@ export default function Entry() {
         >
           Lançamentos automáticos
         </TextHeaderScreen>
-        <StyledSwitch value={SWITCH} onChange={() => setSWITCH(!SWITCH)} />
+        <StyledSwitch
+          value={SWITCH}
+          onChange={() => setSWITCH(!SWITCH)}
+          style={
+            Platform.OS === "ios" && {
+              transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
+            }
+          }
+        />
         <StyledIcon
           name="info"
           color={colors.gray}

@@ -106,7 +106,7 @@ export default function Home() {
         .collection("Projetado")
         .where("date", ">=", initialDate)
         .where("date", "<=", finalDate)
-        .where("consolidated", "==", false)
+        .where("consolidated.wasActionShown", "==", false)
         .get()
         .then((v) => {
           v.forEach((result) => {
@@ -149,7 +149,7 @@ export default function Home() {
           <StyledIcon name="chevron-down" colorVariant="tertiary" />
         </Section>
         <Card>
-          <CardHeaderView>
+          <CardHeaderView balance>
             <CardTextView>
               <CardHeaderText>Saldo atual</CardHeaderText>
             </CardTextView>
@@ -180,9 +180,19 @@ export default function Home() {
           </View>
         </Card>
         <Card>
+          <CardHeaderView>
+            <CardTextView>
+              <CardHeaderText>Receitas x Despesas</CardHeaderText>
+            </CardTextView>
+          </CardHeaderView>
           <LineChart />
         </Card>
         <Card>
+          <CardHeaderView>
+            <CardTextView>
+              <CardHeaderText>Despesas por segmento</CardHeaderText>
+            </CardTextView>
+          </CardHeaderView>
           <SegmentChart />
         </Card>
         <Section>

@@ -100,7 +100,7 @@ export default function Header() {
         {loader.visible ? (
           <StyledLoader width={160} height={15} radius={6} />
         ) : (
-          <HeaderText>Bem vindo, {user.name}!</HeaderText>
+          <HeaderText>Bem vindo (a), {user.name}!</HeaderText>
         )}
         <HeaderIconView>
           <TouchableOpacity onPress={handleHide}>

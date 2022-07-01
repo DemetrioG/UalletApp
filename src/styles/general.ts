@@ -201,7 +201,7 @@ export const HeaderTitleContainer = styled(View)`
 `;
 
 export const HeaderTitle = styled(Text)`
-  font-family: ${fonts.ralewayBold};
+  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.medium}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
@@ -293,9 +293,10 @@ export const SpaceAroundView = styled(View)`
 `;
 
 export const Label = styled(Text)`
-  font-family: ${fonts.ralewayExtraBold};
+  font-family: ${fonts.ralewayBold};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
+  margin-right: 10px;
 `;
 
 export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
