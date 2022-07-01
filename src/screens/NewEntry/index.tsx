@@ -147,7 +147,9 @@ export default function NewEntry({
           });
       }
 
-      const items: IEntryList & { consolidated?: boolean } = {
+      const items: IEntryList & {
+        consolidated?: { consolidated: boolean; wasActionShown: boolean };
+      } = {
         id: id,
         date: convertDateToDatabase(entrydate),
         type: type,
@@ -158,7 +160,10 @@ export default function NewEntry({
       };
 
       if (modality === "Projetado") {
-        items["consolidated"] = false;
+        items["consolidated"] = {
+          consolidated: false,
+          wasActionShown: false,
+        };
       }
 
       // Registra o novo lançamento no banco
