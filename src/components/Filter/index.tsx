@@ -174,112 +174,110 @@ export default function Filter({
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
       <Alert />
-      <StyledKeyboardAvoidingView>
-        <ModalContainer>
-          <ModalView large>
-            <HeaderContainer>
-              <Title>Filtros</Title>
-              <TouchableOpacity onPress={() => setVisible(false)}>
-                <StyledIcon name="x" />
-              </TouchableOpacity>
-            </HeaderContainer>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <InputContainer>
-                <DateContainer>
-                  <StyledInputDate
-                    name="initialdate"
-                    placeholder="Data Inicial *"
-                    type="datetime"
-                    control={control}
-                  />
-                  <StyledInputDate
-                    name="finaldate"
-                    placeholder="Data Final *"
-                    type="datetime"
-                    control={control}
-                  />
-                </DateContainer>
-              </InputContainer>
-              <InputContainer>
-                <StyledTextInput
-                  name="description"
-                  placeholder="Descrição"
+      <ModalContainer>
+        <ModalView large>
+          <HeaderContainer>
+            <Title>Filtros</Title>
+            <TouchableOpacity onPress={() => setVisible(false)}>
+              <StyledIcon name="x" />
+            </TouchableOpacity>
+          </HeaderContainer>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <InputContainer>
+              <DateContainer>
+                <StyledInputDate
+                  name="initialdate"
+                  placeholder="Data Inicial *"
+                  type="datetime"
                   control={control}
                 />
-              </InputContainer>
-              <Picker
-                options={optionsModality}
-                selectedValue={setModality}
-                value={!modality ? "Modalidade *" : modality}
-                type="Modalidade"
-                visibility={modalityVisible}
-                setVisibility={setModalityVisible}
+                <StyledInputDate
+                  name="finaldate"
+                  placeholder="Data Final *"
+                  type="datetime"
+                  control={control}
+                />
+              </DateContainer>
+            </InputContainer>
+            <InputContainer>
+              <StyledTextInput
+                name="description"
+                placeholder="Descrição"
+                control={control}
               />
+            </InputContainer>
+            <Picker
+              options={optionsModality}
+              selectedValue={setModality}
+              value={!modality ? "Modalidade *" : modality}
+              type="Modalidade"
+              visibility={modalityVisible}
+              setVisibility={setModalityVisible}
+            />
+            <Picker
+              options={optionsType}
+              selectedValue={setTypeEntry}
+              value={!typeEntry ? "Tipo" : typeEntry}
+              type="Tipo"
+              visibility={typeEntryVisible}
+              setVisibility={setTypeEntryVisible}
+            />
+            {typeEntry !== "Receita" && (
               <Picker
-                options={optionsType}
-                selectedValue={setTypeEntry}
-                value={!typeEntry ? "Tipo" : typeEntry}
-                type="Tipo"
-                visibility={typeEntryVisible}
-                setVisibility={setTypeEntryVisible}
+                options={optionsSegment}
+                selectedValue={setSegment}
+                value={!segment ? "Segmento" : segment}
+                type="Segmento"
+                visibility={segmentVisible}
+                setVisibility={setSegmentVisible}
               />
-              {typeEntry !== "Receita" && (
-                <Picker
-                  options={optionsSegment}
-                  selectedValue={setSegment}
-                  value={!segment ? "Segmento" : segment}
-                  type="Segmento"
-                  visibility={segmentVisible}
-                  setVisibility={setSegmentVisible}
-                />
-              )}
-              <View>
-                <LabelContainer>
-                  <LabelText>Valor inicial</LabelText>
-                  <LabelValue>{numberToReal(initialLabel)}</LabelValue>
-                </LabelContainer>
-                <StyledSlider
-                  minimumValue={0}
-                  maximumValue={maxValue}
-                  value={filter.initialValue}
-                  onTouchStart={() => setIsSliding(true)}
-                  onValueChange={(value) => {
-                    if (isSliding) {
-                      setInitialLabel(value);
-                    }
-                  }}
-                  tapToSeek
-                  step={1}
-                />
-              </View>
-              <View>
-                <LabelContainer>
-                  <LabelText>Valor final</LabelText>
-                  <LabelValue>{numberToReal(finalLabel)}</LabelValue>
-                </LabelContainer>
-                <StyledSlider
-                  minimumValue={0}
-                  maximumValue={maxValue}
-                  value={filter.finalValue}
-                  onTouchStart={() => setIsSliding(true)}
-                  onValueChange={(value) => {
-                    if (isSliding) {
-                      setFinalLabel(value);
-                    }
-                  }}
-                  tapToSeek
-                  step={1}
-                />
-              </View>
-            </ScrollView>
-            <ButtonContainer>
-              <StyledButton onPress={handleSubmit(handleFilter)}>
-                {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
-              </StyledButton>
-            </ButtonContainer>
-          </ModalView>
-        </ModalContainer>
-      </StyledKeyboardAvoidingView>
+            )}
+            <View>
+              <LabelContainer>
+                <LabelText>Valor inicial</LabelText>
+                <LabelValue>{numberToReal(initialLabel)}</LabelValue>
+              </LabelContainer>
+              <StyledSlider
+                minimumValue={0}
+                maximumValue={maxValue}
+                value={filter.initialValue}
+                onTouchStart={() => setIsSliding(true)}
+                onValueChange={(value) => {
+                  if (isSliding) {
+                    setInitialLabel(value);
+                  }
+                }}
+                tapToSeek
+                step={1}
+              />
+            </View>
+            <View>
+              <LabelContainer>
+                <LabelText>Valor final</LabelText>
+                <LabelValue>{numberToReal(finalLabel)}</LabelValue>
+              </LabelContainer>
+              <StyledSlider
+                minimumValue={0}
+                maximumValue={maxValue}
+                value={filter.finalValue}
+                onTouchStart={() => setIsSliding(true)}
+                onValueChange={(value) => {
+                  if (isSliding) {
+                    setFinalLabel(value);
+                  }
+                }}
+                tapToSeek
+                step={1}
+              />
+            </View>
+          </ScrollView>
+          <ButtonContainer>
+            <StyledButton onPress={handleSubmit(handleFilter)}>
+              {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
+            </StyledButton>
+          </ButtonContainer>
+        </ModalView>
+      </ModalContainer>
     </Modal>
   );
 }

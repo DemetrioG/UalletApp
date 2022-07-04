@@ -9,17 +9,13 @@ import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { colors, metrics } from "../../styles";
 import {
-  ItemView,
-  DescriptionView,
+  DescriptionContainer,
   DescriptionText,
-  ValueView,
+  ValueContainer,
   ValueText,
-  MoreView,
+  MoreContainer,
   LoadingText,
-  IncomeView,
-  IncomeText,
-  AutoEntryView,
-  InfoView,
+  InfoContainer,
   TriangleOfToolTip,
   InfoText,
   RemoveFilterContainer,
@@ -28,7 +24,13 @@ import {
   InfoMonthText,
   HeaderContainer,
   LastEntryText,
-  BalanceLabelText,
+  BalanceText,
+  TotalLabelText,
+  TotalText,
+  TotalItemContainer,
+  AutoEntryContainer,
+  ItemContainer,
+  TotalValueContainer,
 } from "./styles";
 import {
   ButtonHeaderView,
@@ -53,6 +55,7 @@ import {
   ITimestamp,
 } from "../../utils/date.helper";
 import { numberToReal } from "../../utils/number.helper";
+import { sortObjectByKey } from "../../utils/array.helper";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -102,6 +105,7 @@ export default function Entry() {
   const [entryList, setEntryList] = React.useState<
     Array<IEntryList | firebase.firestore.DocumentData>
   >([]);
+  const [entryTotal, setEntryTotal] = React.useState("R$0,00");
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
   const [filter, setFilter] = React.useState(defaultFilter);
   const [filterVisible, setFilterVisible] = React.useState(false);
@@ -153,6 +157,9 @@ export default function Entry() {
               }
               index++;
             });
+            setEntryList((oldArray: any) =>
+              sortObjectByKey(oldArray, "id", "desc")
+            );
           } else {
             setEmptyData(true);
           }
@@ -303,26 +310,28 @@ export default function Entry() {
     item: IEntryList | firebase.firestore.DocumentData;
   }) {
     return (
-      <ItemView>
-        <DescriptionView>
+      <ItemContainer>
+        <DescriptionContainer>
           <DescriptionText>
             {item.description.length > 18
               ? `${item.description.slice(0, 18)}...`
               : item.description}
           </DescriptionText>
-        </DescriptionView>
-        <ValueView>
+        </DescriptionContainer>
+        <ValueContainer>
           <ValueText type={item.type}>
-            {item.type == "Receita" ? "+" : "-"}
+            {item.type == "Receita" ? "+R$" : "-R$"}
           </ValueText>
-          <ValueText type={item.type}>{numberToReal(item.value)}</ValueText>
-        </ValueView>
-        <MoreView>
+          <ValueText type={item.type}>
+            {numberToReal(item.value, true)}
+          </ValueText>
+        </ValueContainer>
+        <MoreContainer>
           <TouchableOpacity onPress={() => navigate("NovoLançamento", item)}>
             <StyledIcon name="more-horizontal" size={15} />
           </TouchableOpacity>
-        </MoreView>
-      </ItemView>
+        </MoreContainer>
+      </ItemContainer>
     );
   }
 
@@ -353,6 +362,16 @@ export default function Entry() {
   React.useEffect(() => {
     getBalance();
   }, [date.modality, date.month, date.year]);
+
+  React.useEffect(() => {
+    (() => {
+      let total = 0;
+      entryList.map(({ value, type }) => {
+        type === "Receita" ? (total += value) : (total -= value);
+      });
+      setEntryTotal(numberToReal(total));
+    })();
+  }, [entryList]);
 
   return (
     <ViewTabContent>
@@ -421,13 +440,21 @@ export default function Entry() {
           )}
         </ContainerCenter>
       )}
-      <IncomeView>
-        <BalanceLabelText>Saldo atual</BalanceLabelText>
-        <IncomeText negative={data.balance.includes("-")}>
-          {!user.hideNumbers ? data.balance : "** ** ** ** **"}
-        </IncomeText>
-      </IncomeView>
-      <AutoEntryView>
+      <TotalItemContainer>
+        <TotalLabelText>Total detalhado</TotalLabelText>
+        <TotalValueContainer>
+          <TotalText>{entryTotal}</TotalText>
+        </TotalValueContainer>
+      </TotalItemContainer>
+      <TotalItemContainer>
+        <TotalLabelText>Saldo atual</TotalLabelText>
+        <TotalValueContainer>
+          <BalanceText negative={data.balance.includes("-")}>
+            {!user.hideNumbers ? data.balance : "** ** ** ** **"}
+          </BalanceText>
+        </TotalValueContainer>
+      </TotalItemContainer>
+      <AutoEntryContainer>
         <TextHeaderScreen
           style={{ marginTop: Platform.OS === "ios" ? 13 : 10 }}
         >
@@ -448,11 +475,11 @@ export default function Entry() {
           style={{ marginLeft: metrics.baseMargin }}
           onPress={infoFade}
         />
-        <InfoView style={{ opacity }}>
+        <InfoContainer style={{ opacity }}>
           <TriangleOfToolTip />
           <InfoText>Integre seu app com suas contas bancárias</InfoText>
-        </InfoView>
-      </AutoEntryView>
+        </InfoContainer>
+      </AutoEntryContainer>
     </ViewTabContent>
   );
 }

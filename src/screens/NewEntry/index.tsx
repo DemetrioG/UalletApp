@@ -435,6 +435,7 @@ export default function NewEntry({
             date={new Date()}
             setDateToInput={setDateToInput}
             calendarIsShow={calendar}
+            edit={isEditing}
           />
         </ContainerCenter>
       </ViewTabContent>
