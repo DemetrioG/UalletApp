@@ -10,11 +10,11 @@ import {
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 
-export const ItemView = styled(View)`
+export const ItemContainer = styled(View)`
   flex-direction: row;
 `;
 
-export const DescriptionView = styled(View)`
+export const DescriptionContainer = styled(View)`
   width: 50%;
   align-items: center;
   justify-content: center;
@@ -29,12 +29,12 @@ export const DescriptionText = styled(Text)`
   color: ${colors.gray};
 `;
 
-export const ValueView = styled(View)`
+export const ValueContainer = styled(View)`
   width: 40%;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  padding: 0px ${metrics.basePadding / 2}px;
+  justify-content: space-between;
+  padding: 0px 8px;
 `;
 
 export const ValueText: React.FC<
@@ -46,7 +46,7 @@ export const ValueText: React.FC<
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;
 
-export const MoreView = styled(View)`
+export const MoreContainer = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -57,15 +57,14 @@ export const LoadingText = styled(Text)`
   color: ${({ theme: { theme } }) => theme.blue};
 `;
 
-export const IncomeView = styled(View)`
+export const TotalItemContainer = styled(View)`
   flex-direction: row;
   align-items: baseline;
-  padding-bottom: ${metrics.basePadding}px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.lightPrimary};
+  justify-content: space-between;
+  padding: 8px 0px;
 `;
 
-export const IncomeText: React.FC<TextProps & { negative?: boolean }> = styled(
+export const BalanceText: React.FC<TextProps & { negative?: boolean }> = styled(
   Text
 )`
   font-family: ${fonts.montserratBold};
@@ -75,17 +74,20 @@ export const IncomeText: React.FC<TextProps & { negative?: boolean }> = styled(
   margin-left: ${metrics.baseMargin / 2}px;
 `;
 
-export const AutoEntryView = styled(View)`
+export const AutoEntryContainer = styled(View)`
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   position: relative;
   margin-bottom: ${metrics.baseMargin}px;
+  border-top-width: 1px;
+  border-top-color: ${colors.lightPrimary};
 `;
 
-export const InfoView = styled(Animated.View)`
+export const InfoContainer = styled(Animated.View)`
   padding: 5px;
   position: absolute;
-  right: 5px;
+  right: 0px;
   top: 45px;
   width: 130px;
   height: 40px;
@@ -98,7 +100,7 @@ export const TriangleOfToolTip = styled(View)`
   width: 15px;
   height: 15px;
   top: -10px;
-  right: 20px;
+  right: 5px;
   border-top-width: 0px;
   border-right-width: 7px;
   border-bottom-width: 13px;
@@ -154,9 +156,21 @@ export const LastEntryText = styled(Text)`
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
-export const BalanceLabelText = styled(Text)`
+export const TotalLabelText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
   margin-right: 10px;
+`;
+
+export const TotalText = styled(Text)`
+  font-family: ${fonts.montserratMedium};
+  font-size: ${fonts.medium}px;
+  color: ${({ theme: { theme } }) => theme.text};
+`;
+
+export const TotalValueContainer = styled(View)`
+  width: 120px;
+  flex-direction: row;
+  justify-content: flex-end;
 `;
