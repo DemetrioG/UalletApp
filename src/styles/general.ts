@@ -290,6 +290,7 @@ export const SpaceAroundView = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  padding-bottom: 10px;
 `;
 
 export const Label = styled(Text)`
@@ -307,9 +308,7 @@ export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
       false: theme.isOnDarkTheme ? colors.infoBlack : colors.gray,
     },
   })
-)`
-  margin-left: 5px;
-`;
+)``;
 
 export const PasswordContainer = styled(View)``;
 

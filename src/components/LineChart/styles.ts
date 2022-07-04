@@ -72,7 +72,6 @@ export const PercentualText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
-  margin-right: ${metrics.baseMargin / 2}px;
 `;
 
 export const PercentualValue: React.FC<
