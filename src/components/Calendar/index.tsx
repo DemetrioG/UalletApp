@@ -6,21 +6,23 @@ interface ICalendar {
   calendarIsShow: boolean;
   date: Date;
   setDateToInput: Function;
+  edit?: boolean;
 }
 
 export default function Calendar({
   calendarIsShow,
   date,
   setDateToInput,
+  edit,
 }: ICalendar) {
-  const [dateNow, setDateNow] = React.useState(date);
   const [isShow, setIsShow] = React.useState(false);
   const opacity = React.useRef(new Animated.Value(0)).current;
   const notInitialRender = React.useRef(false);
 
-  function showCalendar() {
+  function calendarVisibility() {
     if (!isShow) {
       setIsShow(true);
+      !edit && setDateToInput(date);
       Animated.timing(opacity, {
         toValue: 1,
         duration: 500,
@@ -37,13 +39,9 @@ export default function Calendar({
     }
   }
 
-  function onClose() {
-    showCalendar();
-  }
-
   React.useEffect(() => {
     if (notInitialRender.current) {
-      showCalendar();
+      calendarVisibility();
     } else {
       notInitialRender.current = true;
     }
@@ -63,21 +61,21 @@ export default function Calendar({
         >
           {Platform.OS === "ios" && (
             <DateHeader>
-              <TouchableOpacity onPress={() => onClose()}>
+              <TouchableOpacity onPress={() => calendarVisibility()}>
                 <DateText>FECHAR</DateText>
               </TouchableOpacity>
             </DateHeader>
           )}
           <StyledDatePicker
-            value={dateNow}
+            value={date}
             mode="date"
             display="spinner"
             onChange={({ type }: any, date: any) => {
               if (type === "dismissed") {
-                return onClose();
+                return calendarVisibility();
               }
               setDateToInput(date);
-              Platform.OS === "android" ? onClose() : null;
+              Platform.OS === "android" && calendarVisibility();
             }}
           />
         </Animated.View>
