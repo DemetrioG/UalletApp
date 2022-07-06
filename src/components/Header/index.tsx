@@ -10,6 +10,7 @@ import { DataContext } from "../../context/Data/dataContext";
 import { setStorage } from "../../utils/storage.helper";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
+import { metrics } from "../../styles";
 
 const optionsMonth = [
   "Janeiro",
@@ -96,7 +97,11 @@ export default function Header() {
           setVisibility={setPickerYearVisible}
         />
         {loader.visible ? (
-          <StyledLoader width={160} height={15} radius={6} />
+          <StyledLoader
+            width={160}
+            height={15}
+            radius={metrics.smallestRadius}
+          />
         ) : (
           <HeaderText>Bem vindo (a), {user.name}!</HeaderText>
         )}

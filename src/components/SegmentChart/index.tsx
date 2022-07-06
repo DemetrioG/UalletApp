@@ -169,9 +169,7 @@ export default function SegmentChart() {
 
   return (
     <>
-      {loader.visible ? (
-        <StyledLoader width={140} height={140} radius={100} />
-      ) : (
+      {!loader.visible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart
