@@ -2,8 +2,8 @@ import * as React from "react";
 import { Animated, View } from "react-native";
 import styled from "styled-components";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { colors, metrics } from "../styles";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
+import { colors, metrics } from "../styles";
 
 const Tab = createBottomTabNavigator();
 

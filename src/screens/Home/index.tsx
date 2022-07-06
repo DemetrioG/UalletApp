@@ -4,17 +4,18 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import firebase from "../../services/firebase";
-import { UserContext } from "../../context/User/userContext";
-import { DateContext } from "../../context/Date/dateContext";
-import { LoaderContext } from "../../context/Loader/loaderContext";
-import { DataContext } from "../../context/Data/dataContext";
-
+import { IEntryList } from "../Entry";
 import Consolidate from "../../components/Consolidate";
 import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
+import { UserContext } from "../../context/User/userContext";
+import { DateContext } from "../../context/Date/dateContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
+import { sortObjectByKey } from "../../utils/array.helper";
 import { getAtualDate, getFinalDateMonth } from "../../utils/date.helper";
 import {
   Balance,
@@ -43,8 +44,6 @@ import {
   StyledLoader,
   ValueText,
 } from "../../styles/general";
-import { IEntryList } from "../Entry";
-import { sortObjectByKey } from "../../utils/array.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 

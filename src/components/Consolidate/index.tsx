@@ -1,7 +1,12 @@
 import * as React from "react";
 import { FlatList, Modal, TouchableOpacity } from "react-native";
+
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
+import { UserContext } from "../../context/User/userContext";
+import { AlertContext } from "../../context/Alert/alertContext";
+import { numberToReal } from "../../utils/number.helper";
+import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import {
   Label,
   ModalContainer,
@@ -38,11 +43,7 @@ import {
   ActionSize,
   ActionText,
 } from "./styles";
-import { numberToReal } from "../../utils/number.helper";
 import { colors } from "../../styles";
-import { UserContext } from "../../context/User/userContext";
-import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
-import { AlertContext } from "../../context/Alert/alertContext";
 
 const WRITE = require("../../../assets/icons/write.json");
 
@@ -193,28 +194,6 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
     return setVisible(false);
   }
 
-  async function getData() {
-    const date = getAtualDate();
-    const initialDate = date[1];
-    const finalDate = date[2];
-
-    setEntryList([]);
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection("Projetado")
-      .where("date", ">=", initialDate)
-      .where("date", "<=", finalDate)
-      .where("consolidated.wasActionShown", "==", false)
-      .get()
-      .then((v) => {
-        v.forEach((result) => {
-          setEntryList((listState) => [...listState, result.data()]);
-        });
-      });
-  }
-
   function ItemList({
     item: { description, type, value, checked, id },
   }: {
@@ -262,7 +241,27 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
   }
 
   React.useEffect(() => {
-    getData();
+    (async function getData() {
+      const date = getAtualDate();
+      const initialDate = date[1];
+      const finalDate = date[2];
+
+      setEntryList([]);
+      await firebase
+        .firestore()
+        .collection("entry")
+        .doc(user.uid)
+        .collection("Projetado")
+        .where("date", ">=", initialDate)
+        .where("date", "<=", finalDate)
+        .where("consolidated.wasActionShown", "==", false)
+        .get()
+        .then((v) => {
+          v.forEach((result) => {
+            setEntryList((listState) => [...listState, result.data()]);
+          });
+        });
+    })();
   }, []);
 
   return (

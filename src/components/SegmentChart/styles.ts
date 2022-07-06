@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, ViewProps } from "react-native";
-import { PieChart } from "react-native-svg-charts";
 import styled from "styled-components";
+import { PieChart } from "react-native-svg-charts";
 import { colors, fonts, metrics } from "../../styles";
 
 export const StyledPieChart: React.FC<{ data: number[] }> = styled(

@@ -3,6 +3,7 @@ import { Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+import { AlertContext } from "../../context/Alert/alertContext";
 import {
   ButtonContainer,
   HelperText,
@@ -11,7 +12,6 @@ import {
   StyledLottieView,
   TextAlert,
 } from "./styles";
-import { AlertContext } from "../../context/Alert/alertContext";
 import {
   ButtonText,
   StyledButton,

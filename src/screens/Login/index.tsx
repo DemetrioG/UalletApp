@@ -13,12 +13,14 @@ import * as Facebook from "expo-facebook";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import firebase from "../../services/firebase";
 
+import firebase from "../../services/firebase";
+import Alert from "../../components/Alert";
 import { UserContext } from "../../context/User/userContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { AlertContext } from "../../context/Alert/alertContext";
-import Alert from "../../components/Alert";
+import { setStorage } from "../../utils/storage.helper";
+import { networkConnection } from "../../utils/network.helper";
 import {
   ActionText,
   AppleLogo,
@@ -47,8 +49,6 @@ import {
   PasswordLook,
 } from "../../styles/general";
 import { colors, metrics } from "../../styles";
-import { setStorage } from "../../utils/storage.helper";
-import { networkConnection } from "../../utils/network.helper";
 interface IForm {
   email: string;
   password: string;

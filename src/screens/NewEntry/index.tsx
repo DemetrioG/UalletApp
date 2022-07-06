@@ -12,11 +12,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import firebase from "../../services/firebase";
+import { IEntryList } from "../Entry";
+import Picker from "../../components/Picker";
+import Calendar from "../../components/Calendar";
 import { UserContext } from "../../context/User/userContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { AlertContext } from "../../context/Alert/alertContext";
-import Picker from "../../components/Picker";
-import Calendar from "../../components/Calendar";
+import {
+  dateValidation,
+  convertDate,
+  convertDateFromDatabase,
+  convertDateToDatabase,
+} from "../../utils/date.helper";
+import { numberToReal, realToNumber } from "../../utils/number.helper";
+import { networkConnection } from "../../utils/network.helper";
 import { ChangeType, HorizontalView, TypeText, TypeView } from "./styles";
 import {
   ButtonOutlineText,
@@ -35,15 +44,6 @@ import {
   ViewTabContent,
 } from "../../styles/general";
 import { metrics, colors } from "../../styles";
-import { IEntryList } from "../Entry";
-import {
-  dateValidation,
-  convertDate,
-  convertDateFromDatabase,
-  convertDateToDatabase,
-} from "../../utils/date.helper";
-import { numberToReal, realToNumber } from "../../utils/number.helper";
-import { networkConnection } from "../../utils/network.helper";
 
 interface IForm {
   entrydate: string;

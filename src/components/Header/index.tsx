@@ -1,15 +1,15 @@
 import * as React from "react";
 import { TouchableOpacity } from "react-native";
 
-import { UserContext } from "../../context/User/userContext";
 import firebase from "../../services/firebase";
+import Menu from "../Menu";
 import DatePicker from "../DatePicker";
+import { UserContext } from "../../context/User/userContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
+import { setStorage } from "../../utils/storage.helper";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
 import { StyledIcon, StyledLoader } from "../../styles/general";
-import Menu from "../Menu";
-import { LoaderContext } from "../../context/Loader/loaderContext";
-import { setStorage } from "../../utils/storage.helper";
-import { DataContext } from "../../context/Data/dataContext";
 
 const optionsMonth = [
   "Janeiro",
@@ -39,27 +39,6 @@ export default function Header() {
   const [pickerMonthVisible, setPickerMonthVisible] = React.useState(false);
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
 
-  async function getData() {
-    await firebase
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .get()
-      .then((v) => {
-        // Pega o primeiro nome do usuário
-        setUser((userState) => ({
-          ...userState,
-          name: v.data()?.name.split(" ", 1),
-        }));
-      })
-      .catch(() => {
-        setUser((userState) => ({
-          ...userState,
-          name: "",
-        }));
-      });
-  }
-
   function handleHide() {
     setStorage("hideNumbers", !user.hideNumbers);
     setUser((userState) => ({
@@ -70,7 +49,26 @@ export default function Header() {
 
   React.useEffect(() => {
     if (!user.name) {
-      getData();
+      (async function getData() {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((v) => {
+            // Pega o primeiro nome do usuário
+            setUser((userState) => ({
+              ...userState,
+              name: v.data()?.name.split(" ", 1),
+            }));
+          })
+          .catch(() => {
+            setUser((userState) => ({
+              ...userState,
+              name: "",
+            }));
+          });
+      })();
     }
 
     if (user.name.length) {

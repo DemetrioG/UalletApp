@@ -5,11 +5,12 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import firebase from "../../services/firebase";
 
+import firebase from "../../services/firebase";
+import Alert from "../../components/Alert";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { DataContext } from "../../context/Data/dataContext";
-import Alert from "../../components/Alert";
+import { networkConnection } from "../../utils/network.helper";
 import {
   BackgroundContainer,
   ButtonText,
@@ -24,7 +25,6 @@ import {
   StyledTextInput,
   TextHeader,
 } from "../../styles/general";
-import { networkConnection } from "../../utils/network.helper";
 interface IForm {
   email: string;
 }

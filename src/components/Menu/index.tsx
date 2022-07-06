@@ -1,10 +1,11 @@
 import * as React from "react";
+
 import { AlertContext } from "../../context/Alert/alertContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
+import { removeAllStorage } from "../../utils/storage.helper";
 import { colors } from "../../styles";
 import { StyledIcon } from "../../styles/general";
-import { removeAllStorage } from "../../utils/storage.helper";
 import {
   ItemContainer,
   ItemContent,

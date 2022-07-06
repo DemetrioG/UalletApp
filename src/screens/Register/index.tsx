@@ -1,13 +1,14 @@
-import React, { useContext, useState } from "react";
+import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import firebase from "../../services/firebase";
 
-import { AlertContext } from "../../context/Alert/alertContext";
+import firebase from "../../services/firebase";
 import Alert from "../../components/Alert";
+import { AlertContext } from "../../context/Alert/alertContext";
 import { DataContext } from "../../context/Data/dataContext";
+import { networkConnection } from "../../utils/network.helper";
 import {
   BackgroundContainer,
   ButtonText,
@@ -27,7 +28,6 @@ import {
   TextUalletHeader,
 } from "../../styles/general";
 import { colors } from "../../styles";
-import { networkConnection } from "../../utils/network.helper";
 
 interface IForm {
   name: string;
@@ -46,12 +46,12 @@ const schema = yup
   .required();
 
 export default function Register() {
-  const { setAlert } = useContext(AlertContext);
+  const { setAlert } = React.useContext(AlertContext);
   const {
     data: { isNetworkConnected },
-  } = useContext(DataContext);
-  const [lookPassword, setLookPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  } = React.useContext(DataContext);
+  const [lookPassword, setLookPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const {
     control,
