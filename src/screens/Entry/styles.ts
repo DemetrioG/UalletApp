@@ -10,42 +10,6 @@ import {
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 
-export const ItemContainer = styled(View)`
-  flex-direction: row;
-`;
-
-export const DescriptionContainer = styled(View)`
-  width: 50%;
-  align-items: center;
-  justify-content: center;
-  border-right-width: 1px;
-  border-right-color: ${colors.lightPrimary};
-  padding: ${metrics.basePadding / 2}px;
-`;
-
-export const DescriptionText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.regular}px;
-  color: ${colors.gray};
-`;
-
-export const ValueContainer = styled(View)`
-  width: 40%;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0px 8px;
-`;
-
-export const ValueText: React.FC<
-  TextProps & { type: "Receita" | "Despesa" }
-> = styled(Text)`
-  font-family: ${fonts.montserratMedium};
-  font-size: ${fonts.regular}px;
-  color: ${({ theme, type }) =>
-    type === "Receita" ? theme.theme.green : theme.theme.red};
-`;
-
 export const MoreContainer = styled(View)`
   flex: 1;
   align-items: center;
@@ -170,7 +134,5 @@ export const TotalText = styled(Text)`
 `;
 
 export const TotalValueContainer = styled(View)`
-  width: 120px;
-  flex-direction: row;
   justify-content: flex-end;
 `;

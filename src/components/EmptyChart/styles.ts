@@ -15,11 +15,11 @@ const DefaultText = styled(Text)`
 
 export const EmphasisText = styled(DefaultText)`
   font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.medium};
+  font-size: ${fonts.medium}px;
 `;
 
 export const HelperText = styled(DefaultText)`
   font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.regular};
+  font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.blue};
 `;
