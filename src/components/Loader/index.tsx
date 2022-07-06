@@ -3,7 +3,7 @@ import { View } from "react-native";
 import ContentLoader, { Rect } from "react-content-loader/native";
 
 interface ILoader {
-  width: number;
+  width?: number;
   height: number;
   radius: number;
   bg: string;
@@ -15,12 +15,17 @@ export default function Loader({ width, height, radius, bg, fg }: ILoader) {
     <View>
       <ContentLoader
         speed={1}
-        width={width}
+        width={width ? width : "100%"}
         height={height}
         backgroundColor={bg}
         foregroundColor={fg}
       >
-        <Rect width={width} height={height} rx={radius} ry={radius} />
+        <Rect
+          width={width ? width : "100%"}
+          height={height}
+          rx={radius}
+          ry={radius}
+        />
       </ContentLoader>
     </View>
   );

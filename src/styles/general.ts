@@ -270,7 +270,7 @@ export const StyledIcon: React.FC<
 `;
 
 export const StyledLoader: React.FC<{
-  width: number;
+  width?: number;
   height: number;
   radius?: number;
 }> = styled(Loader).attrs(({ theme: { theme }, radius }) => ({

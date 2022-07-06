@@ -44,6 +44,7 @@ import {
   StyledLoader,
   ValueText,
 } from "../../styles/general";
+import { metrics } from "../../styles";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -218,36 +219,46 @@ export default function Home() {
           <StyledIcon name="chevron-down" colorVariant="tertiary" />
         </Section>
         <Card>
-          <CardHeaderView balance>
-            <CardTextView>
-              <CardHeaderText>Saldo atual</CardHeaderText>
-            </CardTextView>
-            <View>
-              <LogoCard source={LOGO_SMALL} width={1} />
-            </View>
-          </CardHeaderView>
           {loader.visible ? (
-            <StyledLoader width={160} height={30} radius={10} />
+            <StyledLoader height={69} radius={metrics.smallRadius} />
           ) : (
-            <Balance negative={data.balance?.includes("-")}>
-              {!user.hideNumbers ? data.balance : "** ** ** ** **"}
-            </Balance>
+            <>
+              <CardHeaderView balance>
+                <CardTextView>
+                  <CardHeaderText>Saldo atual</CardHeaderText>
+                </CardTextView>
+                <View>
+                  <LogoCard source={LOGO_SMALL} width={1} />
+                </View>
+              </CardHeaderView>
+              <Balance negative={data.balance?.includes("-")}>
+                {!user.hideNumbers ? data.balance : "** ** ** ** **"}
+              </Balance>
+            </>
           )}
         </Card>
         <Card>
-          <CardHeaderView>
-            <CardTextView>
-              <CardHeaderText>Últimos lançamentos</CardHeaderText>
-            </CardTextView>
-            <TouchableOpacity onPress={() => navigate("LançamentosTab")}>
-              <StyledIcon name="edit-3" />
-            </TouchableOpacity>
-          </CardHeaderView>
-          {lastEntry.map((item, index) => {
-            return <ItemList item={item} key={index} />;
-          })}
+          {loader.visible ? (
+            <StyledLoader height={156} radius={metrics.mediumRadius} />
+          ) : (
+            <>
+              <CardHeaderView>
+                <CardTextView>
+                  <CardHeaderText>Últimos lançamentos</CardHeaderText>
+                </CardTextView>
+                <TouchableOpacity onPress={() => navigate("LançamentosTab")}>
+                  <StyledIcon name="edit-3" />
+                </TouchableOpacity>
+              </CardHeaderView>
+              <>
+                {lastEntry.map((item, index) => {
+                  return <ItemList item={item} key={index} />;
+                })}
+              </>
+            </>
+          )}
         </Card>
-        <Card>
+        {/* <Card>
           <CardStatusView>
             <StatusText bold={true}>Você está indo bem</StatusText>
           </CardStatusView>
@@ -260,21 +271,29 @@ export default function Home() {
           <View>
             <StatusText bold={true}>Continue!! ⚡</StatusText>
           </View>
-        </Card>
+        </Card> */}
         <Card>
-          <CardHeaderView>
-            <CardTextView>
-              <CardHeaderText>Receitas x Despesas</CardHeaderText>
-            </CardTextView>
-          </CardHeaderView>
+          {loader.visible ? (
+            <StyledLoader height={152} radius={metrics.mediumRadius} />
+          ) : (
+            <CardHeaderView>
+              <CardTextView>
+                <CardHeaderText>Receitas x Despesas</CardHeaderText>
+              </CardTextView>
+            </CardHeaderView>
+          )}
           <LineChart />
         </Card>
         <Card>
-          <CardHeaderView>
-            <CardTextView>
-              <CardHeaderText>Despesas por segmento</CardHeaderText>
-            </CardTextView>
-          </CardHeaderView>
+          {loader.visible ? (
+            <StyledLoader height={168} radius={metrics.mediumRadius} />
+          ) : (
+            <CardHeaderView>
+              <CardTextView>
+                <CardHeaderText>Despesas por segmento</CardHeaderText>
+              </CardTextView>
+            </CardHeaderView>
+          )}
           <SegmentChart />
         </Card>
         <Section>

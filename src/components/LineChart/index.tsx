@@ -160,9 +160,7 @@ export default function LineChart() {
 
   return (
     <>
-      {loader.visible ? (
-        <StyledLoader width={140} height={114} radius={15} />
-      ) : (
+      {!loader.visible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart
