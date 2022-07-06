@@ -318,3 +318,39 @@ export const PasswordLook = styled(TouchableOpacity)`
   top: 0px;
   right: 0px;
 `;
+
+export const ItemContainer = styled(View)`
+  flex-direction: row;
+`;
+
+export const DescriptionContainer = styled(View)`
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+  border-right-width: 1px;
+  border-right-color: ${colors.lightPrimary};
+  padding: ${metrics.basePadding / 2}px;
+`;
+
+export const DescriptionText = styled(Text)`
+  font-family: ${fonts.ralewayMedium};
+  font-size: ${fonts.regular}px;
+  color: ${colors.gray};
+`;
+
+export const ValueContainer = styled(View)`
+  width: 40%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 8px;
+`;
+
+export const ValueText: React.FC<
+  TextProps & { type: "Receita" | "Despesa" }
+> = styled(Text)`
+  font-family: ${fonts.montserratMedium};
+  font-size: ${fonts.regular}px;
+  color: ${({ theme, type }) =>
+    type === "Receita" ? theme.theme.green : theme.theme.red};
+`;
