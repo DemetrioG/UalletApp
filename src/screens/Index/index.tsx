@@ -12,11 +12,12 @@ import {
 } from "../../styles/general";
 import { ImageCarousel, TitleCarousel, StyledCarousel } from "./styles";
 import { metrics } from "../../styles/index";
+import { ImageURISource } from "react-native";
 
 interface ISlidesMockup {
   key: number;
   title: string;
-  image: NodeRequire;
+  image: ImageURISource;
 }
 
 const slides: ISlidesMockup[] = [
