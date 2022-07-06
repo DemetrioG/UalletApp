@@ -2,6 +2,11 @@ import * as React from "react";
 import { Image, Text, TextProps, View, ViewProps } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
+import {
+  ValueContainer as DefaultValueContainer,
+  DescriptionContainer as DefaultDescriptionContainer,
+  DescriptionText as DefaultDescriptionText,
+} from "../../styles/general";
 
 export const CardHeaderView: React.FC<
   ViewProps & { balance?: boolean }
@@ -85,4 +90,18 @@ export const SectionText = styled(Text)`
   font-family: ${fonts.montserratMedium};
   font-size: 20px;
   color: ${({ theme: { theme } }) => theme.tertiary};
+`;
+
+export const ValueContainer = styled(DefaultValueContainer)`
+  width: 40%;
+`;
+
+export const DescriptionContainer = styled(DefaultDescriptionContainer)`
+  flex: 1;
+  border-right-width: 0px;
+  align-items: baseline;
+`;
+
+export const DescriptionText = styled(DefaultDescriptionText)`
+  color: ${({ theme: { theme } }) => theme.text};
 `;
