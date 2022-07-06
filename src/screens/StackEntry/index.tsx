@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { AlertContext } from "../../context/Alert/alertContext";
 import Entry from "../Entry";
 import NewEntry from "../NewEntry";
 import FixedEntry from "../FixedEntry";
@@ -12,8 +11,6 @@ import { BackgroundContainer, ViewTab } from "../../styles/general";
 const Stack = createNativeStackNavigator();
 
 export default function StackEntry() {
-  const { alert, setAlert } = React.useContext(AlertContext);
-
   return (
     <BackgroundContainer>
       <Alert />

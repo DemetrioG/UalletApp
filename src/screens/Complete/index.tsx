@@ -7,10 +7,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import firebase from "../../services/firebase";
-import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
 import Picker from "../../components/Picker";
 import Alert from "../../components/Alert";
+import { UserContext } from "../../context/User/userContext";
+import { AlertContext } from "../../context/Alert/alertContext";
+import { dateValidation } from "../../utils/date.helper";
 import {
   BackgroundContainer,
   ButtonText,
@@ -25,7 +26,6 @@ import {
   StyledTextInputMask,
   TextHeader,
 } from "../../styles/general";
-import { dateValidation } from "../../utils/date.helper";
 
 interface IForm {
   birthdate: string;
@@ -41,7 +41,7 @@ const schema = yup
 
 export default function Complete() {
   const { user } = React.useContext(UserContext);
-  const { alert, setAlert } = React.useContext(AlertContext);
+  const { setAlert } = React.useContext(AlertContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   const [gender, setGender] = React.useState(null);

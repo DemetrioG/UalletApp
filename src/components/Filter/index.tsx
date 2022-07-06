@@ -4,6 +4,13 @@ import { useForm } from "react-hook-form";
 
 import firebase from "../../services/firebase";
 import Picker from "../Picker";
+import Alert from "../Alert";
+import { IActiveFilter } from "../../screens/Entry";
+import { UserContext } from "../../context/User/userContext";
+import { AlertContext } from "../../context/Alert/alertContext";
+import { DateContext } from "../../context/Date/dateContext";
+import { dateValidation } from "../../utils/date.helper";
+import { numberToReal } from "../../utils/number.helper";
 import {
   ButtonText,
   ModalContainer,
@@ -11,7 +18,6 @@ import {
   StyledButton,
   StyledIcon,
   StyledInputDate,
-  StyledKeyboardAvoidingView,
   StyledLoading,
   StyledSlider,
   StyledTextInput,
@@ -26,13 +32,6 @@ import {
   LabelValue,
   Title,
 } from "./styles";
-import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
-import Alert from "../Alert";
-import { IActiveFilter } from "../../screens/Entry";
-import { DateContext } from "../../context/Date/dateContext";
-import { dateValidation } from "../../utils/date.helper";
-import { numberToReal } from "../../utils/number.helper";
 
 interface IFilter {
   visible: boolean;

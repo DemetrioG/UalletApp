@@ -1,7 +1,8 @@
+import * as React from "react";
+import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import * as React from "react";
-import { TouchableOpacity, View } from "react-native";
+
 import { StyledIcon } from "../../styles/general";
 import { ContainerCenter, EmphasisText, HelperText } from "./styles";
 

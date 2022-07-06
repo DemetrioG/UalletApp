@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Text, View } from "react-native";
+import styled from "styled-components";
 import DateTimePicker, {
   AndroidNativeProps,
   IOSNativeProps,
 } from "@react-native-community/datetimepicker";
-import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 
 export const DateHeader = styled(View)`

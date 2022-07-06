@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Platform, TouchableOpacity, Animated } from "react-native";
+
 import { DateHeader, DateText, StyledDatePicker } from "./styles";
 
 interface ICalendar {

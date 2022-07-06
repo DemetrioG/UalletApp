@@ -1,8 +1,13 @@
 import * as React from "react";
 import { ForeignObject } from "react-native-svg";
+
+import firebase from "../../services/firebase";
+import EmptyChart from "../EmptyChart";
 import { DateContext } from "../../context/Date/dateContext";
 import { UserContext } from "../../context/User/userContext";
-import firebase from "../../services/firebase";
+import { LoaderContext } from "../../context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
+import { getFinalDateMonth } from "../../utils/date.helper";
 import {
   StyledPieChart,
   PieChartLabel,
@@ -13,11 +18,7 @@ import {
   SegmentLabelText,
   ChartContainer,
 } from "./styles";
-import EmptyChart from "../EmptyChart";
-import { LoaderContext } from "../../context/Loader/loaderContext";
 import { StyledLoader } from "../../styles/general";
-import { DataContext } from "../../context/Data/dataContext";
-import { getFinalDateMonth } from "../../utils/date.helper";
 
 interface ISlices {
   slices?: [
@@ -72,100 +73,98 @@ export default function SegmentChart() {
   const [data, setData] = React.useState([0, 0, 0, 0, 0]);
   const [empty, setEmpty] = React.useState(false);
 
-  async function getData() {
-    if (date.year !== 0) {
-      const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
-      const finalDate = new Date(
-        `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-          date.year
-        } 23:59:59`
-      );
-
-      // Busca no banco os dados referente ao Mês atual
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection(date.modality)
-        .get()
-        .then((result) => {
-          if (!result.empty) {
-            setEmpty(false);
-            firebase
-              .firestore()
-              .collection("entry")
-              .doc(user.uid)
-              .collection(date.modality)
-              .where("type", "==", "Despesa")
-              .where("date", ">=", initialDate)
-              .where("date", "<=", finalDate)
-              .onSnapshot((snapshot) => {
-                let needs = 0;
-                let invest = 0;
-                let leisure = 0;
-                let education = 0;
-                let shortAndMediumTime = 0;
-                let total = 0;
-                if (snapshot.docs.length > 0) {
-                  snapshot.forEach((result) => {
-                    const segmentData = [result.data()];
-                    segmentData.forEach(({ segment }, index) => {
-                      switch (segment) {
-                        case "Necessidades":
-                          needs++;
-                          break;
-
-                        case "Investimentos":
-                          invest++;
-                          break;
-
-                        case "Lazer":
-                          leisure++;
-                          break;
-
-                        case "Educação":
-                          education++;
-                          break;
-
-                        case "Curto e médio prazo":
-                          shortAndMediumTime++;
-                          break;
-                      }
-
-                      total++;
-                    });
-                  });
-                } else {
-                  setEmpty(true);
-                }
-
-                needs = (needs / total) * 100;
-                invest = (invest / total) * 100;
-                leisure = (leisure / total) * 100;
-                education = (education / total) * 100;
-                shortAndMediumTime = (shortAndMediumTime / total) * 100;
-
-                setData([
-                  leisure,
-                  invest,
-                  education,
-                  shortAndMediumTime,
-                  needs,
-                ]);
-              });
-          } else {
-            setEmpty(true);
-          }
-        });
-      setLoader((loaderState) => ({
-        ...loaderState,
-        segmentChart: true,
-      }));
-    }
-  }
-
   React.useEffect(() => {
-    getData();
+    (async function getData() {
+      if (date.year !== 0) {
+        const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+        const finalDate = new Date(
+          `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+            date.year
+          } 23:59:59`
+        );
+
+        // Busca no banco os dados referente ao Mês atual
+        await firebase
+          .firestore()
+          .collection("entry")
+          .doc(user.uid)
+          .collection(date.modality)
+          .get()
+          .then((result) => {
+            if (!result.empty) {
+              setEmpty(false);
+              firebase
+                .firestore()
+                .collection("entry")
+                .doc(user.uid)
+                .collection(date.modality)
+                .where("type", "==", "Despesa")
+                .where("date", ">=", initialDate)
+                .where("date", "<=", finalDate)
+                .onSnapshot((snapshot) => {
+                  let needs = 0;
+                  let invest = 0;
+                  let leisure = 0;
+                  let education = 0;
+                  let shortAndMediumTime = 0;
+                  let total = 0;
+                  if (snapshot.docs.length > 0) {
+                    snapshot.forEach((result) => {
+                      const segmentData = [result.data()];
+                      segmentData.forEach(({ segment }, index) => {
+                        switch (segment) {
+                          case "Necessidades":
+                            needs++;
+                            break;
+
+                          case "Investimentos":
+                            invest++;
+                            break;
+
+                          case "Lazer":
+                            leisure++;
+                            break;
+
+                          case "Educação":
+                            education++;
+                            break;
+
+                          case "Curto e médio prazo":
+                            shortAndMediumTime++;
+                            break;
+                        }
+
+                        total++;
+                      });
+                    });
+                  } else {
+                    setEmpty(true);
+                  }
+
+                  needs = (needs / total) * 100;
+                  invest = (invest / total) * 100;
+                  leisure = (leisure / total) * 100;
+                  education = (education / total) * 100;
+                  shortAndMediumTime = (shortAndMediumTime / total) * 100;
+
+                  setData([
+                    leisure,
+                    invest,
+                    education,
+                    shortAndMediumTime,
+                    needs,
+                  ]);
+                });
+            } else {
+              setEmpty(true);
+            }
+          });
+        setLoader((loaderState) => ({
+          ...loaderState,
+          segmentChart: true,
+        }));
+      }
+    })();
   }, [date, userData.balance]);
 
   return (

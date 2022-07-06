@@ -2,10 +2,10 @@ import * as React from "react";
 import { Modal, ScrollView } from "react-native";
 
 import { DateContext } from "../../context/Date/dateContext";
+import { getStorage, setStorage } from "../../utils/storage.helper";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
 import { ModalContainer, ModalView, StyledIcon } from "../../styles/general";
 import { colors } from "../../styles";
-import { getStorage, setStorage } from "../../utils/storage.helper";
 
 interface IDatePicker {
   options: string[] | number[];
@@ -39,28 +39,26 @@ export default function DatePicker({
     );
   });
 
-  async function loadStorage() {
-    const storedMonth = await getStorage("Mês");
-    const storedYear = await getStorage("Ano");
-
-    if (storedMonth && storedYear) {
-      setDate((dateState) => ({
-        ...dateState,
-        month: type == "Mês" ? storedMonth : dateState.month,
-        year: type == "Ano" ? storedYear : dateState.year,
-      }));
-    } else {
-      setDate((dateState) => ({
-        ...dateState,
-        month: type == "Mês" ? new Date().getMonth() + 1 : dateState.month,
-        year: type == "Ano" ? new Date().getFullYear() : dateState.year,
-      }));
-    }
-  }
-
   // Pega a referência de Mês e Ano, e coloca no Contexto
   React.useEffect(() => {
-    loadStorage();
+    (async function loadStorage() {
+      const storedMonth = await getStorage("Mês");
+      const storedYear = await getStorage("Ano");
+
+      if (storedMonth && storedYear) {
+        setDate((dateState) => ({
+          ...dateState,
+          month: type == "Mês" ? storedMonth : dateState.month,
+          year: type == "Ano" ? storedYear : dateState.year,
+        }));
+      } else {
+        setDate((dateState) => ({
+          ...dateState,
+          month: type == "Mês" ? new Date().getMonth() + 1 : dateState.month,
+          year: type == "Ano" ? new Date().getFullYear() : dateState.year,
+        }));
+      }
+    })();
   }, [visibility]);
 
   return (
