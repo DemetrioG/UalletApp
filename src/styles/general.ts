@@ -7,13 +7,12 @@ import {
   ScrollViewProps,
   Switch,
   SwitchProps,
-  Text,
   TextProps,
   TouchableOpacity,
-  TouchableOpacityProps,
   View,
   ViewProps,
 } from "react-native";
+import { Button, Center, Flex, Text } from "native-base";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
@@ -36,26 +35,22 @@ export const FlexContainer = styled(View)`
   flex: 1;
 `;
 
-export const BackgroundContainerCenter = styled(View)`
+export const BackgroundContainerCenter = styled(Center)`
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 0px ${metrics.basePadding}px;
-  padding-top: ${metrics.topBottomPadding}px;
+  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px 0px
+    ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
-export const BackgroundContainer = styled(View)`
+export const BackgroundContainer = styled(Flex)`
   flex: 1;
-  padding: 0px ${metrics.basePadding}px;
-  padding-top: ${metrics.topBottomPadding}px;
+  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px 0px
+    ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
-export const ContainerCenter = styled(View)`
+export const ContainerCenter = styled(Center)`
   flex: 1;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const ModalContainer = styled(View)`
@@ -115,40 +110,26 @@ export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
   })
 )``;
 
-export const StyledButton: React.FC<
-  TouchableOpacityProps & { additionalMargin?: number; small?: boolean }
-> = styled(TouchableOpacity)`
-  align-items: center;
-  justify-content: center;
-  background-color: ${colors.strongBlue};
-  border-radius: ${({ small }) =>
-    !small ? metrics.mediumRadius : metrics.smallRadius}px;
-  margin-bottom: ${({ additionalMargin }) =>
-    additionalMargin ? additionalMargin : metrics.smallMargin}px;
-  width: ${({ small }) => (!small ? 250 : 80)}px;
-  height: ${({ small }) => (!small ? 45 : 30)}px;
-`;
+export const ButtonOutline = styled(Button).attrs(({ theme: { theme } }) => ({
+  variant: "outline",
+  borderColor: theme.blue,
+}))``;
 
-export const StyledButtonOutline: typeof StyledButton = styled(StyledButton)`
-  background-color: transparent;
-  border-width: 1px;
-  border-color: ${({ theme: { theme } }) => theme.blue};
-`;
-
-export const DeleteButton: typeof StyledButton = styled(StyledButton)`
-  background-color: ${colors.lightRed};
-`;
-
-export const ButtonText = styled(Text)`
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.regular}px;
+export const ButtonText = styled(Text).attrs(() => ({
+  fontFamily: "body",
+  fontWeight: 800,
+}))`
   color: ${colors.white};
 `;
 
-export const ButtonOutlineText = styled(Text)`
+export const ButtonOutlineText = styled(Text).attrs(() => ({
+  fontWeight: 800,
+}))`
   color: ${({ theme: { theme } }) => theme.blue};
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.regular}px;
+`;
+
+export const DeleteButton = styled(Button)`
+  background-color: ${colors.lightRed};
 `;
 
 export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
@@ -178,9 +159,9 @@ export const TextHeader = styled(Text)`
   margin-top: ${metrics.baseMargin}px;
 `;
 
-export const TextUalletHeader = styled(Text)`
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.big}px;
+export const TextUalletHeader = styled(Text).attrs(() => ({
+  fontWeight: 800,
+}))`
   color: ${({ theme: { theme } }) => theme.text};
   margin-left: ${metrics.baseMargin}px;
 `;
@@ -201,8 +182,6 @@ export const HeaderTitleContainer = styled(View)`
 `;
 
 export const HeaderTitle = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
