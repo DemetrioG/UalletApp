@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Modal, ScrollView, TouchableOpacity, View } from "react-native";
+import { Button } from "native-base";
 import { useForm } from "react-hook-form";
 
 import firebase from "../../services/firebase";
@@ -15,7 +16,6 @@ import {
   ButtonText,
   ModalContainer,
   ModalView,
-  StyledButton,
   StyledIcon,
   StyledInputDate,
   StyledLoading,
@@ -271,9 +271,9 @@ export default function Filter({
             </View>
           </ScrollView>
           <ButtonContainer>
-            <StyledButton onPress={handleSubmit(handleFilter)}>
+            <Button onPress={handleSubmit(handleFilter)}>
               {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
-            </StyledButton>
+            </Button>
           </ButtonContainer>
         </ModalView>
       </ModalContainer>

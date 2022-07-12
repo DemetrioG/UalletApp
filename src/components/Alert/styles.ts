@@ -1,9 +1,10 @@
 import * as React from "react";
 import { Text, View } from "react-native";
+import { Button } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { fonts, metrics } from "../../styles";
-import { StyledButton, DeleteButton } from "../../styles/general";
+import { DeleteButton } from "../../styles/general";
 
 export const StyledLottieView: React.FC<
   AnimatedLottieViewProps & { type?: string }
@@ -27,12 +28,12 @@ export const ButtonContainer = styled(View)`
   justify-content: space-around;
 `;
 
-export const StyledButtonConfirm: typeof StyledButton = styled(StyledButton)`
+export const StyledButtonConfirm = styled(Button)`
   width: 100px;
   height: 35px;
 `;
 
-export const StyledButtonDelete: typeof StyledButton = styled(DeleteButton)`
+export const StyledButtonDelete = styled(DeleteButton)`
   width: 100px;
   height: 35px;
 `;

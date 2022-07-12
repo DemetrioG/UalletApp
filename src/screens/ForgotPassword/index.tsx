@@ -1,5 +1,6 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -19,7 +20,6 @@ import {
   HeaderTitle,
   HeaderTitleContainer,
   LogoHeader,
-  StyledButton,
   StyledKeyboardAvoidingView,
   StyledLoading,
   StyledTextInput,
@@ -103,9 +103,9 @@ export default function ForgotPassword() {
                 errors={errors}
               />
             </FormContainer>
-            <StyledButton onPress={handleSubmit(sendPassword)}>
+            <Button onPress={handleSubmit(sendPassword)}>
               {loading ? <StyledLoading /> : <ButtonText>ENVIAR</ButtonText>}
-            </StyledButton>
+            </Button>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>

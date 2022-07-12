@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -20,7 +21,6 @@ import {
   HeaderTitle,
   HeaderTitleContainer,
   LogoHeader,
-  StyledButton,
   StyledKeyboardAvoidingView,
   StyledLoading,
   StyledTextInputMask,
@@ -171,13 +171,13 @@ export default function Complete() {
                 visibility={profileVisible}
                 setVisibility={setProfileVisible}
               />
-              <StyledButton onPress={handleSubmit(registerData)}>
+              <Button onPress={handleSubmit(registerData)}>
                 {loading ? (
                   <StyledLoading />
                 ) : (
                   <ButtonText>CONFIRMAR</ButtonText>
                 )}
-              </StyledButton>
+              </Button>
             </FormContainer>
           </ContainerCenter>
         </BackgroundContainer>

@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -30,7 +31,6 @@ import {
   ButtonText,
   ContainerCenter,
   FormContainer,
-  StyledButton,
   StyledIcon,
   StyledInputDate,
   StyledLoading,
@@ -281,13 +281,13 @@ export default function FixedEntry() {
               />
             </FormContainer>
             <View>
-              <StyledButton onPress={handleSubmit((e) => registerEntry(e))}>
+              <Button onPress={handleSubmit((e) => registerEntry(e))}>
                 {isLoading ? (
                   <StyledLoading />
                 ) : (
                   <ButtonText>CADASTRAR</ButtonText>
                 )}
-              </StyledButton>
+              </Button>
             </View>
           </View>
           <Calendar

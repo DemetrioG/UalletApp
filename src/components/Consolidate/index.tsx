@@ -334,11 +334,11 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
               </TouchableOpacity>
             </CirclesContainer>
             {page === 1 ? (
-              <StyledButton small onPress={() => setPage(2)}>
+              <StyledButton size={"sm"} onPress={() => setPage(2)}>
                 <ButtonText>SEGUINTE</ButtonText>
               </StyledButton>
             ) : (
-              <StyledButton small onPress={() => handleSubmit()}>
+              <StyledButton size={"sm"} onPress={() => handleSubmit()}>
                 <ButtonText>
                   {isLoading ? <StyledLoading /> : "CONFIRMAR"}
                 </ButtonText>

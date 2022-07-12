@@ -1,12 +1,10 @@
 import * as React from "react";
 import { Text, TextProps, View } from "react-native";
+import { Button } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { colors, fonts, metrics } from "../../styles";
-import {
-  StyledButton as GeneralStyledButton,
-  ButtonText as GeneralButtonText,
-} from "../../styles/general";
+import { ButtonText as GeneralButtonText } from "../../styles/general";
 
 export const HeaderContainer = styled(View)`
   flex-direction: row;
@@ -79,7 +77,7 @@ export const DataContainer = styled(View)`
   padding: 40px 0px 10px 0px;
 `;
 
-export const StyledButton = styled(GeneralStyledButton)`
+export const StyledButton = styled(Button)`
   margin-bottom: 0px;
   margin-left: ${metrics.baseMargin}px;
 `;

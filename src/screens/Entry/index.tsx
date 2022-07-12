@@ -1,5 +1,6 @@
 import * as React from "react";
 import { TouchableOpacity, Animated, Platform, FlatList } from "react-native";
+import { Button } from "native-base";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
@@ -47,8 +48,7 @@ import {
   ItemContainer,
   Label,
   SpaceAroundView,
-  StyledButton,
-  StyledButtonOutline,
+  ButtonOutline,
   StyledIcon,
   StyledSwitch,
   TextHeaderScreen,
@@ -375,12 +375,9 @@ export default function Entry() {
         </InfoMonthText>
       </HeaderContainer>
       <ButtonHeaderView>
-        <StyledButtonOutline
-          small={true}
-          onPress={() => setFilterVisible(true)}
-        >
+        <ButtonOutline size={"sm"} onPress={() => setFilterVisible(true)}>
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
-        </StyledButtonOutline>
+        </ButtonOutline>
         <Filter
           visible={filterVisible}
           setVisible={setFilterVisible}
@@ -388,9 +385,9 @@ export default function Entry() {
           filter={filter}
           setFilter={setFilter}
         />
-        <StyledButton small={true} onPress={() => navigate("NovoLançamento")}>
+        <Button size={"sm"} onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
-        </StyledButton>
+        </Button>
       </ButtonHeaderView>
       {filter.isFiltered && (
         <RemoveFilterContainer>

@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -33,8 +34,7 @@ import {
   ContainerCenter,
   DeleteButton,
   FormContainer,
-  StyledButton,
-  StyledButtonOutline,
+  ButtonOutline,
   StyledIcon,
   StyledInputDate,
   StyledLoading,
@@ -396,23 +396,23 @@ export default function NewEntry({
             </FormContainer>
             {!isEditing && (
               <View>
-                <StyledButton onPress={handleSubmit((e) => registerEntry(e))}>
+                <Button onPress={handleSubmit((e) => registerEntry(e))}>
                   {isLoading ? (
                     <StyledLoading />
                   ) : (
                     <ButtonText>CADASTRAR</ButtonText>
                   )}
-                </StyledButton>
-                <StyledButtonOutline onPress={() => navigate("LançamentoFixo")}>
+                </Button>
+                <ButtonOutline onPress={() => navigate("LançamentoFixo")}>
                   <ButtonOutlineText>
                     CADASTRAR DESPESAS FIXAS
                   </ButtonOutlineText>
-                </StyledButtonOutline>
+                </ButtonOutline>
               </View>
             )}
             {isEditing && (
               <View>
-                <StyledButton
+                <Button
                   onPress={handleSubmit((e) => registerEntry(e, params.id))}
                 >
                   {isLoading ? (
@@ -420,7 +420,7 @@ export default function NewEntry({
                   ) : (
                     <ButtonText>ATUALIZAR</ButtonText>
                   )}
-                </StyledButton>
+                </Button>
                 <DeleteButton onPress={handleDelete}>
                   {isDelete ? (
                     <StyledLoading />

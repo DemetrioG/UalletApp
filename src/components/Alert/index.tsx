@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Modal } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -12,12 +13,7 @@ import {
   StyledLottieView,
   TextAlert,
 } from "./styles";
-import {
-  ButtonText,
-  StyledButton,
-  ModalContainer,
-  ModalView,
-} from "../../styles/general";
+import { ButtonText, ModalContainer, ModalView } from "../../styles/general";
 
 import ERROR from "../../../assets/icons/error.json";
 import SUCCESS from "../../../assets/icons/check.json";
@@ -104,9 +100,9 @@ export default function Alert() {
               />
               <TextAlert>{alert.title}</TextAlert>
               {alert.helperText && <HelperText>{alert.helperText}</HelperText>}
-              <StyledButton onPress={handleAccept}>
+              <Button onPress={handleAccept}>
                 <ButtonText>OK</ButtonText>
-              </StyledButton>
+              </Button>
             </>
           )}
         </ModalView>
