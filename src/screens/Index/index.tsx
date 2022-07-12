@@ -1,4 +1,6 @@
 import * as React from "react";
+import { ImageURISource } from "react-native";
+import { Button, Center, Flex, Spacer } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -6,13 +8,10 @@ import {
   BackgroundContainerCenter,
   ButtonOutlineText,
   ButtonText,
-  FlexContainer,
-  StyledButton,
-  StyledButtonOutline,
+  ButtonOutline,
 } from "../../styles/general";
-import { ImageCarousel, TitleCarousel, StyledCarousel } from "./styles";
+import { ImageCarousel, StyledCarousel, TitleCarousel } from "./styles";
 import { metrics } from "../../styles/index";
-import { ImageURISource } from "react-native";
 
 interface ISlidesMockup {
   key: number;
@@ -48,10 +47,13 @@ export default function Index() {
 
   function renderSlide({ item }: { item: ISlidesMockup }) {
     return (
-      <FlexContainer>
+      <Flex>
         <ImageCarousel source={item.image} />
-        <TitleCarousel>{item.title}</TitleCarousel>
-      </FlexContainer>
+        <Spacer />
+        <Center>
+          <TitleCarousel fontSize={"2xl"}>{item.title}</TitleCarousel>
+        </Center>
+      </Flex>
     );
   }
 
@@ -67,15 +69,12 @@ export default function Index() {
         enableMomentum={false}
         lockScrollWhileSnapping={true}
       />
-      <StyledButton onPress={() => navigate("Register")}>
+      <Button onPress={() => navigate("Register")}>
         <ButtonText>CRIAR CONTA</ButtonText>
-      </StyledButton>
-      <StyledButtonOutline
-        additionalMargin={60}
-        onPress={() => navigate("Login")}
-      >
+      </Button>
+      <ButtonOutline onPress={() => navigate("Login")}>
         <ButtonOutlineText>ENTRAR</ButtonOutlineText>
-      </StyledButtonOutline>
+      </ButtonOutline>
     </BackgroundContainerCenter>
   );
 }
