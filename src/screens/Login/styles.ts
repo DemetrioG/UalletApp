@@ -1,15 +1,14 @@
 import * as React from "react";
 import {
   Text,
-  View,
   TouchableOpacity,
   TouchableOpacityProps,
   Image,
 } from "react-native";
+import { Flex } from "native-base";
 import styled from "styled-components";
-import BottomSheet, { BottomSheetProps } from "@gorhom/bottom-sheet";
-import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { fonts, colors, metrics } from "../../styles";
+
+import { fonts, metrics } from "../../styles";
 
 export const ActionText = styled(Text)`
   font-family: ${fonts.ralewayMedium};
@@ -18,26 +17,9 @@ export const ActionText = styled(Text)`
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
-export const SheetContainer: React.MemoExoticComponent<
-  React.ForwardRefExoticComponent<
-    BottomSheetProps & React.RefAttributes<BottomSheetMethods>
-  >
-> = styled(BottomSheet).attrs(({ theme: { theme } }) => ({
-  handleIndicatorStyle: {
-    width: 30,
-    height: 5,
-    backgroundColor: colors.lightGray,
-  },
-  backgroundStyle: {
-    borderRadius: metrics.largeRadius,
-    backgroundColor: theme.secondary,
-  },
-}))`
-  margin: 0px ${metrics.baseMargin}px;
-  padding: ${metrics.basePadding}px;
-`;
-
-export const SheetView = styled(View)`
+export const SheetView = styled(Flex)`
+  width: 100%;
+  height: 60px;
   margin-top: ${metrics.baseMargin}px;
   flex-direction: row;
   justify-content: space-around;
