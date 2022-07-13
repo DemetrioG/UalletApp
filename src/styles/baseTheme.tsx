@@ -1,6 +1,6 @@
 import * as React from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
-import metrics from "./metrics";
+import { colors, metrics } from ".";
 
 export default function BaseProvider({
   children,
@@ -45,7 +45,7 @@ export default function BaseProvider({
         },
         defaultProps: {
           minW: "56",
-          height: "10",
+          minH: "10",
           shadow: "4",
           colorScheme: "blue",
           marginBottom: metrics.baseMargin,
@@ -55,6 +55,22 @@ export default function BaseProvider({
         defaultProps: {
           fontFamily: "body",
           fontWeight: 500,
+        },
+      },
+      Input: {
+        defaultProps: {
+          _focus: {
+            backgroundColor: "transparent",
+            borderColor: colors.strongBlue,
+          },
+          selectionColor: colors.lightBlue,
+          color: colors.white,
+          borderColor: colors.gray,
+          fontFamily: "body",
+          fontWeight: 700,
+          borderRadius: "md",
+          minH: "10",
+          width: "full",
         },
       },
     },

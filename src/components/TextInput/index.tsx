@@ -1,44 +1,50 @@
 import * as React from "react";
-import { TextInput, TextInputProps } from "react-native";
+import styled from "styled-components";
 import { Control, Controller, FieldValues } from "react-hook-form";
 
-import { AlertContext } from "../../context/Alert/alertContext";
+import {
+  FormControl as NativeFormControl,
+  IInputProps,
+  Input,
+  WarningOutlineIcon,
+} from "native-base";
+import { metrics } from "../../styles";
+
+const FormControl = styled(NativeFormControl)`
+  margin-bottom: ${metrics.baseMargin}px;
+`;
 
 const UTextInput = (
-  props: TextInputProps & {
+  props: IInputProps & {
     errors?: object | undefined;
     helperText?: string | undefined;
-    required?: boolean;
   }
 ) => {
-  const { setAlert } = React.useContext(AlertContext);
+  const [isInvalid, setIsInvalid] = React.useState(false);
 
   React.useEffect(() => {
     if (props.errors && Object.keys(props.errors).length > 0) {
-      if (props.helperText) {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: props.helperText!,
-        }));
-      } else {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Informe todos os campos",
-        }));
-      }
+      setIsInvalid(true);
     }
   }, [props.errors]);
 
   return (
     <>
-      <TextInput {...props} />
+      <FormControl isInvalid={isInvalid}>
+        <Input {...props} />
+        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+          {props.helperText}
+        </FormControl.ErrorMessage>
+      </FormControl>
     </>
   );
 };
 
-export const DefaultTextInput = ({
+const StyledTextInput = styled(UTextInput)`
+  color: ${({ theme: { theme } }) => theme.text};
+`;
+
+const TextInput = ({
   name,
   control,
   ...props
@@ -51,7 +57,7 @@ export const DefaultTextInput = ({
       name={name}
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
-        <UTextInput
+        <StyledTextInput
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}
@@ -61,3 +67,5 @@ export const DefaultTextInput = ({
     />
   );
 };
+
+export default TextInput;
