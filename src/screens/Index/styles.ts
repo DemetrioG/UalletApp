@@ -1,5 +1,5 @@
-import { Text } from "native-base";
 import { Image } from "react-native";
+import { Text } from "native-base";
 import Carousel from "react-native-snap-carousel";
 import styled from "styled-components";
 

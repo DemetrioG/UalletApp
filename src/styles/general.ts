@@ -8,7 +8,6 @@ import {
   Switch,
   SwitchProps,
   TextProps,
-  TouchableOpacity,
   View,
   ViewProps,
 } from "react-native";
@@ -18,7 +17,6 @@ import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
 import React from "react";
-import { DefaultTextInput } from "../components/TextInput";
 import Feather from "react-native-vector-icons/Feather";
 import { IconProps } from "react-native-vector-icons/Icon";
 import Loader from "../components/Loader";
@@ -26,6 +24,7 @@ import { DefaultTextInputMask } from "../components/TextInputMask";
 import Slider, { SliderProps } from "@react-native-community/slider";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
+import { InterfaceTextProps } from "native-base/lib/typescript/components/primitives/Text/types";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -99,7 +98,7 @@ export const ViewTabContent: React.FC<
 `;
 
 export const FormContainer = styled(View)`
-  width: 250px;
+  padding: 0px 50px;
 `;
 
 export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
@@ -152,18 +151,23 @@ export const Logo = styled(Image)`
   height: 58px;
 `;
 
-export const TextHeader = styled(Text)`
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.largest}px;
-  color: ${({ theme: { theme } }) => theme.text};
-  margin-top: ${metrics.baseMargin}px;
-`;
-
-export const TextUalletHeader = styled(Text).attrs(() => ({
+export const TextHeader: React.FC<
+  InterfaceTextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
+> = styled(Text).attrs(() => ({
   fontWeight: 800,
 }))`
   color: ${({ theme: { theme } }) => theme.text};
-  margin-left: ${metrics.baseMargin}px;
+  ${({ withMarginLeft, withMarginTop }) => {
+    if (withMarginLeft) {
+      return `
+      margin-left: ${metrics.baseMargin}px;
+      `;
+    } else if (withMarginTop) {
+      return `
+      margin-top: ${metrics.baseMargin}px;
+      `;
+    }
+  }}
 `;
 
 export const TextHeaderScreen: React.FC<
@@ -182,22 +186,6 @@ export const HeaderTitleContainer = styled(View)`
 `;
 
 export const HeaderTitle = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
-export const StyledTextInput: typeof DefaultTextInput = styled(
-  DefaultTextInput
-).attrs(() => ({
-  placeholderTextColor: colors.lightGray,
-}))`
-  width: 100%;
-  height: 45px;
-  padding: 5px 20px;
-  border-radius: ${metrics.mediumRadius}px;
-  border: 1px solid ${colors.lightGray};
-  font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.regular}px;
-  margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
@@ -236,7 +224,7 @@ export const Card = styled(View)`
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
-export const StyledIcon: React.FC<
+export const Icon: React.FC<
   IconProps & { color?: string; size?: number; colorVariant?: string }
 > = styled(Feather).attrs(
   ({ theme: { theme }, color, size, colorVariant }) => ({
@@ -288,15 +276,6 @@ export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
     },
   })
 )``;
-
-export const PasswordContainer = styled(View)``;
-
-export const PasswordLook = styled(TouchableOpacity)`
-  padding: 14px;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-`;
 
 export const ItemContainer = styled(View)`
   flex-direction: row;
