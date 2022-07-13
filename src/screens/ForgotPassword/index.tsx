@@ -9,6 +9,7 @@ import * as yup from "yup";
 
 import firebase from "../../services/firebase";
 import Alert from "../../components/Alert";
+import TextInput from "../../components/TextInput";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { networkConnection } from "../../utils/network.helper";
@@ -21,8 +22,6 @@ import {
   HeaderTitleContainer,
   LogoHeader,
   StyledKeyboardAvoidingView,
-  StyledLoading,
-  StyledTextInput,
   TextHeader,
 } from "../../styles/general";
 interface IForm {
@@ -35,7 +34,7 @@ const schema = yup
   })
   .required();
 
-export default function ForgotPassword() {
+const ForgotPassword = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
     data: { isNetworkConnected },
@@ -83,7 +82,9 @@ export default function ForgotPassword() {
         <BackgroundContainer>
           <Alert />
           <LogoHeader>
-            <TextHeader>Recuperar senha</TextHeader>
+            <TextHeader withMarginTop fontSize={"2xl"}>
+              Recuperar senha
+            </TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>
@@ -93,7 +94,7 @@ export default function ForgotPassword() {
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>
-              <StyledTextInput
+              <TextInput
                 placeholder="E-mail *"
                 keyboardType="email-address"
                 autoCorrect={false}
@@ -101,14 +102,17 @@ export default function ForgotPassword() {
                 name="email"
                 control={control}
                 errors={errors}
+                helperText="Informe um e-mail válido"
               />
             </FormContainer>
-            <Button onPress={handleSubmit(sendPassword)}>
-              {loading ? <StyledLoading /> : <ButtonText>ENVIAR</ButtonText>}
+            <Button isLoading={loading} onPress={handleSubmit(sendPassword)}>
+              <ButtonText>ENVIAR</ButtonText>
             </Button>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
     </StyledKeyboardAvoidingView>
   );
-}
+};
+
+export default ForgotPassword;
