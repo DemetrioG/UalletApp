@@ -1,5 +1,4 @@
 import * as React from "react";
-import { TouchableOpacity } from "react-native";
 
 import firebase from "../../services/firebase";
 import Menu from "../Menu";
@@ -9,7 +8,7 @@ import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { setStorage } from "../../utils/storage.helper";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
-import { StyledIcon, StyledLoader } from "../../styles/general";
+import { Icon, Skeleton } from "../../styles/general";
 import { metrics } from "../../styles";
 
 const optionsMonth = [
@@ -36,7 +35,6 @@ export default function Header() {
   const { data } = React.useContext(DataContext);
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
-  const [menu, setMenu] = React.useState(false);
   const [pickerMonthVisible, setPickerMonthVisible] = React.useState(false);
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
 
@@ -60,7 +58,7 @@ export default function Header() {
             // Pega o primeiro nome do usuário
             setUser((userState) => ({
               ...userState,
-              name: v.data()?.name.split(" ", 1),
+              name: v.data()?.name.split(" ", 1).toString(),
             }));
           })
           .catch(() => {
@@ -96,40 +94,25 @@ export default function Header() {
           visibility={pickerYearVisible}
           setVisibility={setPickerYearVisible}
         />
-        {loader.visible ? (
-          <StyledLoader
-            width={160}
-            height={15}
-            radius={metrics.smallestRadius}
-          />
-        ) : (
+        <Skeleton isLoaded={!loader.visible} h={4} width={150} secondary>
           <HeaderText>Bem vindo (a), {user.name}!</HeaderText>
-        )}
+        </Skeleton>
         <HeaderIconView>
-          <TouchableOpacity onPress={handleHide}>
-            <StyledIcon name={!user.hideNumbers ? "eye" : "eye-off"} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <StyledIcon
-              name="calendar"
-              onPress={() => setPickerMonthVisible(true)}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <StyledIcon name="bell" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setMenu(!menu)}>
-            <StyledIcon name="more-horizontal" />
-          </TouchableOpacity>
+          <Icon
+            name={!user.hideNumbers ? "eye" : "eye-off"}
+            onPress={handleHide}
+          />
+          <Icon name="calendar" onPress={() => setPickerMonthVisible(true)} />
+          <Icon name="bell" />
+          <Menu />
         </HeaderIconView>
       </HeaderView>
       {!data.isNetworkConnected && (
         <NetworkCard>
           <HeaderText>Sem conexão com a internet</HeaderText>
-          <StyledIcon name="wifi-off" colorVariant="red" />
+          <Icon name="wifi-off" colorVariant="red" />
         </NetworkCard>
       )}
-      <Menu visibility={menu} />
     </>
   );
 }

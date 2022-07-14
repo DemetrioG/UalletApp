@@ -1,7 +1,8 @@
-import * as React from "react";
-import { Text, TextProps, View } from "react-native";
+import { Text } from "native-base";
+import { View } from "react-native";
 import styled from "styled-components";
-import { fonts, metrics } from "../../styles";
+
+import { metrics } from "../../styles";
 import { Card } from "../../styles/general";
 
 export const HeaderView = styled(View)`
@@ -13,17 +14,15 @@ export const HeaderView = styled(View)`
   z-index: 5;
 `;
 
-export const HeaderText: React.FC<TextProps> = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
+export const HeaderText = styled(Text)`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const HeaderIconView = styled(View)`
-  width: 110px;
   flex-direction: row;
   justify-content: space-between;
-  min-width: 140px;
+  align-items: center;
+  min-width: 130px;
 `;
 
 export const NetworkCard = styled(Card)`
