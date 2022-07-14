@@ -1,39 +1,19 @@
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from "react-native";
+import { Text } from "native-base";
+import { TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import styled from "styled-components";
-import { colors, fonts, metrics } from "../../styles";
-
-export const IconContainer = styled(TouchableOpacity)`
-  margin-left: ${metrics.baseMargin}px;
-`;
-
-export const MenuContainer = styled(View)`
-  padding: ${metrics.basePadding}px;
-  position: absolute;
-  right: 10px;
-  top: 60px;
-  background-color: ${colors.infoBlack};
-  border-radius: ${metrics.baseRadius}px;
-  width: 200px;
-  z-index: 5;
-`;
+import { colors } from "../../styles";
+import { Avatar as NativeAvatar } from "native-base";
 
 export const ItemContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: ${metrics.basePadding}px 10px;
+  padding: 10px;
   border-bottom-width: 1px;
-  border-color: ${colors.gray};
+  border-color: ${colors.transpDark};
 `;
 
 export const ItemText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
   color: ${colors.white};
 `;
 
@@ -47,7 +27,15 @@ export const ItemContent: React.FC<TouchableOpacityProps> = styled(
 `;
 
 export const LogoutText = styled(Text)`
-  font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.regular}px;
   color: ${colors.lightRed};
 `;
+
+export const Avatar = styled(NativeAvatar).attrs(() => ({
+  size: "sm",
+  fontFamily: "body",
+}))``;
+
+export const AvatarText = styled(Text).attrs(() => ({
+  fontSize: "sm",
+  fontWeight: 700,
+}))``;

@@ -1,23 +1,29 @@
 import * as React from "react";
+import { Menu as NativeMenu, Pressable, useContrastText } from "native-base";
 
 import { AlertContext } from "../../context/Alert/alertContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
 import { removeAllStorage } from "../../utils/storage.helper";
-import { colors } from "../../styles";
-import { StyledIcon } from "../../styles/general";
+import { colors, metrics } from "../../styles";
 import {
+  Avatar,
+  AvatarText,
   ItemContainer,
   ItemContent,
   ItemText,
   LogoutText,
-  MenuContainer,
 } from "./styles";
+import { Icon } from "../../styles/general";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 
-export default function Menu({ visibility }: { visibility: boolean }) {
+const RANDOM_COLOR = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
+
+export default function Menu() {
   const { date, setDate } = React.useContext(DateContext);
+  const { loader } = React.useContext(LoaderContext);
   const { setAlert } = React.useContext(AlertContext);
-  const { setUser } = React.useContext(UserContext);
+  const { user, setUser } = React.useContext(UserContext);
 
   function changeModality() {
     return setDate((dateState) => ({
@@ -44,28 +50,49 @@ export default function Menu({ visibility }: { visibility: boolean }) {
 
   return (
     <>
-      {visibility && (
-        <MenuContainer>
+      <NativeMenu
+        boxSize={"full"}
+        rounded={"lg"}
+        minWidth={180}
+        top={metrics.baseMargin}
+        right={metrics.basePadding}
+        trigger={(props) => {
+          return (
+            <Pressable {...props}>
+              <Avatar backgroundColor={RANDOM_COLOR}>
+                <AvatarText color={useContrastText(RANDOM_COLOR)}>
+                  {!loader.visible ? "-" : user.name[0]}
+                </AvatarText>
+              </Avatar>
+            </Pressable>
+          );
+        }}
+      >
+        <NativeMenu.Item isDisabled>
           <ItemContainer>
             <ItemContent onPress={changeModality}>
               <ItemText>{date.modality}</ItemText>
-              <StyledIcon name="refresh-cw" size={15} color={colors.white} />
+              <Icon name="refresh-cw" size={15} color={colors.white} />
             </ItemContent>
           </ItemContainer>
+        </NativeMenu.Item>
+        <NativeMenu.Item isDisabled>
           <ItemContainer>
             <ItemContent>
               <ItemText>Configurações</ItemText>
-              <StyledIcon name="settings" size={15} color={colors.white} />
+              <Icon name="settings" size={15} color={colors.white} />
             </ItemContent>
           </ItemContainer>
+        </NativeMenu.Item>
+        <NativeMenu.Item isDisabled>
           <ItemContainer>
             <ItemContent onPress={handleLogout}>
-              <LogoutText>LOGOUT</LogoutText>
-              <StyledIcon name="power" size={15} color={colors.lightRed} />
+              <LogoutText>Logout</LogoutText>
+              <Icon name="power" size={15} color={colors.lightRed} />
             </ItemContent>
           </ItemContainer>
-        </MenuContainer>
-      )}
+        </NativeMenu.Item>
+      </NativeMenu>
     </>
   );
 }
