@@ -1,5 +1,4 @@
 import * as React from "react";
-import { View } from "react-native";
 
 import firebase from "../../services/firebase";
 import EmptyChart from "../EmptyChart";
@@ -8,12 +7,12 @@ import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { UserContext } from "../../context/User/userContext";
 import { dateMonthNumber, getFinalDateMonth } from "../../utils/date.helper";
-import { StyledLoader } from "../../styles/general";
 import {
   ChartContainer,
   ChartView,
   LabelText,
   LabelView,
+  PercentualContainer,
   PercentualIcon,
   PercentualText,
   PercentualValue,
@@ -160,7 +159,7 @@ export default function LineChart() {
 
   return (
     <>
-      {!loader.visible && (
+      {loader.visible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart
@@ -178,34 +177,28 @@ export default function LineChart() {
                 </LabelView>
               </ChartView>
               <PercentualView>
-                <View>
+                <PercentualContainer>
                   <PercentualText>
                     Receita mensal{"\u00A0"}
                     {"\u00A0"}
                     {"\u00A0"}
-                    <PercentualValue type="income" percentual={income}>
-                      {income}%
-                    </PercentualValue>
-                    <PercentualIcon
-                      percentual={income}
-                      type="income"
-                      size={15}
-                    />
                   </PercentualText>
-                </View>
-                <View>
-                  <PercentualText>
-                    Despesa mensal{"\u00A0"}
-                    <PercentualValue type="expense" percentual={expense}>
-                      {expense}%
-                    </PercentualValue>
-                    <PercentualIcon
-                      percentual={expense}
-                      type="expense"
-                      size={15}
-                    />
-                  </PercentualText>
-                </View>
+                  <PercentualValue type="income" percentual={income}>
+                    {income}%
+                  </PercentualValue>
+                  <PercentualIcon percentual={income} type="income" size={15} />
+                </PercentualContainer>
+                <PercentualContainer>
+                  <PercentualText>Despesa mensal{"\u00A0"}</PercentualText>
+                  <PercentualValue type="expense" percentual={expense}>
+                    {expense}%
+                  </PercentualValue>
+                  <PercentualIcon
+                    percentual={expense}
+                    type="expense"
+                    size={15}
+                  />
+                </PercentualContainer>
               </PercentualView>
             </>
           )}
