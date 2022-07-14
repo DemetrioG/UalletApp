@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FlatList, Modal, TouchableOpacity } from "react-native";
+import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
@@ -8,17 +8,15 @@ import { AlertContext } from "../../context/Alert/alertContext";
 import { numberToReal } from "../../utils/number.helper";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import {
+  Icon,
   Label,
   ModalContainer,
   ModalView,
-  StyledIcon,
-  StyledLoading,
   TextHeaderScreen,
 } from "../../styles/general";
 import {
   Circle,
   CirclesContainer,
-  Content,
   Footer,
   HeaderContainer,
   HelperContainer,
@@ -225,12 +223,12 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
             <>
               <TouchableOpacity onPress={() => handleAction(id, "cancel")}>
                 <ButtonActionContainer type="cancel">
-                  <StyledIcon name="x" size={20} color={colors.white} />
+                  <Icon name="x" size={20} color={colors.white} />
                 </ButtonActionContainer>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleAction(id, "check")}>
                 <ButtonActionContainer type="check">
-                  <StyledIcon name="check" size={20} color={colors.white} />
+                  <Icon name="check" size={20} color={colors.white} />
                 </ButtonActionContainer>
               </TouchableOpacity>
             </>
@@ -272,12 +270,10 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
             <TextHeaderScreen noMarginBottom>
               Consolidação de Lançamentos
             </TextHeaderScreen>
-            <TouchableOpacity onPress={() => setVisible(false)}>
-              <StyledIcon name="x" />
-            </TouchableOpacity>
+            <Icon name="x" onPress={() => setVisible(false)} />
           </HeaderContainer>
           {page === 1 && (
-            <Content>
+            <View>
               <InfoContainer>
                 <InfoText>
                   Verificamos alguns lançamentos que você Projetou para o dia de
@@ -290,10 +286,10 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
               <HelperContainer>
                 <HelperText>Prossiga para realizar a consolidação!</HelperText>
               </HelperContainer>
-            </Content>
+            </View>
           )}
           {page === 2 && (
-            <Content>
+            <View>
               <DataContainer>
                 <LabelContainer>
                   <DescriptionSize>
@@ -307,9 +303,6 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
                   </ActionSize>
                 </LabelContainer>
                 <FlatList
-                  style={{
-                    height: 185,
-                  }}
                   showsVerticalScrollIndicator={false}
                   data={entryList}
                   keyExtractor={(item) => item.id.toString()}
@@ -322,7 +315,7 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
                   você Projetou!
                 </InfoText>
               </InfoContainer>
-            </Content>
+            </View>
           )}
           <Footer>
             <CirclesContainer>
@@ -334,14 +327,15 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
               </TouchableOpacity>
             </CirclesContainer>
             {page === 1 ? (
-              <StyledButton size={"sm"} onPress={() => setPage(2)}>
+              <StyledButton onPress={() => setPage(2)}>
                 <ButtonText>SEGUINTE</ButtonText>
               </StyledButton>
             ) : (
-              <StyledButton size={"sm"} onPress={() => handleSubmit()}>
-                <ButtonText>
-                  {isLoading ? <StyledLoading /> : "CONFIRMAR"}
-                </ButtonText>
+              <StyledButton
+                isLoading={isLoading}
+                onPress={() => handleSubmit()}
+              >
+                <ButtonText>CONFIRMAR</ButtonText>
               </StyledButton>
             )}
           </Footer>

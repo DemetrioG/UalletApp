@@ -1,10 +1,13 @@
 import * as React from "react";
-import { Text, TextProps, View } from "react-native";
-import { Button } from "native-base";
+import { TextProps, View } from "react-native";
+import { Center, Text } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { colors, fonts, metrics } from "../../styles";
-import { ButtonText as GeneralButtonText } from "../../styles/general";
+import {
+  ButtonSmall,
+  ButtonText as GeneralButtonText,
+} from "../../styles/general";
 
 export const HeaderContainer = styled(View)`
   flex-direction: row;
@@ -13,23 +16,17 @@ export const HeaderContainer = styled(View)`
   justify-content: space-between;
 `;
 
-export const Content = styled(View)``;
-
 export const InfoContainer = styled(View)`
-  padding: 40px 0px 10px 0px;
+  padding: 30px 0px 10px 0px;
 `;
 
 export const InfoText = styled(Text)`
   text-align: center;
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const IconContainer = styled(View)`
+export const IconContainer = styled(Center)`
   height: 170px;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const StyledLottieView: React.FC<AnimatedLottieViewProps> = styled(
@@ -43,19 +40,18 @@ export const HelperContainer = styled(View)`
   padding: 10px;
 `;
 
-export const HelperText = styled(Text)`
+export const HelperText = styled(Text).attrs(() => ({
+  fontWeight: 700,
+  fontSize: "md",
+}))`
   text-align: center;
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.large}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const Footer = styled(View)`
+export const Footer = styled(Center)`
   flex-direction: row;
   padding: 10px;
-  padding-left: 100px;
-  align-items: center;
-  justify-content: center;
+  padding-left: 90px;
 `;
 
 export const CirclesContainer = styled(View)`
@@ -74,10 +70,10 @@ export const Circle: React.FC<{ isActive?: boolean }> = styled(View)`
 `;
 
 export const DataContainer = styled(View)`
-  padding: 40px 0px 10px 0px;
+  padding: 30px 0px 10px 0px;
 `;
 
-export const StyledButton = styled(Button)`
+export const StyledButton = styled(ButtonSmall)`
   margin-bottom: 0px;
   margin-left: ${metrics.baseMargin}px;
 `;
@@ -88,7 +84,7 @@ export const LabelContainer = styled(View)`
 `;
 
 export const ButtonText = styled(GeneralButtonText)`
-  font-size: 10px;
+  font-size: 12px;
 `;
 
 export const ItemView = styled(View)`
