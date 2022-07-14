@@ -7,7 +7,7 @@ import { UserContext } from "../context/User/userContext";
 import { DataContext } from "../context/Data/dataContext";
 import { getStorage, removeAllStorage } from "../utils/storage.helper";
 
-export default function routes() {
+const Routes = () => {
   const { setData } = React.useContext(DataContext);
   const { user, setUser } = React.useContext(UserContext);
 
@@ -38,4 +38,6 @@ export default function routes() {
   }, []);
 
   return user.signed ? <AppRoutes /> : <AuthRoutes />;
-}
+};
+
+export default Routes;

@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import StackHome from "../screens/StackHome";
 import StackEntry from "../screens/StackEntry";
-import { SafeAreaContainer, StyledIcon } from "../styles/general";
+import { Icon, SafeAreaContainer } from "../styles/general";
 import {
   ActiveMenuIcon,
   HomeIconContainer,
@@ -25,7 +25,7 @@ function getWidth() {
   return width / 5;
 }
 
-export default function AppRoutes() {
+const AppRoutes = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
 
   const opacity = React.useRef(new Animated.Value(0)).current;
@@ -140,7 +140,7 @@ export default function AppRoutes() {
             component={StackHome}
             options={{
               tabBarIcon: ({ focused }) => {
-                return <StyledIcon name="pie-chart" />;
+                return <Icon name="pie-chart" />;
               },
             }}
             listeners={{
@@ -152,7 +152,7 @@ export default function AppRoutes() {
             component={StackEntry}
             options={{
               tabBarIcon: () => {
-                return <StyledIcon name="edit-3" />;
+                return <Icon name="edit-3" />;
               },
             }}
           />
@@ -162,7 +162,7 @@ export default function AppRoutes() {
             options={{
               tabBarIcon: () => (
                 <HomeIconContainer>
-                  <StyledIcon name="home" color={colors.white} />
+                  <Icon name="home" color={colors.white} />
                 </HomeIconContainer>
               ),
             }}
@@ -172,7 +172,7 @@ export default function AppRoutes() {
             component={StackHome}
             options={{
               tabBarIcon: () => {
-                return <StyledIcon name="refresh-cw" />;
+                return <Icon name="refresh-cw" />;
               },
             }}
             listeners={{
@@ -184,7 +184,7 @@ export default function AppRoutes() {
             component={StackHome}
             options={{
               tabBarIcon: () => {
-                return <StyledIcon name="list" />;
+                return <Icon name="list" />;
               },
             }}
             listeners={{
@@ -204,4 +204,6 @@ export default function AppRoutes() {
       </SafeAreaContainer>
     </NavigationContainer>
   );
-}
+};
+
+export default AppRoutes;

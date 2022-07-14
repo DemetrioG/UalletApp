@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
 import { colors, metrics } from "../styles";
+import { Box } from "native-base";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,9 @@ export const StyledTabNavigation: React.FC<{
   },
 }))``;
 
-export const HomeIconContainer = styled(View)`
+export const HomeIconContainer = styled(Box).attrs(() => ({
+  shadow: "4",
+}))`
   width: ${IPHONE_BOTTOM_TAB ? 54 : 50}px;
   height: ${IPHONE_BOTTOM_TAB ? 54 : 50}px;
   background-color: ${colors.strongBlue};
