@@ -3,8 +3,8 @@ import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { StyledIcon } from "../../styles/general";
-import { ContainerCenter, EmphasisText, HelperText } from "./styles";
+import { DefaultText, HelperText } from "./styles";
+import { ContainerCenter, Icon } from "../../styles/general";
 
 interface IEmptyChart {
   emphasisText: string;
@@ -21,8 +21,8 @@ export default function EmpyChart({
 
   return (
     <ContainerCenter>
-      <StyledIcon name={iconName} />
-      <EmphasisText>{emphasisText}</EmphasisText>
+      <Icon name={iconName} />
+      <DefaultText>{emphasisText}</DefaultText>
       <TouchableOpacity onPress={() => navigate("LançamentosTab")}>
         <HelperText>{helperText}</HelperText>
       </TouchableOpacity>
