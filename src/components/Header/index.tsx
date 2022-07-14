@@ -9,7 +9,6 @@ import { DataContext } from "../../context/Data/dataContext";
 import { setStorage } from "../../utils/storage.helper";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
 import { Icon, Skeleton } from "../../styles/general";
-import { metrics } from "../../styles";
 
 const optionsMonth = [
   "Janeiro",

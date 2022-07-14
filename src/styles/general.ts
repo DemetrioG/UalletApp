@@ -11,7 +11,14 @@ import {
   View,
   ViewProps,
 } from "react-native";
-import { Button, Center, Flex, Text } from "native-base";
+import {
+  Button,
+  Center,
+  Flex,
+  Text,
+  Skeleton as NativeSkeleton,
+  ISkeletonProps,
+} from "native-base";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
@@ -19,7 +26,6 @@ import fonts from "./fonts";
 import React from "react";
 import Feather from "react-native-vector-icons/Feather";
 import { IconProps } from "react-native-vector-icons/Icon";
-import Loader from "../components/Loader";
 import { DefaultTextInputMask } from "../components/TextInputMask";
 import Slider, { SliderProps } from "@react-native-community/slider";
 import { SafeAreaView } from "react-navigation";
@@ -52,22 +58,18 @@ export const ContainerCenter = styled(Center)`
   flex: 1;
 `;
 
-export const ModalContainer = styled(View)`
+export const ModalContainer = styled(Center)`
   flex: 1;
-  align-items: center;
-  justify-content: center;
   background-color: ${({ theme: { theme } }) => theme.transparency};
 `;
 
 export const ModalView: React.FC<
   ViewProps & { height?: number | null; center?: boolean; large?: boolean }
 > = styled(View)`
-  padding: ${metrics.topBottomPadding}px
-    ${({ large }) => (!large ? `${metrics.basePadding}px` : null)};
+  width: 80%;
+  padding: ${metrics.topBottomPadding}px;
   margin: 180px 0px;
   align-items: ${({ center }) => (center ? "center" : "null")};
-  width: ${({ large }) => (large ? "350" : "294")}px;
-  height: ${({ height }) => (height ? height + "px" : "auto")};
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
@@ -112,6 +114,18 @@ export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
 export const ButtonOutline = styled(Button).attrs(({ theme: { theme } }) => ({
   variant: "outline",
   borderColor: theme.blue,
+}))``;
+
+export const ButtonSmall = styled(Button).attrs(() => ({
+  minW: "24",
+  minH: 0,
+  size: "sm",
+}))``;
+
+export const ButtonOutlineSmall = styled(ButtonOutline).attrs(() => ({
+  minW: 0,
+  minH: 0,
+  size: "sm",
 }))``;
 
 export const ButtonText = styled(Text).attrs(() => ({
@@ -172,9 +186,10 @@ export const TextHeader: React.FC<
 
 export const TextHeaderScreen: React.FC<
   TextProps & { noMarginBottom?: boolean }
-> = styled(Text)`
-  font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.large}px;
+> = styled(Text).attrs(() => ({
+  fontWeight: 700,
+  fontSize: "md",
+}))`
   color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${({ noMarginBottom }) =>
     noMarginBottom ? 0 : metrics.baseMargin}px;
@@ -236,14 +251,10 @@ export const Icon: React.FC<
   text-align-vertical: bottom;
 `;
 
-export const StyledLoader: React.FC<{
-  width?: number;
-  height: number;
-  radius?: number;
-}> = styled(Loader).attrs(({ theme: { theme }, radius }) => ({
-  fg: theme.primary,
-  bg: theme.secondary,
-  radius: radius ? radius : metrics.mediumRadius,
+export const Skeleton: React.FC<
+  ISkeletonProps & { secondary?: boolean }
+> = styled(NativeSkeleton).attrs(({ secondary, theme: { theme } }) => ({
+  startColor: secondary ? theme.secondary : theme.primary,
 }))``;
 
 export const ButtonHeaderView = styled(View)`
@@ -260,8 +271,9 @@ export const SpaceAroundView = styled(View)`
   padding-bottom: 10px;
 `;
 
-export const Label = styled(Text)`
-  font-family: ${fonts.ralewayBold};
+export const Label = styled(Text).attrs(() => ({
+  fontWeight: 700,
+}))`
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
   margin-right: 10px;
@@ -281,18 +293,14 @@ export const ItemContainer = styled(View)`
   flex-direction: row;
 `;
 
-export const DescriptionContainer = styled(View)`
+export const DescriptionContainer = styled(Center)`
   width: 50%;
-  align-items: center;
-  justify-content: center;
   border-right-width: 1px;
   border-right-color: ${colors.lightPrimary};
   padding: ${metrics.basePadding / 2}px;
 `;
 
 export const DescriptionText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.regular}px;
   color: ${colors.gray};
 `;
 
@@ -306,9 +314,9 @@ export const ValueContainer = styled(View)`
 
 export const ValueText: React.FC<
   TextProps & { type: "Receita" | "Despesa" }
-> = styled(Text)`
-  font-family: ${fonts.montserratMedium};
-  font-size: ${fonts.regular}px;
+> = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+}))`
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;

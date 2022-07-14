@@ -73,6 +73,16 @@ export default function BaseProvider({
           width: "full",
         },
       },
+      Skeleton: {
+        defaultProps: {
+          rounded: "md",
+        },
+      },
+      Menu: {
+        defaultProps: {
+          backgroundColor: colors.infoBlack,
+        },
+      },
     },
   });
   return <NativeBaseProvider theme={theme}>{children}</NativeBaseProvider>;
