@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Image, Text, TextProps, View, ViewProps } from "react-native";
+import { ITextAreaProps, ITextProps, Text } from "native-base";
+import { Image, TextProps, View, ViewProps } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 import {
@@ -17,9 +18,9 @@ export const CardHeaderView: React.FC<
   margin-bottom: ${({ balance }) => (balance ? metrics.baseMargin : 20)}px;
 `;
 
-export const CardHeaderText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.large}px;
+export const CardHeaderText: React.FC<ITextProps> = styled(Text).attrs(() => ({
+  fontSize: "md",
+}))`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
@@ -33,11 +34,13 @@ export const LogoCard = styled(Image)`
   height: 25px;
 `;
 
-export const Balance: React.FC<TextProps & { negative?: boolean }> = styled(
-  Text
-)`
-  font-family: ${fonts.montserratBold};
-  font-size: ${fonts.larger}px;
+export const Balance: React.FC<
+  ITextAreaProps & { negative?: boolean }
+> = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+  fontWeight: 700,
+  fontSize: fonts.larger,
+}))`
   color: ${({ theme: { theme }, negative }) =>
     !negative ? theme.blue : theme.red};
 `;
@@ -86,9 +89,9 @@ export const Section = styled(View)`
   padding: ${metrics.basePadding}px;
 `;
 
-export const SectionText = styled(Text)`
-  font-family: ${fonts.montserratMedium};
-  font-size: 20px;
+export const SectionText = styled(Text).attrs(() => ({
+  fontSize: "lg",
+}))`
   color: ${({ theme: { theme } }) => theme.tertiary};
 `;
 
