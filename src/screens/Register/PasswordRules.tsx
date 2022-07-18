@@ -1,4 +1,5 @@
-import { Flex, Progress, Text, VStack } from "native-base";
+import { Flex, VStack } from "native-base";
+import { ProgressBar, Text } from "./style";
 import * as React from "react";
 
 const dataRules = [
@@ -19,38 +20,58 @@ const dataRules = [
     At least one special character, (?=.*?[#?!@$%^&*-])
     Minimum eight in length .{8,} (with the anchors)
  */
-const PasswordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+const PasswordRegex = new RegExp(
+    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+);
 
-function checkPassword(passwordText: string) : number {
-    const minimumEntryRequirement =  PasswordRegex.test(passwordText);
-    console.log(minimumEntryRequirement)
-    if (!minimumEntryRequirement) return 30;
+function checkPassword(passwordText: string): number {
+    const hasMinimumEntryRequirement = PasswordRegex.test(passwordText);
+    if (!hasMinimumEntryRequirement) return 30;
     if (passwordText.length < 10) return 70;
     return 100;
 }
 
-function PasswordRules({ content }: { content: string }) {
+const PasswordStrengthLabel: { [key: number]: string } = {
+    30: "Fraca",
+    70: "Média",
+    100: "Forte",
+};
+
+function PasswordRules({
+    content = "",
+    ...props
+}: { content: string } & React.ComponentProps<typeof VStack>) {
     const [passwordStrength, setPasswordStrenght] = React.useState(0);
+    const hasLength = content.length;
 
     React.useEffect(() => {
         if (!content) return setPasswordStrenght(0);
-        console.log(content);
         const strengthPasswordPercentage = checkPassword(content);
-        console.log(strengthPasswordPercentage);
         return setPasswordStrenght(strengthPasswordPercentage);
     }, [content]);
 
     return (
-        <VStack space={1}>
-          <Progress value={passwordStrength} size="lg" />
-            <Text fontSize="lg">Sua senha deve conter pelo menos:</Text>
+        <VStack space={1} {...props}>
+            <Text fontSize={16} fontWeight="bold">
+                {(passwordStrength &&
+                    PasswordStrengthLabel[passwordStrength]) ||
+                    ""}
+            </Text>
+            {!!hasLength && (
+                <ProgressBar
+                    value={passwordStrength}
+                    strength={passwordStrength}
+                    size="md"
+                />
+            )}
+            <Text fontSize="md">Sua senha deve conter pelo menos:</Text>
             {dataRules.map((rule, index) => (
                 <Flex key={index} direction="row" alignItems="center">
                     <Text style={{ fontSize: 5 }}>
                         {"\u2B24 "}
                         {"  "}
                     </Text>
-                    <Text fontSize="md">{rule}</Text>
+                    <Text>{rule}</Text>
                 </Flex>
             ))}
         </VStack>

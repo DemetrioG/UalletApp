@@ -37,7 +37,7 @@ const schema = yup
   .object({
     name: yup.string().required(),
     email: yup.string().required(),
-    password: yup.string().required(),
+    password: yup.string().required().matches(new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")),
     confirm: yup.string().required(),
   })
   .required();
@@ -48,6 +48,11 @@ const Register = () => {
     data: { isNetworkConnected },
   } = React.useContext(DataContext);
   const [loading, setLoading] = React.useState(false);
+  const [isPasswordFieldFocused, setPasswordFieldFocused] = React.useState(false);
+  const passwordRef = React.useRef();
+
+  const handleFocus = () => setPasswordFieldFocused(true);
+  const handleBlur = () => setPasswordFieldFocused(false);
 
   const {
     control,
@@ -59,6 +64,13 @@ const Register = () => {
   });
 
   const passwordText = watch("password");
+
+  React.useEffect(() => {
+    const passwordError = errors?.password?.message;
+    const isPasswordWeak = passwordError?.includes("password must match the following");
+    console.log(passwordRef);
+    return handleFocus();
+  }, [errors]);
 
   async function registerUser({ name, email, password, confirm }: IForm) {
     if (networkConnection(isNetworkConnected!, setAlert)) {
@@ -164,6 +176,8 @@ const Register = () => {
                 name="password"
                 control={control}
                 errors={errors.password}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
               />
               <TextInputPassword
                 placeholder="Confirme sua senha *"
@@ -175,7 +189,7 @@ const Register = () => {
                 helperText="Informe todos os campos"
               />
             </FormContainer>
-            <PasswordRules content={passwordText}/>
+            {isPasswordFieldFocused && <PasswordRules mb={5} content={passwordText}/>}
             <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
               <ButtonText>CRIAR CONTA</ButtonText>
             </Button>
