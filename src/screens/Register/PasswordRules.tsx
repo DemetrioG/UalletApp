@@ -10,19 +10,20 @@ const dataRules = [
 ];
 
 /**
- * https://www.ocpsoft.org/tutorials/regular-expressions/password-regular-expression/
-  ^                                            Match the beginning of the string
-  (?=.*[0-9])                                  Require that at least one digit appear anywhere in the string
-  (?=.*[a-z])                                  Require that at least one lowercase letter appear anywhere in the string
-  (?=.*[A-Z])                                  Require that at least one uppercase letter appear anywhere in the string
-  (?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\])        Require that at least one special character appear anywhere in the string
-  .{8,32}                                      The password must be at least 8 characters long, but no more than 32
-  $                                            Match the end of the string.
+ * https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+    This regex will enforce these rules:
+
+    At least one upper case English letter, (?=.*?[A-Z])
+    At least one lower case English letter, (?=.*?[a-z])
+    At least one digit, (?=.*?[0-9])
+    At least one special character, (?=.*?[#?!@$%^&*-])
+    Minimum eight in length .{8,} (with the anchors)
  */
-const Regex = new RegExp("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$");
+const PasswordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
 
 function checkPassword(passwordText: string) : number {
-    const minimumEntryRequirement =  Regex.test(passwordText);
+    const minimumEntryRequirement =  PasswordRegex.test(passwordText);
+    console.log(minimumEntryRequirement)
     if (!minimumEntryRequirement) return 30;
     if (passwordText.length < 10) return 70;
     return 100;
@@ -33,7 +34,9 @@ function PasswordRules({ content }: { content: string }) {
 
     React.useEffect(() => {
         if (!content) return setPasswordStrenght(0);
+        console.log(content);
         const strengthPasswordPercentage = checkPassword(content);
+        console.log(strengthPasswordPercentage);
         return setPasswordStrenght(strengthPasswordPercentage);
     }, [content]);
 
