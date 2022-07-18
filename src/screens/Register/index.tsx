@@ -24,6 +24,7 @@ import {
   StyledKeyboardAvoidingView,
   TextHeader,
 } from "../../styles/general";
+import PasswordRules from "./PasswordRules";
 
 interface IForm {
   name: string;
@@ -52,9 +53,12 @@ const Register = () => {
     control,
     handleSubmit,
     formState: { errors },
+    watch
   } = useForm<IForm>({
     resolver: yupResolver(schema),
   });
+
+  const passwordText = watch("password");
 
   async function registerUser({ name, email, password, confirm }: IForm) {
     if (networkConnection(isNetworkConnected!, setAlert)) {
@@ -171,6 +175,7 @@ const Register = () => {
                 helperText="Informe todos os campos"
               />
             </FormContainer>
+            <PasswordRules content={passwordText}/>
             <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
               <ButtonText>CRIAR CONTA</ButtonText>
             </Button>
