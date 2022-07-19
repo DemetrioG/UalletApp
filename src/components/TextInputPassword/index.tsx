@@ -11,16 +11,17 @@ const Icon = styled(DefaultIcon)`
   color: ${colors.gray};
 `;
 
-const TextInputPassword = (
+const TextInputPassword = React.forwardRef((
   props: React.ComponentProps<typeof TextInput> & {
     name: string;
     control: Control<FieldValues | any>;
-  }
+  }, ref
 ) => {
   const [visible, setVisible] = React.useState(false);
   return (
     <TextInput
       {...props}
+      ref={ref}
       textContentType="oneTimeCode"
       secureTextEntry={!visible}
       InputRightElement={
@@ -32,6 +33,6 @@ const TextInputPassword = (
       }
     />
   );
-};
+});
 
 export default TextInputPassword;

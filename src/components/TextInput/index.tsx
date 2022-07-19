@@ -3,69 +3,70 @@ import styled from "styled-components";
 import { Control, Controller, FieldValues } from "react-hook-form";
 
 import {
-  FormControl as NativeFormControl,
-  IInputProps,
-  Input,
-  WarningOutlineIcon,
+    FormControl as NativeFormControl,
+    IInputProps,
+    Input,
+    WarningOutlineIcon,
 } from "native-base";
 import { metrics } from "../../styles";
 
 const FormControl = styled(NativeFormControl)`
-  margin-bottom: ${metrics.baseMargin}px;
+    margin-bottom: ${metrics.baseMargin}px;
 `;
 
-const UTextInput = (
-  props: IInputProps & {
-    errors?: object | undefined;
-    helperText?: string | undefined;
-  }
-) => {
-  const [isInvalid, setIsInvalid] = React.useState(false);
+const UTextInput = React.forwardRef(
+    (
+        props: IInputProps & {
+            errors?: object | undefined;
+            helperText?: string | undefined;
+        },
+        ref
+    ) => {
+        const [isInvalid, setIsInvalid] = React.useState(false);
 
-  React.useEffect(() => {
-    if (props.errors && Object.keys(props.errors).length > 0) {
-      setIsInvalid(true);
+        React.useEffect(() => {
+            if (props.errors && Object.keys(props.errors).length > 0) {
+                setIsInvalid(true);
+            }
+        }, [props.errors]);
+
+        return (
+            <FormControl isInvalid={isInvalid}>
+                <Input {...props} ref={ref as any} />
+                <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                >
+                    {props.helperText}
+                </FormControl.ErrorMessage>
+            </FormControl>
+        );
     }
-  }, [props.errors]);
-
-  return (
-    <>
-      <FormControl isInvalid={isInvalid}>
-        <Input {...props} />
-        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-          {props.helperText}
-        </FormControl.ErrorMessage>
-      </FormControl>
-    </>
-  );
-};
+);
 
 const StyledTextInput = styled(UTextInput)`
-  color: ${({ theme: { theme } }) => theme.text};
+    color: ${({ theme: { theme } }) => theme.text};
 `;
 
-const TextInput = ({
-  name,
-  control,
-  ...props
+const TextInput = React.forwardRef(({
+    name,
+    control,
+    ...props
 }: React.ComponentProps<typeof UTextInput> & {
-  name: string;
-  control: Control<FieldValues | any>;
-}) => {
-  return (
+    name: string;
+    control: Control<FieldValues | any>;
+}, ref) => (
     <Controller
-      name={name}
-      control={control}
-      render={({ field: { onChange, onBlur, value } }) => (
-        <StyledTextInput
-          onChangeText={onChange}
-          onBlur={onBlur}
-          value={value}
-          {...props}
-        />
-      )}
+        name={name}
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+            <StyledTextInput
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                ref={ref}
+                {...props}
+            />
+        )}
     />
-  );
-};
-
+));
 export default TextInput;

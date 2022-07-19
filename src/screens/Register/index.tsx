@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { TouchableWithoutFeedback, Keyboard, View } from "react-native";
 import { Button } from "native-base";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -58,7 +58,7 @@ const Register = () => {
     control,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
   } = useForm<IForm>({
     resolver: yupResolver(schema),
   });
@@ -67,10 +67,10 @@ const Register = () => {
 
   React.useEffect(() => {
     const passwordError = errors?.password?.message;
-    const isPasswordWeak = passwordError?.includes("password must match the following");
-    console.log(passwordRef);
-    return handleFocus();
-  }, [errors]);
+    const isPasswordWeak = passwordError?.includes("must match");
+    if(!isPasswordWeak) return;
+    (passwordRef.current as any)?.focus();
+  }, [errors.password]);
 
   async function registerUser({ name, email, password, confirm }: IForm) {
     if (networkConnection(isNetworkConnected!, setAlert)) {
@@ -176,6 +176,7 @@ const Register = () => {
                 name="password"
                 control={control}
                 errors={errors.password}
+                ref={passwordRef}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
               />
