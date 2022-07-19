@@ -1,6 +1,7 @@
 import { Flex, VStack } from "native-base";
 import { ProgressBar, Text } from "./style";
 import * as React from "react";
+import { fonts } from "../../styles";
 
 const dataRules = [
     "Uma letra maiúscula",
@@ -52,7 +53,7 @@ function PasswordRules({
 
     return (
         <VStack space={1} {...props}>
-            <Text fontSize={16} fontWeight="bold">
+            <Text fontSize={fonts.regular} fontWeight="bold">
                 {(passwordStrength &&
                     PasswordStrengthLabel[passwordStrength]) ||
                     ""}

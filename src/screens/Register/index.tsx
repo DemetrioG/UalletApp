@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TouchableWithoutFeedback, Keyboard, View } from "react-native";
+import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button } from "native-base";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -48,11 +48,6 @@ const Register = () => {
     data: { isNetworkConnected },
   } = React.useContext(DataContext);
   const [loading, setLoading] = React.useState(false);
-  const [isPasswordFieldFocused, setPasswordFieldFocused] = React.useState(false);
-  const passwordRef = React.useRef();
-
-  const handleFocus = () => setPasswordFieldFocused(true);
-  const handleBlur = () => setPasswordFieldFocused(false);
 
   const {
     control,
@@ -64,13 +59,6 @@ const Register = () => {
   });
 
   const passwordText = watch("password");
-
-  React.useEffect(() => {
-    const passwordError = errors?.password?.message;
-    const isPasswordWeak = passwordError?.includes("must match");
-    if(!isPasswordWeak) return;
-    (passwordRef.current as any)?.focus();
-  }, [errors.password]);
 
   async function registerUser({ name, email, password, confirm }: IForm) {
     if (networkConnection(isNetworkConnected!, setAlert)) {
@@ -138,7 +126,6 @@ const Register = () => {
   }
 
   return (
-    <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
           <Alert />
@@ -176,9 +163,6 @@ const Register = () => {
                 name="password"
                 control={control}
                 errors={errors.password}
-                ref={passwordRef}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
               />
               <TextInputPassword
                 placeholder="Confirme sua senha *"
@@ -190,14 +174,13 @@ const Register = () => {
                 helperText="Informe todos os campos"
               />
             </FormContainer>
-            {isPasswordFieldFocused && <PasswordRules mb={5} content={passwordText}/>}
+            <PasswordRules mb={5} content={passwordText}/>
             <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
               <ButtonText>CRIAR CONTA</ButtonText>
             </Button>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
-    </StyledKeyboardAvoidingView>
   );
 };
 
