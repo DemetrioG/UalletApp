@@ -1,6 +1,5 @@
 import * as React from "react";
-import { TouchableOpacity, Animated, Platform, FlatList } from "react-native";
-import { Button } from "native-base";
+import { FlatList } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
@@ -18,14 +17,9 @@ import {
 } from "../../utils/date.helper";
 import { numberToReal } from "../../utils/number.helper";
 import { sortObjectByKey } from "../../utils/array.helper";
-import { colors, metrics } from "../../styles";
 import {
   MoreContainer,
   LoadingText,
-  InfoContainer,
-  TriangleOfToolTip,
-  InfoText,
-  RemoveFilterContainer,
   RemoveFilterText,
   RemoveFilterButton,
   InfoMonthText,
@@ -35,7 +29,6 @@ import {
   TotalLabelText,
   TotalText,
   TotalItemContainer,
-  AutoEntryContainer,
   TotalValueContainer,
 } from "./styles";
 import {
@@ -48,13 +41,13 @@ import {
   ItemContainer,
   Label,
   SpaceAroundView,
-  ButtonOutline,
-  StyledIcon,
-  StyledSwitch,
   TextHeaderScreen,
   ValueContainer,
   ValueText,
   ViewTabContent,
+  Icon,
+  ButtonOutlineSmall,
+  ButtonSmall,
 } from "../../styles/general";
 
 export interface IEntryList {
@@ -100,8 +93,6 @@ export default function Entry() {
   const { data, setData } = React.useContext(DataContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
-  const [SWITCH, setSWITCH] = React.useState<boolean>(false);
-  const [info, setInfo] = React.useState<boolean>(false);
   const [entryList, setEntryList] = React.useState<
     Array<IEntryList | firebase.firestore.DocumentData>
   >([]);
@@ -110,7 +101,6 @@ export default function Entry() {
   const [filter, setFilter] = React.useState(defaultFilter);
   const [filterVisible, setFilterVisible] = React.useState(false);
 
-  const opacity = React.useRef(new Animated.Value(0)).current;
   const isFocused = useIsFocused();
 
   function handleRemoveFilter() {
@@ -142,30 +132,14 @@ export default function Entry() {
           </ValueText>
         </ValueContainer>
         <MoreContainer>
-          <TouchableOpacity onPress={() => navigate("NovoLançamento", item)}>
-            <StyledIcon name="more-horizontal" size={15} />
-          </TouchableOpacity>
+          <Icon
+            name="more-horizontal"
+            size={16}
+            onPress={() => navigate("NovoLançamento", item)}
+          />
         </MoreContainer>
       </ItemContainer>
     );
-  }
-
-  function infoFade() {
-    if (!info) {
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-      setInfo(true);
-    } else {
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-      setInfo(false);
-    }
   }
 
   React.useEffect(() => {
@@ -375,9 +349,9 @@ export default function Entry() {
         </InfoMonthText>
       </HeaderContainer>
       <ButtonHeaderView>
-        <ButtonOutline size={"sm"} onPress={() => setFilterVisible(true)}>
+        <ButtonOutlineSmall onPress={() => setFilterVisible(true)}>
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
-        </ButtonOutline>
+        </ButtonOutlineSmall>
         <Filter
           visible={filterVisible}
           setVisible={setFilterVisible}
@@ -385,21 +359,20 @@ export default function Entry() {
           filter={filter}
           setFilter={setFilter}
         />
-        <Button size={"sm"} onPress={() => navigate("NovoLançamento")}>
+        <ButtonSmall onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
-        </Button>
+        </ButtonSmall>
       </ButtonHeaderView>
       {filter.isFiltered && (
-        <RemoveFilterContainer>
-          <RemoveFilterButton onPress={handleRemoveFilter}>
-            <RemoveFilterText>Remover filtros</RemoveFilterText>
-            <StyledIcon name="x" size={20} colorVariant="red" />
-          </RemoveFilterButton>
-        </RemoveFilterContainer>
+        <RemoveFilterButton onPress={handleRemoveFilter}>
+          <RemoveFilterText>Remover filtros</RemoveFilterText>
+          <Icon name="x" size={20} colorVariant="red" />
+        </RemoveFilterButton>
       )}
       <LastEntryText>Últimos lançamentos</LastEntryText>
-      {emptyData && <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>}
-      {!emptyData && (
+      {emptyData ? (
+        <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
+      ) : (
         <SpaceAroundView>
           <Label>DESCRIÇÃO</Label>
           <Label>VALOR</Label>
@@ -444,32 +417,6 @@ export default function Entry() {
           </BalanceText>
         </TotalValueContainer>
       </TotalItemContainer>
-      <AutoEntryContainer>
-        <TextHeaderScreen
-          style={{ marginTop: Platform.OS === "ios" ? 13 : 10 }}
-        >
-          Lançamentos automáticos
-        </TextHeaderScreen>
-        <StyledSwitch
-          value={SWITCH}
-          onChange={() => setSWITCH(!SWITCH)}
-          style={
-            Platform.OS === "ios" && {
-              transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
-            }
-          }
-        />
-        <StyledIcon
-          name="info"
-          color={colors.gray}
-          style={{ marginLeft: metrics.baseMargin }}
-          onPress={infoFade}
-        />
-        <InfoContainer style={{ opacity }}>
-          <TriangleOfToolTip />
-          <InfoText>Integre seu app com suas contas bancárias</InfoText>
-        </InfoContainer>
-      </AutoEntryContainer>
     </ViewTabContent>
   );
 }
