@@ -159,7 +159,7 @@ export default function LineChart() {
 
   return (
     <>
-      {loader.visible && (
+      {!loader.visible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart

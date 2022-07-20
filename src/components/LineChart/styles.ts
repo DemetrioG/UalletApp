@@ -1,4 +1,5 @@
-import { TextProps, View } from "react-native";
+import * as React from "react";
+import { TextProps, View, ViewProps } from "react-native";
 import { ChartProps, LineChart } from "react-native-svg-charts";
 import { IconProps } from "react-native-vector-icons/Icon";
 import Feather from "react-native-vector-icons/Feather";
@@ -17,7 +18,7 @@ export const ChartView = styled(View)`
   width: 45%;
 `;
 
-export const LabelView = styled(View)`
+export const LabelView: React.FC<ViewProps> = styled(View)`
   margin-top: 5px;
   flex-direction: row;
   justify-content: space-between;

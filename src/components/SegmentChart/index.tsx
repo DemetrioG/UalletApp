@@ -18,7 +18,6 @@ import {
   SegmentLabelText,
   ChartContainer,
 } from "./styles";
-import { StyledLoader } from "../../styles/general";
 
 interface ISlices {
   slices?: [
