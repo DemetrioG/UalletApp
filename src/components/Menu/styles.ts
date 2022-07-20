@@ -33,6 +33,7 @@ export const LogoutText = styled(Text)`
 export const Avatar = styled(NativeAvatar).attrs(() => ({
   size: "sm",
   fontFamily: "body",
+  shadow: "2",
 }))``;
 
 export const AvatarText = styled(Text).attrs(() => ({

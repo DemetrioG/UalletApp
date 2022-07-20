@@ -17,7 +17,7 @@ import {
 import { Icon } from "../../styles/general";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 
-const RANDOM_COLOR = "#" + (((1 << 24) * Math.random()) | 0).toString(16);
+const RANDOM_COLOR = "#" + Math.floor(Math.random() * 16777215).toString(16);
 
 export default function Menu() {
   const { date, setDate } = React.useContext(DateContext);
@@ -61,7 +61,7 @@ export default function Menu() {
             <Pressable {...props}>
               <Avatar backgroundColor={RANDOM_COLOR}>
                 <AvatarText color={useContrastText(RANDOM_COLOR)}>
-                  {!loader.visible ? "-" : user.name[0]}
+                  {loader.visible ? "-" : user.name[0]}
                 </AvatarText>
               </Avatar>
             </Pressable>
