@@ -4,11 +4,11 @@ import * as React from "react";
 import { fonts } from "../../styles";
 
 const dataRules = [
-    "Uma letra maiúscula",
-    "Uma letra minúscula",
-    "Um caracter especial",
-    "Um número",
-    "Oito caracteres",
+  "Uma letra maiúscula",
+  "Uma letra minúscula",
+  "Um caracter especial",
+  "Um número",
+  "Oito caracteres",
 ];
 
 /**
@@ -22,61 +22,63 @@ const dataRules = [
     Minimum eight in length .{8,} (with the anchors)
  */
 const PasswordRegex = new RegExp(
-    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+  "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
 );
 
 function checkPassword(passwordText: string): number {
-    const hasMinimumEntryRequirement = PasswordRegex.test(passwordText);
-    if (!hasMinimumEntryRequirement) return 30;
-    if (passwordText.length < 10) return 70;
-    return 100;
+  const hasMinimumEntryRequirement = PasswordRegex.test(passwordText);
+  if (!hasMinimumEntryRequirement) return 30;
+  if (passwordText.length < 10) return 70;
+  return 100;
 }
 
 const PasswordStrengthLabel: { [key: number]: string } = {
-    30: "Fraca",
-    70: "Média",
-    100: "Forte",
+  30: "Fraca",
+  70: "Média",
+  100: "Forte",
 };
 
 function PasswordRules({
-    content = "",
-    ...props
+  content = "",
+  ...props
 }: { content: string } & React.ComponentProps<typeof VStack>) {
-    const [passwordStrength, setPasswordStrenght] = React.useState(0);
-    const hasLength = content.length;
+  const [passwordStrength, setPasswordStrenght] = React.useState(0);
+  const hasLength = content.length;
 
-    React.useEffect(() => {
-        if (!content) return setPasswordStrenght(0);
-        const strengthPasswordPercentage = checkPassword(content);
-        return setPasswordStrenght(strengthPasswordPercentage);
-    }, [content]);
+  React.useEffect(() => {
+    if (!content) return setPasswordStrenght(0);
+    const strengthPasswordPercentage = checkPassword(content);
+    return setPasswordStrenght(strengthPasswordPercentage);
+  }, [content]);
 
-    return (
-        <VStack space={1} {...props}>
-            <Text fontSize={fonts.regular} fontWeight="bold">
-                {(passwordStrength &&
-                    PasswordStrengthLabel[passwordStrength]) ||
-                    ""}
-            </Text>
-            {!!hasLength && (
-                <ProgressBar
-                    value={passwordStrength}
-                    strength={passwordStrength}
-                    size="md"
-                />
-            )}
-            <Text fontSize="md">Sua senha deve conter pelo menos:</Text>
-            {dataRules.map((rule, index) => (
-                <Flex key={index} direction="row" alignItems="center">
-                    <Text style={{ fontSize: 5 }}>
-                        {"\u2B24 "}
-                        {"  "}
-                    </Text>
-                    <Text>{rule}</Text>
-                </Flex>
-            ))}
-        </VStack>
-    );
+  return (
+    <VStack space={1} {...props}>
+      {!!hasLength && (
+        <>
+          <Text fontSize={fonts.regular} fontWeight="bold">
+            {passwordStrength && PasswordStrengthLabel[passwordStrength]}
+          </Text>
+          <ProgressBar
+            value={passwordStrength}
+            strength={passwordStrength}
+            size="md"
+          />
+        </>
+      )}
+      <Text fontSize="sm" fontWeight={700}>
+        Sua senha deve conter pelo menos
+      </Text>
+      {dataRules.map((rule, index) => (
+        <Flex key={index} direction="row" alignItems="center">
+          <Text style={{ fontSize: 5 }}>
+            {"\u2B24 "}
+            {"  "}
+          </Text>
+          <Text>{rule}</Text>
+        </Flex>
+      ))}
+    </VStack>
+  );
 }
 
 export default PasswordRules;
