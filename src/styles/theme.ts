@@ -10,10 +10,10 @@ export const LIGHT = {
   text: "#252333",
   blue: "#266DD3",
   red: "#FF2F45",
-  green: "#536F34",
+  green: "#70AE6E",
   transparency: "rgba(227, 222, 222, 0.95)",
   statusBar: "dark-content",
-  yellow: "#FFFD82",
+  yellow: "#FFB100",
   colorPieChart: ["#252333", "#8F47AD", "#AA6EC4", "#FF2F45", "#FF4C5F"],
 };
 
