@@ -28,6 +28,7 @@
         "foregroundImage": "./assets/images/src/adaptive-icon.png",
         "backgroundColor": "#266DD3"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.uallet.uallet",
       "versionCode": 1
     },

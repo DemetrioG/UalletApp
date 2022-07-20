@@ -148,7 +148,7 @@ export const DeleteButton = styled(Button)`
 export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
   () => ({
     behavior: "padding",
-    keyboardVerticalOffset: Platform.OS === "ios" ? -80 : -280,
+    keyboardVerticalOffset: Platform.OS === "ios" ? -80 : 30,
   })
 )`
   flex: 1;
