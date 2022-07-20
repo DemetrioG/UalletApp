@@ -1,6 +1,6 @@
-import { Center, Pressable, Text } from "native-base";
 import * as React from "react";
 import { TextProps, View } from "react-native";
+import { Center, Pressable, Text } from "native-base";
 import styled from "styled-components";
 import { metrics } from "../../styles";
 

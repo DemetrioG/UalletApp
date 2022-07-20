@@ -7,7 +7,7 @@ import {
 } from "react-native";
 
 import { colors } from "../../styles";
-import { StyledIcon, ModalContainer, ModalView } from "../../styles/general";
+import { Icon, ModalContainer, ModalView } from "../../styles/general";
 import {
   ItemPicker,
   ItemText,
@@ -46,7 +46,7 @@ export default function Picker({
     return (
       <ItemPicker key={index} onPress={() => onPressItem(item)}>
         <ItemText>{item}</ItemText>
-        <StyledIcon name="chevron-right" size={20} />
+        <Icon name="chevron-right" size={20} />
       </ItemPicker>
     );
   });
@@ -57,7 +57,7 @@ export default function Picker({
         <PickerText value={value} type={type}>
           {value}
         </PickerText>
-        <StyledIcon name="chevron-down" size={20} color={colors.lightGray} />
+        <Icon name="chevron-down" size={20} color={colors.lightGray} />
       </SpaceItems>
       <Modal
         transparent={true}
