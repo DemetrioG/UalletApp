@@ -9,6 +9,7 @@ import {
   WarningOutlineIcon,
 } from "native-base";
 import { metrics } from "../../styles";
+import { TextInputMask } from "react-native-masked-text";
 
 const FormControl = styled(NativeFormControl)`
   margin-bottom: ${metrics.baseMargin}px;
@@ -16,6 +17,7 @@ const FormControl = styled(NativeFormControl)`
 
 const UTextInput = (
   props: IInputProps & {
+    datetime?: boolean;
     errors?: object | undefined;
     helperText?: string | undefined;
   }
@@ -31,7 +33,13 @@ const UTextInput = (
   return (
     <>
       <FormControl isInvalid={isInvalid}>
-        <Input {...props} />
+        <>
+          {props.datetime ? (
+            <TextInputMask {...props} customTextInput={Input} type="datetime" />
+          ) : (
+            <Input {...props} />
+          )}
+        </>
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
           {props.helperText}
         </FormControl.ErrorMessage>
@@ -45,10 +53,12 @@ const StyledTextInput = styled(UTextInput)`
 `;
 
 const TextInput = ({
+  datetime,
   name,
   control,
   ...props
 }: React.ComponentProps<typeof UTextInput> & {
+  datetime?: boolean;
   name: string;
   control: Control<FieldValues | any>;
 }) => {
@@ -58,6 +68,7 @@ const TextInput = ({
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
         <StyledTextInput
+          datetime={datetime}
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}
