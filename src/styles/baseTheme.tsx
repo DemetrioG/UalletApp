@@ -39,7 +39,6 @@ export default function BaseProvider({
     },
     components: {
       Button: {
-        // Can simply pass default props to change default behaviour of components.
         baseStyle: {
           rounded: "md",
         },

@@ -18,6 +18,7 @@ import {
   Text,
   Skeleton as NativeSkeleton,
   ISkeletonProps,
+  IButtonProps,
 } from "native-base";
 import styled from "styled-components";
 import colors from "./colors";
@@ -26,7 +27,6 @@ import fonts from "./fonts";
 import React from "react";
 import Feather from "react-native-vector-icons/Feather";
 import { IconProps } from "react-native-vector-icons/Icon";
-import { DefaultTextInputMask } from "../components/TextInputMask";
 import Slider, { SliderProps } from "@react-native-community/slider";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
@@ -42,8 +42,7 @@ export const FlexContainer = styled(View)`
 
 export const BackgroundContainerCenter = styled(Center)`
   flex: 1;
-  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px 0px
-    ${metrics.basePadding}px;
+  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
@@ -111,20 +110,28 @@ export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
   })
 )``;
 
-export const ButtonOutline = styled(Button).attrs(({ theme: { theme } }) => ({
-  variant: "outline",
-  borderColor: theme.blue,
-}))``;
+export const ButtonOutline: React.FC<IButtonProps> = styled(Button).attrs(
+  ({ theme: { theme } }) => ({
+    variant: "outline",
+    borderColor: theme.blue,
+  })
+)``;
 
 export const ButtonSmall = styled(Button).attrs(() => ({
-  minW: "24",
+  minW: "20",
   minH: 0,
+  padding: 0,
+  h: 8,
   size: "sm",
 }))``;
 
-export const ButtonOutlineSmall = styled(ButtonOutline).attrs(() => ({
-  minW: 0,
+export const ButtonOutlineSmall: typeof ButtonOutline = styled(
+  ButtonOutline
+).attrs(() => ({
+  minW: "20",
   minH: 0,
+  padding: 0,
+  h: 8,
   size: "sm",
 }))``;
 
@@ -204,28 +211,33 @@ export const HeaderTitle = styled(Text)`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
-  DefaultTextInputMask
-).attrs(() => ({
-  placeholderTextColor: colors.lightGray,
-}))`
-  width: 100%;
-  height: 45px;
-  padding: 5px 20px;
-  border-radius: ${metrics.mediumRadius}px;
-  border: 1px solid ${colors.lightGray};
-  font-family: ${fonts.montserratBold};
-  font-size: ${fonts.regular}px;
-  margin-bottom: ${metrics.baseMargin}px;
-  color: ${({ theme: { theme } }) => theme.text};
-`;
+// export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
+//   DefaultTextInputMask
+// ).attrs(() => ({
+//   placeholderTextColor: colors.lightGray,
+// }))``;
+// export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
+//   DefaultTextInputMask
+// ).attrs(() => ({
+//   placeholderTextColor: colors.lightGray,
+// }))`
+//   width: 100%;
+//   height: 45px;
+//   padding: 5px 20px;
+//   border-radius: ${metrics.mediumRadius}px;
+//   border: 1px solid ${colors.lightGray};
+//   font-family: ${fonts.montserratBold};
+//   font-size: ${fonts.regular}px;
+//   margin-bottom: ${metrics.baseMargin}px;
+//   color: ${({ theme: { theme } }) => theme.text};
+// `;
 
-export const StyledInputDate = styled(StyledTextInputMask)`
-  width: 150px;
-  height: 30px;
-  border-radius: ${metrics.smallRadius}px;
-  margin-bottom: 0px;
-`;
+// export const StyledInputDate = styled(StyledTextInputMask)`
+//   width: 150px;
+//   height: 30px;
+//   border-radius: ${metrics.smallRadius}px;
+//   margin-bottom: 0px;
+// `;
 
 export const StyledLoading = styled(ActivityIndicator).attrs(() => ({
   size: 20,
@@ -258,7 +270,6 @@ export const Skeleton: React.FC<
 }))``;
 
 export const ButtonHeaderView = styled(View)`
-  margin-bottom: ${metrics.baseMargin}px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -301,6 +312,7 @@ export const DescriptionContainer = styled(Center)`
 `;
 
 export const DescriptionText = styled(Text)`
+  font-size: ${fonts.regular}px;
   color: ${colors.gray};
 `;
 
@@ -317,6 +329,7 @@ export const ValueText: React.FC<
 > = styled(Text).attrs(() => ({
   fontFamily: "mono",
 }))`
+  font-size: ${fonts.regular}px;
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;
