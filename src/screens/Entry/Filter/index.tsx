@@ -1,37 +1,40 @@
 import * as React from "react";
-import { Modal, ScrollView, TouchableOpacity, View } from "react-native";
-import { Button } from "native-base";
+import { ScrollView, View, Modal } from "react-native";
+import { Button, Select } from "native-base";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
-import firebase from "../../services/firebase";
-import Picker from "../Picker";
-import Alert from "../Alert";
-import { IActiveFilter } from "../../screens/Entry";
-import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
-import { DateContext } from "../../context/Date/dateContext";
-import { dateValidation } from "../../utils/date.helper";
-import { numberToReal } from "../../utils/number.helper";
+import firebase from "../../../services/firebase";
+import Picker from "../../../components/Picker";
+import Alert from "../../../components/Alert";
+import TextInput from "../../../components/TextInput";
+import { IActiveFilter } from "..";
+import { UserContext } from "../../../context/User/userContext";
+import { AlertContext } from "../../../context/Alert/alertContext";
+import { DateContext } from "../../../context/Date/dateContext";
+import { dateValidation } from "../../../utils/date.helper";
+import { numberToReal } from "../../../utils/number.helper";
 import {
   ButtonText,
+  Icon,
   ModalContainer,
   ModalView,
-  StyledIcon,
-  StyledInputDate,
   StyledLoading,
   StyledSlider,
-  StyledTextInput,
-} from "../../styles/general";
+} from "../../../styles/general";
 import {
   ButtonContainer,
-  DateContainer,
-  HeaderContainer,
   InputContainer,
+  InputDateContainer,
   LabelContainer,
   LabelText,
   LabelValue,
+  SpaceContainer,
   Title,
 } from "./styles";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface IFilter {
   visible: boolean;
@@ -58,16 +61,27 @@ const optionsSegment = [
   "Curto e médio prazo",
 ];
 
-export default function Filter({
-  visible,
-  setVisible,
-  type,
-  filter,
-  setFilter,
-}: IFilter) {
+const schema = yup
+  .object({
+    initialdate: yup.string().required().min(10),
+    finaldate: yup.string().required().min(10),
+  })
+  .required();
+
+export default function Filter(
+  {
+    // visible,
+    // setVisible,
+    // type,
+    // filter,
+    // setFilter,
+  }
+) {
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
   const { date } = React.useContext(DateContext);
   const { alert, setAlert } = React.useContext(AlertContext);
+  const [visible, setVisible] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
   const [typeEntryVisible, setTypeEntryVisible] = React.useState(false);
@@ -80,21 +94,20 @@ export default function Filter({
   const [maxValue, setMaxValue] = React.useState(0);
   const [isSliding, setIsSliding] = React.useState(false);
 
-  const { control, handleSubmit, setValue } = useForm<IForm>();
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<IForm>({
+    resolver: yupResolver(schema),
+  });
+
+  function handleClose() {
+    navigate("Lançamentos");
+  }
 
   async function handleFilter({ description, initialdate, finaldate }: IForm) {
-    if (
-      !initialdate ||
-      !finaldate ||
-      initialdate.length !== 10 ||
-      finaldate!.length !== 10
-    ) {
-      return setAlert(() => ({
-        type: "error",
-        title: "Informe o período dos filtros",
-        visibility: true,
-      }));
-    }
     if (!dateValidation(initialdate) || !dateValidation(finaldate)) {
       return setAlert(() => ({
         type: "error",
@@ -109,6 +122,7 @@ export default function Filter({
         visibility: true,
       }));
     }
+    return;
 
     setLoading(true);
     setFilter(() => ({
@@ -150,61 +164,71 @@ export default function Filter({
     }
   }
 
-  React.useEffect(() => {
-    if (visible) {
-      setValue("initialdate", filter.initialDate!);
-      setValue("finaldate", filter.finalDate!);
-      setValue("description", filter.description!);
-      setInitialLabel(filter.initialValue);
-      setFinalLabel(filter.finalValue);
-      setIsSliding(false);
-      getMaxValue();
-    }
-  }, [visible]);
+  // React.useEffect(() => {
+  //   if (visible) {
+  //     setValue("initialdate", filter.initialDate!);
+  //     setValue("finaldate", filter.finalDate!);
+  //     setValue("description", filter.description!);
+  //     setInitialLabel(filter.initialValue);
+  //     setFinalLabel(filter.finalValue);
+  //     setIsSliding(false);
+  //     getMaxValue();
+  //   }
+  // }, [visible]);
 
-  React.useEffect(() => {
-    if (!filter.isFiltered) {
-      setTypeEntry(null);
-      setModality(null);
-      setSegment(null);
-    }
-  }, [filter]);
+  // React.useEffect(() => {
+  //   if (!filter.isFiltered) {
+  //     setTypeEntry(null);
+  //     setModality(null);
+  //     setSegment(null);
+  //   }
+  // }, [filter]);
 
   return (
-    <Modal transparent={true} animationType="fade" visible={visible}>
+    <Modal visible={true} onRequestClose={handleClose} transparent>
       <Alert />
       <ModalContainer>
-        <ModalView large>
-          <HeaderContainer>
+        <ModalView>
+          <SpaceContainer>
             <Title>Filtros</Title>
-            <TouchableOpacity onPress={() => setVisible(false)}>
-              <StyledIcon name="x" />
-            </TouchableOpacity>
-          </HeaderContainer>
+            <Icon name="x" onPress={handleClose} />
+          </SpaceContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
             <InputContainer>
-              <DateContainer>
-                <StyledInputDate
-                  name="initialdate"
-                  placeholder="Data Inicial *"
-                  type="datetime"
-                  control={control}
-                />
-                <StyledInputDate
-                  name="finaldate"
-                  placeholder="Data Final *"
-                  type="datetime"
-                  control={control}
-                />
-              </DateContainer>
+              <SpaceContainer>
+                <InputDateContainer>
+                  <TextInput
+                    name="initialdate"
+                    placeholder="Data Inicial *"
+                    control={control}
+                    errors={errors.initialdate}
+                    maxLength={10}
+                    datetime
+                  />
+                </InputDateContainer>
+                <InputDateContainer>
+                  <TextInput
+                    name="finaldate"
+                    placeholder="Data Final *"
+                    control={control}
+                    errors={errors.finaldate}
+                    maxLength={10}
+                    datetime
+                  />
+                </InputDateContainer>
+              </SpaceContainer>
             </InputContainer>
             <InputContainer>
-              <StyledTextInput
+              <TextInput
                 name="description"
                 placeholder="Descrição"
                 control={control}
               />
             </InputContainer>
+            <Select placeholder="Modalidade *">
+              <Select.Item label="Projetado" value="projetado" />
+              <Select.Item label="Real" value="real" />
+            </Select>
             <Picker
               options={optionsModality}
               selectedValue={setModality}
@@ -231,7 +255,7 @@ export default function Filter({
                 setVisibility={setSegmentVisible}
               />
             )}
-            <View>
+            {/* <View>
               <LabelContainer>
                 <LabelText>Valor inicial</LabelText>
                 <LabelValue>{numberToReal(initialLabel)}</LabelValue>
@@ -268,7 +292,7 @@ export default function Filter({
                 tapToSeek
                 step={1}
               />
-            </View>
+            </View> */}
           </ScrollView>
           <ButtonContainer>
             <Button onPress={handleSubmit(handleFilter)}>
