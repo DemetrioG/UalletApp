@@ -14,8 +14,6 @@ const Stack = createNativeStackNavigator();
 export default function StackEntry() {
   return (
     <BackgroundContainer>
-      <Alert />
-      <Header />
       <ViewTab>
         <Stack.Navigator>
           <Stack.Screen

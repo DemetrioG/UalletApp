@@ -8,10 +8,13 @@ import StackEntry from "../screens/StackEntry";
 import { Icon, SafeAreaContainer } from "../styles/general";
 import {
   ActiveMenuIcon,
+  BackgroundContainer,
   HomeIconContainer,
   StyledTabNavigation,
 } from "./styles";
 import { colors } from "../styles";
+import Alert from "../components/Alert";
+import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,25 +48,31 @@ const AppRoutes = () => {
   }, []);
 
   // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
-  Keyboard.addListener("keyboardDidShow", () => {
-    setKeyboardVisible(true);
-
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 50,
-      useNativeDriver: true,
-    }).start();
-  });
-
-  Keyboard.addListener("keyboardDidHide", () => {
-    setKeyboardVisible(false);
-
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1800,
-      useNativeDriver: true,
-    }).start();
-  });
+    React.useEffect(() => {
+      Keyboard.addListener("keyboardDidShow", () => {
+        setKeyboardVisible(true);
+    
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 50,
+          useNativeDriver: true,
+        }).start();
+      });
+    
+      Keyboard.addListener("keyboardDidHide", () => {
+        setKeyboardVisible(false);
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 1800,
+          useNativeDriver: true,
+        }).start();
+      });
+      
+      () => {
+        Keyboard.removeAllListeners("keyboardDidShow");
+        Keyboard.removeAllListeners("keyboardDidHide");
+      }
+    }, []);
 
   function homeActive() {
     Animated.spring(tabOffsetValue, {
@@ -131,6 +140,10 @@ const AppRoutes = () => {
   return (
     <NavigationContainer>
       <SafeAreaContainer>
+        <BackgroundContainer>
+          <Alert />
+          <Header />
+        </BackgroundContainer>
         <StyledTabNavigation
           initialRouteName="HomeTab"
           screenListeners={({ route: { name } }) => showActive(name)}

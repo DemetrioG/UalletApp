@@ -62,3 +62,10 @@ export const ActiveMenuIcon: React.FC<{
   left: 30px;
   border-radius: 50px;
 `;
+
+export const BackgroundContainer = styled(View)`
+  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px 0px
+    ${metrics.basePadding}px;
+  margin-top: ${metrics.baseMargin}px;
+  background-color: ${({ theme: { theme } }) => theme.primary};
+`;
