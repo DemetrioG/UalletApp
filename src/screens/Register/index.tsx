@@ -170,10 +170,10 @@ const Register = () => {
                 errors={errors.confirm}
                 helperText="Informe todos os campos"
               />
+              <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
+                <ButtonText>CRIAR CONTA</ButtonText>
+              </Button>
             </FormContainer>
-            <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
-              <ButtonText>CRIAR CONTA</ButtonText>
-            </Button>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>

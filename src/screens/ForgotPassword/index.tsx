@@ -104,10 +104,10 @@ const ForgotPassword = () => {
                 errors={errors}
                 helperText="Informe um e-mail válido"
               />
+              <Button isLoading={loading} onPress={handleSubmit(sendPassword)}>
+                <ButtonText>ENVIAR</ButtonText>
+              </Button>
             </FormContainer>
-            <Button isLoading={loading} onPress={handleSubmit(sendPassword)}>
-              <ButtonText>ENVIAR</ButtonText>
-            </Button>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
