@@ -5,7 +5,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
 
 import firebase from "../../services/firebase";
-import Filter from "../../components/Filter";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { DataContext } from "../../context/Data/dataContext";
@@ -349,16 +348,9 @@ export default function Entry() {
         </InfoMonthText>
       </HeaderContainer>
       <ButtonHeaderView>
-        <ButtonOutlineSmall onPress={() => setFilterVisible(true)}>
+        <ButtonOutlineSmall onPress={() => navigate("Filtros")}>
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
         </ButtonOutlineSmall>
-        <Filter
-          visible={filterVisible}
-          setVisible={setFilterVisible}
-          type="entry"
-          filter={filter}
-          setFilter={setFilter}
-        />
         <ButtonSmall onPress={() => navigate("NovoLançamento")}>
           <ButtonText>NOVO</ButtonText>
         </ButtonSmall>
