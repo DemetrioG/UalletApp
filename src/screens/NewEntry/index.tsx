@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -16,6 +11,8 @@ import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
 import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
+import Icon from "../../components/Icon";
+import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { AlertContext } from "../../context/Alert/alertContext";
@@ -27,21 +24,16 @@ import {
 } from "../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../utils/number.helper";
 import { networkConnection } from "../../utils/network.helper";
-import { ChangeType, HorizontalView, TypeText, TypeView } from "./styles";
+import { HorizontalView, TypeText, TypeView } from "./styles";
 import {
   ButtonOutlineText,
   ButtonText,
   ContainerCenter,
-  DeleteButton,
   FormContainer,
   ButtonOutline,
-  StyledIcon,
-  StyledInputDate,
-  StyledLoading,
-  StyledTextInput,
-  StyledTextInputMask,
   TextHeaderScreen,
   ViewTabContent,
+  ButtonDelete,
 } from "../../styles/general";
 import { metrics, colors } from "../../styles";
 
@@ -324,10 +316,12 @@ export default function NewEntry({
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ViewTabContent noPaddingBottom>
-        <HorizontalView noMarginBottom>
-          <TouchableOpacity onPress={() => navigate("Lançamentos")}>
-            <StyledIcon name="chevron-left" style={{ marginRight: 10 }} />
-          </TouchableOpacity>
+        <HorizontalView>
+          <Icon
+            name="chevron-left"
+            style={{ marginRight: 10 }}
+            onPress={() => navigate("Lançamentos")}
+          />
           <TextHeaderScreen noMarginBottom>
             {isEditing ? "Editar lançamento" : "Novo lançamento"}
           </TextHeaderScreen>
@@ -335,34 +329,34 @@ export default function NewEntry({
         <TypeView>
           <TypeText type={type}>{type}</TypeText>
           {!isEditing && (
-            <ChangeType
+            <Icon
+              name="refresh-cw"
+              size={15}
               onPress={() =>
                 type == "Receita" ? setType("Despesa") : setType("Receita")
               }
-            >
-              <StyledIcon name="refresh-cw" size={15} />
-            </ChangeType>
+              style={{ marginLeft: 10 }}
+            />
           )}
         </TypeView>
         <ContainerCenter>
           <View>
             <FormContainer>
               <HorizontalView>
-                <StyledInputDate
+                <TextInput
                   name="entrydate"
                   placeholder="Data lançamento"
-                  type="datetime"
                   control={control}
+                  masked="datetime"
                 />
-                <TouchableOpacity onPress={() => setCalendar(!calendar)}>
-                  <StyledIcon
-                    name="calendar"
-                    color={colors.lightGray}
-                    style={{ marginLeft: metrics.baseMargin }}
-                  />
-                </TouchableOpacity>
+                <Icon
+                  name="calendar"
+                  color={colors.lightGray}
+                  style={{ marginLeft: metrics.baseMargin }}
+                  onPress={() => setCalendar(!calendar)}
+                />
               </HorizontalView>
-              <StyledTextInput
+              <TextInput
                 name="description"
                 placeholder="Descrição"
                 control={control}
@@ -386,50 +380,42 @@ export default function NewEntry({
                   setVisibility={setSegmentVisible}
                 />
               )}
-              <StyledTextInputMask
+              <TextInput
                 name="value"
                 placeholder="Valor"
                 control={control}
-                type="money"
                 errors={errors}
+                masked="money"
               />
-            </FormContainer>
-            {!isEditing && (
-              <View>
-                <Button onPress={handleSubmit((e) => registerEntry(e))}>
-                  {isLoading ? (
-                    <StyledLoading />
-                  ) : (
+              {!isEditing && (
+                <View>
+                  <Button
+                    isLoading={isLoading}
+                    onPress={handleSubmit((e) => registerEntry(e))}
+                  >
                     <ButtonText>CADASTRAR</ButtonText>
-                  )}
-                </Button>
-                <ButtonOutline onPress={() => navigate("LançamentoFixo")}>
-                  <ButtonOutlineText>
-                    CADASTRAR DESPESAS FIXAS
-                  </ButtonOutlineText>
-                </ButtonOutline>
-              </View>
-            )}
-            {isEditing && (
-              <View>
-                <Button
-                  onPress={handleSubmit((e) => registerEntry(e, params.id))}
-                >
-                  {isLoading ? (
-                    <StyledLoading />
-                  ) : (
+                  </Button>
+                  <ButtonOutline onPress={() => navigate("LançamentoFixo")}>
+                    <ButtonOutlineText>
+                      CADASTRAR DESPESAS FIXAS
+                    </ButtonOutlineText>
+                  </ButtonOutline>
+                </View>
+              )}
+              {isEditing && (
+                <View>
+                  <Button
+                    isLoading={isLoading}
+                    onPress={handleSubmit((e) => registerEntry(e, params.id))}
+                  >
                     <ButtonText>ATUALIZAR</ButtonText>
-                  )}
-                </Button>
-                <DeleteButton onPress={handleDelete}>
-                  {isDelete ? (
-                    <StyledLoading />
-                  ) : (
+                  </Button>
+                  <ButtonDelete isLoading={isDelete} onPress={handleDelete}>
                     <ButtonText>EXCLUIR</ButtonText>
-                  )}
-                </DeleteButton>
-              </View>
-            )}
+                  </ButtonDelete>
+                </View>
+              )}
+            </FormContainer>
           </View>
           <Calendar
             date={new Date()}

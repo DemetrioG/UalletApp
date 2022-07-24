@@ -1,3 +1,4 @@
+import { HStack } from "native-base";
 import * as React from "react";
 import {
   Text,
@@ -9,17 +10,12 @@ import {
 import styled from "styled-components";
 import { fonts, metrics } from "../../styles";
 
-export const HorizontalView: React.FC<
-  ViewProps & { noMarginBottom?: boolean }
-> = styled(View)`
-  flex-direction: row;
+export const HorizontalView = styled(HStack)`
+  width: 55%;
   align-items: center;
-  margin-bottom: ${({ noMarginBottom }) =>
-    noMarginBottom ? 0 : metrics.baseMargin}px;
 `;
 
-export const TypeView = styled(View)`
-  flex-direction: row;
+export const TypeView = styled(HStack)`
   align-items: center;
   margin-left: 35px;
 `;
