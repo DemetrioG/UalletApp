@@ -127,10 +127,8 @@ export default function LineChart() {
                   setData([incomeData, expenseData]);
 
                   // Seta os labels do gráfico
-                  setInitLabel(
-                    dateMonthNumber("toMonth", date.month - 2, "pt")
-                  );
-                  setFinalLabel(dateMonthNumber("toMonth", date.month, "pt"));
+                  setInitLabel(dateMonthNumber("toMonth", date.month - 2));
+                  setFinalLabel(dateMonthNumber("toMonth", date.month));
 
                   // Seta os percentuais de Crescimento/Queda
                   setIncome(
