@@ -7,7 +7,8 @@ import {
 } from "react-native";
 
 import { colors } from "../../styles";
-import { Icon, ModalContainer, ModalView } from "../../styles/general";
+import { ModalContainer, ModalView } from "../../styles/general";
+import Icon from "../Icon";
 import {
   ItemPicker,
   ItemText,

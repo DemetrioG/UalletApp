@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
+import Icon from "../../components/Icon";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
@@ -38,7 +39,6 @@ import {
 import {
   BackgroundContainer,
   Card,
-  Icon,
   ItemContainer,
   ScrollViewTab,
   Skeleton,
