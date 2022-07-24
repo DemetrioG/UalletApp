@@ -128,9 +128,7 @@ const Register = () => {
           <Alert />
           <LogoHeader>
             <Logo source={require("../../../assets/images/logo.png")} />
-            <TextHeader withMarginLeft fontSize={"3xl"}>
-              Uallet
-            </TextHeader>
+            <TextHeader withMarginLeft>Uallet</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>

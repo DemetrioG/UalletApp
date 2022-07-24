@@ -215,7 +215,7 @@ export default function FixedEntry() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ViewTabContent noPaddingBottom>
-        <HorizontalView noMarginBottom>
+        <HorizontalView>
           <TouchableOpacity onPress={() => navigate("Lançamentos")}>
             <StyledIcon name="chevron-left" style={{ marginRight: 10 }} />
           </TouchableOpacity>

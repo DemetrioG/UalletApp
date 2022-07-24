@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   ActivityIndicator,
   Image,
@@ -19,14 +20,12 @@ import {
   Skeleton as NativeSkeleton,
   ISkeletonProps,
   IButtonProps,
+  HStack,
 } from "native-base";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
-import React from "react";
-import Feather from "react-native-vector-icons/Feather";
-import { IconProps } from "react-native-vector-icons/Icon";
 import Slider, { SliderProps } from "@react-native-community/slider";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
@@ -86,7 +85,7 @@ export const ViewTab = styled(View)`
   margin-bottom: ${IPHONE_BOTTOM_TAB ? 100 : 75}px;
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.secondary};
-  min-height: 500px;
+  min-height: 490px;
 `;
 
 export const ViewTabContent: React.FC<
@@ -109,6 +108,10 @@ export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
     maximumTrackTintColor: colors.gray,
   })
 )``;
+
+export const ButtonDelete: React.FC<IButtonProps> = styled(Button)`
+  background-color: ${({theme: {theme}}) => theme.red};
+`
 
 export const ButtonOutline: React.FC<IButtonProps> = styled(Button).attrs(
   ({ theme: { theme } }) => ({
@@ -161,8 +164,7 @@ export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
   flex: 1;
 `;
 
-export const LogoHeader = styled(View)`
-  flex-direction: row;
+export const LogoHeader = styled(HStack)`
   align-items: baseline;
   padding: 0px ${metrics.basePadding}px;
 `;
@@ -174,8 +176,9 @@ export const Logo = styled(Image)`
 
 export const TextHeader: React.FC<
   InterfaceTextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
-> = styled(Text).attrs(() => ({
+> = styled(Text).attrs(({fontSize}) => ({
   fontWeight: 800,
+  fontSize: fontSize ? fontSize : '3xl'
 }))`
   color: ${({ theme: { theme } }) => theme.text};
   ${({ withMarginLeft, withMarginTop }) => {
@@ -203,7 +206,7 @@ export const TextHeaderScreen: React.FC<
 `;
 
 export const HeaderTitleContainer = styled(View)`
-  margin-top: ${metrics.doubleBaseMargin}px;
+  margin-top: ${metrics.baseMargin}px;
   padding: 0px ${metrics.basePadding}px;
 `;
 
@@ -249,18 +252,6 @@ export const Card = styled(View)`
   background-color: ${({ theme: { theme } }) => theme.secondary};
   border-radius: ${metrics.baseRadius}px;
   margin-bottom: ${metrics.baseMargin}px;
-`;
-
-export const Icon: React.FC<
-  IconProps & { color?: string; size?: number; colorVariant?: string }
-> = styled(Feather).attrs(
-  ({ theme: { theme }, color, size, colorVariant }) => ({
-    color: colorVariant ? theme[colorVariant] : color ? color : theme.text,
-    size: size ? size : metrics.iconSize,
-  })
-)`
-  text-align: center;
-  text-align-vertical: bottom;
 `;
 
 export const Skeleton: React.FC<
@@ -332,4 +323,8 @@ export const ValueText: React.FC<
   font-size: ${fonts.regular}px;
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
+`;
+
+export const HalfContainer = styled(View)`
+  width: 48%;
 `;
