@@ -57,7 +57,7 @@ export default function Picker({
         <PickerText value={value} type={type}>
           {value}
         </PickerText>
-        <Icon name="chevron-down" size={20} color={colors.lightGray} />
+        <Icon name="chevron-down" size={20} color={colors.gray} />
       </SpaceItems>
       <Modal
         transparent={true}
