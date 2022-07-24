@@ -17,7 +17,7 @@ const FormControl = styled(NativeFormControl)`
 
 const UTextInput = (
   props: IInputProps & {
-    datetime?: boolean;
+    masked?: "datetime" | "money";
     errors?: object | undefined;
     helperText?: string | undefined;
   }
@@ -34,8 +34,12 @@ const UTextInput = (
     <>
       <FormControl isInvalid={isInvalid}>
         <>
-          {props.datetime ? (
-            <TextInputMask {...props} customTextInput={Input} type="datetime" />
+          {props.masked ? (
+            <TextInputMask
+              {...props}
+              customTextInput={Input}
+              type={props.masked}
+            />
           ) : (
             <Input {...props} />
           )}
@@ -53,12 +57,12 @@ const StyledTextInput = styled(UTextInput)`
 `;
 
 const TextInput = ({
-  datetime,
+  masked,
   name,
   control,
   ...props
 }: React.ComponentProps<typeof UTextInput> & {
-  datetime?: boolean;
+  masked?: "datetime" | "money";
   name: string;
   control: Control<FieldValues | any>;
 }) => {
@@ -68,7 +72,7 @@ const TextInput = ({
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
         <StyledTextInput
-          datetime={datetime}
+          masked={masked}
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}
