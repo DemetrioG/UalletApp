@@ -3,12 +3,12 @@ import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
+import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { numberToReal } from "../../utils/number.helper";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import {
-  Icon,
   Label,
   ModalContainer,
   ModalView,

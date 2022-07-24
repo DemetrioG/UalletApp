@@ -4,7 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { DefaultText, HelperText } from "./styles";
-import { ContainerCenter, Icon } from "../../styles/general";
+import { ContainerCenter } from "../../styles/general";
+import Icon from "../Icon";
 
 interface IEmptyChart {
   emphasisText: string;
