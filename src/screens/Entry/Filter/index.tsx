@@ -1,35 +1,28 @@
 import * as React from "react";
-import { ScrollView, View, Modal } from "react-native";
-import { Button, Select } from "native-base";
+import { ScrollView, Modal } from "react-native";
+import { Button } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../../services/firebase";
 import Picker from "../../../components/Picker";
 import Alert from "../../../components/Alert";
 import TextInput from "../../../components/TextInput";
-import { IActiveFilter } from "..";
-import { UserContext } from "../../../context/User/userContext";
 import { AlertContext } from "../../../context/Alert/alertContext";
-import { DateContext } from "../../../context/Date/dateContext";
 import { dateValidation } from "../../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../../utils/number.helper";
-import {
-  ButtonText,
-  Icon,
-  ModalContainer,
-  ModalView,
-} from "../../../styles/general";
+import { defaultFilter, IActiveFilter } from "./helper";
+import { ButtonText, ModalContainer, ModalView } from "../../../styles/general";
 import {
   ButtonContainer,
   HalfContainer,
   SpaceContainer,
   Title,
 } from "./styles";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { metrics } from "../../../styles";
+import Icon from "../../../components/Icon";
 
 interface IForm {
   initialdate: string;
@@ -38,18 +31,6 @@ interface IForm {
   initialvalue: string;
   finalvalue: string;
 }
-
-export const defaultFilter: IActiveFilter = {
-  initialDate: null,
-  finalDate: null,
-  description: null,
-  modality: null,
-  typeEntry: null,
-  segment: null,
-  initialValue: 0,
-  finalValue: 0,
-  isFiltered: false,
-};
 
 const optionsType = ["Todos", "Receita", "Despesa"];
 const optionsModality = ["Projetado", "Real"];
@@ -84,8 +65,6 @@ export default function Filter({
   const [segment, setSegment] = React.useState<string | null>(null);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [filter, setFilter] = React.useState<IActiveFilter>(defaultFilter);
-  const [initialLabel, setInitialLabel] = React.useState(0);
-  const [finalLabel, setFinalLabel] = React.useState(0);
 
   const {
     control,
@@ -123,18 +102,21 @@ export default function Filter({
     }
 
     setLoading(true);
-    setFilter(() => ({
+    const data = {
       description: description,
       modality: modality,
       segment: segment !== "Todos" ? segment : null,
       typeEntry: typeEntry !== "Todos" ? typeEntry : null,
       initialDate: initialdate,
       finalDate: finaldate,
-      initialValue: realToNumber(initialvalue),
-      finalValue: realToNumber(finalvalue),
+      initialValue: initialvalue ? realToNumber(initialvalue) : 0,
+      finalValue: finalvalue ? realToNumber(finalvalue) : 0,
       isFiltered: true,
-    }));
-    setLoading(false);
+    };
+
+    setFilter(data);
+    navigate("Lançamentos", data);
+    return setLoading(false);
   }
 
   React.useEffect(() => {
@@ -142,19 +124,16 @@ export default function Filter({
     setValue("initialdate", params.initialDate!);
     setValue("finaldate", params.finalDate!);
     setValue("description", params.description!);
-    setInitialLabel(params.initialValue);
-    setFinalLabel(params.finalValue);
+    setModality(params.modality);
+    setTypeEntry(params.typeEntry);
+    setSegment(params.segment);
+
+    params.initialValue !== 0 &&
+      setValue("initialvalue", numberToReal(params.initialValue!));
+
+    params.finalValue !== 0 &&
+      setValue("finalvalue", numberToReal(params.finalValue!));
   }, []);
-
-  React.useEffect(() => {
-    if (!filter.isFiltered) {
-      setTypeEntry(null);
-      setModality(null);
-      setSegment(null);
-    }
-  }, [filter]);
-
-  React.useEffect(() => {}, []);
 
   return (
     <Modal visible={true} onRequestClose={handleClose} transparent>

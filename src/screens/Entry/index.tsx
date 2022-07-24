@@ -8,7 +8,6 @@ import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { DataContext } from "../../context/Data/dataContext";
-import { defaultFilter } from "./Filter";
 import {
   convertDateToDatabase,
   dateMonthNumber,
@@ -17,6 +16,7 @@ import {
 } from "../../utils/date.helper";
 import { numberToReal } from "../../utils/number.helper";
 import { sortObjectByKey } from "../../utils/array.helper";
+import { defaultFilter, IActiveFilter } from "./Filter/helper";
 import {
   MoreContainer,
   LoadingText,
@@ -45,10 +45,10 @@ import {
   ValueContainer,
   ValueText,
   ViewTabContent,
-  Icon,
   ButtonOutlineSmall,
   ButtonSmall,
 } from "../../styles/general";
+import Icon from "../../components/Icon";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -58,18 +58,6 @@ export interface IEntryList {
   segment: string | null;
   type: "Receita" | "Despesa";
   value: number;
-}
-
-export interface IActiveFilter {
-  initialDate: string | null;
-  finalDate: string | null;
-  description: string | null;
-  modality: string | null;
-  typeEntry: string | null;
-  segment: string | null;
-  initialValue: number;
-  finalValue: number;
-  isFiltered: boolean;
 }
 
 const EMPTY = require("../../../assets/icons/emptyData.json");
@@ -134,170 +122,163 @@ export default function Entry({
   }
 
   React.useEffect(() => {
-    if (isFocused) {
-      (async function getEntry({
-        description,
-        finalDate,
-        finalValue,
-        initialDate,
-        initialValue,
-        isFiltered,
-        modality,
-        segment,
-        typeEntry,
-      }: IActiveFilter) {
-        setEntryList([]);
-        setEmptyData(false);
-        if (!isFiltered) {
-          // Pega o mês de referência do App para realizar a busca dos registros
-          const initialDate = new Date(
-            `${date.month}/01/${date.year} 00:00:00`
-          );
-          const finalDate = new Date(
-            `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-              date.year
-            } 23:59:59`
-          );
+    (async function getEntry({
+      description,
+      finalDate,
+      finalValue,
+      initialDate,
+      initialValue,
+      isFiltered,
+      modality,
+      segment,
+      typeEntry,
+    }: IActiveFilter) {
+      setEntryList([]);
+      setEmptyData(false);
+      if (!isFiltered) {
+        // Pega o mês de referência do App para realizar a busca dos registros
+        const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+        const finalDate = new Date(
+          `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
+            date.year
+          } 23:59:59`
+        );
 
-          // Busca os registros dentro do período de referência
-          firebase
-            .firestore()
-            .collection("entry")
-            .doc(user.uid)
-            .collection(date.modality)
-            .where("date", ">=", initialDate)
-            .where("date", "<=", finalDate)
-            .orderBy("date", "desc")
-            .get()
-            .then((snapshot) => {
-              if (snapshot.docs.length > 0) {
-                const list: typeof entryList = [];
-                snapshot.forEach((result) => {
-                  list.push(result.data());
-                });
-                setEntryList(() => sortObjectByKey(list, "id", "desc"));
-              } else {
-                setEmptyData(true);
-              }
-            });
-        } else {
-          let baseQuery: firebase.firestore.Query = firebase
-            .firestore()
-            .collection("entry")
-            .doc(user.uid)
-            .collection(modality!);
-
-          if (description) {
-            baseQuery = baseQuery.where("description", "==", description);
-          }
-          if (segment) {
-            baseQuery = baseQuery.where("segment", "==", segment);
-          }
-          if (typeEntry) {
-            baseQuery = baseQuery.where("type", "==", typeEntry);
-          }
-
-          /**
-           * O Firebase não permite realizar a query filtrando por data e valor, retornando um erro.
-           * Sendo assim, caso o usuário tenha filtrado pelos dois, na query retornamos somente com filtro por data, e pelo código, é filtrado se os valores estão dentro do filtrado.
-           */
-          if (initialDate) {
-            baseQuery = baseQuery.where(
-              "date",
-              ">=",
-              convertDateToDatabase(initialDate)
-            );
-          }
-          if (finalDate) {
-            baseQuery = baseQuery.where(
-              "date",
-              "<=",
-              convertDateToDatabase(finalDate)
-            );
-          }
-
-          if (initialValue > 0 && !initialDate) {
-            baseQuery = baseQuery.where("value", ">=", initialValue);
-          }
-          if (finalValue > 0 && !finalDate) {
-            baseQuery = baseQuery.where("value", "<=", finalValue);
-          }
-
-          baseQuery.get().then((snapshot) => {
+        // Busca os registros dentro do período de referência
+        firebase
+          .firestore()
+          .collection("entry")
+          .doc(user.uid)
+          .collection(date.modality)
+          .where("date", ">=", initialDate)
+          .where("date", "<=", finalDate)
+          .orderBy("date", "desc")
+          .get()
+          .then((snapshot) => {
             if (snapshot.docs.length > 0) {
-              let index = 0;
-              let add = 0;
+              const list: typeof entryList = [];
               snapshot.forEach((result) => {
-                if (
-                  (initialValue > 0 || finalValue > 0) &&
-                  (initialDate || finalDate)
-                ) {
-                  const { value } = result.data();
-                  if (initialValue > 0 && finalValue === 0) {
-                    if (value >= initialValue) {
-                      if (index === 0) {
-                        setEntryList([result.data()]);
-                      } else {
-                        setEntryList((oldArray: any) => [
-                          ...oldArray,
-                          result.data(),
-                        ]);
-                      }
-                      index++;
-                      add++;
-                    }
-                  } else if (finalValue > 0 && initialValue === 0) {
-                    if (value <= finalValue) {
-                      if (index === 0) {
-                        setEntryList([result.data()]);
-                      } else {
-                        setEntryList((oldArray: any) => [
-                          ...oldArray,
-                          result.data(),
-                        ]);
-                      }
-                      index++;
-                      add++;
-                    }
-                  } else {
-                    if (value >= initialValue && value <= finalValue) {
-                      if (index === 0) {
-                        setEntryList([result.data()]);
-                      } else {
-                        setEntryList((oldArray: any) => [
-                          ...oldArray,
-                          result.data(),
-                        ]);
-                      }
-                      index++;
-                      add++;
-                    }
-                  }
-                } else {
-                  if (index === 0) {
-                    setEntryList([result.data()]);
-                  } else {
-                    setEntryList((oldArray: any) => [
-                      ...oldArray,
-                      result.data(),
-                    ]);
-                  }
-                  index++;
-                  add++;
-                }
+                list.push(result.data());
               });
-
-              if (add === 0) {
-                setEmptyData(true);
-              }
+              setEntryList(() => sortObjectByKey(list, "id", "desc"));
             } else {
               setEmptyData(true);
             }
           });
+      } else {
+        let baseQuery: firebase.firestore.Query = firebase
+          .firestore()
+          .collection("entry")
+          .doc(user.uid)
+          .collection(modality!);
+
+        if (description) {
+          baseQuery = baseQuery.where("description", "==", description);
         }
-      })(filter);
-    }
-  }, [date.modality, date.month, date.year, filter, isFocused]);
+        if (segment) {
+          baseQuery = baseQuery.where("segment", "==", segment);
+        }
+        if (typeEntry) {
+          baseQuery = baseQuery.where("type", "==", typeEntry);
+        }
+
+        /**
+         * O Firebase não permite realizar a query filtrando por data e valor, retornando um erro.
+         * Sendo assim, caso o usuário tenha filtrado pelos dois, na query retornamos somente com filtro por data, e pelo código, é filtrado se os valores estão dentro do filtrado.
+         */
+        if (initialDate) {
+          baseQuery = baseQuery.where(
+            "date",
+            ">=",
+            convertDateToDatabase(initialDate)
+          );
+        }
+        if (finalDate) {
+          baseQuery = baseQuery.where(
+            "date",
+            "<=",
+            convertDateToDatabase(finalDate)
+          );
+        }
+
+        if (initialValue > 0 && !initialDate) {
+          baseQuery = baseQuery.where("value", ">=", initialValue);
+        }
+        if (finalValue > 0 && !finalDate) {
+          baseQuery = baseQuery.where("value", "<=", finalValue);
+        }
+
+        baseQuery.get().then((snapshot) => {
+          if (snapshot.docs.length > 0) {
+            let index = 0;
+            let add = 0;
+            snapshot.forEach((result) => {
+              if (
+                (initialValue > 0 || finalValue > 0) &&
+                (initialDate || finalDate)
+              ) {
+                const { value } = result.data();
+                if (initialValue > 0 && finalValue === 0) {
+                  if (value >= initialValue) {
+                    if (index === 0) {
+                      setEntryList([result.data()]);
+                    } else {
+                      setEntryList((oldArray: any) => [
+                        ...oldArray,
+                        result.data(),
+                      ]);
+                    }
+                    index++;
+                    add++;
+                  }
+                } else if (finalValue > 0 && initialValue === 0) {
+                  if (value <= finalValue) {
+                    if (index === 0) {
+                      setEntryList([result.data()]);
+                    } else {
+                      setEntryList((oldArray: any) => [
+                        ...oldArray,
+                        result.data(),
+                      ]);
+                    }
+                    index++;
+                    add++;
+                  }
+                } else {
+                  if (value >= initialValue && value <= finalValue) {
+                    if (index === 0) {
+                      setEntryList([result.data()]);
+                    } else {
+                      setEntryList((oldArray: any) => [
+                        ...oldArray,
+                        result.data(),
+                      ]);
+                    }
+                    index++;
+                    add++;
+                  }
+                }
+              } else {
+                if (index === 0) {
+                  setEntryList([result.data()]);
+                } else {
+                  setEntryList((oldArray: any) => [...oldArray, result.data()]);
+                }
+                index++;
+                add++;
+              }
+            });
+
+            if (add === 0) {
+              setEmptyData(true);
+            }
+          } else {
+            setEmptyData(true);
+          }
+        });
+      }
+    })(filter);
+  }, [date.modality, date.month, date.year, filter]);
 
   React.useEffect(() => {
     // Retorna o Saldo atual
@@ -332,19 +313,19 @@ export default function Entry({
   }, [entryList]);
 
   React.useEffect(() => {
-    setFilter(params);
-  }, []);
+    params && setFilter(params);
+  }, [isFocused]);
 
   return (
     <ViewTabContent>
       <HeaderContainer>
         <TextHeaderScreen>Lançamentos</TextHeaderScreen>
         <InfoMonthText>
-          {dateMonthNumber("toMonth", date.month, "pt", true)}
+          {dateMonthNumber("toMonth", date.month, true)}
         </InfoMonthText>
       </HeaderContainer>
       <ButtonHeaderView>
-        <ButtonOutlineSmall onPress={() => navigate("Filtros")}>
+        <ButtonOutlineSmall onPress={() => navigate("Filtros", filter)}>
           <ButtonOutlineText>FILTROS</ButtonOutlineText>
         </ButtonOutlineSmall>
         <ButtonSmall onPress={() => navigate("NovoLançamento")}>

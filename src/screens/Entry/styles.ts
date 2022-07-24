@@ -18,7 +18,7 @@ export const TotalItemContainer = styled(View)`
   flex-direction: row;
   align-items: baseline;
   justify-content: space-between;
-  padding: 8px 0px;
+  padding: 6px 0px;
 `;
 
 export const BalanceText: React.FC<TextProps & { negative?: boolean }> = styled(
