@@ -1,16 +1,10 @@
-import { Text } from "native-base";
+import { Center, HStack, Text } from "native-base";
 import { View } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../../styles";
 
-export const SpaceContainer = styled(View)`
-  flex-direction: row;
-  align-items: center;
+export const SpaceContainer = styled(HStack)`
   justify-content: space-between;
-`;
-
-export const InputContainer = styled(View)`
-  margin-top: ${metrics.baseMargin}px;
 `;
 
 export const Title = styled(Text).attrs(({ theme: { theme } }) => ({
@@ -35,12 +29,12 @@ export const LabelValue = styled(Text)`
   color: ${({ theme: { theme } }) => theme.blue};
 `;
 
-export const ButtonContainer = styled(View)`
+export const ButtonContainer = styled(Center)`
   padding-top: ${metrics.topBottomPadding}px;
   align-items: center;
   justify-content: center;
 `;
 
-export const InputDateContainer = styled(View)`
+export const HalfContainer = styled(View)`
   width: 48%;
 `;

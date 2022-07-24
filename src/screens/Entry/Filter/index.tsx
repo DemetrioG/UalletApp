@@ -14,41 +14,42 @@ import { UserContext } from "../../../context/User/userContext";
 import { AlertContext } from "../../../context/Alert/alertContext";
 import { DateContext } from "../../../context/Date/dateContext";
 import { dateValidation } from "../../../utils/date.helper";
-import { numberToReal } from "../../../utils/number.helper";
+import { numberToReal, realToNumber } from "../../../utils/number.helper";
 import {
   ButtonText,
   Icon,
   ModalContainer,
   ModalView,
-  StyledLoading,
-  StyledSlider,
 } from "../../../styles/general";
 import {
   ButtonContainer,
-  InputContainer,
-  InputDateContainer,
-  LabelContainer,
-  LabelText,
-  LabelValue,
+  HalfContainer,
   SpaceContainer,
   Title,
 } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-interface IFilter {
-  visible: boolean;
-  type: "entry";
-  filter: IActiveFilter;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setFilter: React.Dispatch<React.SetStateAction<IActiveFilter>>;
-}
+import { metrics } from "../../../styles";
 
 interface IForm {
   initialdate: string;
   finaldate: string;
   description: string;
+  initialvalue: string;
+  finalvalue: string;
 }
+
+export const defaultFilter: IActiveFilter = {
+  initialDate: null,
+  finalDate: null,
+  description: null,
+  modality: null,
+  typeEntry: null,
+  segment: null,
+  initialValue: 0,
+  finalValue: 0,
+  isFiltered: false,
+};
 
 const optionsType = ["Todos", "Receita", "Despesa"];
 const optionsModality = ["Projetado", "Real"];
@@ -68,20 +69,13 @@ const schema = yup
   })
   .required();
 
-export default function Filter(
-  {
-    // visible,
-    // setVisible,
-    // type,
-    // filter,
-    // setFilter,
-  }
-) {
+export default function Filter({
+  route: { params },
+}: {
+  route: { params: IActiveFilter };
+}) {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { user } = React.useContext(UserContext);
-  const { date } = React.useContext(DateContext);
-  const { alert, setAlert } = React.useContext(AlertContext);
-  const [visible, setVisible] = React.useState(true);
+  const { setAlert } = React.useContext(AlertContext);
   const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
   const [typeEntryVisible, setTypeEntryVisible] = React.useState(false);
@@ -89,10 +83,9 @@ export default function Filter(
   const [modalityVisible, setModalityVisible] = React.useState(false);
   const [segment, setSegment] = React.useState<string | null>(null);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
+  const [filter, setFilter] = React.useState<IActiveFilter>(defaultFilter);
   const [initialLabel, setInitialLabel] = React.useState(0);
   const [finalLabel, setFinalLabel] = React.useState(0);
-  const [maxValue, setMaxValue] = React.useState(0);
-  const [isSliding, setIsSliding] = React.useState(false);
 
   const {
     control,
@@ -104,10 +97,16 @@ export default function Filter(
   });
 
   function handleClose() {
-    navigate("Lançamentos");
+    navigate("Lançamentos", filter);
   }
 
-  async function handleFilter({ description, initialdate, finaldate }: IForm) {
+  async function handleFilter({
+    description,
+    initialdate,
+    finaldate,
+    initialvalue,
+    finalvalue,
+  }: IForm) {
     if (!dateValidation(initialdate) || !dateValidation(finaldate)) {
       return setAlert(() => ({
         type: "error",
@@ -122,7 +121,6 @@ export default function Filter(
         visibility: true,
       }));
     }
-    return;
 
     setLoading(true);
     setFilter(() => ({
@@ -132,57 +130,31 @@ export default function Filter(
       typeEntry: typeEntry !== "Todos" ? typeEntry : null,
       initialDate: initialdate,
       finalDate: finaldate,
-      initialValue: initialLabel,
-      finalValue: finalLabel,
+      initialValue: realToNumber(initialvalue),
+      finalValue: realToNumber(finalvalue),
       isFiltered: true,
     }));
     setLoading(false);
-    setVisible(false);
   }
 
-  async function getMaxValue() {
-    let maxValue = 0;
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(date.modality)
-      .orderBy("value", "desc")
-      .limit(1)
-      .get()
-      .then((v) => {
-        v.forEach((result) => {
-          const { value } = result.data();
-          maxValue = value || 0;
-        });
-      });
+  React.useEffect(() => {
+    setFilter(params);
+    setValue("initialdate", params.initialDate!);
+    setValue("finaldate", params.finalDate!);
+    setValue("description", params.description!);
+    setInitialLabel(params.initialValue);
+    setFinalLabel(params.finalValue);
+  }, []);
 
-    if (maxValue > 0) {
-      setMaxValue(maxValue);
-    } else {
-      setMaxValue(100);
+  React.useEffect(() => {
+    if (!filter.isFiltered) {
+      setTypeEntry(null);
+      setModality(null);
+      setSegment(null);
     }
-  }
+  }, [filter]);
 
-  // React.useEffect(() => {
-  //   if (visible) {
-  //     setValue("initialdate", filter.initialDate!);
-  //     setValue("finaldate", filter.finalDate!);
-  //     setValue("description", filter.description!);
-  //     setInitialLabel(filter.initialValue);
-  //     setFinalLabel(filter.finalValue);
-  //     setIsSliding(false);
-  //     getMaxValue();
-  //   }
-  // }, [visible]);
-
-  // React.useEffect(() => {
-  //   if (!filter.isFiltered) {
-  //     setTypeEntry(null);
-  //     setModality(null);
-  //     setSegment(null);
-  //   }
-  // }, [filter]);
+  React.useEffect(() => {}, []);
 
   return (
     <Modal visible={true} onRequestClose={handleClose} transparent>
@@ -193,42 +165,37 @@ export default function Filter(
             <Title>Filtros</Title>
             <Icon name="x" onPress={handleClose} />
           </SpaceContainer>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <InputContainer>
-              <SpaceContainer>
-                <InputDateContainer>
-                  <TextInput
-                    name="initialdate"
-                    placeholder="Data Inicial *"
-                    control={control}
-                    errors={errors.initialdate}
-                    maxLength={10}
-                    datetime
-                  />
-                </InputDateContainer>
-                <InputDateContainer>
-                  <TextInput
-                    name="finaldate"
-                    placeholder="Data Final *"
-                    control={control}
-                    errors={errors.finaldate}
-                    maxLength={10}
-                    datetime
-                  />
-                </InputDateContainer>
-              </SpaceContainer>
-            </InputContainer>
-            <InputContainer>
-              <TextInput
-                name="description"
-                placeholder="Descrição"
-                control={control}
-              />
-            </InputContainer>
-            <Select placeholder="Modalidade *">
-              <Select.Item label="Projetado" value="projetado" />
-              <Select.Item label="Real" value="real" />
-            </Select>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ marginTop: metrics.baseMargin }}
+          >
+            <SpaceContainer>
+              <HalfContainer>
+                <TextInput
+                  name="initialdate"
+                  placeholder="Data Inicial *"
+                  control={control}
+                  errors={errors.initialdate}
+                  maxLength={10}
+                  masked="datetime"
+                />
+              </HalfContainer>
+              <HalfContainer>
+                <TextInput
+                  name="finaldate"
+                  placeholder="Data Final *"
+                  control={control}
+                  errors={errors.finaldate}
+                  maxLength={10}
+                  masked="datetime"
+                />
+              </HalfContainer>
+            </SpaceContainer>
+            <TextInput
+              name="description"
+              placeholder="Descrição"
+              control={control}
+            />
             <Picker
               options={optionsModality}
               selectedValue={setModality}
@@ -255,48 +222,28 @@ export default function Filter(
                 setVisibility={setSegmentVisible}
               />
             )}
-            {/* <View>
-              <LabelContainer>
-                <LabelText>Valor inicial</LabelText>
-                <LabelValue>{numberToReal(initialLabel)}</LabelValue>
-              </LabelContainer>
-              <StyledSlider
-                minimumValue={0}
-                maximumValue={maxValue}
-                value={filter.initialValue}
-                onTouchStart={() => setIsSliding(true)}
-                onValueChange={(value) => {
-                  if (isSliding) {
-                    setInitialLabel(value);
-                  }
-                }}
-                tapToSeek
-                step={1}
-              />
-            </View>
-            <View>
-              <LabelContainer>
-                <LabelText>Valor final</LabelText>
-                <LabelValue>{numberToReal(finalLabel)}</LabelValue>
-              </LabelContainer>
-              <StyledSlider
-                minimumValue={0}
-                maximumValue={maxValue}
-                value={filter.finalValue}
-                onTouchStart={() => setIsSliding(true)}
-                onValueChange={(value) => {
-                  if (isSliding) {
-                    setFinalLabel(value);
-                  }
-                }}
-                tapToSeek
-                step={1}
-              />
-            </View> */}
+            <SpaceContainer>
+              <HalfContainer>
+                <TextInput
+                  name="initialvalue"
+                  placeholder="Valor inicial"
+                  control={control}
+                  masked="money"
+                />
+              </HalfContainer>
+              <HalfContainer>
+                <TextInput
+                  name="finalvalue"
+                  placeholder="Valor final"
+                  control={control}
+                  masked="money"
+                />
+              </HalfContainer>
+            </SpaceContainer>
           </ScrollView>
           <ButtonContainer>
-            <Button onPress={handleSubmit(handleFilter)}>
-              {loading ? <StyledLoading /> : <ButtonText>APLICAR</ButtonText>}
+            <Button isLoading={loading} onPress={handleSubmit(handleFilter)}>
+              <ButtonText>APLICAR</ButtonText>
             </Button>
           </ButtonContainer>
         </ModalView>

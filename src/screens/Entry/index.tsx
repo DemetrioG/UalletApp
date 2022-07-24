@@ -8,6 +8,7 @@ import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { DataContext } from "../../context/Data/dataContext";
+import { defaultFilter } from "./Filter";
 import {
   convertDateToDatabase,
   dateMonthNumber,
@@ -71,22 +72,14 @@ export interface IActiveFilter {
   isFiltered: boolean;
 }
 
-const defaultFilter: IActiveFilter = {
-  initialDate: null,
-  finalDate: null,
-  description: null,
-  modality: null,
-  typeEntry: null,
-  segment: null,
-  initialValue: 0,
-  finalValue: 0,
-  isFiltered: false,
-};
-
 const EMPTY = require("../../../assets/icons/emptyData.json");
 const LOADING = require("../../../assets/icons/blueLoading.json");
 
-export default function Entry() {
+export default function Entry({
+  route: { params },
+}: {
+  route: { params: IActiveFilter };
+}) {
   const { user } = React.useContext(UserContext);
   const { date } = React.useContext(DateContext);
   const { data, setData } = React.useContext(DataContext);
@@ -98,7 +91,6 @@ export default function Entry() {
   const [entryTotal, setEntryTotal] = React.useState("R$0,00");
   const [emptyData, setEmptyData] = React.useState<boolean>(false);
   const [filter, setFilter] = React.useState(defaultFilter);
-  const [filterVisible, setFilterVisible] = React.useState(false);
 
   const isFocused = useIsFocused();
 
@@ -338,6 +330,10 @@ export default function Entry() {
       setEntryTotal(numberToReal(total));
     })();
   }, [entryList]);
+
+  React.useEffect(() => {
+    setFilter(params);
+  }, []);
 
   return (
     <ViewTabContent>
