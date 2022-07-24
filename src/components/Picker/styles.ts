@@ -11,7 +11,6 @@ export const SpaceItems = styled(TouchableOpacity)`
 `;
 
 export const StyledInput = styled(View)`
-  width: 100%;
   height: 40px;
   padding: 5px 14px;
   justify-content: center;
