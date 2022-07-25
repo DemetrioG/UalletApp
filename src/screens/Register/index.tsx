@@ -175,7 +175,7 @@ const Register = () => {
               returnKeyType="done"
               name="confirm"
               control={control}
-              errors={errors.confirm}
+              errors={errors.password}
               helperText="Informe todos os campos"
             />
             <PasswordRules mb={5} content={passwordText} />

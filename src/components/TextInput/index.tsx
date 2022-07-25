@@ -47,6 +47,8 @@ const UTextInput = (
   React.useEffect(() => {
     if (props.errors && Object.keys(props.errors).length > 0) {
       setIsInvalid(true);
+    } else {
+      setIsInvalid(false);
     }
   }, [props.errors]);
 
