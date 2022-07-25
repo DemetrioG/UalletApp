@@ -1,11 +1,11 @@
 import { Text } from "native-base";
 import styled from "styled-components";
-import { metrics } from "../../styles";
+import { colors, metrics } from "../../styles";
 
 export const DefaultText = styled(Text)`
   margin-top: ${metrics.baseMargin}px;
   text-align: center;
-  color: ${({ theme: { theme } }) => theme.text};
+  color: ${colors.gray};
 `;
 
 export const HelperText = styled(DefaultText).attrs(() => ({

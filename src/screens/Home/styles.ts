@@ -109,3 +109,11 @@ export const DescriptionContainer = styled(DefaultDescriptionContainer)`
 export const DescriptionText = styled(DefaultDescriptionText)`
   color: ${({ theme: { theme } }) => theme.text};
 `;
+
+export const EmptyEntryText = styled(Text).attrs(() => ({
+  fontWeight: 500,
+  fontSize: 'md'
+}))`
+  color: ${colors.gray};
+  text-align: center;
+`

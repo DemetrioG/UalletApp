@@ -35,6 +35,7 @@ import {
   ValueContainer,
   DescriptionContainer,
   DescriptionText,
+  EmptyEntryText,
 } from "./styles";
 import {
   BackgroundContainer,
@@ -243,20 +244,28 @@ const Home = () => {
           </Card>
           <Card>
             <Skeleton isLoaded={!loader.visible} h={156} width={"full"}>
-              <CardHeaderView>
-                <CardTextView>
-                  <CardHeaderText>Últimos lançamentos</CardHeaderText>
-                </CardTextView>
-                <Icon
-                  name="edit-3"
-                  onPress={() => navigate("LançamentosTab")}
-                />
-              </CardHeaderView>
-              <>
-                {lastEntry.map((item, index) => {
-                  return <ItemList item={item} key={index} />;
-                })}
-              </>
+              {lastEntry.length > 0 ? (
+                <>
+                  <CardHeaderView>
+                    <CardTextView>
+                      <CardHeaderText>Últimos lançamentos</CardHeaderText>
+                    </CardTextView>
+                    <Icon
+                      name="edit-3"
+                      onPress={() => navigate("LançamentosTab")}
+                    />
+                  </CardHeaderView>
+                  <>
+                    {lastEntry.map((item, index) => {
+                      return <ItemList item={item} key={index} />;
+                    })}
+                  </>
+                </>
+              ) : (
+                <EmptyEntryText>
+                  Não há lançamentos para visualizar
+                </EmptyEntryText>
+              )}
             </Skeleton>
           </Card>
           {/* <Card>

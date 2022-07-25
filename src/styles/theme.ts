@@ -10,9 +10,10 @@ export const LIGHT = {
   text: "#252333",
   blue: "#266DD3",
   red: "#FF2F45",
-  green: "#536F34",
+  green: "#70AE6E",
   transparency: "rgba(227, 222, 222, 0.95)",
   statusBar: "dark-content",
+  yellow: "#FFB100",
   colorPieChart: ["#252333", "#8F47AD", "#AA6EC4", "#FF2F45", "#FF4C5F"],
   randomPalette: ['#2C363F', '#E758AC', '#5E3023', '#30321C', '#4C4C9D', '#712F79', '#1D8A99', '#FAFF00', '#DE6E4B', '#820263'],
   randomColor: '#266DD3'
@@ -29,6 +30,7 @@ export const DARK = {
   green: "#98BC71",
   transparency: "rgba(49, 47, 66, 0.95)",
   statusBar: "light-content",
+  yellow: "#FFFD82",
   colorPieChart: ["#252333", "#FF2F45", "#FF4C5F", "#6499E3", "#98BBEC"],
   randomPalette: ['#DB5461', '#8AA29E', '#F1EDEE', '#88D498', '#C6DABF', '#7D83FF', '#007FFF', '#F5CB5C', '#30BCED', '#9B9B93'],
   randomColor: '#266DD3'

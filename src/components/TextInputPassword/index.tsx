@@ -21,7 +21,7 @@ const TextInputPassword = (
   return (
     <TextInput
       {...props}
-      textContentType="oneTimeCode"
+      textContentType="none"
       secureTextEntry={!visible}
       InputRightElement={
         <Icon

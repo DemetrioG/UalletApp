@@ -8,7 +8,7 @@ import { DateContext } from "../../context/Date/dateContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
-import { colors, metrics } from "../../styles";
+import { colors } from "../../styles";
 import {
   Avatar,
   AvatarText,
