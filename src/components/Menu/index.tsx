@@ -1,9 +1,12 @@
 import * as React from "react";
-import { Menu as NativeMenu, Pressable, useContrastText } from "native-base";
+import { Pressable, useContrastText } from "native-base";
+import { useTheme } from "styled-components";
 
+import Icon from "../Icon";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
 import { colors, metrics } from "../../styles";
 import {
@@ -13,17 +16,22 @@ import {
   ItemContent,
   ItemText,
   LogoutText,
+  NativeMenu,
+  NativeMenuItem,
 } from "./styles";
-import { LoaderContext } from "../../context/Loader/loaderContext";
-import Icon from "../Icon";
+import { IThemeProvider } from "../../../App";
 
-const RANDOM_COLOR = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
-export default function Menu() {
+const Menu = () => {
   const { date, setDate } = React.useContext(DateContext);
   const { loader } = React.useContext(LoaderContext);
   const { setAlert } = React.useContext(AlertContext);
   const { user, setUser } = React.useContext(UserContext);
+
+  const { theme }: IThemeProvider = useTheme();
+
+  const itemTextColor = theme?.isOnDarkTheme
+    ? colors.white
+    : colors.darkPrimary;
 
   function changeModality() {
     return setDate((dateState) => ({
@@ -51,16 +59,11 @@ export default function Menu() {
   return (
     <>
       <NativeMenu
-        boxSize={"full"}
-        rounded={"lg"}
-        minWidth={180}
-        top={metrics.baseMargin}
-        right={metrics.basePadding}
         trigger={(props) => {
           return (
             <Pressable {...props}>
-              <Avatar backgroundColor={RANDOM_COLOR}>
-                <AvatarText color={useContrastText(RANDOM_COLOR)}>
+              <Avatar backgroundColor={theme?.randomColor}>
+                <AvatarText color={useContrastText(theme?.randomColor!)}>
                   {loader.visible ? "-" : user.name[0]}
                 </AvatarText>
               </Avatar>
@@ -68,31 +71,37 @@ export default function Menu() {
           );
         }}
       >
-        <NativeMenu.Item isDisabled>
+        <NativeMenuItem isDisabled>
           <ItemContainer>
             <ItemContent onPress={changeModality}>
-              <ItemText>{date.modality}</ItemText>
-              <Icon name="refresh-cw" size={15} color={colors.white} />
+              <ItemText style={{ color: itemTextColor }}>
+                {date.modality}
+              </ItemText>
+              <Icon name="refresh-cw" size={15} color={itemTextColor} />
             </ItemContent>
           </ItemContainer>
-        </NativeMenu.Item>
-        <NativeMenu.Item isDisabled>
+        </NativeMenuItem>
+        <NativeMenuItem isDisabled>
           <ItemContainer>
             <ItemContent>
-              <ItemText>Configurações</ItemText>
-              <Icon name="settings" size={15} color={colors.white} />
+              <ItemText style={{ color: itemTextColor }}>
+                Configurações
+              </ItemText>
+              <Icon name="settings" size={15} color={itemTextColor} />
             </ItemContent>
           </ItemContainer>
-        </NativeMenu.Item>
-        <NativeMenu.Item isDisabled>
+        </NativeMenuItem>
+        <NativeMenuItem isDisabled>
           <ItemContainer>
             <ItemContent onPress={handleLogout}>
               <LogoutText>Logout</LogoutText>
               <Icon name="power" size={15} color={colors.lightRed} />
             </ItemContent>
           </ItemContainer>
-        </NativeMenu.Item>
+        </NativeMenuItem>
       </NativeMenu>
     </>
   );
-}
+};
+
+export default Menu;
