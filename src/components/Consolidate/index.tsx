@@ -50,7 +50,7 @@ interface IConsolidate {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Consolidate({ visible, setVisible }: IConsolidate) {
+const Consolidate = ({ visible, setVisible }: IConsolidate) => {
   const { user } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
   const [page, setPage] = React.useState(1);
@@ -343,4 +343,6 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default Consolidate;

@@ -13,11 +13,7 @@ interface IEmptyChart {
   helperText: string;
 }
 
-export default function EmpyChart({
-  emphasisText,
-  iconName,
-  helperText,
-}: IEmptyChart) {
+const EmpyChart = ({ emphasisText, iconName, helperText }: IEmptyChart) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   return (
@@ -29,4 +25,6 @@ export default function EmpyChart({
       </TouchableOpacity>
     </ContainerCenter>
   );
-}
+};
+
+export default EmpyChart;

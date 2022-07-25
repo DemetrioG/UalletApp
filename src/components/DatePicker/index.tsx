@@ -15,13 +15,13 @@ interface IDatePicker {
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DatePicker({
+const DatePicker = ({
   options,
   setVisibility,
   type,
   visibility,
   next,
-}: IDatePicker) {
+}: IDatePicker) => {
   const { date, setDate } = React.useContext(DateContext);
 
   const handleSubmitItem = (item: string | number, index: number) => {
@@ -86,4 +86,6 @@ export default function DatePicker({
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default DatePicker;

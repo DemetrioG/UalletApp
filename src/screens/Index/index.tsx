@@ -42,7 +42,7 @@ const slides: ISlidesMockup[] = [
   },
 ];
 
-export default function Index() {
+const Index = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   function renderSlide({ item }: { item: ISlidesMockup }) {
@@ -77,4 +77,6 @@ export default function Index() {
       </ButtonOutline>
     </BackgroundContainerCenter>
   );
-}
+};
+
+export default Index;

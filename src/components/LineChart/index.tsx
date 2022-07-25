@@ -20,7 +20,7 @@ import {
   StyledLineChart,
 } from "./styles";
 
-export default function LineChart() {
+const LineChart = () => {
   const { date } = React.useContext(DateContext);
   const { user } = React.useContext(UserContext);
   const { data: userData } = React.useContext(DataContext);
@@ -204,4 +204,6 @@ export default function LineChart() {
       )}
     </>
   );
-}
+};
+
+export default LineChart;

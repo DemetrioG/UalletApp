@@ -29,7 +29,7 @@ export interface IThemeProvider {
   theme?: typeof LIGHT;
 }
 
-export default function App(): JSX.Element {
+const App = () => {
   const [theme, setTheme] = React.useState<IThemeProvider>();
   const [fontLoaded] = useFonts({
     Raleway_500Medium,
@@ -72,4 +72,6 @@ export default function App(): JSX.Element {
       </BaseProvider>
     );
   }
-}
+};
+
+export default App;

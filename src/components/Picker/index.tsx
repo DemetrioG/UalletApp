@@ -27,14 +27,14 @@ interface IPicker {
   setVisibility: Function;
 }
 
-export default function Picker({
+const Picker = ({
   options,
   selectedValue,
   value,
   type,
   visibility,
   setVisibility,
-}: IPicker) {
+}: IPicker) => {
   const OPTIONS = options;
 
   const onPressItem = (option: string) => {
@@ -77,4 +77,6 @@ export default function Picker({
       </Modal>
     </StyledInput>
   );
-}
+};
+
+export default Picker;

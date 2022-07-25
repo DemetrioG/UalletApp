@@ -6,7 +6,7 @@ import Complete from "../Complete";
 
 const Stack = createNativeStackNavigator();
 
-export default function StackHome() {
+const StackHome = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -21,4 +21,6 @@ export default function StackHome() {
       />
     </Stack.Navigator>
   );
-}
+};
+
+export default StackHome;

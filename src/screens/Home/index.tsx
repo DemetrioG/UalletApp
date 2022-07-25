@@ -72,7 +72,7 @@ function ItemList({
   );
 }
 
-export default function Home() {
+const Home = () => {
   const isFocused = useIsFocused();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
@@ -324,4 +324,6 @@ export default function Home() {
       </ScrollViewTab>
     </BackgroundContainer>
   );
-}
+};
+
+export default Home;
