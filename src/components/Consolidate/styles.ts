@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TextProps, View } from "react-native";
-import { Center, Text } from "native-base";
+import { Center, HStack, Text } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { colors, fonts, metrics } from "../../styles";
@@ -9,10 +9,8 @@ import {
   ButtonText as GeneralButtonText,
 } from "../../styles/general";
 
-export const HeaderContainer = styled(View)`
+export const HeaderContainer = styled(Center)`
   flex-direction: row;
-  align-items: center;
-  text-align: center;
   justify-content: space-between;
 `;
 
@@ -54,9 +52,8 @@ export const Footer = styled(Center)`
   padding-left: 90px;
 `;
 
-export const CirclesContainer = styled(View)`
+export const CirclesContainer = styled(HStack)`
   width: 40px;
-  flex-direction: row;
   align-items: center;
   justify-content: space-around;
 `;
@@ -78,8 +75,7 @@ export const StyledButton = styled(ButtonSmall)`
   margin-left: ${metrics.baseMargin}px;
 `;
 
-export const LabelContainer = styled(View)`
-  flex-direction: row;
+export const LabelContainer = styled(HStack)`
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
@@ -87,9 +83,8 @@ export const ButtonText = styled(GeneralButtonText)`
   font-size: 12px;
 `;
 
-export const ItemView = styled(View)`
-  flex-direction: row;
-  height: 43px;
+export const ItemView = styled(HStack)`
+  min-height: 43px;
 `;
 
 export const DescriptionSize = styled(View)`
@@ -113,7 +108,6 @@ export const DescriptionView = styled(DescriptionSize)`
 `;
 
 export const DescriptionText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${colors.gray};
 `;
@@ -126,9 +120,10 @@ export const ValueView = styled(ValueSize)`
 
 export const ValueText: React.FC<
   TextProps & { type: "Receita" | "Despesa" }
-> = styled(Text)`
-  font-family: ${fonts.montserratMedium};
-  font-size: ${fonts.regular}px;
+> = styled(Text).attrs(() => ({
+  fontFamily: 'mono',
+  fontSize: fonts.regular
+}))`
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;
@@ -152,7 +147,6 @@ export const ButtonActionContainer: React.FC<{
 
 export const ActionText: React.FC<{ checked: boolean }> = styled(Text)`
   text-align: center;
-  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${({ checked, theme: { theme } }) =>
     checked ? theme.green : theme.red};

@@ -1,4 +1,4 @@
-import { Text } from "native-base";
+import { HStack, Text } from "native-base";
 import { View } from "react-native";
 import styled from "styled-components";
 
@@ -18,11 +18,10 @@ export const HeaderText = styled(Text)`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const HeaderIconView = styled(View)`
-  flex-direction: row;
+export const HeaderIconView = styled(HStack)`
   justify-content: space-between;
   align-items: center;
-  min-width: 130px;
+  min-width: 135px;
 `;
 
 export const NetworkCard = styled(Card)`

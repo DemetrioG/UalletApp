@@ -12,5 +12,4 @@ export const StyledIcon: React.FC<
   })
 )`
   text-align: center;
-  text-align-vertical: bottom;
 `;

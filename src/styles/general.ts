@@ -1,13 +1,10 @@
 import * as React from "react";
 import {
-  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   ScrollViewProps,
-  Switch,
-  SwitchProps,
   TextProps,
   View,
   ViewProps,
@@ -21,21 +18,16 @@ import {
   ISkeletonProps,
   IButtonProps,
   HStack,
+  ITextProps,
 } from "native-base";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
-import Slider, { SliderProps } from "@react-native-community/slider";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
-import { InterfaceTextProps } from "native-base/lib/typescript/components/primitives/Text/types";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
-  flex: 1;
-`;
-
-export const FlexContainer = styled(View)`
   flex: 1;
 `;
 
@@ -97,17 +89,9 @@ export const ViewTabContent: React.FC<
   background-color: ${({ theme: { theme } }) => theme.secondary};
 `;
 
-export const FormContainer = styled(View)`
-  padding: 0px 50px;
+export const FormContainer: React.FC<ViewProps & { insideApp?: boolean}> = styled(View)`
+  padding: 0px ${({insideApp}) => !insideApp ? 50 : 35}px;
 `;
-
-export const StyledSlider: React.FC<SliderProps> = styled(Slider).attrs(
-  ({ theme: { theme } }) => ({
-    thumbTintColor: theme.blue,
-    minimumTrackTintColor: theme.blue,
-    maximumTrackTintColor: colors.gray,
-  })
-)``;
 
 export const ButtonDelete: React.FC<IButtonProps> = styled(Button)`
   background-color: ${({theme: {theme}}) => theme.red};
@@ -138,6 +122,16 @@ export const ButtonOutlineSmall: typeof ButtonOutline = styled(
   size: "sm",
 }))``;
 
+export const ButtonDeleteSmall: typeof ButtonDelete = styled(
+  ButtonDelete
+).attrs(() => ({
+  minW: "20",
+  minH: 0,
+  padding: 0,
+  h: 8,
+  size: "sm",
+}))``;
+
 export const ButtonText = styled(Text).attrs(() => ({
   fontFamily: "body",
   fontWeight: 800,
@@ -149,10 +143,6 @@ export const ButtonOutlineText = styled(Text).attrs(() => ({
   fontWeight: 800,
 }))`
   color: ${({ theme: { theme } }) => theme.blue};
-`;
-
-export const DeleteButton = styled(Button)`
-  background-color: ${colors.lightRed};
 `;
 
 export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
@@ -174,8 +164,7 @@ export const Logo = styled(Image)`
   height: 58px;
 `;
 
-export const TextHeader: React.FC<
-  InterfaceTextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
+export const TextHeader: React.FC<ITextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
 > = styled(Text).attrs(({fontSize}) => ({
   fontWeight: 800,
   fontSize: fontSize ? fontSize : '3xl'
@@ -214,39 +203,6 @@ export const HeaderTitle = styled(Text)`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-// export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
-//   DefaultTextInputMask
-// ).attrs(() => ({
-//   placeholderTextColor: colors.lightGray,
-// }))``;
-// export const StyledTextInputMask: typeof DefaultTextInputMask = styled(
-//   DefaultTextInputMask
-// ).attrs(() => ({
-//   placeholderTextColor: colors.lightGray,
-// }))`
-//   width: 100%;
-//   height: 45px;
-//   padding: 5px 20px;
-//   border-radius: ${metrics.mediumRadius}px;
-//   border: 1px solid ${colors.lightGray};
-//   font-family: ${fonts.montserratBold};
-//   font-size: ${fonts.regular}px;
-//   margin-bottom: ${metrics.baseMargin}px;
-//   color: ${({ theme: { theme } }) => theme.text};
-// `;
-
-// export const StyledInputDate = styled(StyledTextInputMask)`
-//   width: 150px;
-//   height: 30px;
-//   border-radius: ${metrics.smallRadius}px;
-//   margin-bottom: 0px;
-// `;
-
-export const StyledLoading = styled(ActivityIndicator).attrs(() => ({
-  size: 20,
-  color: colors.white,
-}))``;
-
 export const Card = styled(View)`
   padding: 20px;
   background-color: ${({ theme: { theme } }) => theme.secondary};
@@ -260,8 +216,7 @@ export const Skeleton: React.FC<
   startColor: secondary ? theme.secondary : theme.primary,
 }))``;
 
-export const ButtonHeaderView = styled(View)`
-  flex-direction: row;
+export const ButtonHeaderView = styled(HStack)`
   align-items: center;
   justify-content: space-between;
 `;
@@ -281,18 +236,7 @@ export const Label = styled(Text).attrs(() => ({
   margin-right: 10px;
 `;
 
-export const StyledSwitch: React.FC<SwitchProps> = styled(Switch).attrs(
-  ({ theme: { theme } }) => ({
-    thumbColor: colors.strongBlue,
-    trackColor: {
-      true: colors.lightBlue,
-      false: theme.isOnDarkTheme ? colors.infoBlack : colors.gray,
-    },
-  })
-)``;
-
-export const ItemContainer = styled(View)`
-  flex-direction: row;
+export const ItemContainer = styled(HStack)`
 `;
 
 export const DescriptionContainer = styled(Center)`

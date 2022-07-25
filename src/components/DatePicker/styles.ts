@@ -1,6 +1,6 @@
 import * as React from "react";
-import { TouchableOpacity, View } from "react-native";
-import { ITextProps, Text } from "native-base";
+import { TouchableOpacity } from "react-native";
+import { HStack, ITextProps, Text } from "native-base";
 import styled from "styled-components";
 import { colors, metrics } from "../../styles";
 
@@ -21,8 +21,7 @@ export const TextItem: React.FC<ITextProps & { type: "Mês" | "Ano" }> = styled(
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const HeaderView = styled(View)`
-  flex-direction: row;
+export const HeaderView = styled(HStack)`
   margin: 0px ${metrics.baseMargin}px ${metrics.baseMargin}px;
   justify-content: space-between;
 `;
