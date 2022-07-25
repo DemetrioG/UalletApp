@@ -10,8 +10,8 @@ import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
+import Icon from "../../components/Icon";
 import { UserContext } from "../../context/User/userContext";
-import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
@@ -34,6 +34,7 @@ import {
   ValueContainer,
   DescriptionContainer,
   DescriptionText,
+  EmptyEntryText,
 } from "./styles";
 import {
   BackgroundContainer,
@@ -72,13 +73,12 @@ function ItemList({
   );
 }
 
-export default function Home() {
+const Home = () => {
   const isFocused = useIsFocused();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
   const { data, setData } = React.useContext(DataContext);
-  const { date } = React.useContext(DateContext);
   const [consolidate, setConsolidate] = React.useState(false);
   const [financeShow, setFinanceShow] = React.useState(true);
   const [investShow, setInvestShow] = React.useState(true);
@@ -134,13 +134,13 @@ export default function Home() {
   React.useEffect(() => {
     // Retorna o Saldo atual
     (function getBalance() {
-      if (date.year !== 0) {
+      if (data.year !== 0) {
         firebase
           .firestore()
           .collection("balance")
           .doc(user.uid)
-          .collection(date.modality)
-          .doc(date.month.toString())
+          .collection(data.modality)
+          .doc(data.month.toString())
           .onSnapshot((snapshot) => {
             setData((dataState) => ({
               ...dataState,
@@ -157,17 +157,17 @@ export default function Home() {
           }));
       }
     })();
-  }, [date]);
+  }, [data.modality, data.month, data.year]);
 
   React.useEffect(() => {
     //Retorna os últimos lançamentos financeiros no app
     (async function getLastEntry() {
-      if (date.year !== 0) {
+      if (data.year !== 0) {
         // Pega o mês de referência do App para realizar a busca dos registros
-        const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+        const initialDate = new Date(`${data.month}/01/${data.year} 00:00:00`);
         const finalDate = new Date(
-          `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-            date.year
+          `${data.month}/${getFinalDateMonth(data.month, data.year)}/${
+            data.year
           } 23:59:59`
         );
 
@@ -176,7 +176,7 @@ export default function Home() {
           .firestore()
           .collection("entry")
           .doc(user.uid)
-          .collection(date.modality)
+          .collection(data.modality)
           .where("date", ">=", initialDate)
           .where("date", "<=", finalDate)
           .orderBy("date", "desc")
@@ -193,7 +193,7 @@ export default function Home() {
           });
       }
     })();
-  }, [isFocused, date]);
+  }, [isFocused, data.modality, data.month, data.year]);
 
   React.useEffect(() => {
     if (
@@ -241,20 +241,28 @@ export default function Home() {
           </Card>
           <Card>
             <Skeleton isLoaded={!loader.visible} h={156} width={"full"}>
-              <CardHeaderView>
-                <CardTextView>
-                  <CardHeaderText>Últimos lançamentos</CardHeaderText>
-                </CardTextView>
-                <Icon
-                  name="edit-3"
-                  onPress={() => navigate("LançamentosTab")}
-                />
-              </CardHeaderView>
-              <>
-                {lastEntry.map((item, index) => {
-                  return <ItemList item={item} key={index} />;
-                })}
-              </>
+              {lastEntry.length > 0 ? (
+                <>
+                  <CardHeaderView>
+                    <CardTextView>
+                      <CardHeaderText>Últimos lançamentos</CardHeaderText>
+                    </CardTextView>
+                    <Icon
+                      name="edit-3"
+                      onPress={() => navigate("LançamentosTab")}
+                    />
+                  </CardHeaderView>
+                  <>
+                    {lastEntry.map((item, index) => {
+                      return <ItemList item={item} key={index} />;
+                    })}
+                  </>
+                </>
+              ) : (
+                <EmptyEntryText>
+                  Não há lançamentos para visualizar
+                </EmptyEntryText>
+              )}
             </Skeleton>
           </Card>
           {/* <Card>
@@ -322,4 +330,6 @@ export default function Home() {
       </ScrollViewTab>
     </BackgroundContainer>
   );
-}
+};
+
+export default Home;

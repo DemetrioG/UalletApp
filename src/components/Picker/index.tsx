@@ -7,7 +7,8 @@ import {
 } from "react-native";
 
 import { colors } from "../../styles";
-import { Icon, ModalContainer, ModalView } from "../../styles/general";
+import { ModalContainer, ModalView } from "../../styles/general";
+import Icon from "../Icon";
 import {
   ItemPicker,
   ItemText,
@@ -26,14 +27,14 @@ interface IPicker {
   setVisibility: Function;
 }
 
-export default function Picker({
+const Picker = ({
   options,
   selectedValue,
   value,
   type,
   visibility,
   setVisibility,
-}: IPicker) {
+}: IPicker) => {
   const OPTIONS = options;
 
   const onPressItem = (option: string) => {
@@ -57,7 +58,7 @@ export default function Picker({
         <PickerText value={value} type={type}>
           {value}
         </PickerText>
-        <Icon name="chevron-down" size={20} color={colors.lightGray} />
+        <Icon name="chevron-down" size={20} color={colors.gray} />
       </SpaceItems>
       <Modal
         transparent={true}
@@ -76,4 +77,6 @@ export default function Picker({
       </Modal>
     </StyledInput>
   );
-}
+};
+
+export default Picker;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getStorage } from "../../utils/storage.helper";
+import { getStorage, setStorage } from "../../utils/storage.helper";
 
 interface IUser {
   signed: boolean;
@@ -7,6 +7,8 @@ interface IUser {
   uid: string | undefined;
   name: string;
   hideNumbers: boolean;
+  completeName: string | undefined;
+  email: string | undefined;
 }
 
 export const initialUserState: IUser = {
@@ -15,6 +17,8 @@ export const initialUserState: IUser = {
   uid: undefined,
   name: "",
   hideNumbers: false,
+  completeName: undefined,
+  email: undefined,
 };
 
 export const UserContext = React.createContext<{
@@ -36,15 +40,35 @@ export function UserContextProvider({
     ...initialUserState,
   });
 
+  const notInitialRender = React.useRef(false);
+
   React.useEffect(() => {
+    // Cache dos dados do usuário
     (async () => {
-      const storedData = await getStorage("hideNumbers");
+      const storedData = await getStorage("user");
       setUser((userState) => ({
         ...userState,
-        hideNumbers: storedData,
+        name: storedData?.name || initialUserState.name,
+        hideNumbers: storedData?.hideNumbers || initialUserState.hideNumbers,
+        completeName: storedData?.completeName,
+        email: storedData?.email,
       }));
     })();
   }, []);
+
+  React.useEffect(() => {
+    if (notInitialRender.current) {
+      const data = {
+        name: user.name,
+        hideNumbers: user.hideNumbers,
+        completeName: user.completeName,
+        email: user.email,
+      };
+      setStorage("user", data);
+    } else {
+      notInitialRender.current = true;
+    }
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

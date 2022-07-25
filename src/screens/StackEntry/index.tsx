@@ -11,7 +11,7 @@ import { BackgroundContainer, ViewTab } from "../../styles/general";
 
 const Stack = createNativeStackNavigator();
 
-export default function StackEntry() {
+const StackEntry = () => {
   return (
     <BackgroundContainer>
       <ViewTab>
@@ -40,4 +40,6 @@ export default function StackEntry() {
       </ViewTab>
     </BackgroundContainer>
   );
-}
+};
+
+export default StackEntry;

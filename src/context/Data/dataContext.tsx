@@ -3,11 +3,17 @@ import * as React from "react";
 export interface IData {
   balance: string;
   isNetworkConnected: boolean | null;
+  month: number;
+  year: number;
+  modality: "Real" | "Projetado";
 }
 
 export const initialDataState: IData = {
   balance: "R$ 0,00",
   isNetworkConnected: null,
+  month: 0,
+  year: 0,
+  modality: "Real",
 };
 
 export const DataContext = React.createContext<{

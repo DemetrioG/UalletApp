@@ -223,9 +223,7 @@ const Login = () => {
           <Alert />
           <LogoHeader>
             <Logo source={LOGO} />
-            <TextHeader withMarginLeft fontSize={"3xl"}>
-              Uallet
-            </TextHeader>
+            <TextHeader withMarginLeft>Uallet</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>

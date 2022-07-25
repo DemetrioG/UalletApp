@@ -4,7 +4,7 @@ import { Control, FieldValues } from "react-hook-form";
 
 import TextInput from "../TextInput";
 import { colors, metrics } from "../../styles";
-import { Icon as DefaultIcon } from "../../styles/general";
+import DefaultIcon from "../Icon";
 
 const Icon = styled(DefaultIcon)`
   margin-right: ${metrics.baseMargin}px;
@@ -21,7 +21,7 @@ const TextInputPassword = (
   return (
     <TextInput
       {...props}
-      textContentType="oneTimeCode"
+      textContentType="none"
       secureTextEntry={!visible}
       InputRightElement={
         <Icon

@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components";
 import DateTimePicker, {
   AndroidNativeProps,
   IOSNativeProps,
 } from "@react-native-community/datetimepicker";
 import { colors, fonts, metrics } from "../../styles";
+import { Text } from "native-base";
 
 export const DateHeader = styled(View)`
   width: 100%;
@@ -19,9 +20,10 @@ export const DateHeader = styled(View)`
   border-top-right-radius: ${metrics.baseRadius}px;
 `;
 
-export const DateText = styled(Text)`
-  font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.regular}px;
+export const DateText = styled(Text).attrs(() => ({
+  fontWeight: 700,
+  fontSize: fonts.regular
+}))`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
