@@ -39,7 +39,6 @@ const Header = () => {
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
 
   function handleHide() {
-    setStorage("hideNumbers", !user.hideNumbers);
     setUser((userState) => ({
       ...userState,
       hideNumbers: !userState.hideNumbers,
@@ -55,10 +54,12 @@ const Header = () => {
           .doc(user.uid)
           .get()
           .then((v) => {
-            // Pega o primeiro nome do usuário
+            // Retorna o nome do usuário
             setUser((userState) => ({
               ...userState,
               name: v.data()?.name.split(" ", 1).toString(),
+              completeName: v.data()?.name,
+              email: v.data()?.email,
             }));
           })
           .catch(() => {
