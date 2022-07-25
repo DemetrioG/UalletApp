@@ -39,7 +39,6 @@ const Header = () => {
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
 
   function handleHide() {
-    setStorage("hideNumbers", !user.hideNumbers);
     setUser((userState) => ({
       ...userState,
       hideNumbers: !userState.hideNumbers,
