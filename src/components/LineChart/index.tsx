@@ -3,7 +3,6 @@ import * as React from "react";
 import firebase from "../../services/firebase";
 import EmptyChart from "../EmptyChart";
 import { DataContext } from "../../context/Data/dataContext";
-import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { UserContext } from "../../context/User/userContext";
 import { dateMonthNumber, getFinalDateMonth } from "../../utils/date.helper";
@@ -21,7 +20,7 @@ import {
 } from "./styles";
 
 const LineChart = () => {
-  const { date } = React.useContext(DateContext);
+  const { data: dataContext } = React.useContext(DataContext);
   const { user } = React.useContext(UserContext);
   const { data: userData } = React.useContext(DataContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
@@ -38,9 +37,9 @@ const LineChart = () => {
 
   React.useEffect(() => {
     (async function getData() {
-      if (date.year !== 0) {
-        let initialMonth = date.month - 2;
-        let initialYear = date.year;
+      if (dataContext.year !== 0) {
+        let initialMonth = dataContext.month - 2;
+        let initialYear = dataContext.year;
 
         if (initialMonth == -1) {
           initialMonth = 11;
@@ -53,9 +52,10 @@ const LineChart = () => {
           `${initialMonth}/01/${initialYear} 00:00:00`
         );
         const finalDate = new Date(
-          `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-            date.year
-          } 23:59:59`
+          `${dataContext.month}/${getFinalDateMonth(
+            dataContext.month,
+            dataContext.year
+          )}/${dataContext.year} 23:59:59`
         );
 
         // Busca no banco os dados referente ao Mês - 2 até Mês atual
@@ -63,7 +63,7 @@ const LineChart = () => {
           .firestore()
           .collection("entry")
           .doc(user.uid)
-          .collection(date.modality)
+          .collection(dataContext.modality)
           .get()
           .then((result) => {
             if (!result.empty) {
@@ -72,7 +72,7 @@ const LineChart = () => {
                 .firestore()
                 .collection("entry")
                 .doc(user.uid)
-                .collection(date.modality)
+                .collection(dataContext.modality)
                 .where("date", ">=", initialDate)
                 .where("date", "<=", finalDate)
                 .onSnapshot((snapshot) => {
@@ -85,9 +85,9 @@ const LineChart = () => {
 
                     let index = 0;
 
-                    let firstMonth = date.month - 2;
-                    let secondMonth = date.month - 1;
-                    const thrirdMonth = date.month;
+                    let firstMonth = dataContext.month - 2;
+                    let secondMonth = dataContext.month - 1;
+                    const thrirdMonth = dataContext.month;
 
                     if (firstMonth == -1) {
                       firstMonth = 11;
@@ -127,8 +127,10 @@ const LineChart = () => {
                   setData([incomeData, expenseData]);
 
                   // Seta os labels do gráfico
-                  setInitLabel(dateMonthNumber("toMonth", date.month - 2));
-                  setFinalLabel(dateMonthNumber("toMonth", date.month));
+                  setInitLabel(
+                    dateMonthNumber("toMonth", dataContext.month - 2)
+                  );
+                  setFinalLabel(dateMonthNumber("toMonth", dataContext.month));
 
                   // Seta os percentuais de Crescimento/Queda
                   setIncome(
@@ -153,7 +155,7 @@ const LineChart = () => {
         }));
       }
     })();
-  }, [date, userData.balance]);
+  }, [dataContext, userData.balance]);
 
   return (
     <>

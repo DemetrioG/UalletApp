@@ -18,7 +18,6 @@ import AppContent from "./src/screens/App";
 import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { AlertContextProvider } from "./src/context/Alert/alertContext";
-import { DateContextProvider } from "./src/context/Date/dateContext";
 import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
 import { DataContextProvider } from "./src/context/Data/dataContext";
 import BaseProvider from "./src/styles/baseTheme";
@@ -58,15 +57,13 @@ const App = () => {
       <BaseProvider>
         <ThemeProvider theme={theme}>
           <UserContextProvider>
-            <DateContextProvider>
-              <DataContextProvider>
-                <AlertContextProvider>
-                  <LoaderContextProvider>
-                    <AppContent />
-                  </LoaderContextProvider>
-                </AlertContextProvider>
-              </DataContextProvider>
-            </DateContextProvider>
+            <DataContextProvider>
+              <AlertContextProvider>
+                <LoaderContextProvider>
+                  <AppContent />
+                </LoaderContextProvider>
+              </AlertContextProvider>
+            </DataContextProvider>
           </UserContextProvider>
         </ThemeProvider>
       </BaseProvider>

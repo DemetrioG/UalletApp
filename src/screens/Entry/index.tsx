@@ -6,7 +6,6 @@ import LottieView from "lottie-react-native";
 
 import firebase from "../../services/firebase";
 import { UserContext } from "../../context/User/userContext";
-import { DateContext } from "../../context/Date/dateContext";
 import { DataContext } from "../../context/Data/dataContext";
 import {
   convertDateToDatabase,
@@ -65,7 +64,6 @@ const LOADING = require("../../../assets/icons/blueLoading.json");
 
 const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
   const { user } = React.useContext(UserContext);
-  const { date } = React.useContext(DateContext);
   const { data, setData } = React.useContext(DataContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
@@ -133,10 +131,10 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
       setEmptyData(false);
       if (!isFiltered) {
         // Pega o mês de referência do App para realizar a busca dos registros
-        const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+        const initialDate = new Date(`${data.month}/01/${data.year} 00:00:00`);
         const finalDate = new Date(
-          `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-            date.year
+          `${data.month}/${getFinalDateMonth(data.month, data.year)}/${
+            data.year
           } 23:59:59`
         );
 
@@ -145,7 +143,7 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
           .firestore()
           .collection("entry")
           .doc(user.uid)
-          .collection(date.modality)
+          .collection(data.modality)
           .where("date", ">=", initialDate)
           .where("date", "<=", finalDate)
           .orderBy("date", "desc")
@@ -274,18 +272,18 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
         });
       }
     })(filter);
-  }, [date.modality, date.month, date.year, filter, isFocused]);
+  }, [data.modality, data.month, data.year, filter, isFocused]);
 
   React.useEffect(() => {
     // Retorna o Saldo atual
     (function getBalance() {
-      if (date.month) {
+      if (data.month) {
         firebase
           .firestore()
           .collection("balance")
           .doc(user.uid)
-          .collection(date.modality)
-          .doc(date.month.toString())
+          .collection(data.modality)
+          .doc(data.month.toString())
           .onSnapshot((snapshot) => {
             setData((dataState) => ({
               ...dataState,
@@ -296,7 +294,7 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
           });
       }
     })();
-  }, [date.modality, date.month, date.year]);
+  }, [data.modality, data.month, data.year]);
 
   React.useEffect(() => {
     (() => {
@@ -317,7 +315,7 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
       <HeaderContainer>
         <TextHeaderScreen>Lançamentos</TextHeaderScreen>
         <InfoMonthText>
-          {dateMonthNumber("toMonth", date.month, true)}
+          {dateMonthNumber("toMonth", data.month, true)}
         </InfoMonthText>
       </HeaderContainer>
       <ButtonHeaderView>

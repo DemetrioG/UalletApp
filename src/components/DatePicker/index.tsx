@@ -6,6 +6,7 @@ import { getStorage, setStorage } from "../../utils/storage.helper";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
 import { ModalContainer, ModalView } from "../../styles/general";
 import Icon from "../Icon";
+import { DataContext } from "../../context/Data/dataContext";
 
 interface IDatePicker {
   options: string[] | number[];
@@ -22,7 +23,7 @@ const DatePicker = ({
   visibility,
   next,
 }: IDatePicker) => {
-  const { date, setDate } = React.useContext(DateContext);
+  const { data, setData } = React.useContext(DataContext);
 
   const handleSubmitItem = (item: string | number, index: number) => {
     setVisibility(false);
@@ -46,16 +47,16 @@ const DatePicker = ({
       const storedYear = await getStorage("Ano");
 
       if (storedMonth && storedYear) {
-        setDate((dateState) => ({
-          ...dateState,
-          month: type == "Mês" ? storedMonth : dateState.month,
-          year: type == "Ano" ? storedYear : dateState.year,
+        setData((dataState) => ({
+          ...dataState,
+          month: type == "Mês" ? storedMonth : dataState.month,
+          year: type == "Ano" ? storedYear : dataState.year,
         }));
       } else {
-        setDate((dateState) => ({
-          ...dateState,
-          month: type == "Mês" ? new Date().getMonth() + 1 : dateState.month,
-          year: type == "Ano" ? new Date().getFullYear() : dateState.year,
+        setData((dataState) => ({
+          ...dataState,
+          month: type == "Mês" ? new Date().getMonth() + 1 : dataState.month,
+          year: type == "Ano" ? new Date().getFullYear() : dataState.year,
         }));
       }
     })();
@@ -72,7 +73,7 @@ const DatePicker = ({
         <ModalView>
           <HeaderView>
             <Title>
-              {type} • {type == "Mês" ? options[date.month - 1] : date.year}
+              {type} • {type == "Mês" ? options[data.month - 1] : data.year}
             </Title>
             <Icon
               name="x"

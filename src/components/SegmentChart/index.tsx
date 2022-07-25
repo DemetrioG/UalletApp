@@ -3,7 +3,6 @@ import { ForeignObject } from "react-native-svg";
 
 import firebase from "../../services/firebase";
 import EmptyChart from "../EmptyChart";
-import { DateContext } from "../../context/Date/dateContext";
 import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
@@ -57,9 +56,8 @@ export const Label = ({ slices, data }: ISlices) => {
 };
 
 const SegmentChart = () => {
-  const { date } = React.useContext(DateContext);
+  const { data: dataContext } = React.useContext(DataContext);
   const { user } = React.useContext(UserContext);
-  const { data: userData } = React.useContext(DataContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
   /**
    * INDEX
@@ -74,12 +72,15 @@ const SegmentChart = () => {
 
   React.useEffect(() => {
     (async function getData() {
-      if (date.year !== 0) {
-        const initialDate = new Date(`${date.month}/01/${date.year} 00:00:00`);
+      if (dataContext.year !== 0) {
+        const initialDate = new Date(
+          `${dataContext.month}/01/${dataContext.year} 00:00:00`
+        );
         const finalDate = new Date(
-          `${date.month}/${getFinalDateMonth(date.month, date.year)}/${
-            date.year
-          } 23:59:59`
+          `${dataContext.month}/${getFinalDateMonth(
+            dataContext.month,
+            dataContext.year
+          )}/${dataContext.year} 23:59:59`
         );
 
         // Busca no banco os dados referente ao Mês atual
@@ -87,7 +88,7 @@ const SegmentChart = () => {
           .firestore()
           .collection("entry")
           .doc(user.uid)
-          .collection(date.modality)
+          .collection(dataContext.modality)
           .get()
           .then((result) => {
             if (!result.empty) {
@@ -96,7 +97,7 @@ const SegmentChart = () => {
                 .firestore()
                 .collection("entry")
                 .doc(user.uid)
-                .collection(date.modality)
+                .collection(dataContext.modality)
                 .where("type", "==", "Despesa")
                 .where("date", ">=", initialDate)
                 .where("date", "<=", finalDate)
@@ -164,7 +165,12 @@ const SegmentChart = () => {
         }));
       }
     })();
-  }, [date, userData.balance]);
+  }, [
+    dataContext.modality,
+    dataContext.month,
+    dataContext.year,
+    dataContext.balance,
+  ]);
 
   return (
     <>

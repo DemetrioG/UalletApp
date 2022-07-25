@@ -5,7 +5,7 @@ import Modal from "react-native-modal";
 
 import Icon from "../Icon";
 import { AlertContext } from "../../context/Alert/alertContext";
-import { DateContext } from "../../context/Date/dateContext";
+import { DataContext } from "../../context/Data/dataContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
@@ -26,7 +26,7 @@ import {
 import { IThemeProvider } from "../../../App";
 
 const Menu = () => {
-  const { date, setDate } = React.useContext(DateContext);
+  const { data, setData } = React.useContext(DataContext);
   const { loader } = React.useContext(LoaderContext);
   const { setAlert } = React.useContext(AlertContext);
   const { user, setUser } = React.useContext(UserContext);
@@ -36,9 +36,9 @@ const Menu = () => {
   const { theme }: IThemeProvider = useTheme();
 
   function changeModality() {
-    return setDate((dateState) => ({
-      ...dateState,
-      modality: dateState.modality === "Real" ? "Projetado" : "Real",
+    return setData((dataState) => ({
+      ...dataState,
+      modality: dataState.modality === "Real" ? "Projetado" : "Real",
     }));
   }
 
@@ -86,7 +86,7 @@ const Menu = () => {
           <MenuContainer>
             <ItemContainer>
               <ItemContent onPress={changeModality}>
-                <ItemText>{date.modality}</ItemText>
+                <ItemText>{data.modality}</ItemText>
                 <Icon name="refresh-cw" size={16} />
               </ItemContent>
             </ItemContainer>
