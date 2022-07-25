@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-navigation";
 import Routes from "../../routes";
 import { IphoneStatusBar, StyledStatusBar } from "./styles";
 
-export default function App() {
+const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {Platform.OS === "ios" && (
@@ -16,4 +16,6 @@ export default function App() {
       <Routes />
     </SafeAreaView>
   );
-}
+};
+
+export default App;

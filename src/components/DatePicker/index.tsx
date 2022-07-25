@@ -4,7 +4,8 @@ import { Modal, ScrollView } from "react-native";
 import { DateContext } from "../../context/Date/dateContext";
 import { getStorage, setStorage } from "../../utils/storage.helper";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
-import { Icon, ModalContainer, ModalView } from "../../styles/general";
+import { ModalContainer, ModalView } from "../../styles/general";
+import Icon from "../Icon";
 
 interface IDatePicker {
   options: string[] | number[];
@@ -14,13 +15,13 @@ interface IDatePicker {
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DatePicker({
+const DatePicker = ({
   options,
   setVisibility,
   type,
   visibility,
   next,
-}: IDatePicker) {
+}: IDatePicker) => {
   const { date, setDate } = React.useContext(DateContext);
 
   const handleSubmitItem = (item: string | number, index: number) => {
@@ -85,4 +86,6 @@ export default function DatePicker({
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default DatePicker;

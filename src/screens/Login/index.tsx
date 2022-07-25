@@ -223,9 +223,7 @@ const Login = () => {
           <Alert />
           <LogoHeader>
             <Logo source={LOGO} />
-            <TextHeader withMarginLeft fontSize={"3xl"}>
-              Uallet
-            </TextHeader>
+            <TextHeader withMarginLeft>Uallet</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>
@@ -253,10 +251,10 @@ const Login = () => {
                 errors={errors}
                 helperText="Informe todos os campos"
               />
+              <Button isLoading={loading} onPress={handleSubmit(loginUser)}>
+                <ButtonText>ENTRAR</ButtonText>
+              </Button>
             </FormContainer>
-            <Button isLoading={loading} onPress={handleSubmit(loginUser)}>
-              <ButtonText>ENTRAR</ButtonText>
-            </Button>
             <TouchableOpacity onPress={() => setSheetOpen(true)}>
               <ActionText>Prefere entrar com as redes sociais?</ActionText>
             </TouchableOpacity>

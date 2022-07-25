@@ -3,6 +3,7 @@ import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
+import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { numberToReal } from "../../utils/number.helper";
@@ -50,7 +51,7 @@ interface IConsolidate {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Consolidate({ visible, setVisible }: IConsolidate) {
+const Consolidate = ({ visible, setVisible }: IConsolidate) => {
   const { user } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
   const [page, setPage] = React.useState(1);
@@ -343,4 +344,6 @@ export default function Consolidate({ visible, setVisible }: IConsolidate) {
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default Consolidate;

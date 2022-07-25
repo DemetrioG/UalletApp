@@ -8,7 +8,8 @@ import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { setStorage } from "../../utils/storage.helper";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
-import { Icon, Skeleton } from "../../styles/general";
+import { Skeleton } from "../../styles/general";
+import Icon from "../Icon";
 
 const optionsMonth = [
   "Janeiro",
@@ -30,7 +31,7 @@ for (let index = 0; index < 5; index++) {
   optionsYear.push(new Date().getFullYear() + index);
 }
 
-export default function Header() {
+const Header = () => {
   const { data } = React.useContext(DataContext);
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
@@ -114,4 +115,6 @@ export default function Header() {
       )}
     </>
   );
-}
+};
+
+export default Header;

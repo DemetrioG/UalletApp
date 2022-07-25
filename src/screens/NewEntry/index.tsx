@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -16,6 +11,8 @@ import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
 import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
+import Icon from "../../components/Icon";
+import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { AlertContext } from "../../context/Alert/alertContext";
@@ -27,23 +24,17 @@ import {
 } from "../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../utils/number.helper";
 import { networkConnection } from "../../utils/network.helper";
-import { ChangeType, HorizontalView, TypeText, TypeView } from "./styles";
+import { HorizontalView, TypeText, TypeView } from "./styles";
 import {
   ButtonOutlineText,
   ButtonText,
   ContainerCenter,
-  DeleteButton,
   FormContainer,
   ButtonOutline,
-  StyledIcon,
-  StyledInputDate,
-  StyledLoading,
-  StyledTextInput,
-  StyledTextInputMask,
   TextHeaderScreen,
   ViewTabContent,
+  ButtonDelete,
 } from "../../styles/general";
-import { metrics, colors } from "../../styles";
 
 interface IForm {
   entrydate: string;
@@ -59,11 +50,7 @@ const schema = yup
   })
   .required();
 
-export default function NewEntry({
-  route: { params },
-}: {
-  route: { params: IEntryList };
-}) {
+const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
   const {
@@ -324,10 +311,12 @@ export default function NewEntry({
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ViewTabContent noPaddingBottom>
-        <HorizontalView noMarginBottom>
-          <TouchableOpacity onPress={() => navigate("Lançamentos")}>
-            <StyledIcon name="chevron-left" style={{ marginRight: 10 }} />
-          </TouchableOpacity>
+        <HorizontalView>
+          <Icon
+            name="chevron-left"
+            style={{ marginRight: 10 }}
+            onPress={() => navigate("Lançamentos")}
+          />
           <TextHeaderScreen noMarginBottom>
             {isEditing ? "Editar lançamento" : "Novo lançamento"}
           </TextHeaderScreen>
@@ -335,102 +324,88 @@ export default function NewEntry({
         <TypeView>
           <TypeText type={type}>{type}</TypeText>
           {!isEditing && (
-            <ChangeType
+            <Icon
+              name="refresh-cw"
+              size={16}
               onPress={() =>
                 type == "Receita" ? setType("Despesa") : setType("Receita")
               }
-            >
-              <StyledIcon name="refresh-cw" size={15} />
-            </ChangeType>
+            />
           )}
         </TypeView>
         <ContainerCenter>
-          <View>
-            <FormContainer>
-              <HorizontalView>
-                <StyledInputDate
-                  name="entrydate"
-                  placeholder="Data lançamento"
-                  type="datetime"
-                  control={control}
-                />
-                <TouchableOpacity onPress={() => setCalendar(!calendar)}>
-                  <StyledIcon
-                    name="calendar"
-                    color={colors.lightGray}
-                    style={{ marginLeft: metrics.baseMargin }}
-                  />
-                </TouchableOpacity>
-              </HorizontalView>
-              <StyledTextInput
-                name="description"
-                placeholder="Descrição"
-                control={control}
-                maxLength={40}
-              />
+          <FormContainer insideApp>
+            <TextInput
+              name="entrydate"
+              placeholder="Data lançamento"
+              control={control}
+              errors={errors.entrydate}
+              masked="datetime"
+              setCalendar={setCalendar}
+              withIcon
+            />
+            <TextInput
+              name="description"
+              placeholder="Descrição"
+              control={control}
+              errors={errors.description}
+              maxLength={40}
+            />
+            <Picker
+              options={optionsModality}
+              selectedValue={setModality}
+              value={!modality ? "Modalidade" : modality}
+              type="Modalidade"
+              visibility={modalityVisible}
+              setVisibility={setModalityVisible}
+            />
+            {type == "Despesa" && (
               <Picker
-                options={optionsModality}
-                selectedValue={setModality}
-                value={!modality ? "Modalidade" : modality}
-                type="Modalidade"
-                visibility={modalityVisible}
-                setVisibility={setModalityVisible}
+                options={optionsSegment}
+                selectedValue={setSegment}
+                value={!segment ? "Segmento" : segment}
+                type="Segmento"
+                visibility={segmentVisible}
+                setVisibility={setSegmentVisible}
               />
-              {type == "Despesa" && (
-                <Picker
-                  options={optionsSegment}
-                  selectedValue={setSegment}
-                  value={!segment ? "Segmento" : segment}
-                  type="Segmento"
-                  visibility={segmentVisible}
-                  setVisibility={setSegmentVisible}
-                />
-              )}
-              <StyledTextInputMask
-                name="value"
-                placeholder="Valor"
-                control={control}
-                type="money"
-                errors={errors}
-              />
-            </FormContainer>
+            )}
+            <TextInput
+              name="value"
+              placeholder="Valor"
+              control={control}
+              errors={errors}
+              masked="money"
+              helperText="Informe todos os campos"
+            />
             {!isEditing && (
-              <View>
-                <Button onPress={handleSubmit((e) => registerEntry(e))}>
-                  {isLoading ? (
-                    <StyledLoading />
-                  ) : (
-                    <ButtonText>CADASTRAR</ButtonText>
-                  )}
+              <>
+                <Button
+                  isLoading={isLoading}
+                  onPress={handleSubmit((e) => registerEntry(e))}
+                >
+                  <ButtonText>CADASTRAR</ButtonText>
                 </Button>
                 <ButtonOutline onPress={() => navigate("LançamentoFixo")}>
                   <ButtonOutlineText>
                     CADASTRAR DESPESAS FIXAS
                   </ButtonOutlineText>
                 </ButtonOutline>
-              </View>
+              </>
             )}
             {isEditing && (
-              <View>
+              <>
                 <Button
+                  isLoading={isLoading}
                   onPress={handleSubmit((e) => registerEntry(e, params.id))}
                 >
-                  {isLoading ? (
-                    <StyledLoading />
-                  ) : (
-                    <ButtonText>ATUALIZAR</ButtonText>
-                  )}
+                  <ButtonText>ATUALIZAR</ButtonText>
                 </Button>
-                <DeleteButton onPress={handleDelete}>
-                  {isDelete ? (
-                    <StyledLoading />
-                  ) : (
-                    <ButtonText>EXCLUIR</ButtonText>
-                  )}
-                </DeleteButton>
-              </View>
+                <ButtonDelete isLoading={isDelete} onPress={handleDelete}>
+                  <ButtonText>EXCLUIR</ButtonText>
+                </ButtonDelete>
+              </>
             )}
-          </View>
+          </FormContainer>
           <Calendar
             date={new Date()}
             setDateToInput={setDateToInput}
@@ -441,4 +416,6 @@ export default function NewEntry({
       </ViewTabContent>
     </TouchableWithoutFeedback>
   );
-}
+};
+
+export default NewEntry;

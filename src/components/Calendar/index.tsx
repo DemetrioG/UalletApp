@@ -10,12 +10,12 @@ interface ICalendar {
   edit?: boolean;
 }
 
-export default function Calendar({
+const Calendar = ({
   calendarIsShow,
   date,
   setDateToInput,
   edit,
-}: ICalendar) {
+}: ICalendar) => {
   const [isShow, setIsShow] = React.useState(false);
   const opacity = React.useRef(new Animated.Value(0)).current;
   const notInitialRender = React.useRef(false);
@@ -83,4 +83,6 @@ export default function Calendar({
       )}
     </>
   );
-}
+};
+
+export default Calendar;

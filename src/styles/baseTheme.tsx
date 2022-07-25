@@ -2,11 +2,7 @@ import * as React from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import { colors, metrics } from ".";
 
-export default function BaseProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const BaseProvider = ({ children }: { children: React.ReactNode }) => {
   const theme = extendTheme({
     fonts: {
       heading: "Raleway",
@@ -39,7 +35,6 @@ export default function BaseProvider({
     },
     components: {
       Button: {
-        // Can simply pass default props to change default behaviour of components.
         baseStyle: {
           rounded: "md",
         },
@@ -86,4 +81,6 @@ export default function BaseProvider({
     },
   });
   return <NativeBaseProvider theme={theme}>{children}</NativeBaseProvider>;
-}
+};
+
+export default BaseProvider;

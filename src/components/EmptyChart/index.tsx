@@ -4,7 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { DefaultText, HelperText } from "./styles";
-import { ContainerCenter, Icon } from "../../styles/general";
+import { ContainerCenter } from "../../styles/general";
+import Icon from "../Icon";
 
 interface IEmptyChart {
   emphasisText: string;
@@ -12,11 +13,7 @@ interface IEmptyChart {
   helperText: string;
 }
 
-export default function EmpyChart({
-  emphasisText,
-  iconName,
-  helperText,
-}: IEmptyChart) {
+const EmpyChart = ({ emphasisText, iconName, helperText }: IEmptyChart) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   return (
@@ -28,4 +25,6 @@ export default function EmpyChart({
       </TouchableOpacity>
     </ContainerCenter>
   );
-}
+};
+
+export default EmpyChart;

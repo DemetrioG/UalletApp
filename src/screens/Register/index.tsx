@@ -37,7 +37,14 @@ const schema = yup
   .object({
     name: yup.string().required(),
     email: yup.string().required(),
-    password: yup.string().required().matches(new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")),
+    password: yup
+      .string()
+      .required()
+      .matches(
+        new RegExp(
+          "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+        )
+      ),
     confirm: yup.string().required(),
   })
   .required();
@@ -126,61 +133,59 @@ const Register = () => {
   }
 
   return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <BackgroundContainer>
-          <Alert />
-          <LogoHeader>
-            <Logo source={require("../../../assets/images/logo.png")} />
-            <TextHeader withMarginLeft fontSize={"3xl"}>
-              Uallet
-            </TextHeader>
-          </LogoHeader>
-          <HeaderTitleContainer>
-            <HeaderTitle>
-              Informe seus dados, que o resto{"\n"}a gente cuida para você!
-            </HeaderTitle>
-          </HeaderTitleContainer>
-          <ContainerCenter>
-            <FormContainer>
-              <TextInput
-                placeholder="Nome completo *"
-                maxLength={40}
-                name="name"
-                control={control}
-                errors={errors.name}
-              />
-              <TextInput
-                placeholder="E-mail *"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="email"
-                control={control}
-                errors={errors.email}
-              />
-              <TextInputPassword
-                placeholder="Senha *"
-                name="password"
-                control={control}
-                errors={errors.password}
-              />
-              <TextInputPassword
-                placeholder="Confirme sua senha *"
-                onSubmitEditing={handleSubmit(registerUser)}
-                returnKeyType="done"
-                name="confirm"
-                control={control}
-                errors={errors.confirm}
-                helperText="Informe todos os campos"
-              />
-            </FormContainer>
-            <PasswordRules mb={5} content={passwordText}/>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <BackgroundContainer>
+        <Alert />
+        <LogoHeader>
+          <Logo source={require("../../../assets/images/logo.png")} />
+          <TextHeader withMarginLeft>Uallet</TextHeader>
+        </LogoHeader>
+        <HeaderTitleContainer>
+          <HeaderTitle>
+            Informe seus dados, que o resto{"\n"}a gente cuida para você!
+          </HeaderTitle>
+        </HeaderTitleContainer>
+        <ContainerCenter>
+          <FormContainer>
+            <TextInput
+              placeholder="Nome completo *"
+              maxLength={40}
+              name="name"
+              control={control}
+              errors={errors.name}
+            />
+            <TextInput
+              placeholder="E-mail *"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              name="email"
+              control={control}
+              errors={errors.email}
+            />
+            <TextInputPassword
+              placeholder="Senha *"
+              name="password"
+              control={control}
+              errors={errors.password}
+            />
+            <TextInputPassword
+              placeholder="Confirme sua senha *"
+              onSubmitEditing={handleSubmit(registerUser)}
+              returnKeyType="done"
+              name="confirm"
+              control={control}
+              errors={errors.confirm}
+              helperText="Informe todos os campos"
+            />
+            <PasswordRules mb={5} content={passwordText} />
             <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
               <ButtonText>CRIAR CONTA</ButtonText>
             </Button>
-          </ContainerCenter>
-        </BackgroundContainer>
-      </TouchableWithoutFeedback>
+          </FormContainer>
+        </ContainerCenter>
+      </BackgroundContainer>
+    </TouchableWithoutFeedback>
   );
 };
 

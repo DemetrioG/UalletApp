@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
+import Icon from "../../components/Icon";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
@@ -44,7 +45,6 @@ import {
   Skeleton,
   ValueText,
 } from "../../styles/general";
-import { metrics } from "../../styles";
 import { Collapse } from "native-base";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
@@ -73,7 +73,7 @@ function ItemList({
   );
 }
 
-export default function Home() {
+const Home = () => {
   const isFocused = useIsFocused();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
@@ -82,6 +82,7 @@ export default function Home() {
   const { date } = React.useContext(DateContext);
   const [consolidate, setConsolidate] = React.useState(false);
   const [financeShow, setFinanceShow] = React.useState(true);
+  const [investShow, setInvestShow] = React.useState(true);
   const [lastEntry, setLastEntry] = React.useState<
     Array<IEntryList | firebase.firestore.DocumentData>
   >([]);
@@ -219,7 +220,10 @@ export default function Home() {
         <TouchableOpacity onPress={() => setFinanceShow(!financeShow)}>
           <Section>
             <SectionText>Finanças</SectionText>
-            <Icon name="chevron-down" colorVariant="tertiary" />
+            <Icon
+              name={financeShow ? "chevron-down" : "chevron-right"}
+              colorVariant="tertiary"
+            />
           </Section>
         </TouchableOpacity>
         <Collapse isOpen={financeShow}>
@@ -277,45 +281,50 @@ export default function Home() {
                   <CardHeaderText>Receitas x Despesas</CardHeaderText>
                 </CardTextView>
               </CardHeaderView>
-              <LineChart />
             </Skeleton>
+            <LineChart />
+          </Card>
+          <Card>
+            <Skeleton isLoaded={!loader.visible} h={168} width={"full"}>
+              <CardHeaderView>
+                <CardTextView>
+                  <CardHeaderText>Despesas por segmento</CardHeaderText>
+                </CardTextView>
+              </CardHeaderView>
+            </Skeleton>
+            <SegmentChart />
           </Card>
         </Collapse>
-        {/* <Card>
-          {loader.visible ? (
-            <StyledLoader height={168} radius={metrics.mediumRadius} />
-          ) : (
+        <TouchableOpacity onPress={() => setInvestShow(!investShow)}>
+          <Section>
+            <SectionText>Investimentos</SectionText>
+            <Icon
+              name={investShow ? "chevron-down" : "chevron-right"}
+              colorVariant="tertiary"
+            />
+          </Section>
+        </TouchableOpacity>
+        <Collapse isOpen={investShow}>
+          <Card>
             <CardHeaderView>
               <CardTextView>
-                <CardHeaderText>Despesas por segmento</CardHeaderText>
+                <CardHeaderText>Patrimônio investido</CardHeaderText>
               </CardTextView>
-            </CardHeaderView>
-          )}
-          <SegmentChart />
-        </Card> */}
-        {/* <Section>
-          <SectionText>Investimentos</SectionText>
-          <Icon name="chevron-down" colorVariant="tertiary" />
-        </Section>
-        <Card>
-          <CardHeaderView>
-            <CardTextView>
-              <CardHeaderText>Patrimônio investido</CardHeaderText>
-            </CardTextView>
-            <TouchableOpacity>
               <Icon name="maximize-2" />
-            </TouchableOpacity>
-          </CardHeaderView>
-          <Invest>
-            {!user.hideNumbers ? "R$ 153.000,00" : "** ** ** ** **"}
-          </Invest>
-          <CardTextView>
-            <CardFooterText>Rendimento semanal</CardFooterText>
-            <InvestPercentual>55%</InvestPercentual>
-            <Icon name="arrow-up" size={15} colorVariant="green" />
-          </CardTextView>
-        </Card> */}
+            </CardHeaderView>
+            <Invest>
+              {!user.hideNumbers ? "R$ 153.000,00" : "** ** ** ** **"}
+            </Invest>
+            <CardTextView>
+              <CardFooterText>Rendimento semanal</CardFooterText>
+              <InvestPercentual>55%</InvestPercentual>
+              <Icon name="arrow-up" size={15} colorVariant="green" />
+            </CardTextView>
+          </Card>
+        </Collapse>
       </ScrollViewTab>
     </BackgroundContainer>
   );
-}
+};
+
+export default Home;

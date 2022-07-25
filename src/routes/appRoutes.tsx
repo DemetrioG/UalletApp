@@ -5,7 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import StackHome from "../screens/StackHome";
 import StackEntry from "../screens/StackEntry";
-import { Icon, SafeAreaContainer } from "../styles/general";
+import Icon from "../components/Icon";
+import { SafeAreaContainer } from "../styles/general";
 import {
   ActiveMenuIcon,
   HomeIconContainer,

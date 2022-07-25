@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  View,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
@@ -31,15 +30,11 @@ import {
   ButtonText,
   ContainerCenter,
   FormContainer,
-  StyledIcon,
-  StyledInputDate,
-  StyledLoading,
-  StyledTextInput,
-  StyledTextInputMask,
   TextHeaderScreen,
   ViewTabContent,
 } from "../../styles/general";
-import { metrics, colors } from "../../styles";
+import Icon from "../../components/Icon";
+import TextInput from "../../components/TextInput";
 
 interface IForm {
   entrydate: string;
@@ -69,7 +64,7 @@ const schema = yup
   })
   .required();
 
-export default function FixedEntry() {
+const FixedEntry = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
   const {
@@ -215,9 +210,9 @@ export default function FixedEntry() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ViewTabContent noPaddingBottom>
-        <HorizontalView noMarginBottom>
+        <HorizontalView>
           <TouchableOpacity onPress={() => navigate("Lançamentos")}>
-            <StyledIcon name="chevron-left" style={{ marginRight: 10 }} />
+            <Icon name="chevron-left" style={{ marginRight: 10 }} />
           </TouchableOpacity>
           <TextHeaderScreen noMarginBottom>Novo lançamento</TextHeaderScreen>
         </HorizontalView>
@@ -225,71 +220,62 @@ export default function FixedEntry() {
           <TypeText>Despesas Fixas</TypeText>
         </TypeView>
         <ContainerCenter>
-          <View>
-            <FormContainer>
-              <HorizontalView>
-                <StyledInputDate
-                  name="entrydate"
-                  placeholder="Data lançamento"
-                  type="datetime"
-                  control={control}
-                />
-                <TouchableOpacity onPress={() => setCalendar(!calendar)}>
-                  <StyledIcon
-                    name="calendar"
-                    color={colors.lightGray}
-                    style={{ marginLeft: metrics.baseMargin }}
-                  />
-                </TouchableOpacity>
-              </HorizontalView>
-              <StyledTextInput
-                name="description"
-                placeholder="Descrição"
-                control={control}
-                maxLength={40}
-              />
-              <Picker
-                options={optionsModality}
-                selectedValue={setModality}
-                value={!modality ? "Modalidade" : modality}
-                type="Modalidade"
-                visibility={modalityVisible}
-                setVisibility={setModalityVisible}
-              />
-              <Picker
-                options={optionsSegment}
-                selectedValue={setSegment}
-                value={!segment ? "Segmento" : segment}
-                type="Segmento"
-                visibility={segmentVisible}
-                setVisibility={setSegmentVisible}
-              />
-              <Picker
-                options={optionsExpenseAmount}
-                selectedValue={setExpenseAmount}
-                value={!expenseAmount ? "Quantidade de meses" : expenseAmount}
-                type="Quantidade de meses"
-                visibility={expenseAmountVisible}
-                setVisibility={setExpenseAmountVisible}
-              />
-              <StyledTextInputMask
-                name="value"
-                placeholder="Valor"
-                control={control}
-                type="money"
-                errors={errors}
-              />
-            </FormContainer>
-            <View>
-              <Button onPress={handleSubmit((e) => registerEntry(e))}>
-                {isLoading ? (
-                  <StyledLoading />
-                ) : (
-                  <ButtonText>CADASTRAR</ButtonText>
-                )}
-              </Button>
-            </View>
-          </View>
+          <FormContainer insideApp>
+            <TextInput
+              name="entrydate"
+              placeholder="Data lançamento"
+              control={control}
+              errors={errors.entrydate}
+              masked="datetime"
+              setCalendar={setCalendar}
+              withIcon
+            />
+            <TextInput
+              name="description"
+              placeholder="Descrição"
+              control={control}
+              errors={errors.description}
+              maxLength={40}
+            />
+            <Picker
+              options={optionsModality}
+              selectedValue={setModality}
+              value={!modality ? "Modalidade" : modality}
+              type="Modalidade"
+              visibility={modalityVisible}
+              setVisibility={setModalityVisible}
+            />
+            <Picker
+              options={optionsSegment}
+              selectedValue={setSegment}
+              value={!segment ? "Segmento" : segment}
+              type="Segmento"
+              visibility={segmentVisible}
+              setVisibility={setSegmentVisible}
+            />
+            <Picker
+              options={optionsExpenseAmount}
+              selectedValue={setExpenseAmount}
+              value={!expenseAmount ? "Quantidade de meses" : expenseAmount}
+              type="Quantidade de meses"
+              visibility={expenseAmountVisible}
+              setVisibility={setExpenseAmountVisible}
+            />
+            <TextInput
+              name="value"
+              placeholder="Valor"
+              control={control}
+              errors={errors.value}
+              masked="money"
+              helperText="Informe todos os campos"
+            />
+            <Button
+              isLoading={isLoading}
+              onPress={handleSubmit((e) => registerEntry(e))}
+            >
+              <ButtonText>CADASTRAR</ButtonText>
+            </Button>
+          </FormContainer>
           <Calendar
             date={new Date()}
             setDateToInput={setDateToInput}
@@ -299,4 +285,6 @@ export default function FixedEntry() {
       </ViewTabContent>
     </TouchableWithoutFeedback>
   );
-}
+};
+
+export default FixedEntry;

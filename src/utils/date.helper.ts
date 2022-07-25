@@ -114,7 +114,6 @@ export function convertDateToDatabase(date: string) {
 export function dateMonthNumber(
   type: "toNumber" | "toMonth",
   value: number,
-  lang: "pt" | "en",
   complete?: boolean
 ) {
   let month;
@@ -127,100 +126,58 @@ export function dateMonthNumber(
     refMonth = 12;
   }
 
-  switch (lang) {
-    case "pt":
-      switch (type) {
-        case "toNumber":
-          month = {
-            Jan: 1,
-            Fev: 2,
-            Mar: 3,
-            Abr: 4,
-            Mai: 5,
-            Jun: 6,
-            Jul: 7,
-            Ago: 8,
-            Set: 9,
-            Out: 10,
-            Nov: 11,
-            Dez: 12,
-          };
-          data = month[refMonth]!;
-          return data;
+  switch (type) {
+    case "toNumber":
+      month = {
+        Jan: 1,
+        Fev: 2,
+        Mar: 3,
+        Abr: 4,
+        Mai: 5,
+        Jun: 6,
+        Jul: 7,
+        Ago: 8,
+        Set: 9,
+        Out: 10,
+        Nov: 11,
+        Dez: 12,
+      };
+      data = month[refMonth]!;
+      return data;
 
-        case "toMonth":
-          !complete
-            ? (month = {
-                1: "Jan",
-                2: "Fev",
-                3: "Mar",
-                4: "Abr",
-                5: "Mai",
-                6: "Jun",
-                7: "Jul",
-                8: "Ago",
-                9: "Set",
-                10: "Out",
-                11: "Nov",
-                12: "Dez",
-              })
-            : (month = {
-                1: "Janeiro",
-                2: "Fevereiro",
-                3: "Março",
-                4: "Abril",
-                5: "Maio",
-                6: "Junho",
-                7: "Julho",
-                8: "Agosto",
-                9: "Setembro",
-                10: "Outubro",
-                11: "Novembro",
-                12: "Dezembro",
-              });
-          data = month[refMonth.toString()]!;
-          return data;
-      }
-
-    case "en":
-      switch (type) {
-        case "toNumber":
-          month = {
-            Jan: 1,
-            Feb: 2,
-            Mar: 3,
-            Apr: 4,
-            May: 5,
-            Jun: 6,
-            Jul: 7,
-            Aug: 8,
-            Sep: 9,
-            Oct: 10,
-            Nov: 11,
-            Dec: 12,
-          };
-          data = month[refMonth]!;
-          return data;
-
-        case "toMonth":
-          month = {
+    case "toMonth":
+      !complete
+        ? (month = {
             1: "Jan",
-            2: "Feb",
+            2: "Fev",
             3: "Mar",
-            4: "Apr",
-            5: "May",
+            4: "Abr",
+            5: "Mai",
             6: "Jun",
             7: "Jul",
-            8: "Aug",
-            9: "Sep",
-            10: "Oct",
+            8: "Ago",
+            9: "Set",
+            10: "Out",
             11: "Nov",
-            12: "Dec",
-          };
-          data = month[refMonth.toString()]!;
-          return data;
-      }
-  }
+            12: "Dez",
+          })
+        : (month = {
+            1: "Janeiro",
+            2: "Fevereiro",
+            3: "Março",
+            4: "Abril",
+            5: "Maio",
+            6: "Junho",
+            7: "Julho",
+            8: "Agosto",
+            9: "Setembro",
+            10: "Outubro",
+            11: "Novembro",
+            12: "Dezembro",
+          });
+      data = month[refMonth.toString()]!;
+      return data;
+  } 
 }
 
 /**
