@@ -9,7 +9,6 @@ import { AlertContext } from "../../context/Alert/alertContext";
 import { numberToReal } from "../../utils/number.helper";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import {
-  Icon,
   Label,
   ModalContainer,
   ModalView,
