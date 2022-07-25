@@ -124,6 +124,15 @@ const Filter = ({
     setValue("initialdate", params.initialDate!);
     setValue("finaldate", params.finalDate!);
     setValue("description", params.description!);
+    setModality(params.modality);
+    setTypeEntry(params.typeEntry);
+    setSegment(params.segment);
+
+    params.initialValue !== 0 &&
+      setValue("initialvalue", numberToReal(params.initialValue!));
+
+    params.finalValue !== 0 &&
+      setValue("finalvalue", numberToReal(params.finalValue!));
   }, []);
 
   return (
