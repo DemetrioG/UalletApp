@@ -1,25 +1,45 @@
 import * as React from "react";
-import styled from "styled-components";
-import { Control, Controller, FieldValues } from "react-hook-form";
-
-import {
-  FormControl as NativeFormControl,
-  IInputProps,
-  Input,
-  WarningOutlineIcon,
-} from "native-base";
-import { metrics } from "../../styles";
+import { IInputProps, Input, WarningOutlineIcon } from "native-base";
 import { TextInputMask } from "react-native-masked-text";
+import { Control, Controller, FieldValues } from "react-hook-form";
+import { FormControl as NativeFormControl } from "native-base";
+
+import { colors, metrics } from "../../styles";
+import NativeIcon from "../Icon";
+import styled from "styled-components";
+
+const Icon = styled(NativeIcon)`
+  position: absolute;
+  top: -30px;
+  right: 15px;
+`;
 
 const FormControl = styled(NativeFormControl)`
   margin-bottom: ${metrics.baseMargin}px;
 `;
+
+const CalendarIcon = ({
+  setCalendar,
+}: {
+  setCalendar: React.Dispatch<React.SetStateAction<any>>;
+}) => {
+  return (
+    <Icon
+      name="calendar"
+      size={18}
+      color={colors.gray}
+      onPress={() => setCalendar((calendarState: boolean) => !calendarState)}
+    />
+  );
+};
 
 const UTextInput = (
   props: IInputProps & {
     masked?: "datetime" | "money";
     errors?: object | undefined;
     helperText?: string | undefined;
+    withIcon?: boolean;
+    setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
   }
 ) => {
   const [isInvalid, setIsInvalid] = React.useState(false);
@@ -43,6 +63,9 @@ const UTextInput = (
           ) : (
             <Input {...props} />
           )}
+          {props.masked === "datetime" && props.withIcon && (
+            <CalendarIcon setCalendar={props.setCalendar!} />
+          )}
         </>
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
           {props.helperText}
@@ -57,7 +80,6 @@ const StyledTextInput = styled(UTextInput)`
 `;
 
 const TextInput = ({
-  masked,
   name,
   control,
   ...props
@@ -65,6 +87,7 @@ const TextInput = ({
   masked?: "datetime" | "money";
   name: string;
   control: Control<FieldValues | any>;
+  setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
     <Controller
@@ -72,7 +95,6 @@ const TextInput = ({
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
         <StyledTextInput
-          masked={masked}
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}
