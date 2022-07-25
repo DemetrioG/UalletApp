@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Text, View } from "react-native";
-import { Button } from "native-base";
+import { HStack, Text } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { fonts, metrics } from "../../styles";
-import { DeleteButton } from "../../styles/general";
+import { ButtonDeleteSmall, ButtonSmall } from "../../styles/general";
 
 export const StyledLottieView: React.FC<
   AnimatedLottieViewProps & { type?: string }
@@ -14,34 +13,32 @@ export const StyledLottieView: React.FC<
 `;
 
 export const TextAlert = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.large}px;
   margin-bottom: ${metrics.doubleBaseMargin}px;
   text-align: center;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const ButtonContainer = styled(View)`
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
+export const ButtonContainer = styled(HStack)`
+  width: 90%;
   justify-content: space-around;
 `;
 
-export const StyledButtonConfirm = styled(Button)`
+export const StyledButtonConfirm = styled(ButtonSmall)`
   width: 100px;
   height: 35px;
 `;
 
-export const StyledButtonDelete = styled(DeleteButton)`
+export const StyledButtonDelete = styled(ButtonDeleteSmall)`
   width: 100px;
   height: 35px;
 `;
 
-export const HelperText = styled(Text)`
+export const HelperText = styled(Text).attrs(() => ({
+  fontWeight: 700,
+  fontSize: 'md'
+}))`
   text-align: center;
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.medium}px;
   color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${metrics.doubleBaseMargin}px;
 `;
