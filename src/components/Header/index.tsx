@@ -31,7 +31,7 @@ for (let index = 0; index < 5; index++) {
   optionsYear.push(new Date().getFullYear() + index);
 }
 
-export default function Header() {
+const Header = () => {
   const { data } = React.useContext(DataContext);
   const { user, setUser } = React.useContext(UserContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
@@ -115,4 +115,6 @@ export default function Header() {
       )}
     </>
   );
-}
+};
+
+export default Header;

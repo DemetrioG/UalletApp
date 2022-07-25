@@ -63,11 +63,7 @@ export interface IEntryList {
 const EMPTY = require("../../../assets/icons/emptyData.json");
 const LOADING = require("../../../assets/icons/blueLoading.json");
 
-export default function Entry({
-  route: { params },
-}: {
-  route: { params: IActiveFilter };
-}) {
+const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
   const { user } = React.useContext(UserContext);
   const { date } = React.useContext(DateContext);
   const { data, setData } = React.useContext(DataContext);
@@ -278,7 +274,7 @@ export default function Entry({
         });
       }
     })(filter);
-  }, [date.modality, date.month, date.year, filter]);
+  }, [date.modality, date.month, date.year, filter, isFocused]);
 
   React.useEffect(() => {
     // Retorna o Saldo atual
@@ -388,4 +384,6 @@ export default function Entry({
       </TotalItemContainer>
     </ViewTabContent>
   );
-}
+};
+
+export default Entry;

@@ -38,7 +38,7 @@ const schema = yup
   })
   .required();
 
-export default function Complete() {
+const Complete = () => {
   const { user } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -181,4 +181,6 @@ export default function Complete() {
       </TouchableWithoutFeedback>
     </StyledKeyboardAvoidingView>
   );
-}
+};
+
+export default Complete;

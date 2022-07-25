@@ -50,11 +50,11 @@ const schema = yup
   })
   .required();
 
-export default function Filter({
+const Filter = ({
   route: { params },
 }: {
   route: { params: IActiveFilter };
-}) {
+}) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setAlert } = React.useContext(AlertContext);
   const [loading, setLoading] = React.useState(false);
@@ -229,4 +229,6 @@ export default function Filter({
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default Filter;
