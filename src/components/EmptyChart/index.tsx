@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DefaultText, HelperText } from "./styles";
 import { ContainerCenter } from "../../styles/general";
 import Icon from "../Icon";
+import { colors } from "../../styles";
 
 interface IEmptyChart {
   emphasisText: string;
@@ -18,7 +19,7 @@ const EmpyChart = ({ emphasisText, iconName, helperText }: IEmptyChart) => {
 
   return (
     <ContainerCenter>
-      <Icon name={iconName} />
+      <Icon name={iconName} color={colors.gray} />
       <DefaultText>{emphasisText}</DefaultText>
       <TouchableOpacity onPress={() => navigate("LançamentosTab")}>
         <HelperText>{helperText}</HelperText>
