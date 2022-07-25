@@ -26,7 +26,6 @@ import metrics from "./metrics";
 import fonts from "./fonts";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
-import { InterfaceTextProps } from "native-base/lib/typescript/components/primitives/Text/types";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;

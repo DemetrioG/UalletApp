@@ -39,7 +39,6 @@ import {
 import {
   BackgroundContainer,
   Card,
-  Icon,
   ItemContainer,
   ScrollViewTab,
   Skeleton,

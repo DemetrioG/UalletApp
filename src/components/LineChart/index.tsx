@@ -157,7 +157,7 @@ const LineChart = () => {
 
   return (
     <>
-      {loader.visible && (
+      {!loader.visible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart

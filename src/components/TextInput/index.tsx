@@ -74,9 +74,6 @@ const UTextInput = (
     </>
   );
 };
-const StyledTextInput = styled(UTextInput)`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
 
 const StyledTextInput = styled(UTextInput)`
   color: ${({ theme: { theme } }) => theme.text};
