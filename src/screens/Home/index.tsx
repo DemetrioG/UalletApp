@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
+import Icon from "../../components/Icon";
 import { UserContext } from "../../context/User/userContext";
 import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
@@ -40,11 +41,10 @@ import {
   Card,
   ItemContainer,
   ScrollViewTab,
-  StyledIcon,
-  StyledLoader,
+  Skeleton,
   ValueText,
 } from "../../styles/general";
-import { metrics } from "../../styles";
+import { Collapse } from "native-base";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -72,7 +72,7 @@ function ItemList({
   );
 }
 
-export default function Home() {
+const Home = () => {
   const isFocused = useIsFocused();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
@@ -80,6 +80,8 @@ export default function Home() {
   const { data, setData } = React.useContext(DataContext);
   const { date } = React.useContext(DateContext);
   const [consolidate, setConsolidate] = React.useState(false);
+  const [financeShow, setFinanceShow] = React.useState(true);
+  const [investShow, setInvestShow] = React.useState(true);
   const [lastEntry, setLastEntry] = React.useState<
     Array<IEntryList | firebase.firestore.DocumentData>
   >([]);
@@ -214,15 +216,18 @@ export default function Home() {
       <Alert />
       <Header />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
-        <Section>
-          <SectionText>Finanças</SectionText>
-          <StyledIcon name="chevron-down" colorVariant="tertiary" />
-        </Section>
-        <Card>
-          {loader.visible ? (
-            <StyledLoader height={69} radius={metrics.smallRadius} />
-          ) : (
-            <>
+        <TouchableOpacity onPress={() => setFinanceShow(!financeShow)}>
+          <Section>
+            <SectionText>Finanças</SectionText>
+            <Icon
+              name={financeShow ? "chevron-down" : "chevron-right"}
+              colorVariant="tertiary"
+            />
+          </Section>
+        </TouchableOpacity>
+        <Collapse isOpen={financeShow}>
+          <Card>
+            <Skeleton isLoaded={!loader.visible} width={"full"} h={69}>
               <CardHeaderView balance>
                 <CardTextView>
                   <CardHeaderText>Saldo atual</CardHeaderText>
@@ -234,91 +239,91 @@ export default function Home() {
               <Balance negative={data.balance?.includes("-")}>
                 {!user.hideNumbers ? data.balance : "** ** ** ** **"}
               </Balance>
-            </>
-          )}
-        </Card>
-        <Card>
-          {loader.visible ? (
-            <StyledLoader height={156} radius={metrics.mediumRadius} />
-          ) : (
-            <>
+            </Skeleton>
+          </Card>
+          <Card>
+            <Skeleton isLoaded={!loader.visible} h={156} width={"full"}>
               <CardHeaderView>
                 <CardTextView>
                   <CardHeaderText>Últimos lançamentos</CardHeaderText>
                 </CardTextView>
-                <TouchableOpacity onPress={() => navigate("LançamentosTab")}>
-                  <StyledIcon name="edit-3" />
-                </TouchableOpacity>
+                <Icon
+                  name="edit-3"
+                  onPress={() => navigate("LançamentosTab")}
+                />
               </CardHeaderView>
               <>
                 {lastEntry.map((item, index) => {
                   return <ItemList item={item} key={index} />;
                 })}
               </>
-            </>
-          )}
-        </Card>
-        {/* <Card>
+            </Skeleton>
+          </Card>
+          {/* <Card>
           <CardStatusView>
-            <StatusText bold={true}>Você está indo bem</StatusText>
+          <StatusText bold={true}>Você está indo bem</StatusText>
           </CardStatusView>
           <CardStatusView>
-            <StatusText>
-              Sua média de gastos variáveis semanal está representando{" "}
-              <StatusPercentText>3%</StatusPercentText> de sua renda
-            </StatusText>
+          <StatusText>
+          Sua média de gastos variáveis semanal está representando{" "}
+          <StatusPercentText>3%</StatusPercentText> de sua renda
+          </StatusText>
           </CardStatusView>
           <View>
-            <StatusText bold={true}>Continue!! ⚡</StatusText>
+          <StatusText bold={true}>Continue!! ⚡</StatusText>
           </View>
         </Card> */}
-        <Card>
-          {loader.visible ? (
-            <StyledLoader height={152} radius={metrics.mediumRadius} />
-          ) : (
+          <Card>
+            <Skeleton isLoaded={!loader.visible} h={152} width={"full"}>
+              <CardHeaderView>
+                <CardTextView>
+                  <CardHeaderText>Receitas x Despesas</CardHeaderText>
+                </CardTextView>
+              </CardHeaderView>
+            </Skeleton>
+            <LineChart />
+          </Card>
+          <Card>
+            <Skeleton isLoaded={!loader.visible} h={168} width={"full"}>
+              <CardHeaderView>
+                <CardTextView>
+                  <CardHeaderText>Despesas por segmento</CardHeaderText>
+                </CardTextView>
+              </CardHeaderView>
+            </Skeleton>
+            <SegmentChart />
+          </Card>
+        </Collapse>
+        <TouchableOpacity onPress={() => setInvestShow(!investShow)}>
+          <Section>
+            <SectionText>Investimentos</SectionText>
+            <Icon
+              name={investShow ? "chevron-down" : "chevron-right"}
+              colorVariant="tertiary"
+            />
+          </Section>
+        </TouchableOpacity>
+        <Collapse isOpen={investShow}>
+          <Card>
             <CardHeaderView>
               <CardTextView>
-                <CardHeaderText>Receitas x Despesas</CardHeaderText>
+                <CardHeaderText>Patrimônio investido</CardHeaderText>
               </CardTextView>
+              <Icon name="maximize-2" />
             </CardHeaderView>
-          )}
-          <LineChart />
-        </Card>
-        <Card>
-          {loader.visible ? (
-            <StyledLoader height={168} radius={metrics.mediumRadius} />
-          ) : (
-            <CardHeaderView>
-              <CardTextView>
-                <CardHeaderText>Despesas por segmento</CardHeaderText>
-              </CardTextView>
-            </CardHeaderView>
-          )}
-          <SegmentChart />
-        </Card>
-        <Section>
-          <SectionText>Investimentos</SectionText>
-          <StyledIcon name="chevron-down" colorVariant="tertiary" />
-        </Section>
-        <Card>
-          <CardHeaderView>
+            <Invest>
+              {!user.hideNumbers ? "R$ 153.000,00" : "** ** ** ** **"}
+            </Invest>
             <CardTextView>
-              <CardHeaderText>Patrimônio investido</CardHeaderText>
+              <CardFooterText>Rendimento semanal</CardFooterText>
+              <InvestPercentual>55%</InvestPercentual>
+              <Icon name="arrow-up" size={15} colorVariant="green" />
             </CardTextView>
-            <TouchableOpacity>
-              <StyledIcon name="maximize-2" />
-            </TouchableOpacity>
-          </CardHeaderView>
-          <Invest>
-            {!user.hideNumbers ? "R$ 153.000,00" : "** ** ** ** **"}
-          </Invest>
-          <CardTextView>
-            <CardFooterText>Rendimento semanal</CardFooterText>
-            <InvestPercentual>55%</InvestPercentual>
-            <StyledIcon name="arrow-up" size={15} colorVariant="green" />
-          </CardTextView>
-        </Card>
+          </Card>
+        </Collapse>
       </ScrollViewTab>
     </BackgroundContainer>
   );
-}
+};
+
+export default Home;

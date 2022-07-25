@@ -18,7 +18,6 @@ import {
   SegmentLabelText,
   ChartContainer,
 } from "./styles";
-import { StyledLoader } from "../../styles/general";
 
 interface ISlices {
   slices?: [
@@ -57,7 +56,7 @@ export const Label = ({ slices, data }: ISlices) => {
   );
 };
 
-export default function SegmentChart() {
+const SegmentChart = () => {
   const { date } = React.useContext(DateContext);
   const { user } = React.useContext(UserContext);
   const { data: userData } = React.useContext(DataContext);
@@ -212,4 +211,6 @@ export default function SegmentChart() {
       )}
     </>
   );
-}
+};
+
+export default SegmentChart;

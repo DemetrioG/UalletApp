@@ -4,8 +4,8 @@ import { Modal, ScrollView } from "react-native";
 import { DateContext } from "../../context/Date/dateContext";
 import { getStorage, setStorage } from "../../utils/storage.helper";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
-import { ModalContainer, ModalView, StyledIcon } from "../../styles/general";
-import { colors } from "../../styles";
+import { ModalContainer, ModalView } from "../../styles/general";
+import Icon from "../Icon";
 
 interface IDatePicker {
   options: string[] | number[];
@@ -15,13 +15,13 @@ interface IDatePicker {
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DatePicker({
+const DatePicker = ({
   options,
   setVisibility,
   type,
   visibility,
   next,
-}: IDatePicker) {
+}: IDatePicker) => {
   const { date, setDate } = React.useContext(DateContext);
 
   const handleSubmitItem = (item: string | number, index: number) => {
@@ -34,7 +34,7 @@ export default function DatePicker({
     return (
       <ItemPicker key={index} onPress={() => handleSubmitItem(item, index)}>
         <TextItem type={type}>{item}</TextItem>
-        <StyledIcon name="chevron-right" size={20} />
+        <Icon name="chevron-right" size={20} />
       </ItemPicker>
     );
   });
@@ -69,15 +69,15 @@ export default function DatePicker({
       onRequestClose={() => setVisibility(false)}
     >
       <ModalContainer>
-        <ModalView height={350}>
+        <ModalView>
           <HeaderView>
             <Title>
               {type} • {type == "Mês" ? options[date.month - 1] : date.year}
             </Title>
-            <StyledIcon
+            <Icon
               name="x"
               size={20}
-              color={colors.lightRed}
+              colorVariant="red"
               onPress={() => setVisibility(false)}
             />
           </HeaderView>
@@ -86,4 +86,6 @@ export default function DatePicker({
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default DatePicker;

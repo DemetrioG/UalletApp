@@ -21,6 +21,7 @@ import { AlertContextProvider } from "./src/context/Alert/alertContext";
 import { DateContextProvider } from "./src/context/Date/dateContext";
 import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
 import { DataContextProvider } from "./src/context/Data/dataContext";
+import BaseProvider from "./src/styles/baseTheme";
 
 LogBox.ignoreAllLogs(true);
 
@@ -28,7 +29,7 @@ export interface IThemeProvider {
   theme?: typeof LIGHT;
 }
 
-export default function App(): JSX.Element {
+const App = () => {
   const [theme, setTheme] = React.useState<IThemeProvider>();
   const [fontLoaded] = useFonts({
     Raleway_500Medium,
@@ -54,19 +55,23 @@ export default function App(): JSX.Element {
     return <AppLoading />;
   } else {
     return (
-      <ThemeProvider theme={theme}>
-        <UserContextProvider>
-          <DateContextProvider>
-            <DataContextProvider>
-              <AlertContextProvider>
-                <LoaderContextProvider>
-                  <AppContent />
-                </LoaderContextProvider>
-              </AlertContextProvider>
-            </DataContextProvider>
-          </DateContextProvider>
-        </UserContextProvider>
-      </ThemeProvider>
+      <BaseProvider>
+        <ThemeProvider theme={theme}>
+          <UserContextProvider>
+            <DateContextProvider>
+              <DataContextProvider>
+                <AlertContextProvider>
+                  <LoaderContextProvider>
+                    <AppContent />
+                  </LoaderContextProvider>
+                </AlertContextProvider>
+              </DataContextProvider>
+            </DateContextProvider>
+          </UserContextProvider>
+        </ThemeProvider>
+      </BaseProvider>
     );
   }
-}
+};
+
+export default App;

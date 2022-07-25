@@ -1,14 +1,14 @@
-import { Text, TextProps, View } from "react-native";
+import * as React from "react";
+import { TextProps, View, ViewProps } from "react-native";
 import { ChartProps, LineChart } from "react-native-svg-charts";
 import { IconProps } from "react-native-vector-icons/Icon";
 import Feather from "react-native-vector-icons/Feather";
 import styled from "styled-components";
 import { fonts, metrics } from "../../styles";
+import { Center, Text } from "native-base";
 
-export const ChartContainer = styled(View)`
+export const ChartContainer = styled(Center)`
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const ChartView = styled(View)`
@@ -18,7 +18,7 @@ export const ChartView = styled(View)`
   width: 45%;
 `;
 
-export const LabelView = styled(View)`
+export const LabelView: React.FC<ViewProps> = styled(View)`
   margin-top: 5px;
   flex-direction: row;
   justify-content: space-between;
@@ -26,8 +26,6 @@ export const LabelView = styled(View)`
 `;
 
 export const LabelText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
@@ -68,17 +66,24 @@ export const PercentualView = styled(View)`
   align-items: flex-start;
 `;
 
+export const PercentualContainer = styled(View)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 export const PercentualText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const PercentualValue: React.FC<
   TextProps & { percentual: number; type: "income" | "expense" }
-> = styled(Text)`
-  font-family: ${fonts.montserratMedium};
-  font-size: ${fonts.regular}px;
+> = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+  fontWeight: 700,
+  fontSize: "sm",
+}))`
   color: ${({ percentual, type, theme }) =>
     type === "income"
       ? percentual > -1

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -9,6 +10,7 @@ import * as yup from "yup";
 import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
 import Alert from "../../components/Alert";
+import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { dateValidation } from "../../utils/date.helper";
@@ -20,10 +22,7 @@ import {
   HeaderTitle,
   HeaderTitleContainer,
   LogoHeader,
-  StyledButton,
   StyledKeyboardAvoidingView,
-  StyledLoading,
-  StyledTextInputMask,
   TextHeader,
 } from "../../styles/general";
 
@@ -39,7 +38,7 @@ const schema = yup
   })
   .required();
 
-export default function Complete() {
+const Complete = () => {
   const { user } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -121,7 +120,7 @@ export default function Complete() {
               }));
             });
         }
-        setLoading(false);
+        return setLoading(false);
       });
   }
 
@@ -131,7 +130,7 @@ export default function Complete() {
         <BackgroundContainer>
           <Alert />
           <LogoHeader>
-            <TextHeader>Complete seu cadastro</TextHeader>
+            <TextHeader fontSize={"2xl"}>Complete seu cadastro</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>
@@ -141,13 +140,6 @@ export default function Complete() {
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>
-              <StyledTextInputMask
-                placeholder="Data de nascimento"
-                type="datetime"
-                name="birthdate"
-                control={control}
-                maxLength={10}
-              />
               <Picker
                 options={optionsGender}
                 selectedValue={setGender}
@@ -155,13 +147,6 @@ export default function Complete() {
                 type="Sexo"
                 visibility={genderVisible}
                 setVisibility={setGenderVisible}
-              />
-              <StyledTextInputMask
-                placeholder="Renda média"
-                type="money"
-                name="income"
-                control={control}
-                errors={errors}
               />
               <Picker
                 options={optionsProfile}
@@ -171,17 +156,31 @@ export default function Complete() {
                 visibility={profileVisible}
                 setVisibility={setProfileVisible}
               />
-              <StyledButton onPress={handleSubmit(registerData)}>
-                {loading ? (
-                  <StyledLoading />
-                ) : (
-                  <ButtonText>CONFIRMAR</ButtonText>
-                )}
-              </StyledButton>
+              <TextInput
+                placeholder="Data de nascimento"
+                name="birthdate"
+                control={control}
+                maxLength={10}
+                masked="datetime"
+                errors={errors.birthdate}
+              />
+              <TextInput
+                placeholder="Renda média"
+                name="income"
+                control={control}
+                errors={errors.income}
+                masked="money"
+                helperText="Informe todos os campos"
+              />
+              <Button isLoading={loading} onPress={handleSubmit(registerData)}>
+                <ButtonText>CONFIRMAR</ButtonText>
+              </Button>
             </FormContainer>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
     </StyledKeyboardAvoidingView>
   );
-}
+};
+
+export default Complete;

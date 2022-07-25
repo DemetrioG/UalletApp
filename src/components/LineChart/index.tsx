@@ -1,5 +1,4 @@
 import * as React from "react";
-import { View } from "react-native";
 
 import firebase from "../../services/firebase";
 import EmptyChart from "../EmptyChart";
@@ -8,12 +7,12 @@ import { DateContext } from "../../context/Date/dateContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { UserContext } from "../../context/User/userContext";
 import { dateMonthNumber, getFinalDateMonth } from "../../utils/date.helper";
-import { StyledLoader } from "../../styles/general";
 import {
   ChartContainer,
   ChartView,
   LabelText,
   LabelView,
+  PercentualContainer,
   PercentualIcon,
   PercentualText,
   PercentualValue,
@@ -21,7 +20,7 @@ import {
   StyledLineChart,
 } from "./styles";
 
-export default function LineChart() {
+const LineChart = () => {
   const { date } = React.useContext(DateContext);
   const { user } = React.useContext(UserContext);
   const { data: userData } = React.useContext(DataContext);
@@ -128,10 +127,8 @@ export default function LineChart() {
                   setData([incomeData, expenseData]);
 
                   // Seta os labels do gráfico
-                  setInitLabel(
-                    dateMonthNumber("toMonth", date.month - 2, "pt")
-                  );
-                  setFinalLabel(dateMonthNumber("toMonth", date.month, "pt"));
+                  setInitLabel(dateMonthNumber("toMonth", date.month - 2));
+                  setFinalLabel(dateMonthNumber("toMonth", date.month));
 
                   // Seta os percentuais de Crescimento/Queda
                   setIncome(
@@ -178,34 +175,28 @@ export default function LineChart() {
                 </LabelView>
               </ChartView>
               <PercentualView>
-                <View>
+                <PercentualContainer>
                   <PercentualText>
                     Receita mensal{"\u00A0"}
                     {"\u00A0"}
                     {"\u00A0"}
-                    <PercentualValue type="income" percentual={income}>
-                      {income}%
-                    </PercentualValue>
-                    <PercentualIcon
-                      percentual={income}
-                      type="income"
-                      size={15}
-                    />
                   </PercentualText>
-                </View>
-                <View>
-                  <PercentualText>
-                    Despesa mensal{"\u00A0"}
-                    <PercentualValue type="expense" percentual={expense}>
-                      {expense}%
-                    </PercentualValue>
-                    <PercentualIcon
-                      percentual={expense}
-                      type="expense"
-                      size={15}
-                    />
-                  </PercentualText>
-                </View>
+                  <PercentualValue type="income" percentual={income}>
+                    {income}%
+                  </PercentualValue>
+                  <PercentualIcon percentual={income} type="income" size={15} />
+                </PercentualContainer>
+                <PercentualContainer>
+                  <PercentualText>Despesa mensal{"\u00A0"}</PercentualText>
+                  <PercentualValue type="expense" percentual={expense}>
+                    {expense}%
+                  </PercentualValue>
+                  <PercentualIcon
+                    percentual={expense}
+                    type="expense"
+                    size={15}
+                  />
+                </PercentualContainer>
               </PercentualView>
             </>
           )}
@@ -213,4 +204,6 @@ export default function LineChart() {
       )}
     </>
   );
-}
+};
+
+export default LineChart;

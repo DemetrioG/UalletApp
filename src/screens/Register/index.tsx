@@ -1,11 +1,14 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Button } from "native-base";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import firebase from "../../services/firebase";
 import Alert from "../../components/Alert";
+import TextInput from "../../components/TextInput";
+import TextInputPassword from "../../components/TextInputPassword";
 import { AlertContext } from "../../context/Alert/alertContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { networkConnection } from "../../utils/network.helper";
@@ -18,16 +21,9 @@ import {
   HeaderTitleContainer,
   Logo,
   LogoHeader,
-  PasswordContainer,
-  PasswordLook,
-  StyledButton,
-  StyledIcon,
   StyledKeyboardAvoidingView,
-  StyledLoading,
-  StyledTextInput,
-  TextUalletHeader,
+  TextHeader,
 } from "../../styles/general";
-import { colors } from "../../styles";
 
 interface IForm {
   name: string;
@@ -45,12 +41,11 @@ const schema = yup
   })
   .required();
 
-export default function Register() {
+const Register = () => {
   const { setAlert } = React.useContext(AlertContext);
   const {
     data: { isNetworkConnected },
   } = React.useContext(DataContext);
-  const [lookPassword, setLookPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   const {
@@ -121,8 +116,8 @@ export default function Register() {
               }));
               break;
           }
-          return setLoading(false);
         });
+      return setLoading(false);
     }
   }
 
@@ -133,7 +128,7 @@ export default function Register() {
           <Alert />
           <LogoHeader>
             <Logo source={require("../../../assets/images/logo.png")} />
-            <TextUalletHeader>Uallet</TextUalletHeader>
+            <TextHeader withMarginLeft>Uallet</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>
@@ -142,57 +137,46 @@ export default function Register() {
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>
-              <StyledTextInput
+              <TextInput
                 placeholder="Nome completo *"
                 maxLength={40}
                 name="name"
                 control={control}
+                errors={errors.name}
               />
-              <StyledTextInput
+              <TextInput
                 placeholder="E-mail *"
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
                 name="email"
                 control={control}
+                errors={errors.email}
               />
-              <PasswordContainer>
-                <StyledTextInput
-                  placeholder="Senha *"
-                  secureTextEntry={!lookPassword}
-                  maxLength={20}
-                  name="password"
-                  control={control}
-                />
-                <PasswordLook onPress={() => setLookPassword(!lookPassword)}>
-                  <StyledIcon
-                    name={!lookPassword ? "eye" : "eye-off"}
-                    size={17}
-                    color={colors.gray}
-                  />
-                </PasswordLook>
-              </PasswordContainer>
-              <StyledTextInput
+              <TextInputPassword
+                placeholder="Senha *"
+                name="password"
+                control={control}
+                errors={errors.password}
+              />
+              <TextInputPassword
                 placeholder="Confirme sua senha *"
-                secureTextEntry={!lookPassword}
                 onSubmitEditing={handleSubmit(registerUser)}
                 returnKeyType="done"
-                maxLength={20}
                 name="confirm"
                 control={control}
-                errors={errors}
+                errors={errors.confirm}
+                helperText="Informe todos os campos"
               />
-            </FormContainer>
-            <StyledButton onPress={handleSubmit(registerUser)}>
-              {loading ? (
-                <StyledLoading />
-              ) : (
+              <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
                 <ButtonText>CRIAR CONTA</ButtonText>
-              )}
-            </StyledButton>
+              </Button>
+            </FormContainer>
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
     </StyledKeyboardAvoidingView>
   );
-}
+};
+
+export default Register;

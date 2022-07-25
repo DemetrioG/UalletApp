@@ -1,39 +1,29 @@
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from "react-native";
+import { IMenuItemProps, IMenuProps, ITextProps, Text } from "native-base";
+import { TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import styled from "styled-components";
-import { colors, fonts, metrics } from "../../styles";
+import { colors, metrics } from "../../styles";
+import { Avatar as NativeAvatar, Menu } from "native-base";
+import React from "react";
 
-export const IconContainer = styled(TouchableOpacity)`
-  margin-left: ${metrics.baseMargin}px;
-`;
+export const NativeMenu: React.FC<IMenuProps> = styled(Menu).attrs(({theme: {theme}}) => ({
+  boxSize: 'full',
+  rounded: 'lg',
+  minWidth: 180,
+  top: metrics.baseMargin,
+  right: metrics.basePadding,
+  backgroundColor: theme.secondary
+}))``
 
-export const MenuContainer = styled(View)`
-  padding: ${metrics.basePadding}px;
-  position: absolute;
-  right: 10px;
-  top: 60px;
-  background-color: ${colors.infoBlack};
-  border-radius: ${metrics.baseRadius}px;
-  width: 200px;
-  z-index: 5;
-`;
+export const NativeMenuItem: React.FC<IMenuItemProps> = styled(Menu.Item)``
 
 export const ItemContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: ${metrics.basePadding}px 10px;
-  border-bottom-width: 1px;
-  border-color: ${colors.gray};
+  padding: 10px;
 `;
 
-export const ItemText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
+export const ItemText: React.FC<ITextProps> = styled(Text)`
   color: ${colors.white};
 `;
 
@@ -47,7 +37,16 @@ export const ItemContent: React.FC<TouchableOpacityProps> = styled(
 `;
 
 export const LogoutText = styled(Text)`
-  font-family: ${fonts.ralewayBold};
-  font-size: ${fonts.regular}px;
   color: ${colors.lightRed};
 `;
+
+export const Avatar = styled(NativeAvatar).attrs(() => ({
+  size: "sm",
+  fontFamily: "body",
+  shadow: "2",
+}))``;
+
+export const AvatarText = styled(Text).attrs(() => ({
+  fontSize: "sm",
+  fontWeight: 700,
+}))``;

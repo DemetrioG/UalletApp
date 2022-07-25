@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
+import { Actionsheet, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { BottomSheetView } from "@gorhom/bottom-sheet";
 import * as AuthSession from "expo-auth-session";
 import * as Facebook from "expo-facebook";
 import { useForm } from "react-hook-form";
@@ -16,6 +16,7 @@ import * as yup from "yup";
 
 import firebase from "../../services/firebase";
 import Alert from "../../components/Alert";
+import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { AlertContext } from "../../context/Alert/alertContext";
@@ -26,7 +27,6 @@ import {
   AppleLogo,
   FacebookLogo,
   GoogleLogo,
-  SheetContainer,
   SheetView,
   SocialContainer,
 } from "./styles";
@@ -35,20 +35,15 @@ import {
   Logo,
   LogoHeader,
   StyledKeyboardAvoidingView,
-  TextUalletHeader,
   HeaderTitleContainer,
   HeaderTitle,
   ContainerCenter,
-  StyledTextInput,
   FormContainer,
-  StyledButton,
   ButtonText,
-  StyledLoading,
-  StyledIcon,
-  PasswordContainer,
-  PasswordLook,
+  TextHeader,
 } from "../../styles/general";
-import { colors, metrics } from "../../styles";
+import { colors } from "../../styles";
+import TextInputPassword from "../../components/TextInputPassword";
 interface IForm {
   email: string;
   password: string;
@@ -68,7 +63,7 @@ const ICONS = {
   facebook: require("../../../assets/images/facebookIcon.png"),
 };
 
-export default function Login() {
+const Login = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
     data: { isNetworkConnected },
@@ -76,10 +71,7 @@ export default function Login() {
   const { setUser } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
   const [sheetOpen, setSheetOpen] = React.useState(false);
-  const [lookPassword, setLookPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const sheetRef = React.useRef(null);
-  const snapPoints = ["25%"];
 
   const {
     control,
@@ -231,7 +223,7 @@ export default function Login() {
           <Alert />
           <LogoHeader>
             <Logo source={LOGO} />
-            <TextUalletHeader>Uallet</TextUalletHeader>
+            <TextHeader withMarginLeft>Uallet</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>
@@ -241,40 +233,28 @@ export default function Login() {
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>
-              <StyledTextInput
+              <TextInput
                 placeholder="E-mail *"
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
                 name="email"
                 control={control}
+                errors={errors.email}
               />
-              <PasswordContainer>
-                <StyledTextInput
-                  placeholder="Senha *"
-                  secureTextEntry={!lookPassword}
-                  onSubmitEditing={handleSubmit(loginUser)}
-                  returnKeyType="done"
-                  maxLength={20}
-                  name="password"
-                  control={control}
-                  errors={errors}
-                />
-                <PasswordLook onPress={() => setLookPassword(!lookPassword)}>
-                  <StyledIcon
-                    name={!lookPassword ? "eye" : "eye-off"}
-                    size={17}
-                    color={colors.gray}
-                  />
-                </PasswordLook>
-              </PasswordContainer>
+              <TextInputPassword
+                placeholder="Senha *"
+                onSubmitEditing={handleSubmit(loginUser)}
+                returnKeyType="done"
+                name="password"
+                control={control}
+                errors={errors}
+                helperText="Informe todos os campos"
+              />
+              <Button isLoading={loading} onPress={handleSubmit(loginUser)}>
+                <ButtonText>ENTRAR</ButtonText>
+              </Button>
             </FormContainer>
-            <StyledButton
-              additionalMargin={metrics.doubleBaseMargin}
-              onPress={handleSubmit(loginUser)}
-            >
-              {loading ? <StyledLoading /> : <ButtonText>ENTRAR</ButtonText>}
-            </StyledButton>
             <TouchableOpacity onPress={() => setSheetOpen(true)}>
               <ActionText>Prefere entrar com as redes sociais?</ActionText>
             </TouchableOpacity>
@@ -284,37 +264,31 @@ export default function Login() {
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
-
-      {sheetOpen && (
-        <SheetContainer
-          ref={sheetRef}
-          snapPoints={snapPoints}
-          enablePanDownToClose={true}
-          onClose={() => setSheetOpen(false)}
-        >
-          <BottomSheetView>
-            <SheetView>
-              {Platform.OS === "ios" && (
-                <SocialContainer backgroundColor={colors.black}>
-                  <AppleLogo source={ICONS.apple} />
-                </SocialContainer>
-              )}
-              <SocialContainer
-                backgroundColor={colors.white}
-                onPress={googleLogin}
-              >
-                <GoogleLogo source={ICONS.google} />
+      <Actionsheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)}>
+        <Actionsheet.Content backgroundColor={colors.transpDark}>
+          <SheetView>
+            {Platform.OS === "ios" && (
+              <SocialContainer backgroundColor={colors.black}>
+                <AppleLogo source={ICONS.apple} />
               </SocialContainer>
-              <SocialContainer
-                backgroundColor={colors.facebookBlue}
-                onPress={facebookLogin}
-              >
-                <FacebookLogo source={ICONS.facebook} />
-              </SocialContainer>
-            </SheetView>
-          </BottomSheetView>
-        </SheetContainer>
-      )}
+            )}
+            <SocialContainer
+              backgroundColor={colors.white}
+              onPress={googleLogin}
+            >
+              <GoogleLogo source={ICONS.google} />
+            </SocialContainer>
+            <SocialContainer
+              backgroundColor={colors.facebookBlue}
+              onPress={facebookLogin}
+            >
+              <FacebookLogo source={ICONS.facebook} />
+            </SocialContainer>
+          </SheetView>
+        </Actionsheet.Content>
+      </Actionsheet>
     </StyledKeyboardAvoidingView>
   );
-}
+};
+
+export default Login;

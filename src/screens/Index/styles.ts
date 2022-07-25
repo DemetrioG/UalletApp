@@ -1,7 +1,7 @@
-import { Image, Text } from "react-native";
+import { Image } from "react-native";
+import { Text } from "native-base";
 import Carousel from "react-native-snap-carousel";
 import styled from "styled-components";
-import { fonts, metrics } from "../../styles";
 
 export const ImageCarousel = styled(Image).attrs(() => ({
   resizeMode: "contain",
@@ -10,15 +10,12 @@ export const ImageCarousel = styled(Image).attrs(() => ({
   width: 100%;
 `;
 
-export const TitleCarousel = styled(Text)`
-  font-size: ${fonts.larger}px;
-  font-family: ${fonts.ralewayExtraBold};
-  text-align: center;
-  margin-top: ${metrics.doubleBaseMargin}px;
-  color: ${({ theme: { theme } }) => theme.text};
-  background-color: ${({ theme: { theme } }) => theme.primary};
-`;
-
 export const StyledCarousel = styled(Carousel).attrs((props) => ({
   slideStyle: { marginTop: 80 },
 }))``;
+
+export const TitleCarousel = styled(Text).attrs(() => ({
+  fontWeight: 800,
+}))`
+  color: ${({ theme: { theme } }) => theme.text};
+`;

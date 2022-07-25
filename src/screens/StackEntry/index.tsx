@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Entry from "../Entry";
 import NewEntry from "../NewEntry";
+import Filter from "../Entry/Filter";
 import FixedEntry from "../FixedEntry";
 import Alert from "../../components/Alert";
 import Header from "../../components/Header";
@@ -10,7 +11,7 @@ import { BackgroundContainer, ViewTab } from "../../styles/general";
 
 const Stack = createNativeStackNavigator();
 
-export default function StackEntry() {
+const StackEntry = () => {
   return (
     <BackgroundContainer>
       <Alert />
@@ -32,8 +33,15 @@ export default function StackEntry() {
             component={FixedEntry}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="Filtros"
+            component={Filter}
+            options={{ headerShown: false, presentation: "transparentModal" }}
+          />
         </Stack.Navigator>
       </ViewTab>
     </BackgroundContainer>
   );
-}
+};
+
+export default StackEntry;

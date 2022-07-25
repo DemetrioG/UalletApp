@@ -1,8 +1,9 @@
 import React from "react";
-import { Text, View, ViewProps } from "react-native";
+import { View, ViewProps } from "react-native";
 import styled from "styled-components";
 import { PieChart } from "react-native-svg-charts";
 import { colors, fonts, metrics } from "../../styles";
+import { Center, Text } from "native-base";
 
 export const StyledPieChart: React.FC<{ data: number[] }> = styled(
   PieChart
@@ -38,10 +39,8 @@ export const StyledPieChart: React.FC<{ data: number[] }> = styled(
   height: 130px;
 `;
 
-export const ChartContainer = styled(View)`
+export const ChartContainer = styled(Center)`
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const PieChartLabel = styled(Text)`
@@ -80,7 +79,6 @@ export const DotView: React.FC<ViewProps & { index: number }> = styled(
 `;
 
 export const SegmentLabelText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Modal } from "react-native";
+import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -12,19 +13,14 @@ import {
   StyledLottieView,
   TextAlert,
 } from "./styles";
-import {
-  ButtonText,
-  StyledButton,
-  ModalContainer,
-  ModalView,
-} from "../../styles/general";
+import { ButtonText, ModalContainer, ModalView } from "../../styles/general";
 
 import ERROR from "../../../assets/icons/error.json";
 import SUCCESS from "../../../assets/icons/check.json";
 import CONFIRM from "../../../assets/icons/confirm.json";
 import NETWORK from "../../../assets/icons/network.json";
 
-export default function Alert() {
+const Alert = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { alert, setAlert } = React.useContext(AlertContext);
   const notInitialRender = React.useRef(false);
@@ -86,10 +82,10 @@ export default function Alert() {
               <StyledLottieView source={CONFIRM} autoPlay loop={false} />
               <TextAlert>{alert.title}</TextAlert>
               <ButtonContainer>
-                <StyledButtonDelete small onPress={handleCancel}>
+                <StyledButtonDelete onPress={handleCancel}>
                   <ButtonText>CANCELAR</ButtonText>
                 </StyledButtonDelete>
-                <StyledButtonConfirm small onPress={handleConfirm}>
+                <StyledButtonConfirm onPress={handleConfirm}>
                   <ButtonText>OK</ButtonText>
                 </StyledButtonConfirm>
               </ButtonContainer>
@@ -104,13 +100,15 @@ export default function Alert() {
               />
               <TextAlert>{alert.title}</TextAlert>
               {alert.helperText && <HelperText>{alert.helperText}</HelperText>}
-              <StyledButton onPress={handleAccept}>
+              <Button onPress={handleAccept}>
                 <ButtonText>OK</ButtonText>
-              </StyledButton>
+              </Button>
             </>
           )}
         </ModalView>
       </ModalContainer>
     </Modal>
   );
-}
+};
+
+export default Alert;

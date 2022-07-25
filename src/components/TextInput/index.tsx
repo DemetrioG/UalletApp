@@ -1,57 +1,100 @@
 import * as React from "react";
-import { TextInput, TextInputProps } from "react-native";
+import { IInputProps, Input, WarningOutlineIcon } from "native-base";
+import { TextInputMask } from "react-native-masked-text";
 import { Control, Controller, FieldValues } from "react-hook-form";
+import { FormControl as NativeFormControl } from "native-base";
 
-import { AlertContext } from "../../context/Alert/alertContext";
+import { colors, metrics } from "../../styles";
+import NativeIcon from "../Icon";
+import styled from "styled-components";
+
+const Icon = styled(NativeIcon)`
+  position: absolute;
+  top: -30px;
+  right: 15px;
+`;
+
+const FormControl = styled(NativeFormControl)`
+  margin-bottom: ${metrics.baseMargin}px;
+`;
+
+const CalendarIcon = ({
+  setCalendar,
+}: {
+  setCalendar: React.Dispatch<React.SetStateAction<any>>;
+}) => {
+  return (
+    <Icon
+      name="calendar"
+      size={18}
+      color={colors.gray}
+      onPress={() => setCalendar((calendarState: boolean) => !calendarState)}
+    />
+  );
+};
 
 const UTextInput = (
-  props: TextInputProps & {
+  props: IInputProps & {
+    masked?: "datetime" | "money";
     errors?: object | undefined;
     helperText?: string | undefined;
-    required?: boolean;
+    withIcon?: boolean;
+    setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
   }
 ) => {
-  const { setAlert } = React.useContext(AlertContext);
+  const [isInvalid, setIsInvalid] = React.useState(false);
 
   React.useEffect(() => {
     if (props.errors && Object.keys(props.errors).length > 0) {
-      if (props.helperText) {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: props.helperText!,
-        }));
-      } else {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Informe todos os campos",
-        }));
-      }
+      setIsInvalid(true);
     }
   }, [props.errors]);
 
   return (
     <>
-      <TextInput {...props} />
+      <FormControl isInvalid={isInvalid}>
+        <>
+          {props.masked ? (
+            <TextInputMask
+              {...props}
+              customTextInput={Input}
+              type={props.masked}
+            />
+          ) : (
+            <Input {...props} />
+          )}
+          {props.masked === "datetime" && props.withIcon && (
+            <CalendarIcon setCalendar={props.setCalendar!} />
+          )}
+        </>
+        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+          {props.helperText}
+        </FormControl.ErrorMessage>
+      </FormControl>
     </>
   );
 };
 
-export const DefaultTextInput = ({
+const StyledTextInput = styled(UTextInput)`
+  color: ${({ theme: { theme } }) => theme.text};
+`;
+
+const TextInput = ({
   name,
   control,
   ...props
 }: React.ComponentProps<typeof UTextInput> & {
+  masked?: "datetime" | "money";
   name: string;
   control: Control<FieldValues | any>;
+  setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
-        <UTextInput
+        <StyledTextInput
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}
@@ -61,3 +104,5 @@ export const DefaultTextInput = ({
     />
   );
 };
+
+export default TextInput;

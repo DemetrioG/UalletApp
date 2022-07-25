@@ -8,7 +8,7 @@ import Register from "../screens/Register";
 import ForgotPassword from "../screens/ForgotPassword";
 
 const Stack = createNativeStackNavigator();
-export default function AuthRoutes() {
+const AuthRoutes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -35,4 +35,6 @@ export default function AuthRoutes() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default AuthRoutes;

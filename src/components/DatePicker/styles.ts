@@ -1,7 +1,8 @@
-import React from "react";
-import { Text, TextProps, TouchableOpacity, View } from "react-native";
+import * as React from "react";
+import { TouchableOpacity } from "react-native";
+import { HStack, ITextProps, Text } from "native-base";
 import styled from "styled-components";
-import { colors, fonts, metrics } from "../../styles";
+import { colors, metrics } from "../../styles";
 
 export const ItemPicker = styled(TouchableOpacity)`
   flex-direction: row;
@@ -11,23 +12,23 @@ export const ItemPicker = styled(TouchableOpacity)`
   border-bottom-color: ${colors.lightGray};
   margin-bottom: ${metrics.baseMargin}px;
 `;
-export const TextItem: React.FC<TextProps & { type: "Mês" | "Ano" }> = styled(
+export const TextItem: React.FC<ITextProps & { type: "Mês" | "Ano" }> = styled(
   Text
-)`
-  font-family: ${({ type }) =>
-    type === "Ano" ? fonts.montserratBold : fonts.ralewayBold};
-  font-size: ${fonts.regular}px;
+).attrs(({ type }) => ({
+  fontFamily: type === "Ano" ? "mono" : "body",
+  fontWeight: 700,
+}))`
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const HeaderView = styled(View)`
-  flex-direction: row;
+export const HeaderView = styled(HStack)`
   margin: 0px ${metrics.baseMargin}px ${metrics.baseMargin}px;
   justify-content: space-between;
 `;
 
-export const Title = styled(Text)`
-  font-family: ${fonts.ralewayExtraBold};
-  font-size: ${fonts.large}px;
+export const Title = styled(Text).attrs(() => ({
+  fontFamily: "body",
+  fontWeight: 800,
+}))`
   color: ${({ theme: { theme } }) => theme.blue};
 `;
