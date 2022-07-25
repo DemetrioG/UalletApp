@@ -55,10 +55,12 @@ const Header = () => {
           .doc(user.uid)
           .get()
           .then((v) => {
-            // Pega o primeiro nome do usuário
+            // Retorna o nome do usuário
             setUser((userState) => ({
               ...userState,
               name: v.data()?.name.split(" ", 1).toString(),
+              completeName: v.data()?.name,
+              email: v.data()?.email,
             }));
           })
           .catch(() => {

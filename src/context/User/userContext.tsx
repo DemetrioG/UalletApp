@@ -7,6 +7,8 @@ interface IUser {
   uid: string | undefined;
   name: string;
   hideNumbers: boolean;
+  completeName: string | undefined;
+  email: string | undefined;
 }
 
 export const initialUserState: IUser = {
@@ -15,6 +17,8 @@ export const initialUserState: IUser = {
   uid: undefined,
   name: "",
   hideNumbers: false,
+  completeName: undefined,
+  email: undefined,
 };
 
 export const UserContext = React.createContext<{

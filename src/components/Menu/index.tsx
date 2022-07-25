@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Pressable, useContrastText } from "native-base";
 import { useTheme } from "styled-components";
+import Modal from "react-native-modal";
 
 import Icon from "../Icon";
 import { AlertContext } from "../../context/Alert/alertContext";
@@ -8,16 +9,19 @@ import { DateContext } from "../../context/Date/dateContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
-import { colors } from "../../styles";
 import {
   Avatar,
+  AvatarMenu,
+  AvatarMenuText,
   AvatarText,
+  Container,
+  Email,
   ItemContainer,
   ItemContent,
   ItemText,
-  LogoutText,
-  NativeMenu,
-  NativeMenuItem,
+  MenuContainer,
+  Name,
+  ProfileContainer,
 } from "./styles";
 import { IThemeProvider } from "../../../App";
 
@@ -27,11 +31,9 @@ const Menu = () => {
   const { setAlert } = React.useContext(AlertContext);
   const { user, setUser } = React.useContext(UserContext);
 
-  const { theme }: IThemeProvider = useTheme();
+  const [visible, setVisible] = React.useState(false);
 
-  const itemTextColor = theme?.isOnDarkTheme
-    ? colors.white
-    : colors.darkPrimary;
+  const { theme }: IThemeProvider = useTheme();
 
   function changeModality() {
     return setDate((dateState) => ({
@@ -40,7 +42,9 @@ const Menu = () => {
     }));
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    setVisible(false);
+    await new Promise((resolve) => setTimeout(resolve, 500));
     return setAlert(() => ({
       title: "Deseja realmente sair do app?",
       type: "confirm",
@@ -58,48 +62,49 @@ const Menu = () => {
 
   return (
     <>
-      <NativeMenu
-        trigger={(props) => {
-          return (
-            <Pressable {...props}>
-              <Avatar backgroundColor={theme?.randomColor}>
-                <AvatarText color={useContrastText(theme?.randomColor!)}>
-                  {loader.visible ? "-" : user.name[0]}
-                </AvatarText>
-              </Avatar>
-            </Pressable>
-          );
-        }}
+      <Pressable onPress={() => setVisible(!visible)}>
+        <Avatar backgroundColor={theme?.randomColor}>
+          <AvatarText color={useContrastText(theme?.randomColor!)}>
+            {loader.visible ? "-" : user.name[0]}
+          </AvatarText>
+        </Avatar>
+      </Pressable>
+      <Modal
+        isVisible={visible}
+        swipeDirection={"down"}
+        onSwipeComplete={() => setVisible(false)}
+        onBackdropPress={() => setVisible(false)}
       >
-        <NativeMenuItem isDisabled>
-          <ItemContainer>
-            <ItemContent onPress={changeModality}>
-              <ItemText style={{ color: itemTextColor }}>
-                {date.modality}
-              </ItemText>
-              <Icon name="refresh-cw" size={15} color={itemTextColor} />
-            </ItemContent>
-          </ItemContainer>
-        </NativeMenuItem>
-        <NativeMenuItem isDisabled>
-          <ItemContainer>
-            <ItemContent>
-              <ItemText style={{ color: itemTextColor }}>
-                Configurações
-              </ItemText>
-              <Icon name="settings" size={15} color={itemTextColor} />
-            </ItemContent>
-          </ItemContainer>
-        </NativeMenuItem>
-        <NativeMenuItem isDisabled>
-          <ItemContainer>
-            <ItemContent onPress={handleLogout}>
-              <LogoutText>Logout</LogoutText>
-              <Icon name="power" size={15} color={colors.lightRed} />
-            </ItemContent>
-          </ItemContainer>
-        </NativeMenuItem>
-      </NativeMenu>
+        <Container>
+          <ProfileContainer>
+            <AvatarMenu>
+              <AvatarMenuText>{user.name[0]}</AvatarMenuText>
+            </AvatarMenu>
+            <Name>{user.completeName}</Name>
+            <Email>{user.email}</Email>
+          </ProfileContainer>
+          <MenuContainer>
+            <ItemContainer>
+              <ItemContent onPress={changeModality}>
+                <ItemText>{date.modality}</ItemText>
+                <Icon name="refresh-cw" size={16} />
+              </ItemContent>
+            </ItemContainer>
+            <ItemContainer>
+              <ItemContent>
+                <ItemText>Configurações</ItemText>
+                <Icon name="settings" size={18} />
+              </ItemContent>
+            </ItemContainer>
+            <ItemContainer>
+              <ItemContent onPress={handleLogout}>
+                <ItemText logout>Logout</ItemText>
+                <Icon name="power" size={18} colorVariant="red" />
+              </ItemContent>
+            </ItemContainer>
+          </MenuContainer>
+        </Container>
+      </Modal>
     </>
   );
 };
