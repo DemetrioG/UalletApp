@@ -1,8 +1,8 @@
 import * as React from "react";
 import NetInfo from "@react-native-community/netinfo";
 
-import AuthRoutes from "./authRoutes";
-import AppRoutes from "./appRoutes";
+import AuthRoutes from "./AuthRoutes";
+import AppRoutes from "./AppTabRoutes";
 import { UserContext } from "../context/User/userContext";
 import { DataContext } from "../context/Data/dataContext";
 import { getStorage, removeAllStorage } from "../utils/storage.helper";

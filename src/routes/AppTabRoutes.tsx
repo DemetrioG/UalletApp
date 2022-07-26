@@ -3,8 +3,6 @@ import { Animated, Dimensions, Keyboard } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import StackHome from "../screens/StackHome";
-import StackEntry from "../screens/StackEntry";
 import Icon from "../components/Icon";
 import { SafeAreaContainer } from "../styles/general";
 import {
@@ -16,6 +14,7 @@ import {
 import { colors } from "../styles";
 import Alert from "../components/Alert";
 import Header from "../components/Header";
+import { AppStackRoutes } from "./AppStackRoutes";
 
 const Tab = createBottomTabNavigator();
 
@@ -151,28 +150,36 @@ const AppRoutes = () => {
         >
           <Tab.Screen
             name="InvestimentosTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
-              tabBarIcon: ({ focused }) => {
+              tabBarIcon: () => {
                 return <Icon name="pie-chart" />;
               },
             }}
-            listeners={{
-              tabPress: (e) => e.preventDefault(),
-            }}
+            listeners={({ navigation }) => ({
+              tabPress: (event) => {
+                event.preventDefault();
+              },
+            })}
           />
           <Tab.Screen
             name="LançamentosTab"
-            component={StackEntry}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
                 return <Icon name="edit-3" />;
               },
             }}
+            listeners={({ navigation }) => ({
+              tabPress: (event) => {
+                event.preventDefault();
+                navigation.navigate("Lançamentos");
+              },
+            })}
           />
           <Tab.Screen
             name="HomeTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => (
                 <HomeIconContainer>
@@ -180,10 +187,16 @@ const AppRoutes = () => {
                 </HomeIconContainer>
               ),
             }}
+            listeners={({ navigation }) => ({
+              tabPress: (event) => {
+                event.preventDefault();
+                navigation.navigate("Home");
+              },
+            })}
           />
           <Tab.Screen
             name="IntegraçõesTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
                 return <Icon name="refresh-cw" />;
@@ -195,7 +208,7 @@ const AppRoutes = () => {
           />
           <Tab.Screen
             name="RelatóriosTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
                 return <Icon name="list" />;
