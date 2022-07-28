@@ -264,3 +264,10 @@ export function getAtualDate() {
 
   return dateInfo;
 }
+
+
+export function secondsToDate(seconds: number) {
+  const date = new Date();
+  date.setSeconds(seconds);
+  return date;
+}

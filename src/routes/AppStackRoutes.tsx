@@ -1,6 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Complete from "../screens/Complete";
+import ConfiguracoesScreen from "../screens/Configurations";
+import { DadosCadastraisScreen } from "../screens/Configurations/DadosCadastrais";
+import { InformacoesCadastraisScreen } from "../screens/Configurations/DadosCadastrais/InformacoesCadastrais";
 import Entry from "../screens/Entry";
 import Filter from "../screens/Entry/Filter";
 import FixedEntry from "../screens/FixedEntry";
@@ -50,6 +53,25 @@ export const AppStackRoutes = () => {
                     presentation: "containedTransparentModal",
                 }}
             />
+            {/* Configuracoes */}
+            <StackScreen 
+                name="Configuracoes"
+                component={ConfiguracoesScreen}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <StackScreen 
+                name="Configuracoes/DadosCadastrais"
+                component={DadosCadastraisScreen}
+                options={{headerShown: false}}
+            />
+            <StackScreen 
+                name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
+                component={InformacoesCadastraisScreen}
+                options={{headerShown: false}}
+            />
+            {/* !Configuracoes */}
         </StackNavigator>
     );
 };
