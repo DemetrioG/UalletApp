@@ -3,7 +3,7 @@ import { View, ViewProps } from "react-native";
 import styled from "styled-components";
 import { PieChart } from "react-native-svg-charts";
 import { colors, fonts, metrics } from "../../styles";
-import { Center, Text } from "native-base";
+import { Center, ITextProps, Text } from "native-base";
 
 export const StyledPieChart: React.FC<{ data: number[] }> = styled(
   PieChart
@@ -43,10 +43,24 @@ export const ChartContainer = styled(Center)`
   flex-direction: row;
 `;
 
-export const PieChartLabel = styled(Text)`
-  font-size: ${fonts.medium}px;
-  font-family: ${fonts.montserratMedium};
+export const PieChartLabel: React.FC<
+  ITextProps & { x: number; y: number }
+> = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+}))`
+  position: absolute;
+  top: ${({ y }) => y}px;
+  left: ${({ x }) => x}px;
   color: ${colors.white};
+`;
+
+export const PieCenter = styled(View)`
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  margin-top: 50px;
+  margin-left: 64px;
+  background-color: ${({ theme: { theme } }) => theme.secondary};
 `;
 
 export const SegmentChartView = styled(View)`
