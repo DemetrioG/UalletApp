@@ -18,6 +18,7 @@ import {
   ChartContainer,
   PieCenter,
 } from "./styles";
+import { metrics } from "../../styles";
 
 interface ISlices {
   slices?: [
@@ -42,7 +43,10 @@ export const Label = ({ slices, data }: ISlices) => {
         return (
           <View key={index}>
             {value !== 0 && (
-              <PieChartLabel x={pieCentroid[0] + 63} y={pieCentroid[1] + 57}>
+              <PieChartLabel
+                x={pieCentroid[0] + (metrics.screenWidth / 100) * 16.8}
+                y={pieCentroid[1] + (metrics.screenHeight / 100) * 8.54}
+              >
                 {Math.round(value)}%
               </PieChartLabel>
             )}
