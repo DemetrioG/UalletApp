@@ -44,8 +44,8 @@ export const Label = ({ slices, data }: ISlices) => {
           <View key={index}>
             {value !== 0 && (
               <PieChartLabel
-                x={pieCentroid[0] + (metrics.screenWidth / 100) * 16.8}
-                y={pieCentroid[1] + (metrics.screenHeight / 100) * 8.54}
+                x={pieCentroid[0] + (metrics.screenWidth / 100) * 17.5}
+                y={pieCentroid[1] + 57}
               >
                 {Math.round(value)}%
               </PieChartLabel>
