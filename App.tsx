@@ -1,7 +1,7 @@
 import * as React from "react";
 import { LogBox, Appearance } from "react-native";
 import { ThemeProvider } from "styled-components";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import {
   Montserrat_500Medium,
@@ -28,6 +28,8 @@ export interface IThemeProvider {
   theme?: typeof LIGHT;
 }
 
+SplashScreen.preventAutoHideAsync();
+
 const App = () => {
   const [theme, setTheme] = React.useState<IThemeProvider>();
   const [fontLoaded] = useFonts({
@@ -50,25 +52,32 @@ const App = () => {
     );
   }, []);
 
-  if (!fontLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <BaseProvider>
-        <ThemeProvider theme={theme}>
-          <UserContextProvider>
-            <DataContextProvider>
-              <AlertContextProvider>
-                <LoaderContextProvider>
-                  <AppContent />
-                </LoaderContextProvider>
-              </AlertContextProvider>
-            </DataContextProvider>
-          </UserContextProvider>
-        </ThemeProvider>
-      </BaseProvider>
-    );
-  }
-};
+  React.useEffect(() => {
+    (async () => {
+      if (fontLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    })();
+  }, [fontLoaded]);
 
+  if (!fontLoaded) {
+    return null;
+  }
+
+  return (
+    <BaseProvider>
+      <ThemeProvider theme={theme}>
+        <UserContextProvider>
+          <DataContextProvider>
+            <AlertContextProvider>
+              <LoaderContextProvider>
+                <AppContent />
+              </LoaderContextProvider>
+            </AlertContextProvider>
+          </DataContextProvider>
+        </UserContextProvider>
+      </ThemeProvider>
+    </BaseProvider>
+  );
+};
 export default App;
