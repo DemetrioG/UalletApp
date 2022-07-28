@@ -9,7 +9,6 @@ export const HeaderView = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${metrics.baseMargin}px;
   padding-left: ${metrics.basePadding}px;
   z-index: 5;
 `;
