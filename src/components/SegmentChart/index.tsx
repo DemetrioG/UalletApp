@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ForeignObject } from "react-native-svg";
+import { View } from "native-base";
 
 import firebase from "../../services/firebase";
 import EmptyChart from "../EmptyChart";
@@ -16,7 +16,9 @@ import {
   DotView,
   SegmentLabelText,
   ChartContainer,
+  PieCenter,
 } from "./styles";
+import { metrics } from "../../styles";
 
 interface ISlices {
   slices?: [
@@ -38,18 +40,18 @@ export const Label = ({ slices, data }: ISlices) => {
     <>
       {slices?.map((slice, index) => {
         const { pieCentroid, value } = slice;
-        return value !== 0 ? (
-          <ForeignObject
-            key={index}
-            // Se o valor do chart for menor que 6, ele joga o label um pouco para a direita para não ficar desalinhado
-            x={data[index] < 6 ? pieCentroid[0] - 9 : pieCentroid[0] - 12}
-            y={pieCentroid[1] - 8}
-            width={100}
-            height={100}
-          >
-            <PieChartLabel>{Math.round(value)}%</PieChartLabel>
-          </ForeignObject>
-        ) : null;
+        return (
+          <View key={index}>
+            {value !== 0 && (
+              <PieChartLabel
+                x={pieCentroid[0] + (metrics.screenWidth / 100) * 17.5}
+                y={pieCentroid[1] + 57}
+              >
+                {Math.round(value)}%
+              </PieChartLabel>
+            )}
+          </View>
+        );
       })}
     </>
   );
@@ -187,6 +189,7 @@ const SegmentChart = () => {
               <SegmentChartView>
                 <StyledPieChart data={data}>
                   <Label data={data} />
+                  <PieCenter />
                 </StyledPieChart>
               </SegmentChartView>
               <SegmentLabelView>

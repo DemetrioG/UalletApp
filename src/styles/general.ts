@@ -89,13 +89,15 @@ export const ViewTabContent: React.FC<
   background-color: ${({ theme: { theme } }) => theme.secondary};
 `;
 
-export const FormContainer: React.FC<ViewProps & { insideApp?: boolean}> = styled(View)`
-  padding: 0px ${({insideApp}) => !insideApp ? 50 : 35}px;
+export const FormContainer: React.FC<
+  ViewProps & { insideApp?: boolean }
+> = styled(View)`
+  padding: 0px ${({ insideApp }) => (!insideApp ? 50 : 35)}px;
 `;
 
 export const ButtonDelete: React.FC<IButtonProps> = styled(Button)`
-  background-color: ${({theme: {theme}}) => theme.red};
-`
+  background-color: ${({ theme: { theme } }) => theme.red};
+`;
 
 export const ButtonOutline: React.FC<IButtonProps> = styled(Button).attrs(
   ({ theme: { theme } }) => ({
@@ -164,10 +166,11 @@ export const Logo = styled(Image)`
   height: 58px;
 `;
 
-export const TextHeader: React.FC<ITextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
-> = styled(Text).attrs(({fontSize}) => ({
+export const TextHeader: React.FC<
+  ITextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
+> = styled(Text).attrs(({ fontSize }) => ({
   fontWeight: 800,
-  fontSize: fontSize ? fontSize : '3xl'
+  fontSize: fontSize ? fontSize : "3xl",
 }))`
   color: ${({ theme: { theme } }) => theme.text};
   ${({ withMarginLeft, withMarginTop }) => {
@@ -236,8 +239,7 @@ export const Label = styled(Text).attrs(() => ({
   margin-right: 10px;
 `;
 
-export const ItemContainer = styled(HStack)`
-`;
+export const ItemContainer = styled(HStack)``;
 
 export const DescriptionContainer = styled(Center)`
   width: 50%;

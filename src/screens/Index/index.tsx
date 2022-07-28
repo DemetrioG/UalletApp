@@ -3,6 +3,7 @@ import { ImageURISource } from "react-native";
 import { Button, Center, Flex, Spacer } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Swiper from "react-native-swiper";
 
 import {
   BackgroundContainerCenter,
@@ -10,8 +11,7 @@ import {
   ButtonText,
   ButtonOutline,
 } from "../../styles/general";
-import { ImageCarousel, StyledCarousel, TitleCarousel } from "./styles";
-import { metrics } from "../../styles/index";
+import { ImageCarousel, TitleCarousel } from "./styles";
 
 interface ISlidesMockup {
   key: number;
@@ -45,7 +45,7 @@ const slides: ISlidesMockup[] = [
 const Index = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
-  function renderSlide({ item }: { item: ISlidesMockup }) {
+  function RenderSlide({ item }: { item: ISlidesMockup }) {
     return (
       <Flex>
         <ImageCarousel source={item.image} />
@@ -59,16 +59,11 @@ const Index = () => {
 
   return (
     <BackgroundContainerCenter>
-      <StyledCarousel
-        data={slides}
-        renderItem={renderSlide}
-        sliderWidth={metrics.screenWidth}
-        itemWidth={metrics.screenWidth}
-        loop={true}
-        autoplay={true}
-        enableMomentum={false}
-        lockScrollWhileSnapping={true}
-      />
+      <Swiper autoplay>
+        {slides.map((e, i) => {
+          return <RenderSlide key={i} item={slides[i]} />;
+        })}
+      </Swiper>
       <Button onPress={() => navigate("Register")}>
         <ButtonText>CRIAR CONTA</ButtonText>
       </Button>
