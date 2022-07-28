@@ -23,7 +23,7 @@ function ConfiguracoesScreen() {
       <ViewTab>
         <HStack alignItems="center" space={3} mb={10}>
             <Icon name="chevron-left" size={24} onPress={goBack}/>
-            <TextHeader fontSize={fonts.larger}>Configurações</TextHeader>
+            <TextHeader fontSize={fonts.large}>Configurações</TextHeader>
         </HStack>
         {
           actions.map((action) => (
