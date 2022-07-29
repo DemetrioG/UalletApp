@@ -53,6 +53,17 @@ export const ModalContainer = styled(Center)`
   background-color: ${({ theme: { theme } }) => theme.transparency};
 `;
 
+export const Balance: React.FC<
+  ITextProps & { negative?: boolean }
+> = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+  fontWeight: 700,
+  fontSize: fonts.larger,
+}))`
+  color: ${({ theme: { theme }, negative }) =>
+    !negative ? theme.blue : theme.red};
+`;
+
 export const ModalView: React.FC<
   ViewProps & { height?: number | null; center?: boolean; large?: boolean }
 > = styled(View)`

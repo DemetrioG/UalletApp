@@ -34,17 +34,6 @@ export const LogoCard = styled(Image)`
   height: 25px;
 `;
 
-export const Balance: React.FC<
-  ITextAreaProps & { negative?: boolean }
-> = styled(Text).attrs(() => ({
-  fontFamily: "mono",
-  fontWeight: 700,
-  fontSize: fonts.larger,
-}))`
-  color: ${({ theme: { theme }, negative }) =>
-    !negative ? theme.blue : theme.red};
-`;
-
 export const Invest = styled(Text).attrs(() => ({
   fontFamily: "mono",
   fontWeight: 700,

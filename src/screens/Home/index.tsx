@@ -6,8 +6,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
 import Consolidate from "../../components/Consolidate";
-import Header from "../../components/Header";
-import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
 import Icon from "../../components/Icon";
@@ -18,19 +16,15 @@ import { numberToReal } from "../../utils/number.helper";
 import { sortObjectByKey } from "../../utils/array.helper";
 import { getAtualDate, getFinalDateMonth } from "../../utils/date.helper";
 import {
-  Balance,
   CardFooterText,
   CardHeaderText,
   CardHeaderView,
-  CardStatusView,
   CardTextView,
   Invest,
   InvestPercentual,
   LogoCard,
   Section,
   SectionText,
-  StatusPercentText,
-  StatusText,
   ValueContainer,
   DescriptionContainer,
   DescriptionText,
@@ -38,6 +32,7 @@ import {
 } from "./styles";
 import {
   BackgroundContainer,
+  Balance,
   Card,
   ItemContainer,
   ScrollViewTab,
