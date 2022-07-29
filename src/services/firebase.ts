@@ -12,13 +12,13 @@ import {
 } from "@env";
 
 const firebaseConfig = {
-  apiKey: API_KEY,
-  authDomain: AUTH_DOMAIN,
-  projectId: PROJECT_ID,
-  storageBucket: STORAGE_BUCKET,
-  messagingSenderId: MESSAGING_SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID,
+  apiKey: API_KEY.toString(),
+  authDomain: AUTH_DOMAIN.toString(),
+  projectId: PROJECT_ID.toString(),
+  storageBucket: STORAGE_BUCKET.toString(),
+  messagingSenderId: MESSAGING_SENDER_ID.toString(),
+  appId: APP_ID.toString(),
+  measurementId: MEASUREMENT_ID.toString(),
 };
 
 // Initialize Firebase
