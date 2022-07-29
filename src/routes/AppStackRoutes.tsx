@@ -8,70 +8,90 @@ import Entry from "../screens/Entry";
 import Filter from "../screens/Entry/Filter";
 import FixedEntry from "../screens/FixedEntry";
 import Home from "../screens/Home";
+import Investments from "../screens/Investments";
+import NewAsset from "../screens/NewAsset";
 import NewEntry from "../screens/NewEntry";
 
 const {
-    Navigator: StackNavigator,
-    Screen: StackScreen,
-    Group,
+  Navigator: StackNavigator,
+  Screen: StackScreen,
+  Group,
 } = createNativeStackNavigator();
 
 export const AppStackRoutes = () => {
-    return (
-        <StackNavigator initialRouteName="Home">
-            <StackScreen
-                name="Home"
-                component={Home}
-                options={{ headerShown: false }}
-            />
-            <StackScreen
-                name="Complete"
-                component={Complete}
-                options={{ headerShown: false }}
-            />
+  return (
+    <StackNavigator initialRouteName="Home">
+      {/* Home */}
+      <StackScreen
+        name="Home"
+        component={Home}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Complete"
+        component={Complete}
+        options={{ headerShown: false }}
+      />
+      {/* !Home */}
 
-            <StackScreen
-                name="Lançamentos"
-                component={Entry}
-                options={{ headerShown: false }}
-            />
-            <StackScreen
-                name="NovoLançamento"
-                component={NewEntry}
-                options={{ headerShown: false }}
-            />
-            <StackScreen
-                name="LançamentoFixo"
-                component={FixedEntry}
-                options={{ headerShown: false }}
-            />
-            <StackScreen
-                name="Filtros"
-                component={Filter}
-                options={{
-                    headerShown: false,
-                    presentation: "containedTransparentModal",
-                }}
-            />
-            {/* Configuracoes */}
-            <StackScreen 
-                name="Configuracoes"
-                component={ConfiguracoesScreen}
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <StackScreen 
-                name="Configuracoes/DadosCadastrais"
-                component={DadosCadastraisScreen}
-                options={{headerShown: false}}
-            />
-            <StackScreen 
-                name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
-                component={InformacoesCadastraisScreen}
-                options={{headerShown: false}}
-            />
-            {/* !Configuracoes */}
-        </StackNavigator>
-    );
+      {/* Lançamentos */}
+      <StackScreen
+        name="Lançamentos"
+        component={Entry}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="NovoLançamento"
+        component={NewEntry}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="LançamentoFixo"
+        component={FixedEntry}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Filtros"
+        component={Filter}
+        options={{
+          headerShown: false,
+          presentation: "containedTransparentModal",
+        }}
+      />
+      {/* !Lançamentos */}
+
+      {/* Investimentos */}
+      <StackScreen
+        name="Investimentos"
+        component={Investments}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="NovoAtivo"
+        component={NewAsset}
+        options={{ headerShown: false }}
+      />
+      {/* !Investimentos */}
+
+      {/* Configuracoes */}
+      <StackScreen
+        name="Configuracoes"
+        component={ConfiguracoesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <StackScreen
+        name="Configuracoes/DadosCadastrais"
+        component={DadosCadastraisScreen}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
+        component={InformacoesCadastraisScreen}
+        options={{ headerShown: false }}
+      />
+      {/* !Configuracoes */}
+    </StackNavigator>
+  );
 };

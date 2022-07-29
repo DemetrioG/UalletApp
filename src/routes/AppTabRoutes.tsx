@@ -71,7 +71,7 @@ const AppRoutes = () => {
     () => {
       Keyboard.removeAllListeners("keyboardDidShow");
       Keyboard.removeAllListeners("keyboardDidHide");
-    }
+    };
   }, []);
 
   function homeActive() {
@@ -129,6 +129,7 @@ const AppRoutes = () => {
               tabPress: (event) => {
                 event.preventDefault();
                 investActive();
+                navigation.navigate("Investimentos");
               },
             })}
           />
