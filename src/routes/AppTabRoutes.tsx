@@ -3,16 +3,18 @@ import { Animated, Dimensions, Keyboard } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import StackHome from "../screens/StackHome";
-import StackEntry from "../screens/StackEntry";
 import Icon from "../components/Icon";
 import { SafeAreaContainer } from "../styles/general";
 import {
   ActiveMenuIcon,
+  BackgroundContainer,
   HomeIconContainer,
   StyledTabNavigation,
 } from "./styles";
 import { colors } from "../styles";
+import Alert from "../components/Alert";
+import Header from "../components/Header";
+import { AppStackRoutes } from "./AppStackRoutes";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,25 +48,31 @@ const AppRoutes = () => {
   }, []);
 
   // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
-  Keyboard.addListener("keyboardDidShow", () => {
-    setKeyboardVisible(true);
-
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 50,
-      useNativeDriver: true,
-    }).start();
-  });
-
-  Keyboard.addListener("keyboardDidHide", () => {
-    setKeyboardVisible(false);
-
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1800,
-      useNativeDriver: true,
-    }).start();
-  });
+    React.useEffect(() => {
+      Keyboard.addListener("keyboardDidShow", () => {
+        setKeyboardVisible(true);
+    
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 50,
+          useNativeDriver: true,
+        }).start();
+      });
+    
+      Keyboard.addListener("keyboardDidHide", () => {
+        setKeyboardVisible(false);
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 1800,
+          useNativeDriver: true,
+        }).start();
+      });
+      
+      () => {
+        Keyboard.removeAllListeners("keyboardDidShow");
+        Keyboard.removeAllListeners("keyboardDidHide");
+      }
+    }, []);
 
   function homeActive() {
     Animated.spring(tabOffsetValue, {
@@ -132,34 +140,46 @@ const AppRoutes = () => {
   return (
     <NavigationContainer>
       <SafeAreaContainer>
+        <BackgroundContainer>
+          <Alert />
+          <Header />
+        </BackgroundContainer>
         <StyledTabNavigation
           initialRouteName="HomeTab"
           screenListeners={({ route: { name } }) => showActive(name)}
         >
           <Tab.Screen
             name="InvestimentosTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
-              tabBarIcon: ({ focused }) => {
+              tabBarIcon: () => {
                 return <Icon name="pie-chart" />;
               },
             }}
-            listeners={{
-              tabPress: (e) => e.preventDefault(),
-            }}
+            listeners={({ navigation }) => ({
+              tabPress: (event) => {
+                event.preventDefault();
+              },
+            })}
           />
           <Tab.Screen
             name="LançamentosTab"
-            component={StackEntry}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
                 return <Icon name="edit-3" />;
               },
             }}
+            listeners={({ navigation }) => ({
+              tabPress: (event) => {
+                event.preventDefault();
+                navigation.navigate("Lançamentos");
+              },
+            })}
           />
           <Tab.Screen
             name="HomeTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => (
                 <HomeIconContainer>
@@ -167,10 +187,16 @@ const AppRoutes = () => {
                 </HomeIconContainer>
               ),
             }}
+            listeners={({ navigation }) => ({
+              tabPress: (event) => {
+                event.preventDefault();
+                navigation.navigate("Home");
+              },
+            })}
           />
           <Tab.Screen
             name="IntegraçõesTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
                 return <Icon name="refresh-cw" />;
@@ -182,7 +208,7 @@ const AppRoutes = () => {
           />
           <Tab.Screen
             name="RelatóriosTab"
-            component={StackHome}
+            component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
                 return <Icon name="list" />;

@@ -24,8 +24,10 @@ import {
   ProfileContainer,
 } from "./styles";
 import { IThemeProvider } from "../../../App";
+import { useNavigation } from "@react-navigation/native";
 
 const Menu = () => {
+  const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
   const { loader } = React.useContext(LoaderContext);
   const { setAlert } = React.useContext(AlertContext);
@@ -42,22 +44,29 @@ const Menu = () => {
     }));
   }
 
-  async function handleLogout() {
-    setVisible(false);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return setAlert(() => ({
-      title: "Deseja realmente sair do app?",
-      type: "confirm",
-      visibility: true,
-      callbackFunction: logout,
-    }));
+  function logout() {
+    removeAllStorage()
+      .then(() => {})
+      .catch(() => {})
+      .finally(() => setUser(initialUserState));
   }
 
-  function logout() {
-    setUser(() => ({
-      ...initialUserState,
-    }));
-    removeAllStorage();
+  function handleLogout() {
+    setVisible(false);
+    setTimeout(() => {
+      setAlert({
+        title: "Deseja realmente sair do app?",
+        type: "confirm",
+        visibility: true,
+        callbackFunction: logout,
+      });
+    }, 500);
+  };
+
+  function goToConfiguracoesScreen() {
+    setVisible(false);
+    //#TODO: adicionar tipagem de navegação
+    return setTimeout(() => navigate("Configuracoes" as any), 150);
   }
 
   return (
@@ -91,7 +100,7 @@ const Menu = () => {
               </ItemContent>
             </ItemContainer>
             <ItemContainer>
-              <ItemContent>
+              <ItemContent onPress={goToConfiguracoesScreen}>
                 <ItemText>Configurações</ItemText>
                 <Icon name="settings" size={18} />
               </ItemContent>

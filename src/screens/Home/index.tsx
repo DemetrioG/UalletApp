@@ -212,8 +212,6 @@ const Home = () => {
   return (
     <BackgroundContainer>
       <Consolidate visible={consolidate} setVisible={setConsolidate} />
-      <Alert />
-      <Header />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
         <TouchableOpacity onPress={() => setFinanceShow(!financeShow)}>
           <Section>
