@@ -88,7 +88,7 @@ const TextInput = ({
 }: React.ComponentProps<typeof UTextInput> & {
   masked?: "datetime" | "money";
   name: string;
-  control: Control<FieldValues | any>;
+  control: any;
   setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
