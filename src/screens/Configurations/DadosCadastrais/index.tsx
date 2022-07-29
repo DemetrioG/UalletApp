@@ -32,8 +32,8 @@ export const DadosCadastraisScreen = () => {
           <Icon name="chevron-left" size={24} onPress={goBack} />
           <TextHeaderScreen noMarginBottom>Dados Cadastrais</TextHeaderScreen>
         </HStack>
-        {actions.map((action) => (
-          <TouchableOpacity onPress={() => goTo(action.url)}>
+        {actions.map((action, index) => (
+          <TouchableOpacity key={index} onPress={() => goTo(action.url)}>
             <ItemContainer>
               <HStack justifyContent="space-between" flex={1}>
                 <ItemText>{action.label}</ItemText>
