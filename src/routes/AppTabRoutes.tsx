@@ -48,31 +48,31 @@ const AppRoutes = () => {
   }, []);
 
   // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
-    React.useEffect(() => {
-      Keyboard.addListener("keyboardDidShow", () => {
-        setKeyboardVisible(true);
-    
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 50,
-          useNativeDriver: true,
-        }).start();
-      });
-    
-      Keyboard.addListener("keyboardDidHide", () => {
-        setKeyboardVisible(false);
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 1800,
-          useNativeDriver: true,
-        }).start();
-      });
-      
-      () => {
-        Keyboard.removeAllListeners("keyboardDidShow");
-        Keyboard.removeAllListeners("keyboardDidHide");
-      }
-    }, []);
+  React.useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardVisible(true);
+
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true,
+      }).start();
+    });
+
+    Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardVisible(false);
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 1800,
+        useNativeDriver: true,
+      }).start();
+    });
+
+    () => {
+      Keyboard.removeAllListeners("keyboardDidShow");
+      Keyboard.removeAllListeners("keyboardDidHide");
+    }
+  }, []);
 
   function homeActive() {
     Animated.spring(tabOffsetValue, {
@@ -109,34 +109,6 @@ const AppRoutes = () => {
     }).start();
   }
 
-  function showActive(name: string) {
-    switch (name) {
-      case "InvestimentosTab":
-        investActive();
-        break;
-
-      case "LançamentosTab":
-        entryActive();
-        break;
-
-      case "HomeTab":
-        homeActive();
-        break;
-
-      case "IntegraçõesTab":
-        integrateActive();
-        break;
-
-      case "RelatóriosTab":
-        reportsActive();
-        break;
-
-      default:
-        homeActive();
-        break;
-    }
-  }
-
   return (
     <NavigationContainer>
       <SafeAreaContainer>
@@ -144,10 +116,7 @@ const AppRoutes = () => {
           <Alert />
           <Header />
         </BackgroundContainer>
-        <StyledTabNavigation
-          initialRouteName="HomeTab"
-          screenListeners={({ route: { name } }) => showActive(name)}
-        >
+        <StyledTabNavigation initialRouteName="HomeTab">
           <Tab.Screen
             name="InvestimentosTab"
             component={AppStackRoutes}
@@ -159,6 +128,7 @@ const AppRoutes = () => {
             listeners={({ navigation }) => ({
               tabPress: (event) => {
                 event.preventDefault();
+                investActive();
               },
             })}
           />
@@ -173,6 +143,7 @@ const AppRoutes = () => {
             listeners={({ navigation }) => ({
               tabPress: (event) => {
                 event.preventDefault();
+                entryActive();
                 navigation.navigate("Lançamentos");
               },
             })}
@@ -190,6 +161,7 @@ const AppRoutes = () => {
             listeners={({ navigation }) => ({
               tabPress: (event) => {
                 event.preventDefault();
+                homeActive();
                 navigation.navigate("Home");
               },
             })}
@@ -202,9 +174,12 @@ const AppRoutes = () => {
                 return <Icon name="refresh-cw" />;
               },
             }}
-            listeners={{
-              tabPress: (e) => e.preventDefault(),
-            }}
+            listeners={({ navigation }) => ({
+              tabPress: (e) => {
+                e.preventDefault();
+                integrateActive();
+              },
+            })}
           />
           <Tab.Screen
             name="RelatóriosTab"
@@ -214,9 +189,12 @@ const AppRoutes = () => {
                 return <Icon name="list" />;
               },
             }}
-            listeners={{
-              tabPress: (e) => e.preventDefault(),
-            }}
+            listeners={({ navigation }) => ({
+              tabPress: (e) => {
+                e.preventDefault();
+                reportsActive();
+              },
+            })}
           />
         </StyledTabNavigation>
         {!keyboardVisible && (

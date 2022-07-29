@@ -16,7 +16,6 @@ interface ITabListener {
 
 export const StyledTabNavigation: React.FC<{
   initialRouteName: string;
-  screenListeners: ({ route: { name } }: ITabListener) => void;
 }> = styled(Tab.Navigator).attrs(({ theme: { theme } }) => ({
   screenOptions: {
     headerShown: false,
