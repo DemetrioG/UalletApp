@@ -71,7 +71,7 @@ const AppRoutes = () => {
     () => {
       Keyboard.removeAllListeners("keyboardDidShow");
       Keyboard.removeAllListeners("keyboardDidHide");
-    };
+    }
   }, []);
 
   function homeActive() {
