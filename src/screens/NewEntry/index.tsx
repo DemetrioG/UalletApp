@@ -37,6 +37,7 @@ import {
   BackgroundContainer,
   ViewTab,
 } from "../../styles/general";
+import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
 
 interface IForm {
   entrydate: string;
@@ -71,15 +72,6 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const [modalityVisible, setModalityVisible] = React.useState(false);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
-
-  const optionsModality = ["Projetado", "Real"];
-  const optionsSegment = [
-    "Lazer",
-    "Educação",
-    "Investimentos",
-    "Necessidades",
-    "Curto e médio prazo",
-  ];
 
   const {
     control,
@@ -311,131 +303,116 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   }, []);
 
   return (
-      <BackgroundContainer>
-          <ViewTab>
-              <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                  <ViewTabContent noPaddingBottom>
-                      <HorizontalView>
-                          <Icon
-                              name="chevron-left"
-                              style={{ marginRight: 10 }}
-                              onPress={() => navigate("Lançamentos")}
-                          />
-                          <TextHeaderScreen noMarginBottom>
-                              {isEditing
-                                  ? "Editar lançamento"
-                                  : "Novo lançamento"}
-                          </TextHeaderScreen>
-                      </HorizontalView>
-                      <TypeView>
-                          <TypeText type={type}>{type}</TypeText>
-                          {!isEditing && (
-                              <Icon
-                                  name="refresh-cw"
-                                  size={16}
-                                  onPress={() =>
-                                      type == "Receita"
-                                          ? setType("Despesa")
-                                          : setType("Receita")
-                                  }
-                              />
-                          )}
-                      </TypeView>
-                      <ContainerCenter>
-                          <FormContainer insideApp>
-                              <TextInput
-                                  name="entrydate"
-                                  placeholder="Data lançamento"
-                                  control={control}
-                                  errors={errors.entrydate}
-                                  masked="datetime"
-                                  setCalendar={setCalendar}
-                                  withIcon
-                              />
-                              <TextInput
-                                  name="description"
-                                  placeholder="Descrição"
-                                  control={control}
-                                  errors={errors.description}
-                                  maxLength={40}
-                              />
-                              <Picker
-                                  options={optionsModality}
-                                  selectedValue={setModality}
-                                  value={!modality ? "Modalidade" : modality}
-                                  type="Modalidade"
-                                  visibility={modalityVisible}
-                                  setVisibility={setModalityVisible}
-                              />
-                              {type == "Despesa" && (
-                                  <Picker
-                                      options={optionsSegment}
-                                      selectedValue={setSegment}
-                                      value={!segment ? "Segmento" : segment}
-                                      type="Segmento"
-                                      visibility={segmentVisible}
-                                      setVisibility={setSegmentVisible}
-                                  />
-                              )}
-                              <TextInput
-                                  name="value"
-                                  placeholder="Valor"
-                                  control={control}
-                                  errors={errors}
-                                  masked="money"
-                                  helperText="Informe todos os campos"
-                              />
-                              {!isEditing && (
-                                  <>
-                                      <Button
-                                          isLoading={isLoading}
-                                          onPress={handleSubmit((e) =>
-                                              registerEntry(e)
-                                          )}
-                                      >
-                                          <ButtonText>CADASTRAR</ButtonText>
-                                      </Button>
-                                      <ButtonOutline
-                                          onPress={() =>
-                                              navigate("LançamentoFixo")
-                                          }
-                                      >
-                                          <ButtonOutlineText>
-                                              CADASTRAR DESPESAS FIXAS
-                                          </ButtonOutlineText>
-                                      </ButtonOutline>
-                                  </>
-                              )}
-                              {isEditing && (
-                                  <>
-                                      <Button
-                                          isLoading={isLoading}
-                                          onPress={handleSubmit((e) =>
-                                              registerEntry(e, params.id)
-                                          )}
-                                      >
-                                          <ButtonText>ATUALIZAR</ButtonText>
-                                      </Button>
-                                      <ButtonDelete
-                                          isLoading={isDelete}
-                                          onPress={handleDelete}
-                                      >
-                                          <ButtonText>EXCLUIR</ButtonText>
-                                      </ButtonDelete>
-                                  </>
-                              )}
-                          </FormContainer>
-                          <Calendar
-                              date={new Date()}
-                              setDateToInput={setDateToInput}
-                              calendarIsShow={calendar}
-                              edit={isEditing}
-                          />
-                      </ContainerCenter>
-                  </ViewTabContent>
-              </TouchableWithoutFeedback>
-          </ViewTab>
-      </BackgroundContainer>
+    <BackgroundContainer>
+      <ViewTab>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ViewTabContent noPaddingBottom>
+            <HorizontalView>
+              <Icon
+                name="chevron-left"
+                style={{ marginRight: 10 }}
+                onPress={() => navigate("Lançamentos")}
+              />
+              <TextHeaderScreen noMarginBottom>
+                {isEditing ? "Editar lançamento" : "Novo lançamento"}
+              </TextHeaderScreen>
+            </HorizontalView>
+            <TypeView>
+              <TypeText type={type}>{type}</TypeText>
+              {!isEditing && (
+                <Icon
+                  name="refresh-cw"
+                  size={16}
+                  onPress={() =>
+                    type == "Receita" ? setType("Despesa") : setType("Receita")
+                  }
+                />
+              )}
+            </TypeView>
+            <ContainerCenter>
+              <FormContainer insideApp>
+                <TextInput
+                  name="entrydate"
+                  placeholder="Data lançamento"
+                  control={control}
+                  errors={errors.entrydate}
+                  masked="datetime"
+                  setCalendar={setCalendar}
+                  withIcon
+                />
+                <TextInput
+                  name="description"
+                  placeholder="Descrição"
+                  control={control}
+                  errors={errors.description}
+                  maxLength={40}
+                />
+                <Picker
+                  options={MODALITY}
+                  selectedValue={setModality}
+                  value={!modality ? "Modalidade" : modality}
+                  type="Modalidade"
+                  visibility={modalityVisible}
+                  setVisibility={setModalityVisible}
+                />
+                {type == "Despesa" && (
+                  <Picker
+                    options={ENTRY_SEGMENT}
+                    selectedValue={setSegment}
+                    value={!segment ? "Segmento" : segment}
+                    type="Segmento"
+                    visibility={segmentVisible}
+                    setVisibility={setSegmentVisible}
+                  />
+                )}
+                <TextInput
+                  name="value"
+                  placeholder="Valor"
+                  control={control}
+                  errors={errors}
+                  masked="money"
+                  helperText="Informe todos os campos"
+                />
+                {!isEditing && (
+                  <>
+                    <Button
+                      isLoading={isLoading}
+                      onPress={handleSubmit((e) => registerEntry(e))}
+                    >
+                      <ButtonText>CADASTRAR</ButtonText>
+                    </Button>
+                    <ButtonOutline onPress={() => navigate("LançamentoFixo")}>
+                      <ButtonOutlineText>
+                        CADASTRAR DESPESAS FIXAS
+                      </ButtonOutlineText>
+                    </ButtonOutline>
+                  </>
+                )}
+                {isEditing && (
+                  <>
+                    <Button
+                      isLoading={isLoading}
+                      onPress={handleSubmit((e) => registerEntry(e, params.id))}
+                    >
+                      <ButtonText>ATUALIZAR</ButtonText>
+                    </Button>
+                    <ButtonDelete isLoading={isDelete} onPress={handleDelete}>
+                      <ButtonText>EXCLUIR</ButtonText>
+                    </ButtonDelete>
+                  </>
+                )}
+              </FormContainer>
+              <Calendar
+                date={new Date()}
+                setDateToInput={setDateToInput}
+                calendarIsShow={calendar}
+                edit={isEditing}
+              />
+            </ContainerCenter>
+          </ViewTabContent>
+        </TouchableWithoutFeedback>
+      </ViewTab>
+    </BackgroundContainer>
   );
 };
 

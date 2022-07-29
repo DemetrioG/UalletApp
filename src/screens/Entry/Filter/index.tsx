@@ -10,6 +10,7 @@ import * as yup from "yup";
 import Picker from "../../../components/Picker";
 import Alert from "../../../components/Alert";
 import TextInput from "../../../components/TextInput";
+import Icon from "../../../components/Icon";
 import { AlertContext } from "../../../context/Alert/alertContext";
 import { dateValidation } from "../../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../../utils/number.helper";
@@ -22,7 +23,11 @@ import {
   Title,
 } from "./styles";
 import { metrics } from "../../../styles";
-import Icon from "../../../components/Icon";
+import {
+  ENTRY_SEGMENT,
+  ENTRY_TYPE,
+  MODALITY,
+} from "../../../components/Picker/options";
 
 interface IForm {
   initialdate: string;
@@ -31,17 +36,6 @@ interface IForm {
   initialvalue: string;
   finalvalue: string;
 }
-
-const optionsType = ["Todos", "Receita", "Despesa"];
-const optionsModality = ["Projetado", "Real"];
-const optionsSegment = [
-  "Todos",
-  "Lazer",
-  "Educação",
-  "Investimentos",
-  "Necessidades",
-  "Curto e médio prazo",
-];
 
 const schema = yup
   .object({
@@ -176,7 +170,7 @@ const Filter = ({
               control={control}
             />
             <Picker
-              options={optionsModality}
+              options={MODALITY}
               selectedValue={setModality}
               value={!modality ? "Modalidade *" : modality}
               type="Modalidade"
@@ -184,7 +178,7 @@ const Filter = ({
               setVisibility={setModalityVisible}
             />
             <Picker
-              options={optionsType}
+              options={ENTRY_TYPE}
               selectedValue={setTypeEntry}
               value={!typeEntry ? "Tipo" : typeEntry}
               type="Tipo"
@@ -193,7 +187,7 @@ const Filter = ({
             />
             {typeEntry !== "Receita" && (
               <Picker
-                options={optionsSegment}
+                options={ENTRY_SEGMENT}
                 selectedValue={setSegment}
                 value={!segment ? "Segmento" : segment}
                 type="Segmento"

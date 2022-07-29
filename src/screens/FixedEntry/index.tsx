@@ -37,6 +37,7 @@ import {
 } from "../../styles/general";
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
+import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
 
 interface IForm {
   entrydate: string;
@@ -44,15 +45,7 @@ interface IForm {
   value: string;
 }
 
-const optionsModality = ["Projetado", "Real"];
 const optionsExpenseAmount: string[] = [];
-const optionsSegment = [
-  "Lazer",
-  "Educação",
-  "Investimentos",
-  "Necessidades",
-  "Curto e médio prazo",
-];
 
 for (let index = 1; index < 13; index++) {
   optionsExpenseAmount.push(index.toString());
@@ -210,99 +203,88 @@ const FixedEntry = () => {
   }
 
   return (
-      <BackgroundContainer>
-          <ViewTab>
-              <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                  <ViewTabContent noPaddingBottom>
-                      <HorizontalView>
-                          <TouchableOpacity
-                              onPress={() => navigate("Lançamentos")}
-                          >
-                              <Icon
-                                  name="chevron-left"
-                                  style={{ marginRight: 10 }}
-                              />
-                          </TouchableOpacity>
-                          <TextHeaderScreen noMarginBottom>
-                              Novo lançamento
-                          </TextHeaderScreen>
-                      </HorizontalView>
-                      <TypeView>
-                          <TypeText>Despesas Fixas</TypeText>
-                      </TypeView>
-                      <ContainerCenter>
-                          <FormContainer insideApp>
-                              <TextInput
-                                  name="entrydate"
-                                  placeholder="Data lançamento"
-                                  control={control}
-                                  errors={errors.entrydate}
-                                  masked="datetime"
-                                  setCalendar={setCalendar}
-                                  withIcon
-                              />
-                              <TextInput
-                                  name="description"
-                                  placeholder="Descrição"
-                                  control={control}
-                                  errors={errors.description}
-                                  maxLength={40}
-                              />
-                              <Picker
-                                  options={optionsModality}
-                                  selectedValue={setModality}
-                                  value={!modality ? "Modalidade" : modality}
-                                  type="Modalidade"
-                                  visibility={modalityVisible}
-                                  setVisibility={setModalityVisible}
-                              />
-                              <Picker
-                                  options={optionsSegment}
-                                  selectedValue={setSegment}
-                                  value={!segment ? "Segmento" : segment}
-                                  type="Segmento"
-                                  visibility={segmentVisible}
-                                  setVisibility={setSegmentVisible}
-                              />
-                              <Picker
-                                  options={optionsExpenseAmount}
-                                  selectedValue={setExpenseAmount}
-                                  value={
-                                      !expenseAmount
-                                          ? "Quantidade de meses"
-                                          : expenseAmount
-                                  }
-                                  type="Quantidade de meses"
-                                  visibility={expenseAmountVisible}
-                                  setVisibility={setExpenseAmountVisible}
-                              />
-                              <TextInput
-                                  name="value"
-                                  placeholder="Valor"
-                                  control={control}
-                                  errors={errors.value}
-                                  masked="money"
-                                  helperText="Informe todos os campos"
-                              />
-                              <Button
-                                  isLoading={isLoading}
-                                  onPress={handleSubmit((e) =>
-                                      registerEntry(e)
-                                  )}
-                              >
-                                  <ButtonText>CADASTRAR</ButtonText>
-                              </Button>
-                          </FormContainer>
-                          <Calendar
-                              date={new Date()}
-                              setDateToInput={setDateToInput}
-                              calendarIsShow={calendar}
-                          />
-                      </ContainerCenter>
-                  </ViewTabContent>
-              </TouchableWithoutFeedback>
-          </ViewTab>
-      </BackgroundContainer>
+    <BackgroundContainer>
+      <ViewTab>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ViewTabContent noPaddingBottom>
+            <HorizontalView>
+              <TouchableOpacity onPress={() => navigate("Lançamentos")}>
+                <Icon name="chevron-left" style={{ marginRight: 10 }} />
+              </TouchableOpacity>
+              <TextHeaderScreen noMarginBottom>
+                Novo lançamento
+              </TextHeaderScreen>
+            </HorizontalView>
+            <TypeView>
+              <TypeText>Despesas Fixas</TypeText>
+            </TypeView>
+            <ContainerCenter>
+              <FormContainer insideApp>
+                <TextInput
+                  name="entrydate"
+                  placeholder="Data lançamento"
+                  control={control}
+                  errors={errors.entrydate}
+                  masked="datetime"
+                  setCalendar={setCalendar}
+                  withIcon
+                />
+                <TextInput
+                  name="description"
+                  placeholder="Descrição"
+                  control={control}
+                  errors={errors.description}
+                  maxLength={40}
+                />
+                <Picker
+                  options={MODALITY}
+                  selectedValue={setModality}
+                  value={!modality ? "Modalidade" : modality}
+                  type="Modalidade"
+                  visibility={modalityVisible}
+                  setVisibility={setModalityVisible}
+                />
+                <Picker
+                  options={ENTRY_SEGMENT}
+                  selectedValue={setSegment}
+                  value={!segment ? "Segmento" : segment}
+                  type="Segmento"
+                  visibility={segmentVisible}
+                  setVisibility={setSegmentVisible}
+                />
+                <Picker
+                  options={optionsExpenseAmount}
+                  selectedValue={setExpenseAmount}
+                  value={!expenseAmount ? "Quantidade de meses" : expenseAmount}
+                  type="Quantidade de meses"
+                  visibility={expenseAmountVisible}
+                  setVisibility={setExpenseAmountVisible}
+                />
+                <TextInput
+                  name="value"
+                  placeholder="Valor"
+                  control={control}
+                  errors={errors.value}
+                  masked="money"
+                  helperText="Informe todos os campos"
+                />
+                <Button
+                  isLoading={isLoading}
+                  onPress={handleSubmit((e) => registerEntry(e))}
+                >
+                  <ButtonText>CADASTRAR</ButtonText>
+                </Button>
+              </FormContainer>
+              <Calendar
+                date={new Date()}
+                setDateToInput={setDateToInput}
+                calendarIsShow={calendar}
+              />
+            </ContainerCenter>
+          </ViewTabContent>
+        </TouchableWithoutFeedback>
+      </ViewTab>
+    </BackgroundContainer>
   );
 };
 

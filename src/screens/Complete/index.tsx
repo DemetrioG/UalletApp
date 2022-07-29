@@ -25,6 +25,7 @@ import {
   StyledKeyboardAvoidingView,
   TextHeader,
 } from "../../styles/general";
+import { GENDER, PROFILE } from "../../components/Picker/options";
 
 interface IForm {
   birthdate: string;
@@ -49,9 +50,6 @@ const Complete = () => {
 
   const [genderVisible, setGenderVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
-
-  const optionsGender = ["Feminino", "Masculino"];
-  const optionsProfile = ["Investidor", "Poupador", "Gastador"];
 
   const {
     control,
@@ -141,7 +139,7 @@ const Complete = () => {
           <ContainerCenter>
             <FormContainer>
               <Picker
-                options={optionsGender}
+                options={GENDER}
                 selectedValue={setGender}
                 value={!gender ? "Sexo" : gender}
                 type="Sexo"
@@ -149,7 +147,7 @@ const Complete = () => {
                 setVisibility={setGenderVisible}
               />
               <Picker
-                options={optionsProfile}
+                options={PROFILE}
                 selectedValue={setProfile}
                 value={!profile ? "Perfil" : profile}
                 type="Perfil"
