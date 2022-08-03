@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -42,16 +42,10 @@ import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
 interface IForm {
   entrydate: string;
   description: string;
+  modality: string;
+  segment: string;
   value: string;
 }
-
-const schema = yup
-  .object({
-    entrydate: yup.string().required(),
-    description: yup.string().required(),
-    value: yup.string().required(),
-  })
-  .required();
 
 const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -73,6 +67,28 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
 
+  const schema = yup
+    .object({
+      entrydate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      description: yup.string().required(),
+      modality: yup
+        .string()
+        .test("modality", "Informe a modalidade", () => Boolean(modality!)),
+      segment: yup
+        .string()
+        .test("segment", "Informe o segmento", () =>
+          type === "Despesa" ? Boolean(segment!) : true
+        ),
+      value: yup.string().required(),
+    })
+    .required();
+
   const {
     control,
     handleSubmit,
@@ -91,22 +107,6 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
     idRegister?: number
   ) {
     if (networkConnection(isNetworkConnected!, setAlert)) {
-      if (!modality || (type == "Despesa" && !segment)) {
-        return setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Informe todos os campos",
-        }));
-      }
-
-      if (!dateValidation(entrydate)) {
-        return setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Verifique a data informada",
-        }));
-      }
-
       Keyboard.dismiss();
       setIsLoading(true);
       let id = idRegister ? idRegister : 1;
@@ -117,7 +117,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
           .firestore()
           .collection("entry")
           .doc(user.uid)
-          .collection(modality)
+          .collection(modality!)
           .orderBy("id", "desc")
           .limit(1)
           .get()
@@ -135,7 +135,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
         date: convertDateToDatabase(entrydate),
         type: type,
         description: description,
-        modality: modality,
+        modality: modality!,
         segment: segment,
         value: realToNumber(value),
       };
@@ -152,7 +152,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
         .firestore()
         .collection("entry")
         .doc(user.uid)
-        .collection(modality)
+        .collection(modality!)
         .doc(id.toString())
         .set(items)
         .catch(() => {
@@ -172,7 +172,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
         .firestore()
         .collection("balance")
         .doc(user.uid)
-        .collection(modality)
+        .collection(modality!)
         .doc(Number(entrydate.slice(3, 5)).toString())
         .get()
         .then((v) => {
@@ -197,7 +197,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
         .firestore()
         .collection("balance")
         .doc(user.uid)
-        .collection(modality)
+        .collection(modality!)
         .doc(Number(entrydate?.slice(3, 5)).toString())
         .set({
           balance: balance,
@@ -337,8 +337,10 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   control={control}
                   errors={errors.entrydate}
                   masked="datetime"
+                  maxLength={10}
                   setCalendar={setCalendar}
                   withIcon
+                  helperText="Verifique a data informada"
                 />
                 <TextInput
                   name="description"
@@ -354,6 +356,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   type="Modalidade"
                   visibility={modalityVisible}
                   setVisibility={setModalityVisible}
+                  errors={errors.modality}
                 />
                 {type == "Despesa" && (
                   <Picker
@@ -363,6 +366,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                     type="Segmento"
                     visibility={segmentVisible}
                     setVisibility={setSegmentVisible}
+                    errors={errors.segment}
                   />
                 )}
                 <TextInput
@@ -392,11 +396,16 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   <>
                     <Button
                       isLoading={isLoading}
+                      isDisabled={isDelete}
                       onPress={handleSubmit((e) => registerEntry(e, params.id))}
                     >
                       <ButtonText>ATUALIZAR</ButtonText>
                     </Button>
-                    <ButtonDelete isLoading={isDelete} onPress={handleDelete}>
+                    <ButtonDelete
+                      isLoading={isDelete}
+                      isDisabled={isLoading}
+                      onPress={handleDelete}
+                    >
                       <ButtonText>EXCLUIR</ButtonText>
                     </ButtonDelete>
                   </>
