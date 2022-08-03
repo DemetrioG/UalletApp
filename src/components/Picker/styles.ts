@@ -36,7 +36,6 @@ export const Title = styled(Text).attrs(() => ({
   fontWeight: 700,
 }))`
   color: ${({ theme: { theme } }) => theme.blue};
-  margin: ${metrics.baseMargin}px;
 `;
 
 export const ItemPicker = styled(TouchableOpacity)`

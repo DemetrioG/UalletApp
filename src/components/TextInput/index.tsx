@@ -10,8 +10,9 @@ import styled from "styled-components";
 
 const Icon = styled(NativeIcon)`
   position: absolute;
-  top: -30px;
-  right: 15px;
+  top: -38px;
+  right: 8px;
+  padding: 8px;
 `;
 
 const FormControl = styled(NativeFormControl)`

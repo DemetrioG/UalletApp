@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormControl, View, WarningOutlineIcon } from "native-base";
+import { FormControl, HStack, View, WarningOutlineIcon } from "native-base";
 import { FieldError } from "react-hook-form";
 import {
   Modal,
@@ -82,14 +82,24 @@ const Picker = ({
           visible={visibility}
           onRequestClose={() => setVisibility(false)}
         >
-          <TouchableWithoutFeedback onPress={() => setVisibility(false)}>
-            <ModalContainer>
-              <ModalView>
+          <ModalContainer>
+            <ModalView>
+              <HStack
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                margin={3}
+              >
                 <Title>{type}</Title>
-                <ScrollView>{option}</ScrollView>
-              </ModalView>
-            </ModalContainer>
-          </TouchableWithoutFeedback>
+                <Icon
+                  name="x"
+                  size={20}
+                  colorVariant="red"
+                  onPress={() => setVisibility(false)}
+                />
+              </HStack>
+              <ScrollView>{option}</ScrollView>
+            </ModalView>
+          </ModalContainer>
         </Modal>
       </StyledInput>
       <FormControl isInvalid={isInvalid} mt={0}>
