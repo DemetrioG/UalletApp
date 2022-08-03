@@ -42,6 +42,9 @@ import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
 interface IForm {
   entrydate: string;
   description: string;
+  modality: string;
+  segment: string;
+  expense_amount: number;
   value: string;
 }
 
@@ -50,14 +53,6 @@ const optionsExpenseAmount: string[] = [];
 for (let index = 1; index < 13; index++) {
   optionsExpenseAmount.push(index.toString());
 }
-
-const schema = yup
-  .object({
-    entrydate: yup.string().required(),
-    description: yup.string().required(),
-    value: yup.string().required(),
-  })
-  .required();
 
 const FixedEntry = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -78,6 +73,29 @@ const FixedEntry = () => {
   const [expenseAmountVisible, setExpenseAmountVisible] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
 
+  const schema = yup
+    .object({
+      entrydate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      description: yup.string().required(),
+      modality: yup
+        .string()
+        .test("modality", "Informe a modalidade", () => Boolean(modality!)),
+      segment: yup
+        .string()
+        .test("segment", "Informe o segmento", () => Boolean(segment!)),
+      expense_amount: yup
+        .string()
+        .test("number", "Informe a quantidade", () => Boolean(expenseAmount!)),
+      value: yup.string().required(),
+    })
+    .required();
+
   const {
     control,
     handleSubmit,
@@ -93,22 +111,6 @@ const FixedEntry = () => {
 
   async function registerEntry({ description, entrydate, value }: IForm) {
     if (networkConnection(isNetworkConnected!, setAlert)) {
-      if (!modality || !segment || !expenseAmount) {
-        return setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Informe todos os campos",
-        }));
-      }
-
-      if (!dateValidation(entrydate)) {
-        return setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "Verifique a data informada",
-        }));
-      }
-
       Keyboard.dismiss();
       setIsLoading(true);
       let id = 0;
@@ -118,7 +120,7 @@ const FixedEntry = () => {
         .firestore()
         .collection("entry")
         .doc(user.uid)
-        .collection(modality)
+        .collection(modality!)
         .orderBy("id", "desc")
         .limit(1)
         .get()
@@ -143,7 +145,7 @@ const FixedEntry = () => {
           .firestore()
           .collection("entry")
           .doc(user.uid)
-          .collection(modality)
+          .collection(modality!)
           .doc(id.toString())
           .set({
             id: id,
@@ -170,7 +172,7 @@ const FixedEntry = () => {
           .firestore()
           .collection("balance")
           .doc(user.uid)
-          .collection(modality)
+          .collection(modality!)
           .doc(Number(finalDate.slice(3, 5)).toString())
           .get()
           .then((v) => {
@@ -183,7 +185,7 @@ const FixedEntry = () => {
           .firestore()
           .collection("balance")
           .doc(user.uid)
-          .collection(modality)
+          .collection(modality!)
           .doc(Number(finalDate.slice(3, 5)).toString())
           .set({
             balance: balance,
@@ -226,8 +228,10 @@ const FixedEntry = () => {
                   control={control}
                   errors={errors.entrydate}
                   masked="datetime"
+                  maxLength={10}
                   setCalendar={setCalendar}
                   withIcon
+                  helperText="Verifique a data informada"
                 />
                 <TextInput
                   name="description"
@@ -243,6 +247,7 @@ const FixedEntry = () => {
                   type="Modalidade"
                   visibility={modalityVisible}
                   setVisibility={setModalityVisible}
+                  errors={errors.modality}
                 />
                 <Picker
                   options={ENTRY_SEGMENT}
@@ -251,6 +256,7 @@ const FixedEntry = () => {
                   type="Segmento"
                   visibility={segmentVisible}
                   setVisibility={setSegmentVisible}
+                  errors={errors.segment}
                 />
                 <Picker
                   options={optionsExpenseAmount}
@@ -259,6 +265,7 @@ const FixedEntry = () => {
                   type="Quantidade de meses"
                   visibility={expenseAmountVisible}
                   setVisibility={setExpenseAmountVisible}
+                  errors={errors.expense_amount}
                 />
                 <TextInput
                   name="value"

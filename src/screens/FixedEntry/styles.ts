@@ -4,11 +4,11 @@ import {
   TextProps,
 } from "react-native";
 import styled from "styled-components";
-import { fonts, metrics } from "../../styles";
+import { fonts } from "../../styles";
 
 export const HorizontalView = styled(HStack)`
   align-items: center;
-  margin-bottom: ${metrics.baseMargin}px;
+  margin-bottom: 5px;
 `;
 
 export const TypeView = styled(HStack)`

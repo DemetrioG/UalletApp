@@ -33,16 +33,12 @@ interface IForm {
   initialdate: string;
   finaldate: string;
   description: string;
+  modality: string;
+  segment: string;
+  entry_type: string;
   initialvalue: string;
   finalvalue: string;
 }
-
-const schema = yup
-  .object({
-    initialdate: yup.string().required().min(10),
-    finaldate: yup.string().required().min(10),
-  })
-  .required();
 
 const Filter = ({
   route: { params },
@@ -50,7 +46,6 @@ const Filter = ({
   route: { params: IActiveFilter };
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { setAlert } = React.useContext(AlertContext);
   const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
   const [typeEntryVisible, setTypeEntryVisible] = React.useState(false);
@@ -59,6 +54,30 @@ const Filter = ({
   const [segment, setSegment] = React.useState<string | null>(null);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [filter, setFilter] = React.useState<IActiveFilter>(defaultFilter);
+
+  const schema = yup
+    .object({
+      initialdate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      finaldate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      modality: yup
+        .string()
+        .test("modality", "Informe a modalidade", () => Boolean(modality!)),
+      segment: yup.string(),
+      entry_type: yup.string(),
+    })
+    .required();
 
   const {
     control,
@@ -80,21 +99,6 @@ const Filter = ({
     initialvalue,
     finalvalue,
   }: IForm) {
-    if (!dateValidation(initialdate) || !dateValidation(finaldate)) {
-      return setAlert(() => ({
-        type: "error",
-        title: "Verifique o período informado",
-        visibility: true,
-      }));
-    }
-    if (!modality) {
-      return setAlert(() => ({
-        type: "error",
-        title: "Informe a modalidade",
-        visibility: true,
-      }));
-    }
-
     setLoading(true);
     const data = {
       description: description,
@@ -151,6 +155,7 @@ const Filter = ({
                   errors={errors.initialdate}
                   maxLength={10}
                   masked="datetime"
+                  helperText="Verifique a data informada"
                 />
               </HalfContainer>
               <HalfContainer>
@@ -161,6 +166,7 @@ const Filter = ({
                   errors={errors.finaldate}
                   maxLength={10}
                   masked="datetime"
+                  helperText="Verifique a data informada"
                 />
               </HalfContainer>
             </SpaceContainer>
@@ -176,6 +182,7 @@ const Filter = ({
               type="Modalidade"
               visibility={modalityVisible}
               setVisibility={setModalityVisible}
+              errors={errors.modality}
             />
             <Picker
               options={ENTRY_TYPE}
@@ -184,6 +191,7 @@ const Filter = ({
               type="Tipo"
               visibility={typeEntryVisible}
               setVisibility={setTypeEntryVisible}
+              errors={errors.entry_type}
             />
             {typeEntry !== "Receita" && (
               <Picker
@@ -193,6 +201,7 @@ const Filter = ({
                 type="Segmento"
                 visibility={segmentVisible}
                 setVisibility={setSegmentVisible}
+                errors={errors.segment}
               />
             )}
             <SpaceContainer>
