@@ -69,9 +69,11 @@ const UTextInput = (
             <CalendarIcon setCalendar={props.setCalendar!} />
           )}
         </>
-        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-          {props.helperText}
-        </FormControl.ErrorMessage>
+        {props.helperText && (
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+            {props.helperText}
+          </FormControl.ErrorMessage>
+        )}
       </FormControl>
     </>
   );
