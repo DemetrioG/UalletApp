@@ -15,13 +15,13 @@ import { AlertContext } from "../../../context/Alert/alertContext";
 import { dateValidation } from "../../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../../utils/number.helper";
 import { defaultFilter, IActiveFilter } from "./helper";
-import { ButtonText, ModalContainer, ModalView } from "../../../styles/general";
 import {
-  ButtonContainer,
+  ButtonText,
   HalfContainer,
-  SpaceContainer,
-  Title,
-} from "./styles";
+  ModalContainer,
+  ModalView,
+} from "../../../styles/general";
+import { ButtonContainer, SpaceContainer, Title } from "./styles";
 import { metrics } from "../../../styles";
 import {
   ENTRY_SEGMENT,
