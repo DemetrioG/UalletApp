@@ -22,6 +22,7 @@ const colors = {
   yellow: "#FFFD82",
   transpDark: "rgba(49, 47, 66, 0.95)",
   transpLight: "rgba(227, 222, 222, 0.95)",
+  invalidInputColor: '#dc2626'
 };
 
 export default colors;
