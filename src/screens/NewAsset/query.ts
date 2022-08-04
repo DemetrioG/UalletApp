@@ -13,52 +13,48 @@ export interface IAsset {
     uid: string;
   }
 
-export function registerAsset({entrydate, segment, broker, asset, amount, price, total, uid}: IAsset) {
-    return new Promise( async (resolve, reject) => {
-        try {
-            let id = 1;
-            // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-            await firebase
-            .firestore()
-            .collection("assets")
-            .doc(uid)
-            .collection('Real')
-            .orderBy("id", "desc")
-            .limit(1)
-            .get()
-            .then((v) => {
-                v.forEach((result) => {
-                    id += result.data().id;  
-                });
-            }).catch(() => {
-                throw new Error('Erro ao retornar último ID')
-            });
+async function _registerAsset(props: IAsset) {
+    const { entrydate, segment, broker, asset, amount, price, total, uid } = props;
 
-            const items = {
-                id: id,
-                date: convertDateToDatabase(entrydate),
-                segment: segment,
-                broker: broker,
-                asset: asset.toUpperCase(),
-                amount: amount,
-                price: realToNumber(price),
-                total: realToNumber(total)
-            }
+    let id = 1;
+    // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
+    const response = await firebase
+    .firestore()
+    .collection("assets")
+    .doc(uid)
+    .collection('Real')
+    .orderBy("id", "desc")
+    .limit(1)
+    .get()
 
-            firebase
-            .firestore()
-            .collection('assets')
-            .doc(uid)
-            .collection('Real')
-            .doc(id.toString())
-            .set(items)
-            .catch(() => {
-                throw new Error('Erro ao salvar o ativo')
-            })
-            
-            resolve('success')
-        } catch (e) {
-            reject(e)
-        }
-    })
+    response.forEach((result) => {
+        id += result.data().id;  
+    });
+
+    const items = {
+        id: id,
+        date: convertDateToDatabase(entrydate),
+        segment: segment,
+        broker: broker,
+        asset: asset.toUpperCase(),
+        amount: amount,
+        price: realToNumber(price),
+        total: realToNumber(total)
+    }
+
+    return firebase
+    .firestore()
+    .collection('assets')
+    .doc(uid)
+    .collection('Real')
+    .doc(id.toString())
+    .set(items)
+}
+
+export function registerAsset(props: IAsset) {
+    try {
+        return _registerAsset(props);
+    } catch (error) {
+        throw new Error('Erro')
+    }
 }
