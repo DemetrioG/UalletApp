@@ -3,7 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Complete from "../screens/Complete";
 import ConfiguracoesScreen from "../screens/Configurations";
 import { DadosCadastraisScreen } from "../screens/Configurations/DadosCadastrais";
-import { InformacoesCadastraisScreen } from "../screens/Configurations/DadosCadastrais/InformacoesCadastrais";
+import { AlterarSenhaScreen } from "../screens/Configurations/DadosCadastrais/AlterarSenha";
+import { InformacoesPessoaisScreen } from "../screens/Configurations/DadosCadastrais/InformacoesPessoais";
 import Entry from "../screens/Entry";
 import Filter from "../screens/Entry/Filter";
 import FixedEntry from "../screens/FixedEntry";
@@ -68,7 +69,12 @@ export const AppStackRoutes = () => {
             />
             <StackScreen 
                 name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
-                component={InformacoesCadastraisScreen}
+                component={InformacoesPessoaisScreen}
+                options={{headerShown: false}}
+            />
+            <StackScreen 
+                name="Configuracoes/DadosCadastrais/AlterarSenha"
+                component={AlterarSenhaScreen}
                 options={{headerShown: false}}
             />
             {/* !Configuracoes */}

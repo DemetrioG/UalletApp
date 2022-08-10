@@ -26,7 +26,7 @@ type UserInfo = {
   profile: string;
 };
 
-export const InformacoesCadastraisScreen = () => {
+export const InformacoesPessoaisScreen = () => {
   const [userInfo, setUserInfo] = React.useState<UserInfo | null>(null);
   const { goBack } = useNavigation();
   const { user } = React.useContext(UserContext);
