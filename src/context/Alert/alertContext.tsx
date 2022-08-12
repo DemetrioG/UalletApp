@@ -1,8 +1,8 @@
 import * as React from "react";
 
 export interface IAlert {
-  visibility: boolean;
-  type: "success" | "error" | "confirm" | "network";
+  visibility?: boolean;
+  type?: "success" | "error" | "confirm" | "network";
   title: string;
   helperText?: string;
   redirect?: string | null;
