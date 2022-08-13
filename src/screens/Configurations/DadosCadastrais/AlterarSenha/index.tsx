@@ -61,7 +61,6 @@ export const AlterarSenhaScreen = () => {
 
         if (!changed) {
             setAlert({
-                visibility: true,
                 type: "error",
                 title: "A senha antiga é inválida",
                 callback: true,
@@ -76,8 +75,7 @@ export const AlterarSenhaScreen = () => {
 
         return setAlert({
             title: "Senha alterada com sucesso",
-            callback: true,
-            callbackFunction: () => navigate("Home" as any),
+            redirect: "Home",
         });
     }
 
