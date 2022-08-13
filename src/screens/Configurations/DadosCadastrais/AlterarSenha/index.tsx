@@ -79,8 +79,6 @@ export const AlterarSenhaScreen = () => {
         });
     }
 
-    console.log(errors);
-
     return (
         <StyledKeyboardAvoidingView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
