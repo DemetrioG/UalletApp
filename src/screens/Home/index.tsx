@@ -30,9 +30,9 @@ import {
   DescriptionText,
   EmptyEntryText,
   BackgroundContainer,
-  Balance,
 } from "./styles";
 import {
+  Balance,
   Card,
   ItemContainer,
   ScrollViewTab,
