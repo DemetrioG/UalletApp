@@ -72,7 +72,7 @@ const Picker = ({
       <StyledInput isInvalid={isInvalid}>
         <SpaceItems onPress={() => setVisibility(true)}>
           <PickerText value={value} type={type}>
-            {value}
+            {value.length > 28 ? `${value.slice(0, 28)}...` : value}
           </PickerText>
           <Icon name="chevron-down" size={20} color={colors.gray} />
         </SpaceItems>
