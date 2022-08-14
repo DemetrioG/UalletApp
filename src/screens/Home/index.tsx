@@ -6,8 +6,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
 import Consolidate from "../../components/Consolidate";
-import Header from "../../components/Header";
-import Alert from "../../components/Alert";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
 import Icon from "../../components/Icon";
@@ -35,9 +33,9 @@ import {
   DescriptionContainer,
   DescriptionText,
   EmptyEntryText,
+  BackgroundContainer,
 } from "./styles";
 import {
-  BackgroundContainer,
   Card,
   ItemContainer,
   ScrollViewTab,
@@ -185,9 +183,13 @@ const Home = () => {
             if (snapshot.docs.length > 0) {
               const list: typeof lastEntry = [];
               snapshot.forEach((result) => {
+                console.log(result.data());
+
                 list.push(result.data());
               });
-              setLastEntry(() => sortObjectByKey(list, "id", "desc"));
+              return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
+            } else {
+              return setLastEntry([]);
             }
           });
       }

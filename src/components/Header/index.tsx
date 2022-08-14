@@ -6,7 +6,6 @@ import DatePicker from "../DatePicker";
 import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
-import { setStorage } from "../../utils/storage.helper";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
 import { Skeleton } from "../../styles/general";
 import Icon from "../Icon";
