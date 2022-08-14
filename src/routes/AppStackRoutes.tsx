@@ -11,6 +11,8 @@ import FixedEntry from "../screens/FixedEntry";
 import Home from "../screens/Home";
 import Investments from "../screens/Investments";
 import NewAsset from "../screens/NewAsset";
+import NewFixAsset from "../screens/NewAsset/NewFixAsset";
+import NewVariableAsset from "../screens/NewAsset/NewVariableAsset";
 import NewEntry from "../screens/NewEntry";
 
 const {
@@ -70,6 +72,16 @@ export const AppStackRoutes = () => {
       <StackScreen
         name="NovoAtivo"
         component={NewAsset}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="NovoAtivoFixo"
+        component={NewFixAsset}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="NovoAtivoVariavel"
+        component={NewVariableAsset}
         options={{ headerShown: false }}
       />
       {/* !Investimentos */}
