@@ -22,7 +22,6 @@ import {
 const LineChart = () => {
   const { data: dataContext } = React.useContext(DataContext);
   const { user } = React.useContext(UserContext);
-  const { data: userData } = React.useContext(DataContext);
   const { loader, setLoader } = React.useContext(LoaderContext);
 
   const [data, setData] = React.useState([
@@ -155,7 +154,7 @@ const LineChart = () => {
         }));
       }
     })();
-  }, [dataContext, userData.balance]);
+  }, [dataContext]);
 
   return (
     <>
