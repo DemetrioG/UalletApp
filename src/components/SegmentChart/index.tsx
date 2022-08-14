@@ -167,12 +167,7 @@ const SegmentChart = () => {
         }));
       }
     })();
-  }, [
-    dataContext.modality,
-    dataContext.month,
-    dataContext.year,
-    dataContext.balance,
-  ]);
+  }, [dataContext]);
 
   return (
     <>

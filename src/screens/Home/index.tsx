@@ -29,10 +29,10 @@ import {
   DescriptionContainer,
   DescriptionText,
   EmptyEntryText,
-} from "./styles";
-import {
   BackgroundContainer,
   Balance,
+} from "./styles";
+import {
   Card,
   ItemContainer,
   ScrollViewTab,
@@ -180,9 +180,13 @@ const Home = () => {
             if (snapshot.docs.length > 0) {
               const list: typeof lastEntry = [];
               snapshot.forEach((result) => {
+                console.log(result.data());
+
                 list.push(result.data());
               });
-              setLastEntry(() => sortObjectByKey(list, "id", "desc"));
+              return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
+            } else {
+              return setLastEntry([]);
             }
           });
       }

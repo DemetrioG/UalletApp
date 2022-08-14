@@ -49,9 +49,8 @@ const AppRoutes = () => {
 
   // Verificação de teclado ativo para renderizar com transição o componente que fica acima do ícone na Tab
   React.useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", () => {
+    const keyboardShow = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardVisible(true);
-
       Animated.timing(opacity, {
         toValue: 0,
         duration: 50,
@@ -59,7 +58,7 @@ const AppRoutes = () => {
       }).start();
     });
 
-    Keyboard.addListener("keyboardDidHide", () => {
+    const keyboardHide = Keyboard.addListener("keyboardDidHide", () => {
       setKeyboardVisible(false);
       Animated.timing(opacity, {
         toValue: 1,
@@ -69,8 +68,8 @@ const AppRoutes = () => {
     });
 
     () => {
-      Keyboard.removeAllListeners("keyboardDidShow");
-      Keyboard.removeAllListeners("keyboardDidHide");
+      keyboardShow.remove();
+      keyboardHide.remove();
     };
   }, []);
 

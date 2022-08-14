@@ -45,14 +45,18 @@ const DatePicker = ({
       const storedMonth = await getStorage("Mês");
       const storedYear = await getStorage("Ano");
 
-      if (storedMonth && storedYear) {
-        setData((dataState) => ({
+      if (storedMonth && type === "Mês") {
+        return setData((dataState) => ({
           ...dataState,
-          month: type == "Mês" ? storedMonth : dataState.month,
-          year: type == "Ano" ? storedYear : dataState.year,
+          month: storedMonth,
+        }));
+      } else if (storedYear && type === "Ano") {
+        return setData((dataState) => ({
+          ...dataState,
+          year: storedYear,
         }));
       } else {
-        setData((dataState) => ({
+        return setData((dataState) => ({
           ...dataState,
           month: type == "Mês" ? new Date().getMonth() + 1 : dataState.month,
           year: type == "Ano" ? new Date().getFullYear() : dataState.year,
