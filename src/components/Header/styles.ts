@@ -24,6 +24,7 @@ export const HeaderIconView = styled(HStack)`
 `;
 
 export const NetworkCard = styled(Card)`
+  margin-top: ${metrics.baseMargin}px;
   padding: ${metrics.basePadding}px 20px;
   flex-direction: row;
   align-items: center;

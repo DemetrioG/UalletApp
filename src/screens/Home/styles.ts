@@ -7,7 +7,12 @@ import {
   ValueContainer as DefaultValueContainer,
   DescriptionContainer as DefaultDescriptionContainer,
   DescriptionText as DefaultDescriptionText,
+  BackgroundContainer as DefaultBackgroundContainer
 } from "../../styles/general";
+
+export const BackgroundContainer = styled(DefaultBackgroundContainer)` 
+  padding-top: 0px;
+`
 
 export const CardHeaderView: React.FC<
   ViewProps & { balance?: boolean }
