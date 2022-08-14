@@ -32,4 +32,12 @@ export const BROKER = [
     'NU INVEST CORRETORA DE VALORES',
     'ORAMA DTVM S.A',
     'RICO INVESTIMENTOS',
-]
+    'SANTANDER CCVM S/A',
+    'ITAU CV S/A',
+    'BRADESCO S/A CTVM',
+    'BANCO DO BRASIL S/A'
+];
+export const TYPE_OF_INVEST = [
+    'Renda fixa',
+    'Renda variável',
+];

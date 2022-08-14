@@ -1,6 +1,6 @@
 import { Text } from "native-base";
 import styled from "styled-components";
-import { metrics } from "../../styles";
+import { metrics } from "../../../styles";
 
 export const TotalLabel = styled(Text)`
     color: ${({theme: {theme}}) => theme.text};
