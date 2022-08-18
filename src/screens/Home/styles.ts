@@ -46,7 +46,7 @@ export const Invest = styled(Text).attrs(() => ({
 }))`
   margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) =>
-    !theme.isOnDarkTheme ? colors.strongPurple : colors.yellow};
+    !theme.isOnDarkTheme ? colors.strongPurple : colors.lightYellow};
 `;
 
 export const CardStatusView = styled(View)`
