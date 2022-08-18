@@ -1,15 +1,26 @@
 import * as React from "react";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Button, HStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { IAsset, registerAsset } from "./query";
+import { AlertContext } from "../../../context/Alert/alertContext";
+import { UserContext } from "../../../context/User/userContext";
+import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
 import Calendar from "../../../components/Calendar";
+import { BROKER } from "../../../components/Picker/options";
 import { convertDate, dateValidation } from "../../../utils/date.helper";
+import axios, { ITesouro, TESOURO_URL } from "../../../utils/api.helper";
+import { sortObjectByKey } from "../../../utils/array.helper";
 import {
   BackgroundContainer,
   ButtonText,
@@ -20,33 +31,29 @@ import {
   ViewTab,
   ViewTabContent,
 } from "../../../styles/general";
-import Picker from "../../../components/Picker";
-import { ASSET_SEGMENT, BROKER } from "../../../components/Picker/options";
-import { Total, TotalLabel } from "./styles";
-import { numberToReal, realToNumber } from "../../../utils/number.helper";
-import { IAsset, registerAsset } from "./query";
-import { UserContext } from "../../../context/User/userContext";
-import { AlertContext } from "../../../context/Alert/alertContext";
-import axios, { ITesouro, TESOURO_URL } from "../../../utils/api.helper";
-import { sortObjectByKey } from "../../../utils/array.helper";
+import { RentTypeText } from "./styles";
 
 interface IForm {
   entrydate: string;
   title: string;
   broker: string;
   rent: string;
-  duedate: number;
+  duedate: string;
   price: string;
   cdbname: string;
 }
+
+const RENT_OPTIONS = ["Selic", "CDI", "IPCA +", "Pré Fix.", "Pós Fix."];
 
 const NewFixAsset = () => {
   const navigation = useNavigation();
   const { user } = React.useContext(UserContext);
   const { setAlert } = React.useContext(AlertContext);
+  const [selic, setSelic] = React.useState<string | null>(null);
+  const [rentType, setRentType] = React.useState("Selic");
   const [calendar, setCalendar] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [title, setTitle] = React.useState(null);
+  const [title, setTitle] = React.useState<string | null>(null);
   const [broker, setBroker] = React.useState(null);
 
   const [TITLE_OPTIONS, SET_TITLE_OPTIONS] = React.useState<string[]>([]);
@@ -54,7 +61,7 @@ const NewFixAsset = () => {
   const [titleVisible, setTitleVisible] = React.useState(false);
   const [brokerVisible, setBrokerVisible] = React.useState(false);
 
-  const CDBIsSetted = title === "CDB";
+  const CDBIsSetted = title === "Certificado de Depósito Bancário";
 
   const schema = yup
     .object({
@@ -65,7 +72,9 @@ const NewFixAsset = () => {
         .test("date", "Verifique a data informada", (value) =>
           dateValidation(value!)
         ),
-      title: yup.string().test("segment", "Informe um título", () => title!),
+      title: yup
+        .string()
+        .test("segment", "Informe um título", () => Boolean(title!)),
       cdbname: yup
         .string()
         .test("cdb", "Informe o nome do CDB", (value) =>
@@ -75,10 +84,8 @@ const NewFixAsset = () => {
       rent: yup.string().required(),
       duedate: yup
         .string()
-        .required()
-        .min(10)
         .test("date", "Verifique a data informada", (value) =>
-          dateValidation(value!)
+          value?.length && value !== "" ? dateValidation(value!) : true
         ),
       price: yup
         .string()
@@ -95,57 +102,104 @@ const NewFixAsset = () => {
     control,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<IForm>({
     resolver: yupResolver(schema),
   });
 
-  function setDateToInput(date: Date) {
+  const setDateToInput = (date: Date) => {
     setValue("entrydate", convertDate(date));
-  }
+  };
 
-  function submit({ entrydate, amount, asset, price }: IForm) {
-    // setLoading(true);
-    // const data: IAsset = {
-    //   entrydate: entrydate,
-    //   amount: amount,
-    //   asset: asset,
-    //   price: price,
-    //   broker: broker,
-    //   segment: segment,
-    //   total: total,
-    //   uid: user.uid!,
-    // };
-    // registerAsset(data)
-    //   .then(() => {
-    //     return setAlert(() => ({
-    //       visibility: true,
-    //       type: "success",
-    //       title: "Ativo cadastrado com sucesso",
-    //       redirect: "Investimentos",
-    //     }));
-    //   })
-    //   .catch(() => {
-    //     return setAlert(() => ({
-    //       visibility: true,
-    //       type: "error",
-    //       title: "Erro ao cadastrar ativo",
-    //       redirect: "Investimentos",
-    //     }));
-    //   })
-    //   .finally(() => setLoading(false));
-  }
+  const changeRentType = () => {
+    const index = RENT_OPTIONS.indexOf(rentType) + 1;
+    const newValue = RENT_OPTIONS[index >= RENT_OPTIONS.length ? 0 : index];
+    return setRentType(newValue);
+  };
+
+  const submit = ({ entrydate, cdbname, rent, duedate, price }: IForm) => {
+    const CDB = cdbname && cdbname !== "";
+    const DUEDATE = duedate && duedate !== "";
+
+    setLoading(true);
+    const data: IAsset = {
+      entrydate: entrydate,
+      title: title,
+      cdbname: CDB ? cdbname : null,
+      broker: broker,
+      rent: rent,
+      rentType: rentType,
+      duedate: DUEDATE ? duedate : null,
+      price: price,
+      uid: user.uid!,
+    };
+
+    registerAsset(data)
+      .then(() => {
+        return setAlert(() => ({
+          visibility: true,
+          type: "success",
+          title: "Ativo cadastrado com sucesso",
+          redirect: "Investimentos",
+        }));
+      })
+      .catch(() => {
+        return setAlert(() => ({
+          visibility: true,
+          type: "error",
+          title: "Erro ao cadastrar ativo",
+        }));
+      })
+      .finally(() => setLoading(false));
+  };
 
   React.useEffect(() => {
-    axios.get(TESOURO_URL).then(({ data }: { data: ITesouro[] }) => {
-      const names: string[] = ["CDB"];
-      const sortedData = sortObjectByKey(data, "NOME", "asc");
-      sortedData.map((e) => names.push(e.NOME));
+    const fillTitlePicker = () => {
+      const names: string[] = [
+        "Certificado de Depósito Bancário",
+        "Letra de Crédito",
+        "Letra de Crédito Imobiliário",
+        "Letra de Crédito do Agronegócio",
+      ];
 
-      return SET_TITLE_OPTIONS(names);
-    });
+      axios.get(TESOURO_URL).then(({ data }: { data: ITesouro[] }) => {
+        const selic = data.filter((e) => e.NOME.includes("Tesouro Selic"))[0]
+          .SELIC;
+        setSelic(selic);
+
+        const sortedData = sortObjectByKey(data, "NOME", "asc");
+        sortedData.map((e) => names.push(e.NOME));
+
+        return SET_TITLE_OPTIONS(names);
+      });
+    };
+    fillTitlePicker();
   }, []);
+
+  React.useEffect(() => {
+    const changeRentTypeWithTitle = () => {
+      const SELIC = title?.includes("Selic");
+      const CDB = title?.includes("Certificado de Depósito");
+      const IPCA = title?.includes("IPCA");
+      const PREFIX = title?.includes("Prefixado");
+
+      if (SELIC) {
+        setValue("rent", selic!);
+        setRentType(RENT_OPTIONS[0]);
+      } else {
+        setValue("rent", "");
+      }
+
+      if (CDB) {
+        setRentType(RENT_OPTIONS[1]);
+      } else if (IPCA) {
+        setRentType(RENT_OPTIONS[2]);
+      } else if (PREFIX) {
+        setRentType(RENT_OPTIONS[3]);
+      }
+    };
+    changeRentTypeWithTitle();
+  }, [title]);
 
   return (
     <BackgroundContainer>
@@ -184,7 +238,7 @@ const NewFixAsset = () => {
                 />
                 {CDBIsSetted && (
                   <TextInput
-                    name="entrydate"
+                    name="cdbname"
                     placeholder="Nome do CDB"
                     control={control}
                     errors={errors.cdbname}
@@ -199,6 +253,12 @@ const NewFixAsset = () => {
                   setVisibility={setBrokerVisible}
                   errors={errors.broker}
                 />
+                <TouchableOpacity onPress={changeRentType}>
+                  <HStack mb={1} alignItems={"center"}>
+                    <RentTypeText>{rentType}</RentTypeText>
+                    <Icon name="corner-right-down" size={12} />
+                  </HStack>
+                </TouchableOpacity>
                 <HStack justifyContent={"space-between"}>
                   <HalfContainer>
                     <TextInput
@@ -206,7 +266,10 @@ const NewFixAsset = () => {
                       placeholder="Rentabilidade"
                       control={control}
                       errors={errors.rent}
-                      keyboardType="decimal-pad"
+                      masked="money"
+                      options={{
+                        unit: "% ",
+                      }}
                     />
                   </HalfContainer>
                   <HalfContainer>

@@ -1,20 +1,21 @@
 import firebase from '../../../services/firebase';
 import { convertDateToDatabase } from '../../../utils/date.helper';
-import { realToNumber } from '../../../utils/number.helper';
+import { percentualToNumber, realToNumber } from '../../../utils/number.helper';
 
 export interface IAsset {
-    entrydate: string;
-    segment: string | null;
-    broker: string | null;
-    asset: string;
-    amount: number;
-    price: string;
-    total: string;
-    uid: string;
-  }
+    entrydate: string,
+    title: string | null,
+    cdbname: string | null,
+    broker: string | null,
+    rent: string,
+    rentType: string | null,
+    duedate: string | null,
+    price: string,
+    uid: string,
+}
 
 async function _registerAsset(props: IAsset) {
-    const { entrydate, segment, broker, asset, amount, price, total, uid } = props;
+    const { entrydate, broker, duedate, price, rent, title , uid, cdbname, rentType } = props;
 
     let id = 1;
     // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
@@ -22,31 +23,32 @@ async function _registerAsset(props: IAsset) {
     .firestore()
     .collection("assets")
     .doc(uid)
-    .collection('Real')
+    .collection('fixed')
     .orderBy("id", "desc")
     .limit(1)
     .get()
 
-    response.forEach((result) => {
+    response.forEach((result) => {    
         id += result.data().id;  
     });
 
     const items = {
         id: id,
         date: convertDateToDatabase(entrydate),
-        segment: segment,
+        title: title,
+        cdbname: cdbname && cdbname.toUpperCase(),
         broker: broker,
-        asset: asset.toUpperCase(),
-        amount: amount,
-        price: realToNumber(price),
-        total: realToNumber(total)
+        rent: percentualToNumber(rent),
+        rentType: rentType?.toUpperCase(),
+        duedate: duedate && convertDateToDatabase(duedate),
+        price: realToNumber(price)
     }
 
     return firebase
     .firestore()
     .collection('assets')
     .doc(uid)
-    .collection('Real')
+    .collection('fixed')
     .doc(id.toString())
     .set(items)
 }
@@ -54,7 +56,7 @@ async function _registerAsset(props: IAsset) {
 export function registerAsset(props: IAsset) {
     try {
         return _registerAsset(props);
-    } catch (error) {
+    } catch (error) {    
         throw new Error('Erro')
     }
 }
