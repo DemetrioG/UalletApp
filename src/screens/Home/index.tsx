@@ -155,7 +155,7 @@ const Home = () => {
 
   React.useEffect(() => {
     //Retorna os últimos lançamentos financeiros no app
-    (async function getLastEntry() {
+    async function getLastEntry() {
       if (data.year !== 0) {
         // Pega o mês de referência do App para realizar a busca dos registros
         const initialDate = new Date(`${data.month}/01/${data.year} 00:00:00`);
@@ -166,6 +166,7 @@ const Home = () => {
         );
 
         // Busca os registros dentro do período de referência
+        await new Promise((resolve) => setInterval(resolve, 100));
         firebase
           .firestore()
           .collection("entry")
@@ -180,8 +181,6 @@ const Home = () => {
             if (snapshot.docs.length > 0) {
               const list: typeof lastEntry = [];
               snapshot.forEach((result) => {
-                console.log(result.data());
-
                 list.push(result.data());
               });
               return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
@@ -190,8 +189,9 @@ const Home = () => {
             }
           });
       }
-    })();
-  }, [isFocused, data.modality, data.month, data.year]);
+    }
+    getLastEntry();
+  }, [isFocused, data.modality, data.month, data.year, consolidate]);
 
   React.useEffect(() => {
     if (
