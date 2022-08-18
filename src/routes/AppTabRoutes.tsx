@@ -12,7 +12,7 @@ import {
   StyledTabNavigation,
 } from "./styles";
 import { colors } from "../styles";
-import Alert from "../components/Alert";
+import ConfirmDialog from "../components/ConfirmDialog";
 import Header from "../components/Header";
 import { AppStackRoutes } from "./AppStackRoutes";
 
@@ -112,7 +112,7 @@ const AppRoutes = () => {
     <NavigationContainer>
       <SafeAreaContainer>
         <BackgroundContainer>
-          <Alert />
+          <ConfirmDialog />
           <Header />
         </BackgroundContainer>
         <StyledTabNavigation initialRouteName="HomeTab">
