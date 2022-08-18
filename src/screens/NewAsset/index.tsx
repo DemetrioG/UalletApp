@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Button, HStack, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
@@ -33,10 +32,7 @@ const NewAsset = () => {
     .required();
 
   const {
-    control,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors },
   } = useForm<{ type: string }>({
     resolver: yupResolver(schema),
