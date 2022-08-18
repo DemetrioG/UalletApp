@@ -14,18 +14,19 @@ export const ENTRY_SEGMENT = [
     "Curto e médio prazo",
 ];
 export const ASSET_SEGMENT = [
-    'CDB, LC, LCI e LCA',
-    'Tesouro Nacional',
     'Ações',
     'FIIs e Fiagro',
     'Criptomoedas',
-    'Outros'
+    "BDR's",
 ]
 export const BROKER = [
+    'BANCO DO BRASIL S/A',
+    'BRADESCO S/A CTVM',
     'BTG PACTUAL CTVM S.A',
     'CLEAR CORRETORA',
     'CM CAPITAL MARKETS CCTVM LTDA',
     'GENIAL INVESTIMENTOS CVM S.A',
+    'ITAU CV S/A',
     'MODAL DTVM LTDA',
     'XP INVESTIMENTOS CCTVM S.A',
     'NECTON INVESTIMENTOS S.A CVMC',
@@ -33,9 +34,6 @@ export const BROKER = [
     'ORAMA DTVM S.A',
     'RICO INVESTIMENTOS',
     'SANTANDER CCVM S/A',
-    'ITAU CV S/A',
-    'BRADESCO S/A CTVM',
-    'BANCO DO BRASIL S/A'
 ];
 export const TYPE_OF_INVEST = [
     'Renda fixa',
