@@ -1,17 +1,16 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button } from "native-base";
+import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import firebase from "../../services/firebase";
-import Alert from "../../components/Alert";
 import TextInput from "../../components/TextInput";
 import TextInputPassword from "../../components/TextInputPassword";
-import { AlertContext } from "../../context/Alert/alertContext";
-import { DataContext } from "../../context/Data/dataContext";
-import { networkConnection } from "../../utils/network.helper";
 import {
   BackgroundContainer,
   ButtonText,
@@ -21,7 +20,6 @@ import {
   HeaderTitleContainer,
   Logo,
   LogoHeader,
-  StyledKeyboardAvoidingView,
   TextHeader,
 } from "../../styles/general";
 import PasswordRules from "./PasswordRules";
@@ -50,10 +48,7 @@ const schema = yup
   .required();
 
 const Register = () => {
-  const { setAlert } = React.useContext(AlertContext);
-  const {
-    data: { isNetworkConnected },
-  } = React.useContext(DataContext);
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const [loading, setLoading] = React.useState(false);
 
   const {
@@ -68,74 +63,64 @@ const Register = () => {
   const passwordText = watch("password");
 
   async function registerUser({ name, email, password, confirm }: IForm) {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      if (password !== confirm) {
-        setAlert(() => ({
-          visibility: true,
-          type: "error",
-          title: "As senhas informadas são diferentes",
-        }));
-        return;
-      }
-
-      setLoading(true);
-      await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((v) => {
-          firebase.firestore().collection("users").doc(v.user?.uid).set({
-            name: name,
-            email: email,
-            typeUser: "default",
-            dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-          });
-          setAlert(() => ({
-            visibility: true,
-            type: "success",
-            title: "Usuário criado com sucesso",
-            redirect: "Login",
-          }));
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case "auth/weak-password":
-              setAlert(() => ({
-                visibility: true,
-                type: "error",
-                title: "Sua senha deve ter no mínimo 6 caracteres",
-              }));
-              break;
-            case "auth/invalid-email":
-              setAlert(() => ({
-                visibility: true,
-                type: "error",
-                title: "O e-mail informado é inválido",
-              }));
-              break;
-            case "auth/email-already-in-use":
-              setAlert(() => ({
-                visibility: true,
-                type: "error",
-                title: "Usuário já cadastrado",
-              }));
-              break;
-            default:
-              setAlert(() => ({
-                visibility: true,
-                type: "error",
-                title: "Erro ao cadastrar usuário",
-              }));
-              break;
-          }
-        });
-      return setLoading(false);
+    if (password !== confirm) {
+      return Toast.show({
+        type: "error",
+        text1: "As senhas informadas são diferentes",
+      });
     }
+
+    setLoading(true);
+    await firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((v) => {
+        firebase.firestore().collection("users").doc(v.user?.uid).set({
+          name: name,
+          email: email,
+          typeUser: "default",
+          dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        Toast.show({
+          type: "success",
+          text1: "Usuário criado com sucesso",
+        });
+        return navigate("Login");
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/weak-password":
+            Toast.show({
+              type: "error",
+              text1: "Sua senha deve ter no mínimo 6 caracteres",
+            });
+            break;
+          case "auth/invalid-email":
+            Toast.show({
+              type: "error",
+              text1: "O e-mail informado é inválido",
+            });
+            break;
+          case "auth/email-already-in-use":
+            Toast.show({
+              type: "error",
+              text1: "Usuário já cadastrado",
+            });
+            break;
+          default:
+            Toast.show({
+              type: "error",
+              text1: "Erro ao cadastrar usuário",
+            });
+            break;
+        }
+      });
+    return setLoading(false);
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BackgroundContainer>
-        <Alert />
         <LogoHeader>
           <Logo source={require("../../../assets/images/logo.png")} />
           <TextHeader withMarginLeft>Uallet</TextHeader>

@@ -11,7 +11,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { IAsset, registerAsset } from "./query";
-import { AlertContext } from "../../../context/Alert/alertContext";
 import { UserContext } from "../../../context/User/userContext";
 import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
@@ -32,6 +31,8 @@ import {
   ViewTabContent,
 } from "../../../styles/general";
 import { RentTypeText } from "./styles";
+import Toast from "react-native-toast-message";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface IForm {
   entrydate: string;
@@ -46,9 +47,8 @@ interface IForm {
 const RENT_OPTIONS = ["Selic", "CDI", "IPCA +", "Pré Fix.", "Pós Fix."];
 
 const NewFixAsset = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
-  const { setAlert } = React.useContext(AlertContext);
   const [selic, setSelic] = React.useState<string | null>(null);
   const [rentType, setRentType] = React.useState("Selic");
   const [calendar, setCalendar] = React.useState(false);
@@ -136,19 +136,17 @@ const NewFixAsset = () => {
 
     registerAsset(data)
       .then(() => {
-        return setAlert(() => ({
-          visibility: true,
+        Toast.show({
           type: "success",
-          title: "Ativo cadastrado com sucesso",
-          redirect: "Investimentos",
-        }));
+          text1: "Ativo cadastrado com sucesso",
+        });
+        return navigation.navigate("Investimentos");
       })
       .catch(() => {
-        return setAlert(() => ({
-          visibility: true,
+        return Toast.show({
           type: "error",
-          title: "Erro ao cadastrar ativo",
-        }));
+          text1: "Erro ao cadastrar ativo",
+        });
       })
       .finally(() => setLoading(false));
   };

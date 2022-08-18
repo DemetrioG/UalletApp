@@ -15,7 +15,7 @@ import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { DataContext } from "../../context/Data/dataContext";
-import { AlertContext } from "../../context/Alert/alertContext";
+import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import {
   dateValidation,
   convertDate,
@@ -23,7 +23,6 @@ import {
   convertDateToDatabase,
 } from "../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../utils/number.helper";
-import { networkConnection } from "../../utils/network.helper";
 import { HorizontalView, TypeText, TypeView } from "./styles";
 import {
   ButtonOutlineText,
@@ -38,6 +37,7 @@ import {
   ViewTab,
 } from "../../styles/general";
 import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
+import Toast from "react-native-toast-message";
 
 interface IForm {
   entrydate: string;
@@ -53,7 +53,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const {
     data: { isNetworkConnected },
   } = React.useContext(DataContext);
-  const { setAlert } = React.useContext(AlertContext);
+  const { setConfirm } = React.useContext(ConfirmContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDelete, setIsDelete] = React.useState(false);
@@ -106,187 +106,178 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
     { description, entrydate, value }: IForm,
     idRegister?: number
   ) {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      Keyboard.dismiss();
-      setIsLoading(true);
-      let id = idRegister ? idRegister : 1;
+    Keyboard.dismiss();
+    setIsLoading(true);
+    let id = idRegister ? idRegister : 1;
 
-      if (!idRegister) {
-        // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-        await firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(modality!)
-          .orderBy("id", "desc")
-          .limit(1)
-          .get()
-          .then((v) => {
-            v.forEach((result) => {
-              id += result.data().id;
-            });
-          });
-      }
-
-      const items: IEntryList & {
-        consolidated?: { consolidated: boolean; wasActionShown: boolean };
-      } = {
-        id: id,
-        date: convertDateToDatabase(entrydate),
-        type: type,
-        description: description,
-        modality: modality!,
-        segment: segment,
-        value: realToNumber(value),
-      };
-
-      if (modality === "Projetado") {
-        items["consolidated"] = {
-          consolidated: false,
-          wasActionShown: false,
-        };
-      }
-
-      // Registra o novo lançamento no banco
+    if (!idRegister) {
+      // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
       await firebase
         .firestore()
         .collection("entry")
         .doc(user.uid)
         .collection(modality!)
-        .doc(id.toString())
-        .set(items)
-        .catch(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "error",
-            title: idRegister
-              ? "Erro ao atualizar as informações"
-              : "Erro ao cadastrar as informações",
-          }));
-          return setIsLoading(false);
-        });
-
-      // Atualiza o saldo atual no banco
-      let balance = 0;
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection(modality!)
-        .doc(Number(entrydate.slice(3, 5)).toString())
+        .orderBy("id", "desc")
+        .limit(1)
         .get()
         .then((v) => {
-          balance = v.data()?.balance || 0;
+          v.forEach((result) => {
+            id += result.data().id;
+          });
         });
-
-      if (!isEditing) {
-        if (type == "Receita") {
-          balance += realToNumber(value);
-        } else {
-          balance -= realToNumber(value);
-        }
-      } else {
-        if (type == "Receita") {
-          balance += realToNumber(value) - params.value;
-        } else {
-          balance -= realToNumber(value) - params.value;
-        }
-      }
-
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection(modality!)
-        .doc(Number(entrydate?.slice(3, 5)).toString())
-        .set({
-          balance: balance,
-        })
-        .then(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "success",
-            title: idRegister
-              ? "Lançamento atualizado com sucesso"
-              : "Dados cadastrados com sucesso",
-            redirect: "Lançamentos",
-          }));
-        });
-
-      return setIsLoading(false);
     }
+
+    const items: IEntryList & {
+      consolidated?: { consolidated: boolean; wasActionShown: boolean };
+    } = {
+      id: id,
+      date: convertDateToDatabase(entrydate),
+      type: type,
+      description: description,
+      modality: modality!,
+      segment: segment,
+      value: realToNumber(value),
+    };
+
+    if (modality === "Projetado") {
+      items["consolidated"] = {
+        consolidated: false,
+        wasActionShown: false,
+      };
+    }
+
+    // Registra o novo lançamento no banco
+    await firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection(modality!)
+      .doc(id.toString())
+      .set(items)
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: idRegister
+            ? "Erro ao atualizar as informações"
+            : "Erro ao cadastrar as informações",
+        });
+        return setIsLoading(false);
+      });
+
+    // Atualiza o saldo atual no banco
+    let balance = 0;
+    await firebase
+      .firestore()
+      .collection("balance")
+      .doc(user.uid)
+      .collection(modality!)
+      .doc(Number(entrydate.slice(3, 5)).toString())
+      .get()
+      .then((v) => {
+        balance = v.data()?.balance || 0;
+      });
+
+    if (!isEditing) {
+      if (type == "Receita") {
+        balance += realToNumber(value);
+      } else {
+        balance -= realToNumber(value);
+      }
+    } else {
+      if (type == "Receita") {
+        balance += realToNumber(value) - params.value;
+      } else {
+        balance -= realToNumber(value) - params.value;
+      }
+    }
+
+    await firebase
+      .firestore()
+      .collection("balance")
+      .doc(user.uid)
+      .collection(modality!)
+      .doc(Number(entrydate?.slice(3, 5)).toString())
+      .set({
+        balance: balance,
+      })
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: idRegister
+            ? "Lançamento atualizado com sucesso"
+            : "Dados cadastrados com sucesso",
+        });
+        navigate("Lançamentos");
+      });
+
+    return setIsLoading(false);
   }
 
   function handleDelete() {
-    return setAlert(() => ({
+    return setConfirm(() => ({
       title: "Deseja excluir este lançamento?",
-      type: "confirm",
       visibility: true,
       callbackFunction: deleteEntry,
     }));
   }
 
   async function deleteEntry() {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      setIsDelete(true);
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection(params.modality)
-        .doc(params.id.toString())
-        .delete()
-        .catch(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "error",
-            title: "Erro ao excluir o lançamento",
-          }));
-          return setIsDelete(false);
+    setIsDelete(true);
+    await firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection(params.modality)
+      .doc(params.id.toString())
+      .delete()
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro ao excluir o lançamento",
         });
+        return setIsDelete(false);
+      });
 
-      // Atualiza o saldo atual no banco
-      let balance = 0;
-      const dateMonth = Number(
-        convertDateFromDatabase(params.date).slice(3, 5)
-      ).toString();
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection(params.modality)
-        .doc(dateMonth)
-        .get()
-        .then((v) => {
-          balance = v.data()?.balance || 0;
-        })
-        .catch(() => {
-          balance = 0;
-        });
+    // Atualiza o saldo atual no banco
+    let balance = 0;
+    const dateMonth = Number(
+      convertDateFromDatabase(params.date).slice(3, 5)
+    ).toString();
+    await firebase
+      .firestore()
+      .collection("balance")
+      .doc(user.uid)
+      .collection(params.modality)
+      .doc(dateMonth)
+      .get()
+      .then((v) => {
+        balance = v.data()?.balance || 0;
+      })
+      .catch(() => {
+        balance = 0;
+      });
 
-      if (params.type == "Despesa") {
-        balance += params.value;
-      } else {
-        balance -= params.value;
-      }
-
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection(params.modality)
-        .doc(dateMonth)
-        .set({
-          balance: balance,
-        });
-
-      return setAlert(() => ({
-        visibility: true,
-        type: "success",
-        title: "Lançamento excluído com  sucesso",
-        redirect: "Lançamentos",
-      }));
+    if (params.type == "Despesa") {
+      balance += params.value;
+    } else {
+      balance -= params.value;
     }
+
+    await firebase
+      .firestore()
+      .collection("balance")
+      .doc(user.uid)
+      .collection(params.modality)
+      .doc(dateMonth)
+      .set({
+        balance: balance,
+      });
+
+    Toast.show({
+      type: "success",
+      text1: "Lançamento excluído com  sucesso",
+    });
+    return navigate("Lançamentos");
   }
 
   React.useEffect(() => {

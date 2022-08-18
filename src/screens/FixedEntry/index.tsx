@@ -5,6 +5,7 @@ import {
   Keyboard,
 } from "react-native";
 import { Button } from "native-base";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -15,8 +16,6 @@ import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
 import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
-import { DataContext } from "../../context/Data/dataContext";
 import {
   dateValidation,
   convertDate,
@@ -24,7 +23,6 @@ import {
   futureDate,
 } from "../../utils/date.helper";
 import { realToNumber } from "../../utils/number.helper";
-import { networkConnection } from "../../utils/network.helper";
 import { HorizontalView, TypeText, TypeView } from "./styles";
 import {
   BackgroundContainer,
@@ -57,10 +55,6 @@ for (let index = 1; index < 13; index++) {
 const FixedEntry = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
-  const {
-    data: { isNetworkConnected },
-  } = React.useContext(DataContext);
-  const { setAlert } = React.useContext(AlertContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [modality, setModality] = React.useState<"Projetado" | "Real" | null>(
@@ -110,98 +104,93 @@ const FixedEntry = () => {
   }
 
   async function registerEntry({ description, entrydate, value }: IForm) {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      Keyboard.dismiss();
-      setIsLoading(true);
-      let id = 0;
+    Keyboard.dismiss();
+    setIsLoading(true);
+    let id = 0;
 
-      // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
+    // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
+    await firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .collection(modality!)
+      .orderBy("id", "desc")
+      .limit(1)
+      .get()
+      .then((v) => {
+        v.forEach((result) => {
+          id += result.data().id;
+        });
+      });
+
+    // Registra o novo lançamento no banco
+    for (let index = 0; index < Number(expenseAmount); index++) {
+      id++;
+
+      let finalDate;
+      if (index === 0) {
+        finalDate = entrydate;
+      } else {
+        finalDate = futureDate(entrydate, index);
+      }
+
       await firebase
         .firestore()
         .collection("entry")
         .doc(user.uid)
         .collection(modality!)
-        .orderBy("id", "desc")
-        .limit(1)
-        .get()
-        .then((v) => {
-          v.forEach((result) => {
-            id += result.data().id;
+        .doc(id.toString())
+        .set({
+          id: id,
+          date: convertDateToDatabase(finalDate),
+          type: "Despesa",
+          description: description,
+          modality: modality,
+          segment: segment,
+          value: realToNumber(value),
+        })
+        .catch(() => {
+          Toast.show({
+            type: "error",
+            text1: "Erro ao cadastrar as informações",
           });
+          return setIsLoading(false);
         });
 
-      // Registra o novo lançamento no banco
-      for (let index = 0; index < Number(expenseAmount); index++) {
-        id++;
+      // Atualiza o saldo atual no banco
+      let balance = 0;
+      await firebase
+        .firestore()
+        .collection("balance")
+        .doc(user.uid)
+        .collection(modality!)
+        .doc(Number(finalDate.slice(3, 5)).toString())
+        .get()
+        .then((v) => {
+          balance = v.data()?.balance || 0;
+        });
 
-        let finalDate;
-        if (index === 0) {
-          finalDate = entrydate;
-        } else {
-          finalDate = futureDate(entrydate, index);
-        }
+      balance -= realToNumber(value);
 
-        await firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(modality!)
-          .doc(id.toString())
-          .set({
-            id: id,
-            date: convertDateToDatabase(finalDate),
-            type: "Despesa",
-            description: description,
-            modality: modality,
-            segment: segment,
-            value: realToNumber(value),
-          })
-          .catch(() => {
-            setAlert(() => ({
-              visibility: true,
-              type: "error",
-              title: "Erro ao cadastrar as informações",
-              redirect: null,
-            }));
-            return setIsLoading(false);
+      await firebase
+        .firestore()
+        .collection("balance")
+        .doc(user.uid)
+        .collection(modality!)
+        .doc(Number(finalDate.slice(3, 5)).toString())
+        .set({
+          balance: balance,
+        })
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Dados cadastrados com sucesso",
           });
-
-        // Atualiza o saldo atual no banco
-        let balance = 0;
-        await firebase
-          .firestore()
-          .collection("balance")
-          .doc(user.uid)
-          .collection(modality!)
-          .doc(Number(finalDate.slice(3, 5)).toString())
-          .get()
-          .then((v) => {
-            balance = v.data()?.balance || 0;
-          });
-
-        balance -= realToNumber(value);
-
-        await firebase
-          .firestore()
-          .collection("balance")
-          .doc(user.uid)
-          .collection(modality!)
-          .doc(Number(finalDate.slice(3, 5)).toString())
-          .set({
-            balance: balance,
-          })
-          .then(() => {
-            return setAlert(() => ({
-              visibility: true,
-              type: "success",
-              title: "Dados cadastrados com sucesso",
-              redirect: "Lançamentos",
-            }));
-          });
-      }
-
-      return setIsLoading(false);
+          return navigate("Lançamentos");
+        });
     }
+
+    return setIsLoading(false);
   }
 
   return (

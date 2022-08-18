@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Button, HStack } from "native-base";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,7 +9,6 @@ import * as yup from "yup";
 
 import { IAsset, registerAsset } from "./query";
 import { UserContext } from "../../../context/User/userContext";
-import { AlertContext } from "../../../context/Alert/alertContext";
 import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
@@ -28,6 +28,7 @@ import {
   ViewTabContent,
 } from "../../../styles/general";
 import { Total, TotalLabel } from "./styles";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface IForm {
   entrydate: string;
@@ -39,9 +40,8 @@ interface IForm {
 }
 
 const NewVariableAsset = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
-  const { setAlert } = React.useContext(AlertContext);
   const [calendar, setCalendar] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [segment, setSegment] = React.useState(null);
@@ -120,19 +120,17 @@ const NewVariableAsset = () => {
 
     registerAsset(data)
       .then(() => {
-        return setAlert(() => ({
-          visibility: true,
+        Toast.show({
           type: "success",
-          title: "Ativo cadastrado com sucesso",
-          // redirect: "Investimentos",
-        }));
+          text1: "Ativo cadastrado com sucesso",
+        });
+        return navigation.navigate("Investimentos");
       })
       .catch(() => {
-        return setAlert(() => ({
-          visibility: true,
+        return Toast.show({
           type: "error",
-          title: "Erro ao cadastrar ativo",
-        }));
+          text1: "Erro ao cadastrar ativo",
+        });
       })
       .finally(() => setLoading(false));
   }

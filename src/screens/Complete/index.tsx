@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Button } from "native-base";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -9,10 +10,8 @@ import * as yup from "yup";
 
 import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
-import Alert from "../../components/Alert";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
 import { dateValidation } from "../../utils/date.helper";
 import {
   BackgroundContainer,
@@ -36,7 +35,6 @@ interface IForm {
 
 const Complete = () => {
   const { user } = React.useContext(UserContext);
-  const { setAlert } = React.useContext(AlertContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   const [gender, setGender] = React.useState(null);
@@ -102,19 +100,16 @@ const Complete = () => {
             )
             .then(() => {
               navigate("Home");
-              setAlert(() => ({
-                visibility: true,
+              Toast.show({
                 type: "success",
-                title: "Dados cadastrados com sucesso",
-                redirect: "Home",
-              }));
+                text1: "Dados cadastrados com sucesso",
+              });
             })
             .catch(() => {
-              setAlert(() => ({
-                visibility: true,
+              Toast.show({
                 type: "error",
-                title: "Erro ao cadastrar as informações",
-              }));
+                text1: "Erro ao cadastrar as informações",
+              });
             });
         }
         return setLoading(false);
@@ -125,7 +120,6 @@ const Complete = () => {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          <Alert />
           <LogoHeader>
             <TextHeader fontSize={"2xl"}>Complete seu cadastro</TextHeader>
           </LogoHeader>
