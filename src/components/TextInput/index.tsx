@@ -1,7 +1,10 @@
 import * as React from "react";
 import { IInputProps, Input, WarningOutlineIcon } from "native-base";
-import { TextInputMask } from "react-native-masked-text";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import {
+  TextInputMask,
+  TextInputMaskOptionProp,
+} from "react-native-masked-text";
+import { Controller } from "react-hook-form";
 import { FormControl as NativeFormControl } from "native-base";
 
 import { colors, metrics } from "../../styles";
@@ -40,6 +43,7 @@ const UTextInput = (
     errors?: object | undefined;
     helperText?: string | undefined;
     withIcon?: boolean;
+    options?: TextInputMaskOptionProp;
     setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
   }
 ) => {
