@@ -16,7 +16,3 @@ export const Title = styled(Text).attrs(({ theme: { theme } }) => ({
 export const ButtonContainer = styled(Center)`
   padding-top: ${metrics.topBottomPadding}px;
 `;
-
-export const HalfContainer = styled(View)`
-  width: 48%;
-`;

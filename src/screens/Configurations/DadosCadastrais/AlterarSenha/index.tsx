@@ -1,9 +1,11 @@
 import React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button, HStack, VStack } from "native-base";
+import { Button, HStack } from "native-base";
+import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import * as yup from "yup";
 
 import Icon from "../../../../components/Icon";
@@ -19,7 +21,6 @@ import {
 } from "../../../../styles/general";
 import PasswordRules from "../../../Register/PasswordRules";
 import { changePassword } from "./querys";
-import { AlertContext } from "../../../../context/Alert/alertContext";
 
 const defaultValues = {
   oldPassword: "",
@@ -42,8 +43,7 @@ const schema = yup
 
 export const AlterarSenhaScreen = () => {
   const [loading, setLoading] = React.useState(false);
-  const { setAlert } = React.useContext(AlertContext);
-  const { goBack, navigate } = useNavigation();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
     control,
     handleSubmit,
@@ -61,20 +61,19 @@ export const AlterarSenhaScreen = () => {
     const changed = await changePassword(formValues);
 
     if (!changed) {
-      setAlert({
+      Toast.show({
         type: "error",
-        title: "A senha antiga é inválida",
-        callback: true,
-        callbackFunction: () =>
-          setError("oldPassword", { message: "error", type: "value" }),
+        text1: "A senha antiga é inválida",
       });
+      setError("oldPassword", { message: "error", type: "value" });
       return setLoading(false);
     }
 
-    return setAlert({
-      title: "Senha alterada com sucesso",
-      redirect: "Home",
+    Toast.show({
+      type: "success",
+      text1: "Senha alterada com sucesso",
     });
+    return navigate("Home");
   }
 
   return (

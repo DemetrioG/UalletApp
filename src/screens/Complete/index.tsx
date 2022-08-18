@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Button } from "native-base";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -9,10 +10,8 @@ import * as yup from "yup";
 
 import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
-import Alert from "../../components/Alert";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
 import { dateValidation } from "../../utils/date.helper";
 import {
   BackgroundContainer,
@@ -25,22 +24,17 @@ import {
   StyledKeyboardAvoidingView,
   TextHeader,
 } from "../../styles/general";
+import { GENDER, PROFILE } from "../../components/Picker/options";
 
 interface IForm {
   birthdate: string;
+  gender: string;
+  profile: string;
   income: string;
 }
 
-const schema = yup
-  .object({
-    birthdate: yup.string().required(),
-    income: yup.string().required(),
-  })
-  .required();
-
 const Complete = () => {
   const { user } = React.useContext(UserContext);
-  const { setAlert } = React.useContext(AlertContext);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   const [gender, setGender] = React.useState(null);
@@ -50,8 +44,29 @@ const Complete = () => {
   const [genderVisible, setGenderVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
 
-  const optionsGender = ["Feminino", "Masculino"];
-  const optionsProfile = ["Investidor", "Poupador", "Gastador"];
+  const schema = yup
+    .object({
+      birthdate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      gender: yup.string().test("gender", "Informe seu sexo", () => gender!),
+      profile: yup
+        .string()
+        .test("profile", "Infome seu perfil", () => profile!),
+      income: yup
+        .string()
+        .required()
+        .test(
+          "income",
+          "Informe uma renda média",
+          (value) => value !== "R$0,00"
+        ),
+    })
+    .required();
 
   const {
     control,
@@ -62,26 +77,6 @@ const Complete = () => {
   });
 
   function registerData({ birthdate, income }: IForm) {
-    if (!gender || !profile) {
-      return setAlert(() => ({
-        visibility: true,
-        type: "error",
-        title: "Informe todos os campos",
-      }));
-    } else if (income == "R$0,00") {
-      return setAlert(() => ({
-        visibility: true,
-        type: "error",
-        title: "Informe uma renda média",
-      }));
-    } else if (!dateValidation(birthdate)) {
-      return setAlert(() => ({
-        visibility: true,
-        type: "error",
-        title: "Verifique a data de nascimento informada",
-      }));
-    }
-
     setLoading(true);
     firebase
       .firestore()
@@ -105,19 +100,16 @@ const Complete = () => {
             )
             .then(() => {
               navigate("Home");
-              setAlert(() => ({
-                visibility: true,
+              Toast.show({
                 type: "success",
-                title: "Dados cadastrados com sucesso",
-                redirect: "Home",
-              }));
+                text1: "Dados cadastrados com sucesso",
+              });
             })
             .catch(() => {
-              setAlert(() => ({
-                visibility: true,
+              Toast.show({
                 type: "error",
-                title: "Erro ao cadastrar as informações",
-              }));
+                text1: "Erro ao cadastrar as informações",
+              });
             });
         }
         return setLoading(false);
@@ -128,7 +120,6 @@ const Complete = () => {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          <Alert />
           <LogoHeader>
             <TextHeader fontSize={"2xl"}>Complete seu cadastro</TextHeader>
           </LogoHeader>
@@ -141,20 +132,22 @@ const Complete = () => {
           <ContainerCenter>
             <FormContainer>
               <Picker
-                options={optionsGender}
+                options={GENDER}
                 selectedValue={setGender}
                 value={!gender ? "Sexo" : gender}
                 type="Sexo"
                 visibility={genderVisible}
                 setVisibility={setGenderVisible}
+                errors={errors.gender}
               />
               <Picker
-                options={optionsProfile}
+                options={PROFILE}
                 selectedValue={setProfile}
                 value={!profile ? "Perfil" : profile}
                 type="Perfil"
                 visibility={profileVisible}
                 setVisibility={setProfileVisible}
+                errors={errors.profile}
               />
               <TextInput
                 placeholder="Data de nascimento"
@@ -163,6 +156,7 @@ const Complete = () => {
                 maxLength={10}
                 masked="datetime"
                 errors={errors.birthdate}
+                helperText="Verifique a data informada"
               />
               <TextInput
                 placeholder="Renda média"
@@ -170,7 +164,11 @@ const Complete = () => {
                 control={control}
                 errors={errors.income}
                 masked="money"
-                helperText="Informe todos os campos"
+                helperText={
+                  errors.income?.message === "Informe uma renda média"
+                    ? errors.income.message
+                    : "Informe todos os campos"
+                }
               />
               <Button isLoading={loading} onPress={handleSubmit(registerData)}>
                 <ButtonText>CONFIRMAR</ButtonText>

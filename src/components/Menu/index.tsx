@@ -4,7 +4,7 @@ import { useTheme } from "styled-components";
 import Modal from "react-native-modal";
 
 import Icon from "../Icon";
-import { AlertContext } from "../../context/Alert/alertContext";
+import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
@@ -30,7 +30,7 @@ const Menu = () => {
   const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
   const { loader } = React.useContext(LoaderContext);
-  const { setAlert } = React.useContext(AlertContext);
+  const { setConfirm } = React.useContext(ConfirmContext);
   const { user, setUser } = React.useContext(UserContext);
 
   const [visible, setVisible] = React.useState(false);
@@ -54,14 +54,13 @@ const Menu = () => {
   function handleLogout() {
     setVisible(false);
     setTimeout(() => {
-      setAlert({
+      setConfirm({
         title: "Deseja realmente sair do app?",
-        type: "confirm",
         visibility: true,
         callbackFunction: logout,
       });
     }, 500);
-  };
+  }
 
   function goToConfiguracoesScreen() {
     setVisible(false);
@@ -72,8 +71,8 @@ const Menu = () => {
   return (
     <>
       <Pressable onPress={() => setVisible(!visible)}>
-        <Avatar backgroundColor={theme?.randomColor}>
-          <AvatarText color={useContrastText(theme?.randomColor!)}>
+        <Avatar backgroundColor={theme?.secondary}>
+          <AvatarText color={theme?.text}>
             {loader.visible ? "-" : user.name[0]}
           </AvatarText>
         </Avatar>

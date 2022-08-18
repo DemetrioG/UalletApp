@@ -39,17 +39,6 @@ export const LogoCard = styled(Image)`
   height: 25px;
 `;
 
-export const Balance: React.FC<
-  ITextAreaProps & { negative?: boolean }
-> = styled(Text).attrs(() => ({
-  fontFamily: "mono",
-  fontWeight: 700,
-  fontSize: fonts.larger,
-}))`
-  color: ${({ theme: { theme }, negative }) =>
-    !negative ? theme.blue : theme.red};
-`;
-
 export const Invest = styled(Text).attrs(() => ({
   fontFamily: "mono",
   fontWeight: 700,
@@ -57,7 +46,7 @@ export const Invest = styled(Text).attrs(() => ({
 }))`
   margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) =>
-    !theme.isOnDarkTheme ? colors.strongPurple : colors.yellow};
+    !theme.isOnDarkTheme ? colors.strongPurple : colors.lightYellow};
 `;
 
 export const CardStatusView = styled(View)`

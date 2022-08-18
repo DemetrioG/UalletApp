@@ -1,11 +1,11 @@
 import * as React from "react";
 import { FlatList, Modal, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
 import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
-import { AlertContext } from "../../context/Alert/alertContext";
 import { numberToReal } from "../../utils/number.helper";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import {
@@ -42,6 +42,7 @@ import {
   ActionText,
 } from "./styles";
 import { colors } from "../../styles";
+import { toastConfig } from "../Toast/config";
 
 const WRITE = require("../../../assets/icons/write.json");
 
@@ -52,7 +53,6 @@ interface IConsolidate {
 
 const Consolidate = ({ visible, setVisible }: IConsolidate) => {
   const { user } = React.useContext(UserContext);
-  const { setAlert } = React.useContext(AlertContext);
   const [page, setPage] = React.useState(1);
   const [isLoading, setIsLoading] = React.useState(false);
   const [entryList, setEntryList] = React.useState<
@@ -120,11 +120,10 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
             { merge: true }
           )
           .catch(() => {
-            setAlert(() => ({
-              visibility: true,
+            Toast.show({
               type: "error",
-              title: "Erro ao consolidar as informações",
-            }));
+              text1: "Erro ao consolidar as informações",
+            });
             return setIsLoading(false);
           });
 
@@ -145,11 +144,10 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
               value: value,
             })
             .catch(() => {
-              setAlert(() => ({
-                visibility: true,
+              Toast.show({
                 type: "error",
-                title: "Erro ao consolidar as informações",
-              }));
+                text1: "Erro ao consolidar as informações",
+              });
               return setIsLoading(false);
             });
 
@@ -184,12 +182,11 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
         }
       }
     );
-    setAlert(() => ({
-      visibility: true,
+    setVisible(false);
+    return Toast.show({
       type: "success",
-      title: "Dados consolidados com sucesso",
-    }));
-    return setVisible(false);
+      text1: "Dados consolidados com sucesso",
+    });
   }
 
   function ItemList({
@@ -265,6 +262,7 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <ModalContainer>
+        <Toast config={toastConfig} />
         <ModalView large>
           <HeaderContainer>
             <TextHeaderScreen noMarginBottom>

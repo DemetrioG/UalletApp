@@ -1,4 +1,6 @@
 import * as React from "react";
+import { FormControl, HStack, View, WarningOutlineIcon } from "native-base";
+import { FieldError } from "react-hook-form";
 import {
   Modal,
   ScrollView,
@@ -6,7 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 
-import { colors } from "../../styles";
+import { colors, metrics } from "../../styles";
 import { ModalContainer, ModalView } from "../../styles/general";
 import Icon from "../Icon";
 import {
@@ -25,6 +27,8 @@ interface IPicker {
   type: string;
   visibility: boolean | undefined;
   setVisibility: Function;
+  errors: FieldError | undefined;
+  helperText?: string;
 }
 
 const Picker = ({
@@ -34,7 +38,10 @@ const Picker = ({
   type,
   visibility,
   setVisibility,
+  errors,
+  helperText,
 }: IPicker) => {
+  const [isInvalid, setIsInvalid] = React.useState(false);
   const OPTIONS = options;
 
   const onPressItem = (option: string) => {
@@ -52,30 +59,57 @@ const Picker = ({
     );
   });
 
+  React.useEffect(() => {
+    if (errors && Object.keys(errors).length > 0) {
+      setIsInvalid(true);
+    } else {
+      setIsInvalid(false);
+    }
+  }, [errors]);
+
   return (
-    <StyledInput>
-      <SpaceItems onPress={() => setVisibility(true)}>
-        <PickerText value={value} type={type}>
-          {value}
-        </PickerText>
-        <Icon name="chevron-down" size={20} color={colors.gray} />
-      </SpaceItems>
-      <Modal
-        transparent={true}
-        animationType="fade"
-        visible={visibility}
-        onRequestClose={() => setVisibility(false)}
-      >
-        <TouchableWithoutFeedback onPress={() => setVisibility(false)}>
+    <View mb={metrics.baseMargin}>
+      <StyledInput isInvalid={isInvalid}>
+        <SpaceItems onPress={() => setVisibility(true)}>
+          <PickerText value={value} type={type}>
+            {value.length > 28 ? `${value.slice(0, 28)}...` : value}
+          </PickerText>
+          <Icon name="chevron-down" size={20} color={colors.gray} />
+        </SpaceItems>
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={visibility}
+          onRequestClose={() => setVisibility(false)}
+        >
           <ModalContainer>
             <ModalView>
-              <Title>{type}</Title>
+              <HStack
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                margin={3}
+              >
+                <Title>{type}</Title>
+                <Icon
+                  name="x"
+                  size={20}
+                  colorVariant="red"
+                  onPress={() => setVisibility(false)}
+                />
+              </HStack>
               <ScrollView>{option}</ScrollView>
             </ModalView>
           </ModalContainer>
-        </TouchableWithoutFeedback>
-      </Modal>
-    </StyledInput>
+        </Modal>
+      </StyledInput>
+      <FormControl isInvalid={isInvalid} mt={0}>
+        {helperText && (
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+            {helperText}
+          </FormControl.ErrorMessage>
+        )}
+      </FormControl>
+    </View>
   );
 };
 

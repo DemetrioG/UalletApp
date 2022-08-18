@@ -3,6 +3,7 @@ import { Text } from "native-base";
 import { TextProps, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
+import { IViewProps } from "native-base/lib/typescript/components/basic/View/types";
 
 export const SpaceItems = styled(TouchableOpacity)`
   flex-direction: row;
@@ -10,15 +11,14 @@ export const SpaceItems = styled(TouchableOpacity)`
   align-items: center;
 `;
 
-export const StyledInput = styled(View)`
+export const StyledInput: React.FC<IViewProps & { isInvalid: boolean }> = styled(View)`
   height: 40px;
   padding: 5px 14px;
   justify-content: center;
   border-radius: 6.5px;
-  border: 1px solid ${colors.gray};
+  border: 1px solid ${({ isInvalid }) => isInvalid ? colors.invalidInputColor : colors.gray};
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.regular}px;
-  margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
@@ -36,7 +36,6 @@ export const Title = styled(Text).attrs(() => ({
   fontWeight: 700,
 }))`
   color: ${({ theme: { theme } }) => theme.blue};
-  margin: ${metrics.baseMargin}px;
 `;
 
 export const ItemPicker = styled(TouchableOpacity)`
