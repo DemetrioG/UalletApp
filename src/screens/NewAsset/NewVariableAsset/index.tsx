@@ -6,10 +6,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { IAsset, registerAsset } from "./query";
+import { UserContext } from "../../../context/User/userContext";
+import { AlertContext } from "../../../context/Alert/alertContext";
+import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
 import Calendar from "../../../components/Calendar";
+import { ASSET_SEGMENT, BROKER } from "../../../components/Picker/options";
 import { convertDate, dateValidation } from "../../../utils/date.helper";
+import { numberToReal, realToNumber } from "../../../utils/number.helper";
+import { checkAssetValid } from "../../../utils/asset.helper";
 import {
   BackgroundContainer,
   ButtonText,
@@ -20,13 +27,7 @@ import {
   ViewTab,
   ViewTabContent,
 } from "../../../styles/general";
-import Picker from "../../../components/Picker";
-import { ASSET_SEGMENT, BROKER } from "../../../components/Picker/options";
 import { Total, TotalLabel } from "./styles";
-import { numberToReal, realToNumber } from "../../../utils/number.helper";
-import { IAsset, registerAsset } from "./query";
-import { UserContext } from "../../../context/User/userContext";
-import { AlertContext } from "../../../context/Alert/alertContext";
 
 interface IForm {
   entrydate: string;
@@ -63,7 +64,10 @@ const NewVariableAsset = () => {
         .string()
         .test("segment", "Informe um segmento", () => segment!),
       broker: yup.string().test("broker", "Informe a corretora", () => broker!),
-      asset: yup.string().required(),
+      asset: yup
+        .string()
+        .required()
+        .test("asset", "Ativo incorreto", (value) => checkAsset(value!)),
       amount: yup.number().required(),
       price: yup
         .string()
@@ -88,6 +92,11 @@ const NewVariableAsset = () => {
 
   function setDateToInput(date: Date) {
     setValue("entrydate", convertDate(date));
+  }
+
+  async function checkAsset(value: string) {
+    const response = await checkAssetValid(value, segment!);
+    return response || false;
   }
 
   function calculatesTotal() {
@@ -115,7 +124,7 @@ const NewVariableAsset = () => {
           visibility: true,
           type: "success",
           title: "Ativo cadastrado com sucesso",
-          redirect: "Investimentos",
+          // redirect: "Investimentos",
         }));
       })
       .catch(() => {
@@ -123,7 +132,6 @@ const NewVariableAsset = () => {
           visibility: true,
           type: "error",
           title: "Erro ao cadastrar ativo",
-          redirect: "Investimentos",
         }));
       })
       .finally(() => setLoading(false));
