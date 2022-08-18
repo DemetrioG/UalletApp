@@ -76,3 +76,14 @@ export function realToNumber(value: string) {
 
   return Number(newValue.replace(",", "."));
 }
+
+/**
+ * @param value Valor no padrão % 120,00
+ * @returns Valor no padrão Numérico
+ */
+export function percentualToNumber(value: string) {
+  let newValue = value.replace('% ', '');
+  newValue = newValue.split('.').join('');
+
+  return Number(newValue.replace(',', '.'));
+}
