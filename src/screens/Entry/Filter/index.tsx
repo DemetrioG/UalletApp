@@ -8,10 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import Picker from "../../../components/Picker";
-import Alert from "../../../components/Alert";
 import TextInput from "../../../components/TextInput";
 import Icon from "../../../components/Icon";
-import { AlertContext } from "../../../context/Alert/alertContext";
 import { dateValidation } from "../../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../../utils/number.helper";
 import { defaultFilter, IActiveFilter } from "./helper";
@@ -135,7 +133,6 @@ const Filter = ({
 
   return (
     <Modal visible={true} onRequestClose={handleClose} transparent>
-      <Alert />
       <ModalContainer>
         <ModalView>
           <SpaceContainer>
