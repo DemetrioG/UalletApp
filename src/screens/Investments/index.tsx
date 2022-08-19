@@ -1,16 +1,16 @@
+import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Button, HStack, Text, VStack } from "native-base";
-import * as React from "react";
-import { metrics } from "../../styles";
+import { Button, HStack, ScrollView, VStack } from "native-base";
+import Positions from "./Positions";
 import {
   BackgroundContainer,
   Balance,
   ButtonText,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../styles/general";
+import { metrics } from "../../styles";
 import { PatrimonyText } from "./styles";
 
 const Investments = () => {
@@ -18,7 +18,7 @@ const Investments = () => {
   return (
     <BackgroundContainer>
       <ViewTab>
-        <ViewTabContent>
+        <ScrollView>
           <HStack mb={metrics.baseMargin}>
             <TextHeaderScreen>Investimentos</TextHeaderScreen>
           </HStack>
@@ -26,10 +26,11 @@ const Investments = () => {
           <VStack mt={1}>
             <Balance>R$0,00</Balance>
           </VStack>
+          <Positions />
           <Button mt={10} onPress={() => navigate("NovoAtivo")}>
             <ButtonText>ADICIONAR ATIVO</ButtonText>
           </Button>
-        </ViewTabContent>
+        </ScrollView>
       </ViewTab>
     </BackgroundContainer>
   );
