@@ -1,20 +1,17 @@
 import * as React from "react";
 import {
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
-  Platform,
+    TouchableWithoutFeedback,
+    Keyboard,
+    TouchableOpacity,
+    Platform,
 } from "react-native";
 import { Actionsheet, Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import * as AuthSession from "expo-auth-session";
-import * as Facebook from "expo-facebook";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../services/firebase";
 import Alert from "../../components/Alert";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
@@ -23,272 +20,170 @@ import { AlertContext } from "../../context/Alert/alertContext";
 import { setStorage } from "../../utils/storage.helper";
 import { networkConnection } from "../../utils/network.helper";
 import {
-  ActionText,
-  AppleLogo,
-  FacebookLogo,
-  GoogleLogo,
-  SheetView,
-  SocialContainer,
+    ActionText,
+    AppleLogo,
+    FacebookLogo,
+    GoogleLogo,
+    SheetView,
+    SocialContainer,
 } from "./styles";
 import {
-  BackgroundContainer,
-  Logo,
-  LogoHeader,
-  StyledKeyboardAvoidingView,
-  HeaderTitleContainer,
-  HeaderTitle,
-  ContainerCenter,
-  FormContainer,
-  ButtonText,
-  TextHeader,
+    BackgroundContainer,
+    Logo,
+    LogoHeader,
+    StyledKeyboardAvoidingView,
+    HeaderTitleContainer,
+    HeaderTitle,
+    ContainerCenter,
+    FormContainer,
+    ButtonText,
+    TextHeader,
 } from "../../styles/general";
 import { colors } from "../../styles";
 import TextInputPassword from "../../components/TextInputPassword";
+import {
+    loginByEmailAndPassword,
+    loginByFacebook,
+    loginByGoogle,
+} from "./querys";
 interface IForm {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 }
 
 const schema = yup
-  .object({
-    email: yup.string().required(),
-    password: yup.string().required(),
-  })
-  .required();
+    .object({
+        email: yup.string().required(),
+        password: yup.string().required(),
+    })
+    .required();
 
 const LOGO = require("../../../assets/images/logo.png");
 const ICONS = {
-  apple: require("../../../assets/images/appleIcon.png"),
-  google: require("../../../assets/images/googleIcon.png"),
-  facebook: require("../../../assets/images/facebookIcon.png"),
+    apple: require("../../../assets/images/appleIcon.png"),
+    google: require("../../../assets/images/googleIcon.png"),
+    facebook: require("../../../assets/images/facebookIcon.png"),
 };
 
 const Login = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const {
-    data: { isNetworkConnected },
-  } = React.useContext(DataContext);
-  const { setUser } = React.useContext(UserContext);
-  const { setAlert } = React.useContext(AlertContext);
-  const [sheetOpen, setSheetOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+    const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+    const {
+        data: { isNetworkConnected },
+    } = React.useContext(DataContext);
+    const { setUser } = React.useContext(UserContext);
+    const { setAlert } = React.useContext(AlertContext);
+    const [sheetOpen, setSheetOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    resolver: yupResolver(schema),
-  });
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<IForm>({
+        resolver: yupResolver(schema),
+    });
 
-  async function loginUser({ email, password }: IForm) {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      setLoading(true);
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then((v) => {
-          const data = {
-            uid: v.user?.uid,
-            // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
-            date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-          };
-          setStorage("authUser", data);
-          setUser((userState) => ({
-            ...userState,
-            uid: v.user?.uid || "",
-            signed: true,
-          }));
-        })
-        .catch(() => {
-          setAlert(() => ({
-            visibility: true,
-            type: "error",
-            title: "Verifique os campos informados",
-          }));
-        })
-        .finally(() => setLoading(false));
+    async function loginUser({ email, password }: IForm) {
+        if (networkConnection(isNetworkConnected!, setAlert)) {
+            setLoading(true);
+            loginByEmailAndPassword({ email, password })
+                .then((loggedSucceedData) => {
+                    setStorage("authUser", loggedSucceedData);
+                    setUser((userState) => ({
+                        ...userState,
+                        uid: loggedSucceedData.uid || "",
+                        signed: true,
+                    }));
+                })
+                .catch(() => {
+                    setAlert(() => ({
+                        visibility: true,
+                        type: "error",
+                        title: "Verifique os campos informados",
+                    }));
+                })
+                .finally(() => setLoading(false));
+        }
     }
-  }
 
-  async function googleLogin() {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      setLoading(true);
-      const CLIENT_ID =
-        "1027938913805-2uq44iec7nrr8p5c9qqu32nbapu5gfg6.apps.googleusercontent.com";
-      const REDIRECT_URI = "https://auth.expo.io/@demetriog/Uallet";
-      const RESPONSE_TYPE = "token";
-      const SCOPE = encodeURI("profile email");
-
-      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
-
-      // Autenticação com o Google
-      const response = await AuthSession.startAsync({ authUrl });
-
-      if (response.type === "success") {
-        // Buscar informações do usuário
-        const user = await fetch(
-          `https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token=${response.params.access_token}`
-        );
-        const userInfo = await user.json();
-
-        // Cadastrar usuário no banco
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(userInfo.id)
-          .get()
-          .then((v) => {
-            if (!v.data()) {
-              firebase.firestore().collection("users").doc(userInfo.id).set({
-                name: userInfo.name,
-                email: userInfo.email,
-                typeUser: "google",
-                dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-              });
-            }
-          });
-
-        const data = {
-          uid: userInfo.id,
-          // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
-          date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-        };
-        setStorage("authUser", data);
-        setUser((userState) => ({
-          ...userState,
-          uid: userInfo.id,
-          signed: true,
-        }));
-      }
-      return setLoading(false);
-    }
-  }
-
-  async function facebookLogin() {
-    if (networkConnection(isNetworkConnected!, setAlert)) {
-      setLoading(true);
-      // Autenticação com o Facebook
-      await Facebook.initializeAsync("623678532217571");
-
-      const response = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ["public_profile", "email"],
-      });
-
-      // Buscar informações do usuário
-      if (response.type === "success") {
-        const data = await fetch(
-          `https://graph.facebook.com/me?fields=id,name,picture.type(large),email&access_token=${response.token}`
-        );
-
-        const userInfo = await data.json();
-
-        // Cadastrar usuário no banco
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(userInfo.id)
-          .get()
-          .then((v) => {
-            if (!v.data()) {
-              firebase.firestore().collection("users").doc(userInfo.id).set({
-                name: userInfo.name,
-                email: userInfo.email,
-                typeUser: "facebook",
-                dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-              });
-            }
-          });
-
-        const dataStorage = {
-          uid: userInfo.id,
-          // Salva no storage a data atual + 15 dias, para deixar o usuário autenticado sem precisar logar em toda entrada do app
-          date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-        };
-        setStorage("authUser", dataStorage);
-        setUser((userState) => ({
-          ...userState,
-          uid: userInfo.id,
-          signed: true,
-        }));
-        return setLoading(false);
-      }
-    }
-  }
-
-  return (
-    <StyledKeyboardAvoidingView>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <BackgroundContainer>
-          <Alert />
-          <LogoHeader>
-            <Logo source={LOGO} />
-            <TextHeader withMarginLeft>Uallet</TextHeader>
-          </LogoHeader>
-          <HeaderTitleContainer>
-            <HeaderTitle>
-              É um prazer ter você aqui novamente.{"\n"}Realize seu login
-              abaixo!
-            </HeaderTitle>
-          </HeaderTitleContainer>
-          <ContainerCenter>
-            <FormContainer>
-              <TextInput
-                placeholder="E-mail *"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="email"
-                control={control}
-                errors={errors.email}
-              />
-              <TextInputPassword
-                placeholder="Senha *"
-                onSubmitEditing={handleSubmit(loginUser)}
-                returnKeyType="done"
-                name="password"
-                control={control}
-                errors={errors}
-                helperText="Informe todos os campos"
-              />
-              <Button isLoading={loading} onPress={handleSubmit(loginUser)}>
-                <ButtonText>ENTRAR</ButtonText>
-              </Button>
-            </FormContainer>
-            <TouchableOpacity onPress={() => setSheetOpen(true)}>
-              <ActionText>Prefere entrar com as redes sociais?</ActionText>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigate("Forgot")}>
-              <ActionText>Esqueceu sua senha?</ActionText>
-            </TouchableOpacity>
-          </ContainerCenter>
-        </BackgroundContainer>
-      </TouchableWithoutFeedback>
-      <Actionsheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)}>
-        <Actionsheet.Content backgroundColor={colors.transpDark}>
-          <SheetView>
-            {Platform.OS === "ios" && (
-              <SocialContainer backgroundColor={colors.black}>
-                <AppleLogo source={ICONS.apple} />
-              </SocialContainer>
-            )}
-            <SocialContainer
-              backgroundColor={colors.white}
-              onPress={googleLogin}
-            >
-              <GoogleLogo source={ICONS.google} />
-            </SocialContainer>
-            <SocialContainer
-              backgroundColor={colors.facebookBlue}
-              onPress={facebookLogin}
-            >
-              <FacebookLogo source={ICONS.facebook} />
-            </SocialContainer>
-          </SheetView>
-        </Actionsheet.Content>
-      </Actionsheet>
-    </StyledKeyboardAvoidingView>
-  );
+    return (
+        <StyledKeyboardAvoidingView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <BackgroundContainer>
+                    <Alert />
+                    <LogoHeader>
+                        <Logo source={LOGO} />
+                        <TextHeader withMarginLeft>Uallet</TextHeader>
+                    </LogoHeader>
+                    <HeaderTitleContainer>
+                        <HeaderTitle>
+                            É um prazer ter você aqui novamente.{"\n"}Realize
+                            seu login abaixo!
+                        </HeaderTitle>
+                    </HeaderTitleContainer>
+                    <ContainerCenter>
+                        <FormContainer>
+                            <TextInput
+                                placeholder="E-mail *"
+                                keyboardType="email-address"
+                                autoCorrect={false}
+                                autoCapitalize="none"
+                                name="email"
+                                control={control}
+                                errors={errors.email}
+                            />
+                            <TextInputPassword
+                                placeholder="Senha *"
+                                onSubmitEditing={handleSubmit(loginUser)}
+                                returnKeyType="done"
+                                name="password"
+                                control={control}
+                                errors={errors}
+                                helperText="Informe todos os campos"
+                            />
+                            <Button
+                                isLoading={loading}
+                                onPress={handleSubmit(loginUser)}
+                            >
+                                <ButtonText>ENTRAR</ButtonText>
+                            </Button>
+                        </FormContainer>
+                        <TouchableOpacity onPress={() => setSheetOpen(true)}>
+                            <ActionText>
+                                Prefere entrar com as redes sociais?
+                            </ActionText>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigate("Forgot")}>
+                            <ActionText>Esqueceu sua senha?</ActionText>
+                        </TouchableOpacity>
+                    </ContainerCenter>
+                </BackgroundContainer>
+            </TouchableWithoutFeedback>
+            <Actionsheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)}>
+                <Actionsheet.Content backgroundColor={colors.transpDark}>
+                    <SheetView>
+                        {Platform.OS === "ios" && (
+                            <SocialContainer backgroundColor={colors.black}>
+                                <AppleLogo source={ICONS.apple} />
+                            </SocialContainer>
+                        )}
+                        <SocialContainer
+                            backgroundColor={colors.white}
+                            onPress={loginByGoogle}
+                        >
+                            <GoogleLogo source={ICONS.google} />
+                        </SocialContainer>
+                        <SocialContainer
+                            backgroundColor={colors.facebookBlue}
+                            onPress={loginByFacebook}
+                        >
+                            <FacebookLogo source={ICONS.facebook} />
+                        </SocialContainer>
+                    </SheetView>
+                </Actionsheet.Content>
+            </Actionsheet>
+        </StyledKeyboardAvoidingView>
+    );
 };
 
 export default Login;
