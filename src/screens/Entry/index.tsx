@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
@@ -50,6 +50,7 @@ import {
   BackgroundContainer,
 } from "../../styles/general";
 import Icon from "../../components/Icon";
+import { getBalance } from "./querys";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -277,31 +278,26 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
   }, [data.modality, data.month, data.year, filter, isFocused]);
 
   React.useEffect(() => {
-    // Retorna o Saldo atual
-    (function getBalance() {
-      if (data.month) {
-        firebase
-          .firestore()
-          .collection("balance")
-          .doc(user.uid)
-          .collection(data.modality)
-          .doc(data.month.toString())
-          .onSnapshot((snapshot) => {
-            setData((dataState) => ({
-              ...dataState,
-              balance: snapshot.data()
-                ? numberToReal(snapshot.data()?.balance)
-                : "R$ 0,00",
-            }));
-          });
-      }
-    })();
-  }, [data.modality, data.month, data.year]);
+    if (!data.month) return;
+
+    getBalance({
+      month: data.month.toString(),
+      modality: data.modality
+    })
+    .then(({balance}) => {
+      setData((dataState) => ({
+        ...dataState,
+        balance: balance
+          ? numberToReal(balance)
+          : "R$ 0,00",
+      }));
+    });
+  }, [data.modality, data.month]);
 
   React.useEffect(() => {
     (() => {
       let total = 0;
-      entryList.map(({ value, type }) => {
+      entryList.forEach(({ value, type }) => {
         type === "Receita" ? (total += value) : (total -= value);
       });
       setEntryTotal(numberToReal(total));
