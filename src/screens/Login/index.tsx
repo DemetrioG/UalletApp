@@ -6,19 +6,16 @@ import {
     Platform,
 } from "react-native";
 import { Actionsheet, Button } from "native-base";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Alert from "../../components/Alert";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
-import { DataContext } from "../../context/Data/dataContext";
-import { AlertContext } from "../../context/Alert/alertContext";
 import { setStorage } from "../../utils/storage.helper";
-import { networkConnection } from "../../utils/network.helper";
 import {
     ActionText,
     AppleLogo,
@@ -67,11 +64,7 @@ const ICONS = {
 
 const Login = () => {
     const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-    const {
-        data: { isNetworkConnected },
-    } = React.useContext(DataContext);
     const { setUser } = React.useContext(UserContext);
-    const { setAlert } = React.useContext(AlertContext);
     const [sheetOpen, setSheetOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
 
@@ -84,33 +77,29 @@ const Login = () => {
     });
 
     async function loginUser({ email, password }: IForm) {
-        if (networkConnection(isNetworkConnected!, setAlert)) {
-            setLoading(true);
-            loginByEmailAndPassword({ email, password })
-                .then((loggedSucceedData) => {
-                    setStorage("authUser", loggedSucceedData);
-                    setUser((userState) => ({
-                        ...userState,
-                        uid: loggedSucceedData.uid || "",
-                        signed: true,
-                    }));
-                })
-                .catch(() => {
-                    setAlert(() => ({
-                        visibility: true,
-                        type: "error",
-                        title: "Verifique os campos informados",
-                    }));
-                })
-                .finally(() => setLoading(false));
-        }
+      setLoading(true);
+      loginByEmailAndPassword({ email, password })
+        .then((loggedSucceedData) => {
+            setStorage("authUser", loggedSucceedData);
+            setUser((userState) => ({
+                ...userState,
+                uid: loggedSucceedData.uid || "",
+                signed: true,
+            }));
+        })
+        .catch(() => {
+          Toast.show({
+                type: "error",
+                text1: "Verifique os campos informados",
+            });
+        })
+        .finally(() => setLoading(false));
     }
 
     return (
         <StyledKeyboardAvoidingView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <BackgroundContainer>
-                    <Alert />
                     <LogoHeader>
                         <Logo source={LOGO} />
                         <TextHeader withMarginLeft>Uallet</TextHeader>

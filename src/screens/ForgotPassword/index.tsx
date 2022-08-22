@@ -5,11 +5,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Alert from "../../components/Alert";
+import Toast from "react-native-toast-message";
 import TextInput from "../../components/TextInput";
-import { AlertContext } from "../../context/Alert/alertContext";
-import { DataContext } from "../../context/Data/dataContext";
-import { networkConnection } from "../../utils/network.helper";
 import {
     BackgroundContainer,
     ButtonText,
@@ -22,6 +19,8 @@ import {
     TextHeader,
 } from "../../styles/general";
 import { resetPassword } from "./querys";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 interface IForm {
     email: string;
 }
@@ -33,11 +32,8 @@ const schema = yup
     .required();
 
 const ForgotPassword = () => {
-   const {
-        data: { isNetworkConnected },
-    } = React.useContext(DataContext);
-    const { setAlert } = React.useContext(AlertContext);
     const [loading, setLoading] = React.useState(false);
+    const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
     const {
         control,
@@ -48,32 +44,29 @@ const ForgotPassword = () => {
     });
 
     function sendPassword({ email }: IForm) {
-        if (networkConnection(isNetworkConnected!, setAlert)) {
-            setLoading(true);
-            resetPassword(email)
-                .then((successMessage) => {
-                    setAlert({
-                        visibility: true,
-                        title: successMessage,
-                        redirect: "Login",
-                    });
-                })
-                .catch((errorMessage: string) => {
-                    setAlert({
-                        visibility: true,
-                        type: "error",
-                        title: errorMessage,
-                    });
-                })
-                .finally(() => setLoading(false));
-        }
+      setLoading(true);
+      resetPassword(email)
+          .then((successMessage) => {
+              navigate("Login");
+              Toast.show({
+                  type: "success",
+                  text1: successMessage,
+              });
+          })
+          .catch((errorMessage: string) => {
+              Toast.show({
+                  type: "error",
+                  text1: errorMessage,
+              });
+          })
+          .finally(() => setLoading(false));
+        
     }
 
     return (
         <StyledKeyboardAvoidingView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <BackgroundContainer>
-                    <Alert />
                     <LogoHeader>
                         <TextHeader withMarginTop fontSize={"2xl"}>
                             Recuperar senha

@@ -8,47 +8,35 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import Picker from "../../../components/Picker";
-import Alert from "../../../components/Alert";
 import TextInput from "../../../components/TextInput";
-import { AlertContext } from "../../../context/Alert/alertContext";
+import Icon from "../../../components/Icon";
 import { dateValidation } from "../../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../../utils/number.helper";
 import { defaultFilter, IActiveFilter } from "./helper";
-import { ButtonText, ModalContainer, ModalView } from "../../../styles/general";
 import {
-  ButtonContainer,
+  ButtonText,
   HalfContainer,
-  SpaceContainer,
-  Title,
-} from "./styles";
+  ModalContainer,
+  ModalView,
+} from "../../../styles/general";
+import { ButtonContainer, SpaceContainer, Title } from "./styles";
 import { metrics } from "../../../styles";
-import Icon from "../../../components/Icon";
+import {
+  ENTRY_SEGMENT,
+  ENTRY_TYPE,
+  MODALITY,
+} from "../../../components/Picker/options";
 
 interface IForm {
   initialdate: string;
   finaldate: string;
   description: string;
+  modality: string;
+  segment: string;
+  entry_type: string;
   initialvalue: string;
   finalvalue: string;
 }
-
-const optionsType = ["Todos", "Receita", "Despesa"];
-const optionsModality = ["Projetado", "Real"];
-const optionsSegment = [
-  "Todos",
-  "Lazer",
-  "Educação",
-  "Investimentos",
-  "Necessidades",
-  "Curto e médio prazo",
-];
-
-const schema = yup
-  .object({
-    initialdate: yup.string().required().min(10),
-    finaldate: yup.string().required().min(10),
-  })
-  .required();
 
 const Filter = ({
   route: { params },
@@ -56,7 +44,6 @@ const Filter = ({
   route: { params: IActiveFilter };
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { setAlert } = React.useContext(AlertContext);
   const [loading, setLoading] = React.useState(false);
   const [typeEntry, setTypeEntry] = React.useState<string | null>(null);
   const [typeEntryVisible, setTypeEntryVisible] = React.useState(false);
@@ -65,6 +52,30 @@ const Filter = ({
   const [segment, setSegment] = React.useState<string | null>(null);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [filter, setFilter] = React.useState<IActiveFilter>(defaultFilter);
+
+  const schema = yup
+    .object({
+      initialdate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      finaldate: yup
+        .string()
+        .required()
+        .min(10)
+        .test("date", "Verifique a data informada", (value) =>
+          dateValidation(value!)
+        ),
+      modality: yup
+        .string()
+        .test("modality", "Informe a modalidade", () => Boolean(modality!)),
+      segment: yup.string(),
+      entry_type: yup.string(),
+    })
+    .required();
 
   const {
     control,
@@ -86,21 +97,6 @@ const Filter = ({
     initialvalue,
     finalvalue,
   }: IForm) {
-    if (!dateValidation(initialdate) || !dateValidation(finaldate)) {
-      return setAlert(() => ({
-        type: "error",
-        title: "Verifique o período informado",
-        visibility: true,
-      }));
-    }
-    if (!modality) {
-      return setAlert(() => ({
-        type: "error",
-        title: "Informe a modalidade",
-        visibility: true,
-      }));
-    }
-
     setLoading(true);
     const data = {
       description: description,
@@ -137,7 +133,6 @@ const Filter = ({
 
   return (
     <Modal visible={true} onRequestClose={handleClose} transparent>
-      <Alert />
       <ModalContainer>
         <ModalView>
           <SpaceContainer>
@@ -157,6 +152,7 @@ const Filter = ({
                   errors={errors.initialdate}
                   maxLength={10}
                   masked="datetime"
+                  helperText="Verifique a data informada"
                 />
               </HalfContainer>
               <HalfContainer>
@@ -167,6 +163,7 @@ const Filter = ({
                   errors={errors.finaldate}
                   maxLength={10}
                   masked="datetime"
+                  helperText="Verifique a data informada"
                 />
               </HalfContainer>
             </SpaceContainer>
@@ -176,29 +173,32 @@ const Filter = ({
               control={control}
             />
             <Picker
-              options={optionsModality}
+              options={MODALITY}
               selectedValue={setModality}
               value={!modality ? "Modalidade *" : modality}
               type="Modalidade"
               visibility={modalityVisible}
               setVisibility={setModalityVisible}
+              errors={errors.modality}
             />
             <Picker
-              options={optionsType}
+              options={ENTRY_TYPE}
               selectedValue={setTypeEntry}
               value={!typeEntry ? "Tipo" : typeEntry}
               type="Tipo"
               visibility={typeEntryVisible}
               setVisibility={setTypeEntryVisible}
+              errors={errors.entry_type}
             />
             {typeEntry !== "Receita" && (
               <Picker
-                options={optionsSegment}
+                options={ENTRY_SEGMENT}
                 selectedValue={setSegment}
                 value={!segment ? "Segmento" : segment}
                 type="Segmento"
                 visibility={segmentVisible}
                 setVisibility={setSegmentVisible}
+                errors={errors.segment}
               />
             )}
             <SpaceContainer>

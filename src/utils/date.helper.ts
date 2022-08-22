@@ -196,27 +196,9 @@ export function getFinalDateMonth(month: number | null, year: number | null) {
  */
 
 export function dateValidation(date: string) {
-  if (date.length < 10) {
-    return false;
-  }
-  const day = Number(date.slice(0, 2));
-  const month = Number(date.slice(3, 5));
-  const year = Number(date.slice(6, 10));
+  const dateValidation = /^(0[1-9]|[12][0-9]|3[01])[\/ \/.](0[1-9]|1[012])[\/ \/.](19|20)\d\d$/;
 
-  // Validação do dia
-  if (day < 1 || day > Number(getFinalDateMonth(month, year))) {
-    return false;
-  }
-
-  if (month < 1 || month > 12) {
-    return false;
-  }
-
-  if (year < 1000 || year > 3000) {
-    return false;
-  }
-
-  return true;
+  return dateValidation.test(date);
 }
 
 /**

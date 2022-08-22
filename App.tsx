@@ -7,7 +7,7 @@ import * as Font from "expo-font";
 import AppContent from "./src/screens/App";
 import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
-import { AlertContextProvider } from "./src/context/Alert/alertContext";
+import { ConfirmContextProvider } from "./src/context/ConfirmDialog/confirmContext";
 import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
 import { DataContextProvider } from "./src/context/Data/dataContext";
 import BaseProvider from "./src/styles/baseTheme";
@@ -73,11 +73,11 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <UserContextProvider>
           <DataContextProvider>
-            <AlertContextProvider>
+            <ConfirmContextProvider>
               <LoaderContextProvider>
                 <AppContent />
               </LoaderContextProvider>
-            </AlertContextProvider>
+            </ConfirmContextProvider>
           </DataContextProvider>
         </UserContextProvider>
       </ThemeProvider>
