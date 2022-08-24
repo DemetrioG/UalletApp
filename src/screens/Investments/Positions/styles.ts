@@ -24,7 +24,7 @@ export const Container = styled(View)`
     border-bottom-right-radius: ${metrics.baseRadius}px;
     padding: ${metrics.basePadding}px;
     background-color: ${({theme: {theme}}) => theme.primary};
-    height: 180px;
+    max-height: 180px;
     margin-top: 45px;
 `;
 
