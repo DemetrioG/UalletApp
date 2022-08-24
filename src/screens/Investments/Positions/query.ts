@@ -4,7 +4,7 @@ import axios, {
   CRIPTO_URL,
   FII_URL,
 } from "../../../utils/api.helper";
-import { groupBy } from "../../../utils/asset.helper";
+import { groupBy } from "../../../utils/array.helper";
 import {
   averageBetweenNumbers,
   getRent,
