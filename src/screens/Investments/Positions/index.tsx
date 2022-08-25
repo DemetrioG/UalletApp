@@ -3,6 +3,7 @@ import { Collapse, HStack, ScrollView, VStack } from "native-base";
 import {
   Circle,
   Container,
+  EmptyText,
   Header,
   HeaderText,
   ItemContainer,
@@ -14,6 +15,7 @@ import { TouchableOpacity, View } from "react-native";
 import { colors } from "../../../styles";
 import { UserContext } from "../../../context/User/userContext";
 import { getAssets, getUpdatedInfos, IAsset } from "./query";
+import { useIsFocused } from "@react-navigation/native";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -94,10 +96,22 @@ const ItemList = ({ data }: { data: IAsset[] }) => {
                     <ItemContent number>{e.amount}</ItemContent>
                   </ItemContainer>
                   <ItemContainer minW={ITEMS_WIDTH.rentPercentual}>
-                    <ItemContent number>{e.rentPercentual}</ItemContent>
+                    <ItemContent
+                      number
+                      withColor
+                      negative={e.rentPercentual.includes("-")}
+                    >
+                      {e.rentPercentual}
+                    </ItemContent>
                   </ItemContainer>
                   <ItemContainer minW={ITEMS_WIDTH.rent}>
-                    <ItemContent number>{e.rent}</ItemContent>
+                    <ItemContent
+                      number
+                      withColor
+                      negative={e.rent.includes("-")}
+                    >
+                      {e.rent}
+                    </ItemContent>
                   </ItemContainer>
                   <ItemContainer minW={ITEMS_WIDTH.segment}>
                     <ItemContent number>{e.segment}</ItemContent>
@@ -118,9 +132,17 @@ const ItemList = ({ data }: { data: IAsset[] }) => {
 };
 
 const Positions = () => {
-  const { user } = useContext(UserContext);
-  const [open, setOpen] = useState(true);
+  const { user, setUser } = useContext(UserContext);
   const [data, setData] = useState<IAsset[]>([]);
+
+  const isFocused = useIsFocused();
+
+  function handlePositionVisible() {
+    setUser((userState) => ({
+      ...userState,
+      hideAssetPosition: !userState.hideAssetPosition,
+    }));
+  }
 
   useEffect(() => {
     async function getData() {
@@ -151,23 +173,29 @@ const Positions = () => {
       });
     }
     getData();
-  }, []);
+  }, [isFocused]);
 
   return (
-    <VStack mt={5} mb={open ? 0 : 10}>
+    <VStack mt={5} mb={user.hideAssetPosition ? 0 : 10}>
       <Header>
-        <TouchableOpacity onPress={() => setOpen(!open)}>
+        <TouchableOpacity onPress={handlePositionVisible}>
           <HStack justifyContent="space-between">
             <HeaderText>Posições</HeaderText>
-            <Icon name={open ? "chevron-down" : "chevron-right"} />
+            <Icon
+              name={user.hideAssetPosition ? "chevron-down" : "chevron-right"}
+            />
           </HStack>
         </TouchableOpacity>
       </Header>
-      <Collapse isOpen={open}>
+      <Collapse isOpen={user.hideAssetPosition}>
         <Container>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <ItemList data={data} />
-          </ScrollView>
+          {data.length > 0 ? (
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <ItemList data={data} />
+            </ScrollView>
+          ) : (
+            <EmptyText>Não há dados para visualizar</EmptyText>
+          )}
         </Container>
       </Collapse>
     </VStack>
