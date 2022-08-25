@@ -2,52 +2,61 @@ import { Center, ITextProps, Text, VStack } from "native-base";
 import React from "react";
 import { View } from "react-native";
 import styled from "styled-components";
-import { metrics } from "../../../styles";
+import { colors, metrics } from "../../../styles";
 
 export const Header = styled(View)`
-    z-index: 10;
-    width: 100%;
-    position: absolute;
-    border-radius: ${metrics.baseRadius}px;
-    padding: ${metrics.basePadding}px;
-    background-color: ${({theme: {theme}}) => theme.primary};
-`
+  z-index: 10;
+  width: 100%;
+  position: absolute;
+  border-radius: ${metrics.baseRadius}px;
+  padding: ${metrics.basePadding}px;
+  background-color: ${({ theme: { theme } }) => theme.primary};
+`;
 
 export const HeaderText = styled(Text).attrs(() => ({
-    fontSize: 'md'
+  fontSize: "md",
 }))`
-    color: ${({theme: {theme}}) => theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const Container = styled(View)`
-    border-bottom-left-radius: ${metrics.baseRadius}px;
-    border-bottom-right-radius: ${metrics.baseRadius}px;
-    padding: ${metrics.basePadding}px;
-    background-color: ${({theme: {theme}}) => theme.primary};
-    max-height: 180px;
-    margin-top: 45px;
+  border-bottom-left-radius: ${metrics.baseRadius}px;
+  border-bottom-right-radius: ${metrics.baseRadius}px;
+  padding: ${metrics.basePadding}px;
+  background-color: ${({ theme: { theme } }) => theme.primary};
+  max-height: ${metrics.screenHeight / 3.5}px;
+  margin-top: 45px;
 `;
 
-export const ItemContainer = styled(VStack)<{ticker?: boolean}>`
-    padding: ${({ticker}) => ticker ? 9.5 : 8}px 10px;
-    align-items: center;
+export const ItemContainer = styled(VStack)<{ ticker?: boolean }>`
+  padding: ${({ ticker }) => (ticker ? 9.5 : 8)}px 10px;
+  align-items: center;
 `;
 
 export const Label = styled(Text).attrs(() => ({
-    fontWeight: 700,
+  fontWeight: 700,
 }))`
-    color: ${({theme: {theme}}) => theme.text};
+  color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const ItemContent: React.FC<ITextProps & {number?: boolean}> = styled(Text).attrs(({number}) => ({
-    fontFamily: number ? 'mono' : 'body'
+export const ItemContent: React.FC<
+  ITextProps & { number?: boolean; withColor?: boolean; negative?: boolean }
+> = styled(Text).attrs(({ number }) => ({
+  fontFamily: number ? "mono" : "body",
 }))`
-    color: ${({theme: {theme}}) => theme.text};
+  color: ${({ withColor, negative, theme: { theme } }) =>
+    withColor ? (negative ? theme.red : theme.green) : theme.text};
 `;
 
 export const Circle = styled(Center)`
-    width: 25px;
-    height: 25px;
-    border-radius: 50px;
-    background-color: ${({theme: {theme}}) => theme.red};
-`
+  width: 25px;
+  height: 25px;
+  border-radius: 50px;
+  background-color: ${({ theme: { theme } }) => theme.red};
+`;
+
+export const EmptyText = styled(Text)`
+  margin: ${metrics.baseMargin}px;
+  text-align: center;
+  color: ${colors.gray};
+`;
