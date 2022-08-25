@@ -39,7 +39,6 @@ interface IInfos {
 
 async function _getAssets(uid: string) {
   const data: IAsset[] = [];
-  const finalData: IAsset[] = [];
   await firebase
     .firestore()
     .collection("assets")
@@ -60,40 +59,12 @@ async function _getAssets(uid: string) {
         };
         data.push(asset);
       });
-
-      /**
-       * Agrupa os dados por ativo
-       */
-      const groupData = groupBy(data, "asset");
-      const refreshedAsset: string[] = [];
-
-      data.map((e) => {
-        if (!refreshedAsset.includes(e.asset)) {
-          let data: IAsset | null = null;
-          const info: IAsset[] = groupData[e.asset as keyof typeof groupData];
-
-          info.map((e, i) => {
-            if (i === 0) {
-              data = e;
-            } else {
-              data!.amount += e.amount;
-              data!.price = averageBetweenNumbers(
-                realToNumber(data!.price),
-                realToNumber(e.price)
-              );
-            }
-          });
-
-          refreshedAsset.push(e.asset);
-          return finalData.push(data!);
-        }
-      });
     })
     .catch(() => {
       throw new Error();
     });
 
-  return finalData;
+  return data;
 }
 
 export function getAssets(uid: string) {
