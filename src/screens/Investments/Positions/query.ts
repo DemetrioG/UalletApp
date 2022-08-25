@@ -44,6 +44,7 @@ async function _getAssets(uid: string) {
     .collection("assets")
     .doc(uid)
     .collection("variable")
+    .orderBy("segment")
     .get()
     .then((v) => {
       v.forEach((result) => {
