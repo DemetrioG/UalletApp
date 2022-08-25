@@ -1,5 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import * as React from "react";
+import { TouchableOpacity, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
+
+import { getAssets, getUpdatedInfos, IAsset } from "./query";
+import Icon from "../../../components/Icon";
+import { UserContext } from "../../../context/User/userContext";
 import {
   Circle,
   Container,
@@ -10,12 +16,8 @@ import {
   ItemContent,
   Label,
 } from "./styles";
-import Icon from "../../../components/Icon";
-import { TouchableOpacity, View } from "react-native";
 import { colors } from "../../../styles";
-import { UserContext } from "../../../context/User/userContext";
-import { getAssets, getUpdatedInfos, IAsset } from "./query";
-import { useIsFocused } from "@react-navigation/native";
+import { Skeleton } from "../../../styles/general";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -27,19 +29,23 @@ const ITEMS_WIDTH = {
   delete: 70,
 };
 
-const ItemList = ({ data }: { data: IAsset[] }) => {
-  return (
-    <HStack>
-      <View>
-        {data.map((e, i) => {
-          return (
-            <VStack key={i}>
-              {i === 0 && (
-                <ItemContainer minW={ITEMS_WIDTH.asset}>
-                  <Label>TICKER</Label>
-                </ItemContainer>
-              )}
+const Positions = () => {
+  const { user, setUser } = React.useContext(UserContext);
+  const [data, setData] = React.useState<IAsset[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
+
+  const isFocused = useIsFocused();
+
+  const ItemList = ({ data }: { data: IAsset[] }) => {
+    return (
+      <HStack>
+        <View>
+          {data.map((e, i) => {
+            return (
               <ItemContainer
+                key={i}
                 minW={ITEMS_WIDTH.asset}
                 ticker
                 borderWidth={0.8}
@@ -47,45 +53,26 @@ const ItemList = ({ data }: { data: IAsset[] }) => {
               >
                 <ItemContent number>{e.asset}</ItemContent>
               </ItemContainer>
-            </VStack>
-          );
-        })}
-      </View>
-      <ScrollView
-        horizontal
-        nestedScrollEnabled
-        showsHorizontalScrollIndicator={false}
-      >
-        <View>
-          {data.map((e, i) => {
-            return (
-              <VStack key={i}>
-                {i === 0 && (
-                  <HStack>
-                    <ItemContainer minW={ITEMS_WIDTH.price}>
-                      <Label>PREÇO ATUAL</Label>
-                    </ItemContainer>
-                    <ItemContainer minW={ITEMS_WIDTH.price}>
-                      <Label>PREÇO MÉDIO</Label>
-                    </ItemContainer>
-                    <ItemContainer minW={ITEMS_WIDTH.amount}>
-                      <Label>COTAS</Label>
-                    </ItemContainer>
-                    <ItemContainer minW={ITEMS_WIDTH.rentPercentual}>
-                      <Label>RENTABILIDADE %</Label>
-                    </ItemContainer>
-                    <ItemContainer minW={ITEMS_WIDTH.rent}>
-                      <Label>RENTABILIDADE</Label>
-                    </ItemContainer>
-                    <ItemContainer minW={ITEMS_WIDTH.segment}>
-                      <Label>SEGMENTO</Label>
-                    </ItemContainer>
-                    <ItemContainer minW={ITEMS_WIDTH.delete}>
-                      <Label>EXCLUIR</Label>
-                    </ItemContainer>
-                  </HStack>
-                )}
-                <HStack>
+            );
+          })}
+        </View>
+        <ScrollView
+          horizontal
+          nestedScrollEnabled
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScroll={(e) => {
+            headerScrollRef.current.scrollTo({
+              x: e.nativeEvent.contentOffset.x,
+              y: e.nativeEvent.contentOffset.y,
+              animated: false,
+            });
+          }}
+        >
+          <View>
+            {data.map((e, i) => {
+              return (
+                <HStack key={i}>
                   <ItemContainer minW={ITEMS_WIDTH.price}>
                     <ItemContent number>{e.atualPrice}</ItemContent>
                   </ItemContainer>
@@ -122,20 +109,13 @@ const ItemList = ({ data }: { data: IAsset[] }) => {
                     </Circle>
                   </ItemContainer>
                 </HStack>
-              </VStack>
-            );
-          })}
-        </View>
-      </ScrollView>
-    </HStack>
-  );
-};
-
-const Positions = () => {
-  const { user, setUser } = useContext(UserContext);
-  const [data, setData] = useState<IAsset[]>([]);
-
-  const isFocused = useIsFocused();
+              );
+            })}
+          </View>
+        </ScrollView>
+      </HStack>
+    );
+  };
 
   function handlePositionVisible() {
     setUser((userState) => ({
@@ -144,33 +124,37 @@ const Positions = () => {
     }));
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     async function getData() {
-      await getAssets(user.uid!).then((data) => {
-        getUpdatedInfos(data).then((infos) => {
-          const finalData: IAsset[] = [];
-          infos.map((info) => {
-            const [item] = data.filter((e) => e.asset === info.asset);
-            const newData: IAsset = {
-              id: item.id,
-              amount: item.amount,
-              asset: item.asset,
-              price: item.price,
-              segment: item.segment,
-              atualPrice: info.atualPrice,
-              rent: info.rent,
-              rentPercentual: info.rentPercentual,
-              pvp: info.pvp,
-              dy: info.dy,
-              pl: info.pl,
-            };
+      await getAssets(user.uid!)
+        .then((data) => {
+          getUpdatedInfos(data)
+            .then((infos) => {
+              const finalData: IAsset[] = [];
+              infos.map((info) => {
+                const [item] = data.filter((e) => e.asset === info.asset);
+                const newData: IAsset = {
+                  id: item.id,
+                  amount: item.amount,
+                  asset: item.asset,
+                  price: item.price,
+                  segment: item.segment,
+                  atualPrice: info.atualPrice,
+                  rent: info.rent,
+                  rentPercentual: info.rentPercentual,
+                  pvp: info.pvp,
+                  dy: info.dy,
+                  pl: info.pl,
+                };
 
-            return finalData.push(newData);
-          });
+                return finalData.push(newData);
+              });
 
-          setData(finalData);
-        });
-      });
+              setData(finalData);
+            })
+            .finally(() => setLoading(false));
+        })
+        .catch(() => setLoading(false));
     }
     getData();
   }, [isFocused]);
@@ -180,7 +164,7 @@ const Positions = () => {
       <Header>
         <TouchableOpacity onPress={handlePositionVisible}>
           <HStack justifyContent="space-between">
-            <HeaderText>Posições</HeaderText>
+            <HeaderText>Posições RV</HeaderText>
             <Icon
               name={user.hideAssetPosition ? "chevron-down" : "chevron-right"}
             />
@@ -189,13 +173,52 @@ const Positions = () => {
       </Header>
       <Collapse isOpen={user.hideAssetPosition}>
         <Container>
-          {data.length > 0 ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <ItemList data={data} />
-            </ScrollView>
-          ) : (
-            <EmptyText>Não há dados para visualizar</EmptyText>
-          )}
+          <Skeleton isLoaded={!loading} secondary>
+            {data.length > 0 ? (
+              <>
+                <HStack>
+                  <ItemContainer minW={ITEMS_WIDTH.asset}>
+                    <Label>TICKER</Label>
+                  </ItemContainer>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    scrollEnabled={false}
+                    ref={headerScrollRef}
+                  >
+                    <HStack>
+                      <ItemContainer minW={ITEMS_WIDTH.price}>
+                        <Label>PREÇO ATUAL</Label>
+                      </ItemContainer>
+                      <ItemContainer minW={ITEMS_WIDTH.price}>
+                        <Label>PREÇO MÉDIO</Label>
+                      </ItemContainer>
+                      <ItemContainer minW={ITEMS_WIDTH.amount}>
+                        <Label>COTAS</Label>
+                      </ItemContainer>
+                      <ItemContainer minW={ITEMS_WIDTH.rentPercentual}>
+                        <Label>RENTABILIDADE %</Label>
+                      </ItemContainer>
+                      <ItemContainer minW={ITEMS_WIDTH.rent}>
+                        <Label>RENTABILIDADE</Label>
+                      </ItemContainer>
+                      <ItemContainer minW={ITEMS_WIDTH.segment}>
+                        <Label>SEGMENTO</Label>
+                      </ItemContainer>
+                      <ItemContainer minW={ITEMS_WIDTH.delete}>
+                        <Label>EXCLUIR</Label>
+                      </ItemContainer>
+                    </HStack>
+                  </ScrollView>
+                </HStack>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <ItemList data={data} />
+                </ScrollView>
+              </>
+            ) : (
+              <EmptyText>Não há dados para visualizar</EmptyText>
+            )}
+          </Skeleton>
         </Container>
       </Collapse>
     </VStack>
