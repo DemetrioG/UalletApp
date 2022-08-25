@@ -93,10 +93,7 @@ export function averageBetweenNumbers(
   firstNumber: number,
   secondNumber: number
 ) {
-  const value = numberToReal(
-    Number(((firstNumber + secondNumber) / 2).toFixed(2)),
-    true
-  );
+  const value = Number(((firstNumber + secondNumber) / 2).toFixed(2));
   return value;
 }
 
