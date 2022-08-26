@@ -35,6 +35,8 @@ interface IInfos {
   dy: string;
   pvp: string;
   pl: string;
+  totalPrecoAtual: number;
+  totalPrecoMedio: number;
 }
 
 async function _getAssets(uid: string) {
@@ -102,6 +104,8 @@ async function _getUpdatedInfos(data: IAsset[]) {
         dy: data.DY + "%",
         pvp: data.P_VP,
         pl: data.P_L,
+        totalPrecoAtual: realToNumber(data.PRECO) * item.amount,
+        totalPrecoMedio: realToNumber(item.price) * item.amount,
       };
 
       return assetsInfo.push(infos);
