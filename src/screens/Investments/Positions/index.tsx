@@ -44,13 +44,7 @@ const Positions = () => {
         <View>
           {data.map((e, i) => {
             return (
-              <ItemContainer
-                key={i}
-                minW={ITEMS_WIDTH.asset}
-                ticker
-                borderWidth={0.8}
-                borderColor={"transparent"}
-              >
+              <ItemContainer key={i} minW={ITEMS_WIDTH.asset}>
                 <ItemContent number>{e.asset}</ItemContent>
               </ItemContainer>
             );

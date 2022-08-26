@@ -28,9 +28,10 @@ export const Container = styled(View)`
   margin-top: 45px;
 `;
 
-export const ItemContainer = styled(VStack)<{ ticker?: boolean }>`
-  padding: ${({ ticker }) => (ticker ? 9.5 : 8)}px 10px;
+export const ItemContainer = styled(VStack)`
+  padding: 8px 10px;
   align-items: center;
+  height: 40px;
 `;
 
 export const Label = styled(Text).attrs(() => ({
