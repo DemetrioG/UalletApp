@@ -74,6 +74,7 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 export function realToNumber(value: string) {
   let newValue = value.replace("R$", "");
   newValue = newValue.split(".").join("");
+  newValue = newValue.replace(/\s/g, "");
 
   return Number(newValue.replace(",", "."));
 }
@@ -87,6 +88,16 @@ export function percentualToNumber(value: string) {
   newValue = newValue.split(".").join("");
 
   return Number(newValue.replace(",", "."));
+}
+
+/**
+ * @param value Valor no padrão Numérico
+ * @returns Valor no padrão % 120,00
+ */
+export function numberToPercentual(value: number) {
+  let newValue = value.toString().replace(".", ",");
+
+  return newValue + "%";
 }
 
 export function averageBetweenNumbers(
