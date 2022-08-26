@@ -18,7 +18,7 @@ const Investments = () => {
   return (
     <BackgroundContainer>
       <ViewTab>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <HStack mb={metrics.baseMargin}>
             <TextHeaderScreen>Investimentos</TextHeaderScreen>
           </HStack>

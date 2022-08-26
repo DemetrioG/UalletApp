@@ -11,6 +11,7 @@ export const Header = styled(View)`
   border-radius: ${metrics.baseRadius}px;
   padding: ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
+  justify-content: center;
 `;
 
 export const HeaderText = styled(Text).attrs(() => ({
@@ -25,7 +26,7 @@ export const Container = styled(View)`
   padding: ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
   max-height: ${metrics.screenHeight / 3.5}px;
-  margin-top: 45px;
+  margin-top: 100px;
 `;
 
 export const ItemContainer = styled(VStack)`
@@ -60,4 +61,23 @@ export const EmptyText = styled(Text)`
   margin: ${metrics.baseMargin}px;
   text-align: center;
   color: ${colors.gray};
+`;
+
+export const TotalLabel = styled(Text).attrs(() => ({
+  fontWeight: 700,
+}))`
+  color: ${colors.gray};
+`;
+
+export const TotalValue = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+}))`
+  color: ${colors.gray};
+`;
+
+export const TotalPercentual = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+}))<{ negative?: boolean }>`
+  color: ${({ negative, theme: { theme } }) =>
+    !negative ? theme.green : theme.red};
 `;
