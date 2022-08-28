@@ -40,6 +40,7 @@ import {
   ValueText,
 } from "../../styles/general";
 import { Collapse } from "native-base";
+import { getLastEntry } from "./querys";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -155,42 +156,22 @@ const Home = () => {
 
   React.useEffect(() => {
     //Retorna os últimos lançamentos financeiros no app
-    async function getLastEntry() {
-      if (data.year !== 0) {
-        // Pega o mês de referência do App para realizar a busca dos registros
-        const initialDate = new Date(`${data.month}/01/${data.year} 00:00:00`);
-        const finalDate = new Date(
-          `${data.month}/${getFinalDateMonth(data.month, data.year)}/${
-            data.year
-          } 23:59:59`
-        );
-
-        // Busca os registros dentro do período de referência
-        await new Promise((resolve) => setInterval(resolve, 100));
-        firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(data.modality)
-          .where("date", ">=", initialDate)
-          .where("date", "<=", finalDate)
-          .orderBy("date", "desc")
-          .limit(4)
-          .get()
-          .then((snapshot) => {
-            if (snapshot.docs.length > 0) {
-              const list: typeof lastEntry = [];
-              snapshot.forEach((result) => {
-                list.push(result.data());
-              });
-              return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
-            } else {
-              return setLastEntry([]);
-            }
-          });
+    getLastEntry({
+      modality: data.modality,
+      month: data.month,
+      year: data.year
+    })
+    .then((snapshot) => {
+      if (snapshot.docs.length > 0) {
+        const list: typeof lastEntry = [];
+        snapshot.forEach((result) => {
+          list.push(result.data());
+        });
+        return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
+      } else {
+        return setLastEntry([]);
       }
-    }
-    getLastEntry();
+    });
   }, [isFocused, data.modality, data.month, data.year, consolidate]);
 
   React.useEffect(() => {
