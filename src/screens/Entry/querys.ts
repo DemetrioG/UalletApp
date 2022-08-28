@@ -37,6 +37,6 @@ export const getEntryList = async ({ month, year, modality } : TEntryList) => {
     .collection(modality)
     .where("date", ">=", initialDate)
     .where("date", "<=", finalDate)
-    .orderBy("id", "desc")
+    .orderBy("date", "desc")
     .get();
 }

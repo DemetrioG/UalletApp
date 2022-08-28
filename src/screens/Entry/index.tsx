@@ -135,14 +135,14 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
 
             if (!isFiltered) {
                 return getEntryList({
-                    ...data,
+                    ...data
                 }).then((snapshot) => {
                     if (!snapshot.docs.length) return setEmptyData(true);
                     const list: typeof entryList = [];
                     snapshot.forEach((result) => {
                         list.push(result.data());
                     });
-                    setEntryList(list);
+                    setEntryList(() => sortObjectByKey(list, "id", "desc"));
                 });
             }
 

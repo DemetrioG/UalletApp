@@ -1,5 +1,4 @@
 import firebase from "firebase";
-import { string } from "yup";
 
 type LastIdFromEntryProps = { modality: string }
 export const lastIdFromEntry = async ({ modality }: LastIdFromEntryProps) => {
