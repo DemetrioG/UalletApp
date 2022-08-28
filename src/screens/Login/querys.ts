@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../../services/firebase";
 //import * as AuthSession from "expo-auth-session";
 //import * as Facebook from "expo-facebook";
 

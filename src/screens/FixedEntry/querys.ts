@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../../services/firebase";
 
 type LastIdFromEntryProps = { modality: string }
 export const lastIdFromEntry = async ({ modality }: LastIdFromEntryProps) => {

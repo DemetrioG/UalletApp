@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../../../../services/firebase";
 
 const reautenticate = async (password: string, user: firebase.User) => {
   try {

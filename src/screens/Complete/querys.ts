@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../../services/firebase";
 
 type TUpdateUserData = {
   birthDate: string,
