@@ -2,9 +2,9 @@ import firebase from "firebase";
 
 type TUpdateUserData = {
   birthDate: string,
-  gender: string,
+  gender: string | null,
   income: string,
-  profile: string,
+  profile: string | null,
 }
 
 export const updateUserData = async (userData: TUpdateUserData): Promise<string> => {
