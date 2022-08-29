@@ -6,6 +6,7 @@ interface ILoader {
   segmentChart: boolean;
   name: boolean;
   visible: boolean;
+  lastEntry: boolean;
 }
 
 export const initialLoaderState: ILoader = {
@@ -13,6 +14,7 @@ export const initialLoaderState: ILoader = {
   lineChart: false,
   segmentChart: false,
   name: false,
+  lastEntry: false,
   visible: true,
 };
 

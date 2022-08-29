@@ -40,7 +40,11 @@ import {
   ValueText,
 } from "../../styles/general";
 import { Collapse } from "native-base";
-import { checkFutureDebitsToConsolidate, completeUser, getLastEntry } from "./querys";
+import {
+  checkFutureDebitsToConsolidate,
+  completeUser,
+  getLastEntry,
+} from "./querys";
 import { getBalance } from "../../utils/query.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
@@ -84,59 +88,68 @@ const Home = () => {
 
   React.useEffect(() => {
     // Verifica se há despesas projetadas para consolidar na data atual
-    checkFutureDebitsToConsolidate()
-      .then((v) => {
-        v.forEach((result) => {
-          result.data() && setConsolidate(true);
-        });
+    checkFutureDebitsToConsolidate().then((v) => {
+      v.forEach((result) => {
+        result.data() && setConsolidate(true);
       });
+    });
 
     if (user.complete) return;
 
-    completeUser()
-      .then((v) => {
-        setUser((userState) => ({
-          ...userState,
-          complete: true,
-        }));
-        // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
-        if (!v.data()?.birthDate) {
-          navigate("Complete");
-        }
-      });
+    completeUser().then((v) => {
+      setUser((userState) => ({
+        ...userState,
+        complete: true,
+      }));
+      // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
+      if (!v.data()?.birthDate) {
+        navigate("Complete");
+      }
+    });
   }, []);
 
   React.useEffect(() => {
-      if (!data.year) return
+    if (!data.year) return;
 
-      getBalance({
-            month: data.month.toString(),
-            modality: data.modality,
-        }).then((balance) => {
-          setData((dataState) => ({
-            ...dataState,
-            balance
-          }));
-        });
-
-      !loader.balance &&
-        setLoader((loaderState) => ({
-          ...loaderState,
-          balance: true,
+    getBalance({
+      month: data.month.toString(),
+      modality: data.modality,
+    })
+      .then((balance) => {
+        setData((dataState) => ({
+          ...dataState,
+          balance,
         }));
+      })
+      .finally(() => {
+        !loader.balance &&
+          setLoader((loaderState) => ({
+            ...loaderState,
+            balance: true,
+          }));
+      });
   }, [data.modality, data.month, data.year]);
 
   React.useEffect(() => {
+    if (!data.year) return;
+
     //Retorna os últimos lançamentos financeiros no app
     getLastEntry({
       modality: data.modality,
       month: data.month,
-      year: data.year
+      year: data.year,
     })
-    .then((_lastEntry) => {
-      setLastEntry(_lastEntry);
-    });
-  }, [isFocused, data.modality, data.month, data.year, consolidate]);
+      .then((_lastEntry) => {
+        setLastEntry(_lastEntry);
+      })
+      .finally(() => {
+        !loader.lastEntry &&
+          setLoader((loaderState) => ({
+            ...loaderState,
+            lastEntry: true,
+          }));
+      });
+  }, [data.modality, data.month, data.year, consolidate, data.balance]);
 
   React.useEffect(() => {
     if (
@@ -144,7 +157,8 @@ const Home = () => {
       loader.balance &&
       loader.lineChart &&
       loader.segmentChart &&
-      loader.visible
+      loader.visible &&
+      loader.lastEntry
     ) {
       setLoader((loaderState) => ({
         ...loaderState,
