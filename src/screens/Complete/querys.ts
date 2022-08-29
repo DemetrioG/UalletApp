@@ -1,4 +1,5 @@
 import firebase from "../../services/firebase";
+import { currentUser } from "../../utils/query.helper";
 
 type TUpdateUserData = {
   birthDate: string,
@@ -9,7 +10,7 @@ type TUpdateUserData = {
 
 export const updateUserData = async (userData: TUpdateUserData): Promise<string> => {
   try {
-    const user = firebase.auth().currentUser;
+    const user = currentUser();
     if (!user) throw new Error("Úsuario não encontrado");
 
     await firebase.firestore()

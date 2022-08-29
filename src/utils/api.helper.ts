@@ -18,7 +18,7 @@ export const ACOES_URL = 'acoes/';
 export const FII_URL = 'fiis/';
 
 const axios = defaultAxios.create({
-    baseURL: AWS_WEBSERVICE_ENDPOINT.toString()
+    baseURL: AWS_WEBSERVICE_ENDPOINT?.toString() || "http://3.87.93.70:8080/"
 });
 
 export default axios;

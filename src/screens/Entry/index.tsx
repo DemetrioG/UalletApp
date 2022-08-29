@@ -50,7 +50,8 @@ import {
     BackgroundContainer,
 } from "../../styles/general";
 import Icon from "../../components/Icon";
-import { getBalance, getEntryList } from "./querys";
+import { getEntryList } from "./querys";
+import { getBalance } from "../../utils/query.helper";
 
 export interface IEntryList {
     date: ITimestamp;
@@ -271,10 +272,10 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
         getBalance({
             month: data.month.toString(),
             modality: data.modality,
-        }).then(({ balance }) => {
+        }).then((balance) => {
             setData((dataState) => ({
                 ...dataState,
-                balance: balance ? numberToReal(balance) : "R$ 0,00",
+                balance,
             }));
         });
     }, [data.modality, data.month]);

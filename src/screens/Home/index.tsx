@@ -40,7 +40,8 @@ import {
   ValueText,
 } from "../../styles/general";
 import { Collapse } from "native-base";
-import { getLastEntry } from "./querys";
+import { checkFutureDebitsToConsolidate, completeUser, getLastEntry } from "./querys";
+import { getBalance } from "../../utils/query.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -83,75 +84,46 @@ const Home = () => {
 
   React.useEffect(() => {
     // Verifica se há despesas projetadas para consolidar na data atual
-    (async () => {
-      const date = getAtualDate();
-      const initialDate = date[1];
-      const finalDate = date[2];
-
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection("Projetado")
-        .where("date", ">=", initialDate)
-        .where("date", "<=", finalDate)
-        .where("consolidated.wasActionShown", "==", false)
-        .get()
-        .then((v) => {
-          v.forEach((result) => {
-            result.data() && setConsolidate(true);
-          });
+    checkFutureDebitsToConsolidate()
+      .then((v) => {
+        v.forEach((result) => {
+          result.data() && setConsolidate(true);
         });
-    })();
+      });
 
-    if (!user.complete) {
-      // Verifica se o usuário está com todos os dados completos. Se não, envia para tela de cadastro
-      (async function completeData() {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then((v) => {
-            setUser((userState) => ({
-              ...userState,
-              complete: true,
-            }));
-            // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
-            if (!v.data()?.birthDate) {
-              navigate("Complete");
-            }
-          });
-      })();
-    }
+    if (user.complete) return;
+
+    completeUser()
+      .then((v) => {
+        setUser((userState) => ({
+          ...userState,
+          complete: true,
+        }));
+        // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
+        if (!v.data()?.birthDate) {
+          navigate("Complete");
+        }
+      });
   }, []);
 
   React.useEffect(() => {
-    // Retorna o Saldo atual
-    (function getBalance() {
-      if (data.year !== 0) {
-        firebase
-          .firestore()
-          .collection("balance")
-          .doc(user.uid)
-          .collection(data.modality)
-          .doc(data.month.toString())
-          .onSnapshot((snapshot) => {
-            setData((dataState) => ({
-              ...dataState,
-              balance: snapshot.data()
-                ? numberToReal(snapshot.data()?.balance)
-                : "R$ 0,00",
-            }));
-          });
+      if (!data.year) return
 
-        !loader.balance &&
-          setLoader((loaderState) => ({
-            ...loaderState,
-            balance: true,
+      getBalance({
+            month: data.month.toString(),
+            modality: data.modality,
+        }).then((balance) => {
+          setData((dataState) => ({
+            ...dataState,
+            balance
           }));
-      }
-    })();
+        });
+
+      !loader.balance &&
+        setLoader((loaderState) => ({
+          ...loaderState,
+          balance: true,
+        }));
   }, [data.modality, data.month, data.year]);
 
   React.useEffect(() => {
@@ -161,16 +133,8 @@ const Home = () => {
       month: data.month,
       year: data.year
     })
-    .then((snapshot) => {
-      if (snapshot.docs.length > 0) {
-        const list: typeof lastEntry = [];
-        snapshot.forEach((result) => {
-          list.push(result.data());
-        });
-        return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
-      } else {
-        return setLastEntry([]);
-      }
+    .then((_lastEntry) => {
+      setLastEntry(_lastEntry);
     });
   }, [isFocused, data.modality, data.month, data.year, consolidate]);
 

@@ -1,8 +1,9 @@
 import firebase from "../../services/firebase";
+import { currentUser } from "../../utils/query.helper";
 
 type LastIdFromEntryProps = { modality: string }
 export const lastIdFromEntry = async ({ modality }: LastIdFromEntryProps) => {
-  const user = firebase.auth().currentUser;
+  const user = currentUser();
 
   if (!user) return -1;
 
@@ -36,7 +37,7 @@ type InserNewEntryProps = {
 }
 
 export const insertNewEntry = async ({ modality, ...props }: InserNewEntryProps) => {
-  const user = firebase.auth().currentUser;
+  const user = currentUser();
 
   if (!user) return Promise.resolve(false);
 
@@ -57,7 +58,7 @@ export const insertNewEntry = async ({ modality, ...props }: InserNewEntryProps)
 
 type UpdateCurrentBalanceProps = { modality: string, docDate: string, value: number }
 export const updateCurrentBalance = ({ modality, docDate, value }: UpdateCurrentBalanceProps) => {
-  const user = firebase.auth().currentUser;
+  const user = currentUser();
 
   if (!user) return Promise.resolve(false);
 

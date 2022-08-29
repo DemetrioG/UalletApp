@@ -1,27 +1,10 @@
 import firebase from "../../services/firebase";
 import { getFinalDateMonth } from "../../utils/date.helper";
-
-/**
- * Dada a modalidade/mês retorna o saldo atual do usuário.
- */
-type TBalance = { month: string, modality: string }
-export const getBalance = async ({ month, modality }: TBalance) => {
-  const user = firebase.auth().currentUser;
-
-  if (!user) return { balance: 0 };
-
-  const data = await firebase
-    .firestore()
-    .collection("balance").doc(user.uid)
-    .collection(modality).doc(month)
-    .get();
-
-  return data.data() as { balance: number };
-}
+import { currentUser } from "../../utils/query.helper";
 
 type TEntryList = { month: number, year: number, modality: string }
 export const getEntryList = async ({ month, year, modality } : TEntryList) => {
-  const user = firebase.auth().currentUser;
+  const user = currentUser();
   if (!user) return Promise.reject(null);
 
   const initialDate = new Date(`${month}/01/${year} 00:00:00`);
