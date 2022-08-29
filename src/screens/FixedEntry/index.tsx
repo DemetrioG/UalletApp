@@ -12,10 +12,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
-import { UserContext } from "../../context/User/userContext";
 import {
   dateValidation,
   convertDate,
@@ -36,7 +34,11 @@ import {
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
 import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
-import { insertNewEntry, lastIdFromEntry, updateCurrentBalance } from "./querys";
+import {
+  insertNewEntry,
+  lastIdFromEntry,
+  updateCurrentBalance,
+} from "./querys";
 
 interface IForm {
   entrydate: string;
@@ -47,11 +49,10 @@ interface IForm {
   value: string;
 }
 
-const optionsExpenseAmount = Array.from({length: 12}, (_, i) => i);
+const optionsExpenseAmount = Array.from({ length: 12 }, (_, i) => ++i);
 
 const FixedEntry = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { user } = React.useContext(UserContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [modality, setModality] = React.useState<"Projetado" | "Real" | null>(
@@ -105,7 +106,7 @@ const FixedEntry = () => {
     setIsLoading(true);
 
     // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-    let id = await lastIdFromEntry({modality: modality!});
+    let id = await lastIdFromEntry({ modality: modality! });
     if (id === -1) return;
 
     // Registra o novo lançamento no banco
@@ -133,8 +134,8 @@ const FixedEntry = () => {
       const didUpdateBalanceSucceed = await updateCurrentBalance({
         modality: modality!,
         value: realToNumber(value),
-        docDate: Number(finalDate.slice(3, 5)).toString()
-      })
+        docDate: Number(finalDate.slice(3, 5)).toString(),
+      });
 
       if (!didInsertSucceed || !didUpdateBalanceSucceed) {
         Toast.show({
@@ -143,13 +144,13 @@ const FixedEntry = () => {
         });
         return setIsLoading(false);
       }
-      
-      Toast.show({
-        type: "success",
-        text1: "Dados cadastrados com sucesso",
-      });
-      return navigate("Lançamentos");
     }
+
+    Toast.show({
+      type: "success",
+      text1: "Dados cadastrados com sucesso",
+    });
+    navigate("Lançamentos");
     return setIsLoading(false);
   }
 
