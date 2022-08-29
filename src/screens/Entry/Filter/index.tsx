@@ -147,7 +147,7 @@ const Filter = ({
               <HalfContainer>
                 <TextInput
                   name="initialdate"
-                  placeholder="Data Inicial *"
+                  placeholder="Data Inicial"
                   control={control}
                   errors={errors.initialdate}
                   maxLength={10}
@@ -158,7 +158,7 @@ const Filter = ({
               <HalfContainer>
                 <TextInput
                   name="finaldate"
-                  placeholder="Data Final *"
+                  placeholder="Data Final"
                   control={control}
                   errors={errors.finaldate}
                   maxLength={10}
@@ -175,7 +175,7 @@ const Filter = ({
             <Picker
               options={MODALITY}
               selectedValue={setModality}
-              value={!modality ? "Modalidade *" : modality}
+              value={!modality ? "Modalidade" : modality}
               type="Modalidade"
               visibility={modalityVisible}
               setVisibility={setModalityVisible}
