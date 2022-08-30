@@ -50,13 +50,6 @@ export const ItemContent: React.FC<
     withColor ? (negative ? theme.red : theme.green) : theme.text};
 `;
 
-export const Circle = styled(Center)`
-  width: 25px;
-  height: 25px;
-  border-radius: 50px;
-  background-color: ${({ theme: { theme } }) => theme.red};
-`;
-
 export const EmptyText = styled(Text)`
   margin: ${metrics.baseMargin}px;
   text-align: center;
