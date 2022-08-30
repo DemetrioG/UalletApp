@@ -1,8 +1,9 @@
 import firebase from "../services/firebase";
 import { numberToReal } from "./number.helper";
+import { getStorage } from "./storage.helper";
 
-export const currentUser = () => {
-  return firebase.auth().currentUser;
+export const currentUser = async () => {
+  return firebase.auth().currentUser || (await getStorage("user"));
 }
 
 /**
@@ -10,7 +11,7 @@ export const currentUser = () => {
  */
  type TBalance = { month: string, modality: string }
  export const getBalance = async ({ month, modality }: TBalance) => {
-   const user = currentUser();
+   const user = await currentUser();
  
    if (!user) return "R$ 0,00";
  

@@ -21,7 +21,7 @@ type changePasswordParams = {
 
 export const changePassword = async ({ oldPassword, newPassword }: changePasswordParams) => {
   try {
-    const user = currentUser();
+    const user = await currentUser();
 
     if (!user) return false;
     

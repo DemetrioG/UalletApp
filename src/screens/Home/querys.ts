@@ -5,7 +5,7 @@ import { currentUser } from "../../utils/query.helper";
 
 type GetLastEntryProps = { month: number, year: number, modality: string };
 export const getLastEntry = async ({ month, year, modality }: GetLastEntryProps) => {
-  const user = currentUser();
+  const user = await currentUser();
 
   if (!user) return Promise.reject(false);
 
@@ -40,9 +40,9 @@ export const getLastEntry = async ({ month, year, modality }: GetLastEntryProps)
   return [];
 };
 
-export const checkFutureDebitsToConsolidate = () => {
+export const checkFutureDebitsToConsolidate = async () => {
   const [, initialDate, finalDate] = getAtualDate();
-  const user = currentUser();
+  const user = await currentUser();
 
   if (!user) return Promise.reject(false);
 
@@ -57,8 +57,9 @@ export const checkFutureDebitsToConsolidate = () => {
     .get()
 }
 
-export const completeUser = () => {
-  const user = currentUser();
+export const completeUser = async () => {
+  const user = await currentUser();
+
   if (!user) return Promise.reject(false);
 
   return firebase.firestore()

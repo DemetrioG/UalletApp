@@ -10,7 +10,7 @@ type TUpdateUserData = {
 
 export const updateUserData = async (userData: TUpdateUserData): Promise<string> => {
   try {
-    const user = currentUser();
+    const user = await currentUser();
     if (!user) throw new Error("Úsuario não encontrado");
 
     await firebase.firestore()

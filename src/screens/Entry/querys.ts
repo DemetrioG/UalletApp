@@ -4,7 +4,7 @@ import { currentUser } from "../../utils/query.helper";
 
 type TEntryList = { month: number, year: number, modality: string }
 export const getEntryList = async ({ month, year, modality } : TEntryList) => {
-  const user = currentUser();
+  const user = await currentUser();
   if (!user) return Promise.reject(null);
 
   const initialDate = new Date(`${month}/01/${year} 00:00:00`);
