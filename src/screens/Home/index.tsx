@@ -52,8 +52,8 @@ function ItemList({
     <ItemContainer>
       <DescriptionContainer>
         <DescriptionText>
-          {item.description.length > 22
-            ? `${item.description.slice(0, 22)}...`
+          {item.description.length > 18
+            ? `${item.description.slice(0, 18)}...`
             : item.description}
         </DescriptionText>
       </DescriptionContainer>
