@@ -10,6 +10,7 @@ import Filter from "../screens/Entry/Filter";
 import FixedEntry from "../screens/FixedEntry";
 import Home from "../screens/Home";
 import Investments from "../screens/Investments";
+import AssetInfoScreen from "../screens/Investments/AssetInfo";
 import NewAsset from "../screens/NewAsset";
 import NewFixAsset from "../screens/NewAsset/NewFixAsset";
 import NewVariableAsset from "../screens/NewAsset/NewVariableAsset";
@@ -82,6 +83,11 @@ export const AppStackRoutes = () => {
       <StackScreen
         name="NovoAtivoVariavel"
         component={NewVariableAsset}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Investimentos/AtivoInfo"
+        component={AssetInfoScreen}
         options={{ headerShown: false }}
       />
       {/* !Investimentos */}
