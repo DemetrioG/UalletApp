@@ -1,27 +1,21 @@
 import firebase from "../../../services/firebase";
-import axios, {
-  ACOES_URL,
-  CRIPTO_URL,
-  FII_URL,
-} from "../../../utils/api.helper";
-import { groupBy } from "../../../utils/array.helper";
+import axios, { ACOES_URL, FII_URL } from "../../../utils/api.helper";
 import {
-  averageBetweenNumbers,
   getRent,
   getRentPercentual,
-  numberToReal,
   realToNumber,
 } from "../../../utils/number.helper";
 
 export interface IAsset {
   id: number;
   asset: string;
-  price: string;
+  price: number;
   amount: number;
   segment: string;
-  atualPrice: string;
+  atualPrice: number;
   rentPercentual: string;
-  rent: string;
+  rent: number;
+  total?: number;
   dy?: string;
   pvp?: string;
   pl?: string;
@@ -29,14 +23,15 @@ export interface IAsset {
 
 interface IInfos {
   asset: string;
-  atualPrice: string;
-  rent: string;
+  atualPrice: number;
+  rent: number;
   rentPercentual: string;
   dy: string;
   pvp: string;
   pl: string;
   totalPrecoAtual: number;
   totalPrecoMedio: number;
+  totalPrecoInicial: number;
 }
 
 async function _getAssets(uid: string) {
@@ -53,12 +48,13 @@ async function _getAssets(uid: string) {
         const asset = {
           id: result.data().id,
           asset: result.data().asset,
-          price: numberToReal(result.data().price, true),
+          price: result.data().price,
           amount: result.data().amount,
           segment: result.data().segment,
-          atualPrice: numberToReal(result.data().price, true),
+          atualPrice: result.data().price,
+          total: result.data().total,
           rentPercentual: "0,00%",
-          rent: "0,00",
+          rent: 0,
         };
         data.push(asset);
       });
@@ -92,20 +88,19 @@ async function _getUpdatedInfos(data: IAsset[]) {
       const infos: IInfos = {
         asset: data.TICKER,
         atualPrice: data.PRECO,
-        rent: numberToReal(
-          getRent(realToNumber(item.price), realToNumber(data.PRECO)) *
-            item.amount
+        rent: Number(
+          (getRent(item.price, realToNumber(data.PRECO)) * item.amount).toFixed(
+            2
+          )
         ),
         rentPercentual:
-          getRentPercentual(
-            realToNumber(item.price),
-            realToNumber(data.PRECO)
-          ) + "%",
+          getRentPercentual(item.price, realToNumber(data.PRECO)) + "%",
         dy: data.DY + "%",
         pvp: data.P_VP,
         pl: data.P_L,
         totalPrecoAtual: realToNumber(data.PRECO) * item.amount,
-        totalPrecoMedio: realToNumber(item.price) * item.amount,
+        totalPrecoMedio: item.total || 0,
+        totalPrecoInicial: realToNumber(data.PRECO_ABERTURA) * item.amount,
       };
 
       return assetsInfo.push(infos);
