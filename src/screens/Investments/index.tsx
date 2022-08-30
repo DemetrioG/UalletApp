@@ -1,8 +1,10 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Button, HStack, ScrollView, VStack } from "native-base";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import Positions from "./Positions";
+import { numberToReal } from "../../utils/number.helper";
 import {
   BackgroundContainer,
   Balance,
@@ -15,6 +17,8 @@ import { PatrimonyText } from "./styles";
 
 const Investments = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const [totalEquity, setTotalEquity] = React.useState(0);
+
   return (
     <BackgroundContainer>
       <ViewTab>
@@ -24,9 +28,9 @@ const Investments = () => {
           </HStack>
           <PatrimonyText>Patrimônio investido</PatrimonyText>
           <VStack mt={1}>
-            <Balance>R$0,00</Balance>
+            <Balance>{numberToReal(totalEquity)}</Balance>
           </VStack>
-          <Positions />
+          <Positions setTotalEquity={setTotalEquity} />
           <Button mt={10} onPress={() => navigate("NovoAtivo")}>
             <ButtonText>ADICIONAR ATIVO</ButtonText>
           </Button>
