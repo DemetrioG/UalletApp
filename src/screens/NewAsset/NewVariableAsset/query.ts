@@ -89,7 +89,7 @@ async function _registerAsset(props: IAsset) {
     .doc(uid)
     .collection("variable")
     .doc(id.toString())
-    .set(items);
+    .set(items, { merge: true });
 }
 
 export function registerAsset(props: IAsset) {
