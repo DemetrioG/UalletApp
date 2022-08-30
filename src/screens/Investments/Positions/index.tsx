@@ -1,13 +1,12 @@
 import * as React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
 
 import { getAssets, getUpdatedInfos, IAsset } from "./query";
 import Icon from "../../../components/Icon";
 import { UserContext } from "../../../context/User/userContext";
 import {
-  Circle,
   Container,
   EmptyText,
   Header,
@@ -26,6 +25,7 @@ import {
   numberToReal,
   realToNumber,
 } from "../../../utils/number.helper";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -34,7 +34,7 @@ const ITEMS_WIDTH = {
   rentPercentual: 140,
   rent: 150,
   segment: 140,
-  delete: 70,
+  info: 70,
   pvp: 75,
   dy: 100,
   pl: 75,
@@ -96,9 +96,11 @@ const TotalClose = ({
 const ItemList = ({
   data,
   scrollRef,
+  navigation,
 }: {
   data: IAsset[];
   scrollRef: React.MutableRefObject<any>;
+  navigation: Function;
 }) => {
   return (
     <HStack>
@@ -141,15 +143,26 @@ const ItemList = ({
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.rent}>
-                  <ItemContent number withColor negative={e.rent.includes("-")}>
-                    {e.rent}
+                  <ItemContent
+                    number
+                    withColor
+                    negative={numberToReal(e.rent).includes("-")}
+                  >
+                    {numberToReal(e.rent)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.price}>
-                  <ItemContent number>{e.price}</ItemContent>
+                  <ItemContent number>
+                    {numberToReal(e.price, true)}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.amount}>
                   <ItemContent number>{e.amount}</ItemContent>
+                </ItemContainer>
+                <ItemContainer minW={ITEMS_WIDTH.amount}>
+                  <ItemContent number>
+                    {numberToReal(e.total || 0, true)}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.pvp}>
                   <ItemContent number>{e.pvp}</ItemContent>
@@ -158,15 +171,16 @@ const ItemList = ({
                   <ItemContent number>{e.dy}</ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.pl}>
-                  <ItemContent number>{e.pl}</ItemContent>
+                  <ItemContent number>{e.pl || "-"}</ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.segment}>
                   <ItemContent number>{e.segment}</ItemContent>
                 </ItemContainer>
-                <ItemContainer minW={ITEMS_WIDTH.delete}>
-                  <Circle>
-                    <Icon name="minus" size={14} color={colors.white} />
-                  </Circle>
+                <ItemContainer minW={ITEMS_WIDTH.info}>
+                  <Icon
+                    name="more-horizontal"
+                    onPress={() => navigation("Investimentos/AtivoInfo", e)}
+                  />
                 </ItemContainer>
               </HStack>
             );
@@ -177,12 +191,19 @@ const ItemList = ({
   );
 };
 
-const Positions = () => {
+const Positions = ({
+  setTotalEquity,
+}: {
+  setTotalEquity: React.Dispatch<React.SetStateAction<number>>;
+}) => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
   const [data, setData] = React.useState<IAsset[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [totalValue, setTotalValue] = React.useState(0);
+  const [todayValue, setTodayValue] = React.useState(0);
   const [totalRent, setTotalRent] = React.useState("");
+  const [todayRent, setTodayRent] = React.useState("");
 
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
@@ -195,49 +216,57 @@ const Positions = () => {
     }));
   }
 
+  async function getData() {
+    await getAssets(user.uid!)
+      .then((data) => {
+        getUpdatedInfos(data)
+          .then((infos) => {
+            const finalData: IAsset[] = [];
+            let totalValue = 0;
+            let totalInitialPrice = 0;
+            let totalMediumPrice = 0;
+            let totalAtualPrice = 0;
+
+            infos.map((info) => {
+              const [item] = data.filter((e) => e.asset === info.asset);
+              const newData: IAsset = {
+                id: item.id,
+                amount: item.amount,
+                asset: item.asset,
+                price: item.price,
+                segment: item.segment,
+                total: info.totalPrecoAtual,
+                atualPrice: info.atualPrice,
+                rent: info.rent,
+                rentPercentual: info.rentPercentual,
+                pvp: info.pvp,
+                dy: info.dy,
+                pl: info.pl,
+              };
+
+              totalValue += info.rent;
+              totalAtualPrice += info.totalPrecoAtual;
+              totalMediumPrice += info.totalPrecoMedio;
+              totalInitialPrice += info.totalPrecoInicial;
+
+              return finalData.push(newData);
+            });
+            setTotalValue(totalValue);
+            setTotalRent(getRentPercentual(totalMediumPrice, totalAtualPrice));
+
+            setTodayValue(totalAtualPrice - totalInitialPrice);
+            setTodayRent(getRentPercentual(totalInitialPrice, totalAtualPrice));
+
+            setTotalEquity(totalAtualPrice);
+            setData(finalData);
+          })
+          .finally(() => setLoading(false));
+      })
+      .catch(() => setLoading(false));
+  }
+
   React.useEffect(() => {
-    async function getData() {
-      await getAssets(user.uid!)
-        .then((data) => {
-          getUpdatedInfos(data)
-            .then((infos) => {
-              const finalData: IAsset[] = [];
-              let totalValue = 0;
-              let totalAtualPrice = 0;
-              let totalMediumPrice = 0;
-              infos.map((info) => {
-                const [item] = data.filter((e) => e.asset === info.asset);
-                const newData: IAsset = {
-                  id: item.id,
-                  amount: item.amount,
-                  asset: item.asset,
-                  price: item.price,
-                  segment: item.segment,
-                  atualPrice: info.atualPrice,
-                  rent: info.rent,
-                  rentPercentual: info.rentPercentual,
-                  pvp: info.pvp,
-                  dy: info.dy,
-                  pl: info.pl,
-                };
-
-                totalValue += realToNumber(info.rent);
-                totalAtualPrice += info.totalPrecoAtual;
-                totalMediumPrice += info.totalPrecoMedio;
-
-                return finalData.push(newData);
-              });
-              setTotalValue(totalValue);
-              setTotalRent(
-                getRentPercentual(totalMediumPrice, totalAtualPrice)
-              );
-              setData(finalData);
-            })
-            .finally(() => setLoading(false));
-        })
-        .catch(() => setLoading(false));
-    }
-    getData();
+    isFocused && getData();
   }, [isFocused]);
 
   return (
@@ -257,12 +286,16 @@ const Positions = () => {
             <HStack justifyContent="space-between" alignItems="center">
               {!user.hideAssetPosition ? (
                 <HStack>
-                  <TotalClose label="HOJE" percentual="3,06%" />
+                  <TotalClose label="HOJE" percentual={todayRent} />
                   <TotalClose label="TOTAL" percentual={totalRent} />
                 </HStack>
               ) : (
                 <VStack>
-                  <TotalOpen label="HOJE" value="R$ 49,51" percentual="3,06%" />
+                  <TotalOpen
+                    label="HOJE"
+                    value={numberToReal(todayValue)}
+                    percentual={todayRent}
+                  />
                   <TotalOpen
                     label="TOTAL"
                     value={numberToReal(totalValue)}
@@ -307,6 +340,9 @@ const Positions = () => {
                         <ItemContainer minW={ITEMS_WIDTH.amount}>
                           <Label>COTAS</Label>
                         </ItemContainer>
+                        <ItemContainer minW={ITEMS_WIDTH.amount}>
+                          <Label>TOTAL</Label>
+                        </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.pvp}>
                           <Label>P/VP</Label>
                         </ItemContainer>
@@ -319,14 +355,18 @@ const Positions = () => {
                         <ItemContainer minW={ITEMS_WIDTH.segment}>
                           <Label>SEGMENTO</Label>
                         </ItemContainer>
-                        <ItemContainer minW={ITEMS_WIDTH.delete}>
-                          <Label>EXCLUIR</Label>
+                        <ItemContainer minW={ITEMS_WIDTH.info}>
+                          <Label>INFO</Label>
                         </ItemContainer>
                       </HStack>
                     </ScrollView>
                   </HStack>
                   <ScrollView showsVerticalScrollIndicator={false}>
-                    <ItemList data={data} scrollRef={headerScrollRef} />
+                    <ItemList
+                      data={data}
+                      scrollRef={headerScrollRef}
+                      navigation={navigate}
+                    />
                   </ScrollView>
                 </>
               ) : (
