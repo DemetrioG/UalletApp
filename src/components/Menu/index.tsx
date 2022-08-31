@@ -7,7 +7,10 @@ import Icon from "../Icon";
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
-import { LoaderContext } from "../../context/Loader/loaderContext";
+import {
+  initialLoaderState,
+  LoaderContext,
+} from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
 import {
   Avatar,
@@ -29,7 +32,7 @@ import { useNavigation } from "@react-navigation/native";
 const Menu = () => {
   const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
-  const { loader } = React.useContext(LoaderContext);
+  const { loader, setLoader } = React.useContext(LoaderContext);
   const { setConfirm } = React.useContext(ConfirmContext);
   const { user, setUser } = React.useContext(UserContext);
 
@@ -48,7 +51,10 @@ const Menu = () => {
     removeAllStorage()
       .then(() => {})
       .catch(() => {})
-      .finally(() => setUser(initialUserState));
+      .finally(() => {
+        setUser(initialUserState);
+        setLoader(initialLoaderState);
+      });
   }
 
   function handleLogout() {
