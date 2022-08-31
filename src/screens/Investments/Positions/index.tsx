@@ -301,11 +301,13 @@ const Positions = ({
     setTotalEquity(totalEquity);
     setData(data);
 
-    setLoader((state) => ({
-      ...state,
-      equity: true,
-      positions: true,
-    }));
+    if (investVisible) {
+      setLoader((state) => ({
+        ...state,
+        equity: true,
+        positions: true,
+      }));
+    }
   }
 
   React.useEffect(() => {
