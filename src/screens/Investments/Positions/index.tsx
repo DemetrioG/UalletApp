@@ -198,7 +198,10 @@ const Positions = ({
   setSpinner: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { user, setUser } = React.useContext(UserContext);
+  const {
+    user: { hideAssetPosition, uid },
+    setUser,
+  } = React.useContext(UserContext);
   const {
     loader: { investVisible },
     setLoader,
@@ -221,7 +224,7 @@ const Positions = ({
   }
 
   async function refreshData() {
-    await getAssets(user.uid!)
+    await getAssets(uid!)
       .then(async (data) => {
         await getUpdatedInfos(data).then(async (infos) => {
           const finalData: IAsset[] = [];
@@ -324,12 +327,16 @@ const Positions = ({
           style={{ marginLeft: metrics.baseMargin }}
         />
       </HStack>
-      <VStack mt={5} mb={user.hideAssetPosition ? 0 : 10}>
-        <Skeleton isLoaded={!investVisible} h={200}>
+      <Skeleton
+        isLoaded={!investVisible}
+        mt={4}
+        h={hideAssetPosition ? 52 : 200}
+      >
+        <VStack mt={5} mb={!hideAssetPosition ? 0 : 10}>
           <Header>
             <TouchableOpacity onPress={handlePositionVisible}>
               <HStack justifyContent="space-between" alignItems="center">
-                {!user.hideAssetPosition ? (
+                {hideAssetPosition ? (
                   <HStack>
                     <TotalClose label="HOJE" percentual={todayRent} />
                     <TotalClose label="TOTAL" percentual={totalRent} />
@@ -349,14 +356,12 @@ const Positions = ({
                   </VStack>
                 )}
                 <Icon
-                  name={
-                    user.hideAssetPosition ? "chevron-down" : "chevron-right"
-                  }
+                  name={!hideAssetPosition ? "chevron-down" : "chevron-right"}
                 />
               </HStack>
             </TouchableOpacity>
           </Header>
-          <Collapse isOpen={user.hideAssetPosition}>
+          <Collapse isOpen={!hideAssetPosition}>
             <Container>
               {data.length > 0 ? (
                 <>
@@ -420,8 +425,8 @@ const Positions = ({
               )}
             </Container>
           </Collapse>
-        </Skeleton>
-      </VStack>
+        </VStack>
+      </Skeleton>
     </VStack>
   );
 };
