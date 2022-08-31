@@ -2,6 +2,7 @@ import * as React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
+import Toast from "react-native-toast-message";
 
 import { getAssets, getUpdatedInfos, IAsset } from "./query";
 import Icon from "../../../components/Icon";
@@ -19,13 +20,11 @@ import {
   TotalValue,
 } from "./styles";
 import { colors, metrics } from "../../../styles";
-import { Skeleton } from "../../../styles/general";
-import {
-  getRentPercentual,
-  numberToReal,
-  realToNumber,
-} from "../../../utils/number.helper";
+import { getRentPercentual, numberToReal } from "../../../utils/number.helper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { getStorage, setStorage } from "../../../utils/storage.helper";
+import { LoaderContext } from "../../../context/Loader/loaderContext";
+import { Skeleton } from "../../../styles/general";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -193,17 +192,22 @@ const ItemList = ({
 
 const Positions = ({
   setTotalEquity,
+  setSpinner,
 }: {
   setTotalEquity: React.Dispatch<React.SetStateAction<number>>;
+  setSpinner: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
+  const {
+    loader: { investVisible },
+    setLoader,
+  } = React.useContext(LoaderContext);
   const [data, setData] = React.useState<IAsset[]>([]);
-  const [loading, setLoading] = React.useState(true);
   const [totalValue, setTotalValue] = React.useState(0);
   const [todayValue, setTodayValue] = React.useState(0);
-  const [totalRent, setTotalRent] = React.useState("");
-  const [todayRent, setTodayRent] = React.useState("");
+  const [totalRent, setTotalRent] = React.useState("0,00");
+  const [todayRent, setTodayRent] = React.useState("0,00");
 
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
@@ -216,58 +220,98 @@ const Positions = ({
     }));
   }
 
-  async function getData() {
+  async function refreshData() {
     await getAssets(user.uid!)
-      .then((data) => {
-        getUpdatedInfos(data)
-          .then((infos) => {
-            const finalData: IAsset[] = [];
-            let totalValue = 0;
-            let totalInitialPrice = 0;
-            let totalMediumPrice = 0;
-            let totalAtualPrice = 0;
+      .then(async (data) => {
+        await getUpdatedInfos(data).then(async (infos) => {
+          const finalData: IAsset[] = [];
+          let totalValue = 0;
+          let totalInitialPrice = 0;
+          let totalMediumPrice = 0;
+          let totalAtualPrice = 0;
 
-            infos.map((info) => {
-              const [item] = data.filter((e) => e.asset === info.asset);
-              const newData: IAsset = {
-                id: item.id,
-                amount: item.amount,
-                asset: item.asset,
-                price: item.price,
-                segment: item.segment,
-                total: info.totalPrecoAtual,
-                atualPrice: info.atualPrice,
-                rent: info.rent,
-                rentPercentual: info.rentPercentual,
-                pvp: info.pvp,
-                dy: info.dy,
-                pl: info.pl,
-              };
+          infos.map((info) => {
+            const [item] = data.filter((e) => e.asset === info.asset);
+            const newData: IAsset = {
+              id: item.id,
+              amount: item.amount,
+              asset: item.asset,
+              price: item.price,
+              segment: item.segment,
+              total: info.totalPrecoAtual,
+              atualPrice: info.atualPrice,
+              rent: info.rent,
+              rentPercentual: info.rentPercentual,
+              pvp: info.pvp,
+              dy: info.dy,
+              pl: info.pl,
+            };
 
-              totalValue += info.rent;
-              totalAtualPrice += info.totalPrecoAtual;
-              totalMediumPrice += info.totalPrecoMedio;
-              totalInitialPrice += info.totalPrecoInicial;
+            totalValue += info.rent;
+            totalAtualPrice += info.totalPrecoAtual;
+            totalMediumPrice += info.totalPrecoMedio;
+            totalInitialPrice += info.totalPrecoInicial;
 
-              return finalData.push(newData);
-            });
-            setTotalValue(totalValue);
-            setTotalRent(getRentPercentual(totalMediumPrice, totalAtualPrice));
+            return finalData.push(newData);
+          });
 
-            setTodayValue(totalAtualPrice - totalInitialPrice);
-            setTodayRent(getRentPercentual(totalInitialPrice, totalAtualPrice));
+          setStorage("investPositionsTotalValue", totalValue);
+          setStorage(
+            "investPositionsTotalRent",
+            getRentPercentual(totalMediumPrice, totalAtualPrice)
+          );
+          setStorage(
+            "investPositionsTodayValue",
+            totalAtualPrice - totalInitialPrice
+          );
+          setStorage(
+            "investPositionsTodayRent",
+            getRentPercentual(totalInitialPrice, totalAtualPrice)
+          );
+          setStorage("investTotalEquity", totalAtualPrice);
+          setStorage("investPositionsData", finalData);
 
-            setTotalEquity(totalAtualPrice);
-            setData(finalData);
-          })
-          .finally(() => setLoading(false));
+          await getData();
+        });
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro ao atualizar as posições",
+        });
+      })
+      .finally(() => setSpinner(false));
+  }
+
+  async function getData() {
+    const totalValue = await getStorage("investPositionsTotalValue");
+    const totalRent = await getStorage("investPositionsTotalRent");
+    const todayValue = await getStorage("investPositionsTodayValue");
+    const todayRent = await getStorage("investPositionsTodayRent");
+    const totalEquity = await getStorage("investTotalEquity");
+    const data = await getStorage("investPositionsData");
+
+    setTotalValue(totalValue);
+    setTotalRent(totalRent);
+    setTodayValue(todayValue);
+    setTodayRent(todayRent);
+    setTotalEquity(totalEquity);
+    setData(data);
+
+    setLoader((state) => ({
+      ...state,
+      equity: true,
+      positions: true,
+    }));
   }
 
   React.useEffect(() => {
-    isFocused && getData();
+    isFocused && refreshData();
   }, [isFocused]);
+
+  React.useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <VStack mt={5}>
@@ -281,37 +325,39 @@ const Positions = ({
         />
       </HStack>
       <VStack mt={5} mb={user.hideAssetPosition ? 0 : 10}>
-        <Header>
-          <TouchableOpacity onPress={handlePositionVisible}>
-            <HStack justifyContent="space-between" alignItems="center">
-              {!user.hideAssetPosition ? (
-                <HStack>
-                  <TotalClose label="HOJE" percentual={todayRent} />
-                  <TotalClose label="TOTAL" percentual={totalRent} />
-                </HStack>
-              ) : (
-                <VStack>
-                  <TotalOpen
-                    label="HOJE"
-                    value={numberToReal(todayValue)}
-                    percentual={todayRent}
-                  />
-                  <TotalOpen
-                    label="TOTAL"
-                    value={numberToReal(totalValue)}
-                    percentual={totalRent}
-                  />
-                </VStack>
-              )}
-              <Icon
-                name={user.hideAssetPosition ? "chevron-down" : "chevron-right"}
-              />
-            </HStack>
-          </TouchableOpacity>
-        </Header>
-        <Collapse isOpen={user.hideAssetPosition}>
-          <Container>
-            <Skeleton isLoaded={!loading} secondary>
+        <Skeleton isLoaded={!investVisible} h={200}>
+          <Header>
+            <TouchableOpacity onPress={handlePositionVisible}>
+              <HStack justifyContent="space-between" alignItems="center">
+                {!user.hideAssetPosition ? (
+                  <HStack>
+                    <TotalClose label="HOJE" percentual={todayRent} />
+                    <TotalClose label="TOTAL" percentual={totalRent} />
+                  </HStack>
+                ) : (
+                  <VStack>
+                    <TotalOpen
+                      label="HOJE"
+                      value={numberToReal(todayValue)}
+                      percentual={todayRent}
+                    />
+                    <TotalOpen
+                      label="TOTAL"
+                      value={numberToReal(totalValue)}
+                      percentual={totalRent}
+                    />
+                  </VStack>
+                )}
+                <Icon
+                  name={
+                    user.hideAssetPosition ? "chevron-down" : "chevron-right"
+                  }
+                />
+              </HStack>
+            </TouchableOpacity>
+          </Header>
+          <Collapse isOpen={user.hideAssetPosition}>
+            <Container>
               {data.length > 0 ? (
                 <>
                   <HStack>
@@ -372,9 +418,9 @@ const Positions = ({
               ) : (
                 <EmptyText>Não há dados para visualizar</EmptyText>
               )}
-            </Skeleton>
-          </Container>
-        </Collapse>
+            </Container>
+          </Collapse>
+        </Skeleton>
       </VStack>
     </VStack>
   );
