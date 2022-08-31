@@ -33,7 +33,10 @@ for (let index = 0; index < 5; index++) {
 const Header = () => {
   const { data } = React.useContext(DataContext);
   const { user, setUser } = React.useContext(UserContext);
-  const { loader, setLoader } = React.useContext(LoaderContext);
+  const {
+    loader: { homeVisible },
+    setLoader,
+  } = React.useContext(LoaderContext);
   const [pickerMonthVisible, setPickerMonthVisible] = React.useState(false);
   const [pickerYearVisible, setPickerYearVisible] = React.useState(false);
 
@@ -94,7 +97,7 @@ const Header = () => {
           visibility={pickerYearVisible}
           setVisibility={setPickerYearVisible}
         />
-        <Skeleton isLoaded={!loader.homeVisible} h={4} width={150} secondary>
+        <Skeleton isLoaded={!homeVisible} h={4} width={150} secondary>
           <HeaderText>Bem vindo (a), {user.name}!</HeaderText>
         </Skeleton>
         <HeaderIconView>

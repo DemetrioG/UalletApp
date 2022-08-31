@@ -32,7 +32,10 @@ import { useNavigation } from "@react-navigation/native";
 const Menu = () => {
   const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
-  const { loader, setLoader } = React.useContext(LoaderContext);
+  const {
+    loader: { homeVisible },
+    setLoader,
+  } = React.useContext(LoaderContext);
   const { setConfirm } = React.useContext(ConfirmContext);
   const { user, setUser } = React.useContext(UserContext);
 
@@ -79,7 +82,7 @@ const Menu = () => {
       <Pressable onPress={() => setVisible(!visible)}>
         <Avatar backgroundColor={theme?.secondary}>
           <AvatarText color={theme?.text}>
-            {loader.homeVisible ? "-" : user.name[0]}
+            {homeVisible ? "-" : user.name[0]}
           </AvatarText>
         </Avatar>
       </Pressable>
