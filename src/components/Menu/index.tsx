@@ -73,7 +73,7 @@ const Menu = () => {
       <Pressable onPress={() => setVisible(!visible)}>
         <Avatar backgroundColor={theme?.secondary}>
           <AvatarText color={theme?.text}>
-            {loader.visible ? "-" : user.name[0]}
+            {loader.homeVisible ? "-" : user.name[0]}
           </AvatarText>
         </Avatar>
       </Pressable>

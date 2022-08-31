@@ -94,7 +94,7 @@ const Header = () => {
           visibility={pickerYearVisible}
           setVisibility={setPickerYearVisible}
         />
-        <Skeleton isLoaded={!loader.visible} h={4} width={150} secondary>
+        <Skeleton isLoaded={!loader.homeVisible} h={4} width={150} secondary>
           <HeaderText>Bem vindo (a), {user.name}!</HeaderText>
         </Skeleton>
         <HeaderIconView>

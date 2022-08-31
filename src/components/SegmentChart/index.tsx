@@ -171,7 +171,7 @@ const SegmentChart = () => {
 
   return (
     <>
-      {!loader.visible && (
+      {!loader.homeVisible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart
