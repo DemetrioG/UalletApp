@@ -35,25 +35,35 @@ async function _deleteAsset(asset: string, uid: string, amount: number) {
       amountDeleteDate = data.amountDeleteDate || [];
     });
 
-    amountDeleteDate.push({
-      amount: amount,
-      date: date,
-    });
+    if (data.amount - amount > 0) {
+      amountDeleteDate.push({
+        amount: amount,
+        date: date,
+      });
 
-    return firebase
-      .firestore()
-      .collection("assets")
-      .doc(uid)
-      .collection("variable")
-      .doc(data.id.toString())
-      .set(
-        {
-          amountDeleteDate: amountDeleteDate,
-          total: data.total - data.price * amount,
-          amount: data.amount - amount,
-        },
-        { merge: true }
-      );
+      return firebase
+        .firestore()
+        .collection("assets")
+        .doc(uid)
+        .collection("variable")
+        .doc(data.id.toString())
+        .set(
+          {
+            amountDeleteDate: amountDeleteDate,
+            total: data.total - data.price * amount,
+            amount: data.amount - amount,
+          },
+          { merge: true }
+        );
+    } else {
+      return firebase
+        .firestore()
+        .collection("assets")
+        .doc(uid)
+        .collection("variable")
+        .doc(data.id.toString())
+        .delete();
+    }
   }
 }
 
