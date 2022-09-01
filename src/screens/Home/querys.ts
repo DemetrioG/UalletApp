@@ -3,8 +3,15 @@ import { sortObjectByKey } from "../../utils/array.helper";
 import { getAtualDate, getFinalDateMonth } from "../../utils/date.helper";
 import { currentUser } from "../../utils/query.helper";
 
-type GetLastEntryProps = { month: number, year: number, modality: string };
-export const getLastEntry = async ({ month, year, modality }: GetLastEntryProps) => {
+type GetLastEntryProps = { month: number; year: number; modality: string };
+/**
+ * Retorna os últimos lançamentos financeiros no app
+ */
+export const getLastEntry = async ({
+  month,
+  year,
+  modality,
+}: GetLastEntryProps) => {
   const user = await currentUser();
 
   if (!user) return Promise.reject(false);
@@ -12,8 +19,7 @@ export const getLastEntry = async ({ month, year, modality }: GetLastEntryProps)
   // Pega o mês de referência do App para realizar a busca dos registros
   const initialDate = new Date(`${month}/01/${year} 00:00:00`);
   const finalDate = new Date(
-    `${month}/${getFinalDateMonth(month, year)}/${year
-    } 23:59:59`
+    `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
   );
 
   // Busca os registros dentro do período de referência
@@ -54,16 +60,13 @@ export const checkFutureDebitsToConsolidate = async () => {
     .where("date", ">=", initialDate)
     .where("date", "<=", finalDate)
     .where("consolidated.wasActionShown", "==", false)
-    .get()
-}
+    .get();
+};
 
 export const completeUser = async () => {
   const user = await currentUser();
 
   if (!user) return Promise.reject(false);
 
-  return firebase.firestore()
-    .collection("users")
-    .doc(user.uid)
-    .get();
-}
+  return firebase.firestore().collection("users").doc(user.uid).get();
+};
