@@ -1,7 +1,7 @@
 import firebase from "../../services/firebase";
 import { currentUser } from "../../utils/query.helper";
 
-type LastIdFromEntryProps = { modality: string }
+type LastIdFromEntryProps = { modality: string };
 export const lastIdFromEntry = async ({ modality }: LastIdFromEntryProps) => {
   const user = await currentUser();
 
@@ -16,54 +16,61 @@ export const lastIdFromEntry = async ({ modality }: LastIdFromEntryProps) => {
     .collection(modality!)
     .orderBy("id", "desc")
     .limit(1)
-    .get()
+    .get();
 
   results.forEach((result) => {
     id += result.data().id;
   });
 
   return id;
-}
-
+};
 
 type InserNewEntryProps = {
-  modality: string,
-  id: number,
-  date: firebase.firestore.Timestamp,
-  type: string,
-  description: string,
-  segment: string,
-  value: number
-}
+  modality: string;
+  id: number;
+  date: firebase.firestore.Timestamp;
+  type: string;
+  description: string;
+  segment: string;
+  value: number;
+};
 
-export const insertNewEntry = async ({ modality, ...props }: InserNewEntryProps) => {
+export const insertNewEntry = async (props: InserNewEntryProps) => {
   const user = await currentUser();
 
   if (!user) return Promise.resolve(false);
 
   try {
-    await firebase.firestore()
+    await firebase
+      .firestore()
       .collection("entry")
       .doc(user.uid)
-      .collection(modality!)
+      .collection(props.modality!)
       .doc(props.id.toString())
       .set(props);
-    Promise.resolve(true);
-  }
-  catch (e) {
+    return Promise.resolve(true);
+  } catch (e) {
     console.error(e);
-    Promise.reject(false);
+    return Promise.reject(false);
   }
-}
+};
 
-type UpdateCurrentBalanceProps = { modality: string, docDate: string, value: number }
-export const updateCurrentBalance = async ({ modality, docDate, value }: UpdateCurrentBalanceProps) => {
+type UpdateCurrentBalanceProps = {
+  modality: string;
+  docDate: string;
+  value: number;
+};
+export const updateCurrentBalance = async ({
+  modality,
+  docDate,
+  value,
+}: UpdateCurrentBalanceProps) => {
   const user = await currentUser();
 
   if (!user) return Promise.resolve(false);
 
   let balance = 0;
-  firebase
+  await firebase
     .firestore()
     .collection("balance")
     .doc(user.uid)
@@ -72,11 +79,12 @@ export const updateCurrentBalance = async ({ modality, docDate, value }: UpdateC
     .get()
     .then((v) => {
       balance = v.data()?.balance || 0;
-    }).catch(() => Promise.reject(false));
+    })
+    .catch(() => Promise.reject(false));
 
   balance -= value;
 
-  firebase
+  return firebase
     .firestore()
     .collection("balance")
     .doc(user.uid)
@@ -84,6 +92,7 @@ export const updateCurrentBalance = async ({ modality, docDate, value }: UpdateC
     .doc(docDate)
     .set({
       balance: balance,
-    }).then(() => Promise.resolve(true))
+    })
+    .then(() => Promise.resolve(true))
     .catch(() => Promise.resolve(false));
-}
+};
