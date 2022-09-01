@@ -20,7 +20,10 @@ import { getData } from "./query";
 
 const LineChart = () => {
   const { data: dataContext } = React.useContext(DataContext);
-  const { loader, setLoader } = React.useContext(LoaderContext);
+  const {
+    loader: { homeVisible },
+    setLoader,
+  } = React.useContext(LoaderContext);
 
   const [data, setData] = React.useState([
     [0, 0, 0],
@@ -82,7 +85,7 @@ const LineChart = () => {
 
   return (
     <>
-      {!loader.visible && (
+      {!homeVisible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart

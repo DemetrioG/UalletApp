@@ -62,6 +62,7 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 
   if (withoutSign) {
     newValue = newValue.replace("R$", "");
+    newValue = newValue.replace(/\s/g, "");
   }
 
   return newValue;
@@ -75,6 +76,7 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 export function realToNumber(value: string) {
   let newValue = value.replace("R$", "");
   newValue = newValue.split(".").join("");
+  newValue = newValue.replace(/\s/g, "");
 
   return Number(newValue.replace(",", "."));
 }
@@ -89,4 +91,45 @@ export function percentualToNumber(value: string) {
   newValue = newValue.split(".").join("");
 
   return Number(newValue.replace(",", "."));
+}
+
+/**
+ * Converte padrão numérico para percentual
+ * @param value Valor no padrão Numérico
+ * @returns Valor no padrão % 120,00
+ */
+export function numberToPercentual(value: number) {
+  let newValue = value.toString().replace(".", ",");
+
+  return newValue + "%";
+}
+
+/**
+ * Retorna a média entre dois números
+ */
+export function averageBetweenNumbers(
+  firstNumber: number,
+  secondNumber: number
+) {
+  const value = Number(((firstNumber + secondNumber) / 2).toFixed(2));
+  return value;
+}
+
+/**
+ * @returns Retorna a o Lucro / Perda entre o primeiro e o segundo número
+ */
+export function getRent(firstNumber: number, secondNumber: number) {
+  const value = Number((secondNumber - firstNumber).toFixed(2));
+  return value;
+}
+
+/**
+ * Retorna o percentual de crescimento entre dois números
+ */
+export function getRentPercentual(firstNumber: number, secondNumber: number) {
+  const value = numberToReal(
+    Number((((secondNumber - firstNumber) / firstNumber) * 100).toFixed(2)),
+    true
+  );
+  return value;
 }

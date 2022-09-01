@@ -57,7 +57,10 @@ export const Label = ({ slices, data }: ISlices) => {
 
 const SegmentChart = () => {
   const { data: dataContext } = React.useContext(DataContext);
-  const { loader, setLoader } = React.useContext(LoaderContext);
+  const {
+    loader: { homeVisible },
+    setLoader,
+  } = React.useContext(LoaderContext);
   /**
    * INDEX
    * 0: Leisure
@@ -95,7 +98,7 @@ const SegmentChart = () => {
 
   return (
     <>
-      {!loader.visible && (
+      {!homeVisible && (
         <ChartContainer>
           {empty ? (
             <EmptyChart

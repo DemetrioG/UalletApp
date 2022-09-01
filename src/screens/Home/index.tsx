@@ -58,8 +58,8 @@ function ItemList({
     <ItemContainer>
       <DescriptionContainer>
         <DescriptionText>
-          {item.description.length > 22
-            ? `${item.description.slice(0, 22)}...`
+          {item.description.length > 18
+            ? `${item.description.slice(0, 18)}...`
             : item.description}
         </DescriptionText>
       </DescriptionContainer>
@@ -74,10 +74,12 @@ function ItemList({
 }
 
 const Home = () => {
-  const isFocused = useIsFocused();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
-  const { loader, setLoader } = React.useContext(LoaderContext);
+  const {
+    loader: { name, balance, segmentChart, lineChart, homeVisible },
+    setLoader,
+  } = React.useContext(LoaderContext);
   const { data, setData } = React.useContext(DataContext);
   const [consolidate, setConsolidate] = React.useState(false);
   const [financeShow, setFinanceShow] = React.useState(true);
@@ -101,7 +103,9 @@ const Home = () => {
         ...userState,
         complete: true,
       }));
-      // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
+      /**
+       * Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
+       */
       if (!v.data()?.birthDate) {
         navigate("Complete");
       }
@@ -122,7 +126,7 @@ const Home = () => {
         }));
       })
       .finally(() => {
-        !loader.balance &&
+        !balance &&
           setLoader((loaderState) => ({
             ...loaderState,
             balance: true,
@@ -133,7 +137,6 @@ const Home = () => {
   React.useEffect(() => {
     if (!data.year) return;
 
-    //Retorna os últimos lançamentos financeiros no app
     getLastEntry({
       modality: data.modality,
       month: data.month,
@@ -143,7 +146,7 @@ const Home = () => {
         setLastEntry(_lastEntry);
       })
       .finally(() => {
-        !loader.lastEntry &&
+        !lastEntry &&
           setLoader((loaderState) => ({
             ...loaderState,
             lastEntry: true,
@@ -152,20 +155,13 @@ const Home = () => {
   }, [data.modality, data.month, data.year, consolidate, data.balance]);
 
   React.useEffect(() => {
-    if (
-      loader.name &&
-      loader.balance &&
-      loader.lineChart &&
-      loader.segmentChart &&
-      loader.visible &&
-      loader.lastEntry
-    ) {
+    if (name && balance && lineChart && segmentChart && homeVisible) {
       setLoader((loaderState) => ({
         ...loaderState,
-        visible: false,
+        homeVisible: false,
       }));
     }
-  }, [loader]);
+  }, [balance, lineChart, segmentChart, name]);
 
   return (
     <BackgroundContainer>
@@ -182,7 +178,7 @@ const Home = () => {
         </TouchableOpacity>
         <Collapse isOpen={financeShow}>
           <Card>
-            <Skeleton isLoaded={!loader.visible} width={"full"} h={69}>
+            <Skeleton isLoaded={!homeVisible} width={"full"} h={69}>
               <CardHeaderView balance>
                 <CardTextView>
                   <CardHeaderText>Saldo atual</CardHeaderText>
@@ -197,7 +193,7 @@ const Home = () => {
             </Skeleton>
           </Card>
           <Card>
-            <Skeleton isLoaded={!loader.visible} h={156} width={"full"}>
+            <Skeleton isLoaded={!homeVisible} h={156} width={"full"}>
               {lastEntry.length > 0 ? (
                 <>
                   <CardHeaderView>
@@ -237,7 +233,7 @@ const Home = () => {
           </View>
         </Card> */}
           <Card>
-            <Skeleton isLoaded={!loader.visible} h={152} width={"full"}>
+            <Skeleton isLoaded={!homeVisible} h={152} width={"full"}>
               <CardHeaderView>
                 <CardTextView>
                   <CardHeaderText>Receitas x Despesas</CardHeaderText>
@@ -247,7 +243,7 @@ const Home = () => {
             <LineChart />
           </Card>
           <Card>
-            <Skeleton isLoaded={!loader.visible} h={168} width={"full"}>
+            <Skeleton isLoaded={!homeVisible} h={168} width={"full"}>
               <CardHeaderView>
                 <CardTextView>
                   <CardHeaderText>Despesas por segmento</CardHeaderText>

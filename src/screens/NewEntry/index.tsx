@@ -14,7 +14,6 @@ import Calendar from "../../components/Calendar";
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
-import { DataContext } from "../../context/Data/dataContext";
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import {
   dateValidation,
@@ -50,9 +49,6 @@ interface IForm {
 const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
-  const {
-    data: { isNetworkConnected },
-  } = React.useContext(DataContext);
   const { setConfirm } = React.useContext(ConfirmContext);
 
   const [isLoading, setIsLoading] = React.useState(false);

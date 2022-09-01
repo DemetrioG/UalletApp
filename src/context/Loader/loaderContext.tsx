@@ -1,12 +1,14 @@
 import * as React from "react";
 
 interface ILoader {
-  balance: boolean;
-  lineChart: boolean;
-  segmentChart: boolean;
-  name: boolean;
-  visible: boolean;
-  lastEntry: boolean;
+  balance?: boolean;
+  lineChart?: boolean;
+  segmentChart?: boolean;
+  name?: boolean;
+  homeVisible?: boolean;
+  equity?: boolean;
+  positions?: boolean;
+  investVisible?: boolean;
 }
 
 export const initialLoaderState: ILoader = {
@@ -14,8 +16,10 @@ export const initialLoaderState: ILoader = {
   lineChart: false,
   segmentChart: false,
   name: false,
-  lastEntry: false,
-  visible: true,
+  homeVisible: true,
+  equity: false,
+  positions: false,
+  investVisible: true,
 };
 
 export const LoaderContext = React.createContext<{

@@ -94,8 +94,8 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
       <ItemContainer>
         <DescriptionContainer>
           <DescriptionText>
-            {item.description.length > 18
-              ? `${item.description.slice(0, 18)}...`
+            {item.description.length > 17
+              ? `${item.description.slice(0, 17)}...`
               : item.description}
           </DescriptionText>
         </DescriptionContainer>
