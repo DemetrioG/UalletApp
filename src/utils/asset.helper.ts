@@ -6,6 +6,7 @@ import axios, {
 } from "./api.helper";
 
 /**
+ * Checa se o ativo informado é válido
  * @param value Ticker do ativo
  */
 export async function checkAssetValid(

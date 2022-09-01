@@ -1,15 +1,17 @@
 import { Platform } from "react-native";
 
-// No Android, o toLocaleString não funciona, então é passado esse require para funcionar corretamente
+/**
+ * No Android, o toLocaleString não funciona, então é passado esse require para funcionar corretamente
+ */
 if (Platform.OS === "android") {
   require("intl");
   require("intl/locale-data/jsonp/en-IN");
 }
 
 /**
- * @returns      Valor no padrão R$ 0,00
+ * Converte número para padrão Real
+ * @returns Valor no padrão R$ 0,00
  */
-
 export function numberToReal(number: number, withoutSign?: boolean) {
   let newValue = number.toLocaleString("pt-br", {
     style: "currency",
@@ -67,10 +69,10 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 }
 
 /**
+ * Converte padrão Real para número
  * @param value Valor no padrão R$0,00
- * @returns     Valor no padrão Numérico
+ * @returns Valor no padrão Numérico
  */
-
 export function realToNumber(value: string) {
   let newValue = value.replace("R$", "");
   newValue = newValue.split(".").join("");
@@ -80,6 +82,7 @@ export function realToNumber(value: string) {
 }
 
 /**
+ * Converte percentual para número
  * @param value Valor no padrão % 120,00
  * @returns Valor no padrão Numérico
  */
@@ -91,6 +94,7 @@ export function percentualToNumber(value: string) {
 }
 
 /**
+ * Converte padrão numérico para percentual
  * @param value Valor no padrão Numérico
  * @returns Valor no padrão % 120,00
  */
@@ -100,6 +104,9 @@ export function numberToPercentual(value: number) {
   return newValue + "%";
 }
 
+/**
+ * Retorna a média entre dois números
+ */
 export function averageBetweenNumbers(
   firstNumber: number,
   secondNumber: number
@@ -116,6 +123,9 @@ export function getRent(firstNumber: number, secondNumber: number) {
   return value;
 }
 
+/**
+ * Retorna o percentual de crescimento entre dois números
+ */
 export function getRentPercentual(firstNumber: number, secondNumber: number) {
   const value = numberToReal(
     Number((((secondNumber - firstNumber) / firstNumber) * 100).toFixed(2)),

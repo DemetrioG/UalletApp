@@ -12,10 +12,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
-import { UserContext } from "../../context/User/userContext";
 import {
   dateValidation,
   convertDate,
@@ -36,6 +34,11 @@ import {
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
 import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
+import {
+  insertNewEntry,
+  lastIdFromEntry,
+  updateCurrentBalance,
+} from "./querys";
 
 interface IForm {
   entrydate: string;
@@ -46,15 +49,10 @@ interface IForm {
   value: string;
 }
 
-const optionsExpenseAmount: string[] = [];
-
-for (let index = 1; index < 13; index++) {
-  optionsExpenseAmount.push(index.toString());
-}
+const optionsExpenseAmount = Array.from({ length: 12 }, (_, i) => ++i);
 
 const FixedEntry = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { user } = React.useContext(UserContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [modality, setModality] = React.useState<"Projetado" | "Real" | null>(
@@ -106,22 +104,10 @@ const FixedEntry = () => {
   async function registerEntry({ description, entrydate, value }: IForm) {
     Keyboard.dismiss();
     setIsLoading(true);
-    let id = 0;
 
     // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(modality!)
-      .orderBy("id", "desc")
-      .limit(1)
-      .get()
-      .then((v) => {
-        v.forEach((result) => {
-          id += result.data().id;
-        });
-      });
+    let id = await lastIdFromEntry({ modality: modality! });
+    if (id === -1) return;
 
     // Registra o novo lançamento no banco
     for (let index = 0; index < Number(expenseAmount); index++) {
@@ -134,62 +120,37 @@ const FixedEntry = () => {
         finalDate = futureDate(entrydate, index);
       }
 
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection(modality!)
-        .doc(id.toString())
-        .set({
-          id: id,
-          date: convertDateToDatabase(finalDate),
-          type: "Despesa",
-          description: description,
-          modality: modality,
-          segment: segment,
-          value: realToNumber(value),
-        })
-        .catch(() => {
-          Toast.show({
-            type: "error",
-            text1: "Erro ao cadastrar as informações",
-          });
-          return setIsLoading(false);
-        });
+      const didInsertSucceed = await insertNewEntry({
+        id: id,
+        date: convertDateToDatabase(finalDate),
+        type: "Despesa",
+        description: description,
+        modality: modality!,
+        segment: segment!,
+        value: realToNumber(value),
+      });
 
       // Atualiza o saldo atual no banco
-      let balance = 0;
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection(modality!)
-        .doc(Number(finalDate.slice(3, 5)).toString())
-        .get()
-        .then((v) => {
-          balance = v.data()?.balance || 0;
-        });
+      const didUpdateBalanceSucceed = await updateCurrentBalance({
+        modality: modality!,
+        value: realToNumber(value),
+        docDate: Number(finalDate.slice(3, 5)).toString(),
+      });
 
-      balance -= realToNumber(value);
-
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection(modality!)
-        .doc(Number(finalDate.slice(3, 5)).toString())
-        .set({
-          balance: balance,
-        })
-        .then(() => {
-          Toast.show({
-            type: "success",
-            text1: "Dados cadastrados com sucesso",
-          });
-          return navigate("Lançamentos");
+      if (!didInsertSucceed || !didUpdateBalanceSucceed) {
+        Toast.show({
+          type: "error",
+          text1: "Erro ao cadastrar as informações",
         });
+        return setIsLoading(false);
+      }
     }
 
+    Toast.show({
+      type: "success",
+      text1: "Dados cadastrados com sucesso",
+    });
+    navigate("Lançamentos");
     return setIsLoading(false);
   }
 
@@ -248,7 +209,7 @@ const FixedEntry = () => {
                   errors={errors.segment}
                 />
                 <Picker
-                  options={optionsExpenseAmount}
+                  options={optionsExpenseAmount as unknown as string[]}
                   selectedValue={setExpenseAmount}
                   value={!expenseAmount ? "Quantidade de meses" : expenseAmount}
                   type="Quantidade de meses"

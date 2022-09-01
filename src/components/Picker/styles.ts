@@ -11,12 +11,15 @@ export const SpaceItems = styled(TouchableOpacity)`
   align-items: center;
 `;
 
-export const StyledInput: React.FC<IViewProps & { isInvalid: boolean }> = styled(View)`
+export const StyledInput: React.FC<
+  IViewProps & { isInvalid: boolean }
+> = styled(View)`
   height: 40px;
   padding: 5px 14px;
   justify-content: center;
   border-radius: 6.5px;
-  border: 1px solid ${({ isInvalid }) => isInvalid ? colors.invalidInputColor : colors.gray};
+  border: 1px solid
+    ${({ isInvalid }) => (isInvalid ? colors.invalidInputColor : colors.gray)};
   font-family: ${fonts.ralewayBold};
   font-size: ${fonts.regular}px;
   color: ${({ theme: { theme } }) => theme.text};
@@ -29,7 +32,7 @@ export const PickerText: React.FC<
   fontSize: fonts.regular,
 }))`
   color: ${({ theme, value, type }) =>
-    value.replace(" *", "") === type ? colors.gray : theme.theme.text};
+    value === type ? colors.gray : theme.theme.text};
 `;
 
 export const Title = styled(Text).attrs(() => ({

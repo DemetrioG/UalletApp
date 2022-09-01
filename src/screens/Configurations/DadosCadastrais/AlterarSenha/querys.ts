@@ -1,4 +1,5 @@
-import firebase from "firebase";
+import firebase from "../../../../services/firebase";
+import { currentUser } from "../../../../utils/query.helper";
 
 const reautenticate = async (password: string, user: firebase.User) => {
   try {
@@ -20,7 +21,7 @@ type changePasswordParams = {
 
 export const changePassword = async ({ oldPassword, newPassword }: changePasswordParams) => {
   try {
-    const user = firebase.auth().currentUser;
+    const user = await currentUser();
 
     if (!user) return false;
     

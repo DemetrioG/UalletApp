@@ -133,14 +133,14 @@ const Register = () => {
         <ContainerCenter>
           <FormContainer>
             <TextInput
-              placeholder="Nome completo *"
+              placeholder="Nome completo"
               maxLength={40}
               name="name"
               control={control}
               errors={errors.name}
             />
             <TextInput
-              placeholder="E-mail *"
+              placeholder="E-mail"
               keyboardType="email-address"
               autoCorrect={false}
               autoCapitalize="none"
@@ -149,13 +149,13 @@ const Register = () => {
               errors={errors.email}
             />
             <TextInputPassword
-              placeholder="Senha *"
+              placeholder="Senha"
               name="password"
               control={control}
               errors={errors.password}
             />
             <TextInputPassword
-              placeholder="Confirme sua senha *"
+              placeholder="Confirme sua senha"
               onSubmitEditing={handleSubmit(registerUser)}
               returnKeyType="done"
               name="confirm"

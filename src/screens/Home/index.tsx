@@ -40,6 +40,12 @@ import {
   ValueText,
 } from "../../styles/general";
 import { Collapse } from "native-base";
+import {
+  checkFutureDebitsToConsolidate,
+  completeUser,
+  getLastEntry,
+} from "./querys";
+import { getBalance } from "../../utils/query.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -68,7 +74,6 @@ function ItemList({
 }
 
 const Home = () => {
-  const isFocused = useIsFocused();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
   const {
@@ -85,116 +90,69 @@ const Home = () => {
 
   React.useEffect(() => {
     // Verifica se há despesas projetadas para consolidar na data atual
-    (async () => {
-      const date = getAtualDate();
-      const initialDate = date[1];
-      const finalDate = date[2];
+    checkFutureDebitsToConsolidate().then((v) => {
+      v.forEach((result) => {
+        result.data() && setConsolidate(true);
+      });
+    });
 
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection("Projetado")
-        .where("date", ">=", initialDate)
-        .where("date", "<=", finalDate)
-        .where("consolidated.wasActionShown", "==", false)
-        .get()
-        .then((v) => {
-          v.forEach((result) => {
-            result.data() && setConsolidate(true);
-          });
-        });
-    })();
+    if (user.complete) return;
 
-    if (!user.complete) {
-      // Verifica se o usuário está com todos os dados completos. Se não, envia para tela de cadastro
-      (async function completeData() {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then((v) => {
-            setUser((userState) => ({
-              ...userState,
-              complete: true,
-            }));
-            // Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
-            if (!v.data()?.birthDate) {
-              navigate("Complete");
-            }
-          });
-      })();
-    }
+    completeUser().then((v) => {
+      setUser((userState) => ({
+        ...userState,
+        complete: true,
+      }));
+      /**
+       * Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
+       */
+      if (!v.data()?.birthDate) {
+        navigate("Complete");
+      }
+    });
   }, []);
 
   React.useEffect(() => {
-    // Retorna o Saldo atual
-    (function getBalance() {
-      if (data.year !== 0) {
-        firebase
-          .firestore()
-          .collection("balance")
-          .doc(user.uid)
-          .collection(data.modality)
-          .doc(data.month.toString())
-          .onSnapshot((snapshot) => {
-            setData((dataState) => ({
-              ...dataState,
-              balance: snapshot.data()
-                ? numberToReal(snapshot.data()?.balance)
-                : "R$ 0,00",
-            }));
-          });
+    if (!data.year) return;
 
+    getBalance({
+      month: data.month.toString(),
+      modality: data.modality,
+    })
+      .then((balance) => {
+        setData((dataState) => ({
+          ...dataState,
+          balance,
+        }));
+      })
+      .finally(() => {
         !balance &&
           setLoader((loaderState) => ({
             ...loaderState,
             balance: true,
           }));
-      }
-    })();
-  }, [data.modality, data.month, data.year]);
+      });
+  }, [data.modality, data.month, data.year, consolidate]);
 
   React.useEffect(() => {
-    //Retorna os últimos lançamentos financeiros no app
-    async function getLastEntry() {
-      if (data.year !== 0) {
-        // Pega o mês de referência do App para realizar a busca dos registros
-        const initialDate = new Date(`${data.month}/01/${data.year} 00:00:00`);
-        const finalDate = new Date(
-          `${data.month}/${getFinalDateMonth(data.month, data.year)}/${
-            data.year
-          } 23:59:59`
-        );
+    if (!data.year) return;
 
-        // Busca os registros dentro do período de referência
-        await new Promise((resolve) => setInterval(resolve, 100));
-        firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(data.modality)
-          .where("date", ">=", initialDate)
-          .where("date", "<=", finalDate)
-          .orderBy("date", "desc")
-          .limit(4)
-          .get()
-          .then((snapshot) => {
-            if (snapshot.docs.length > 0) {
-              const list: typeof lastEntry = [];
-              snapshot.forEach((result) => {
-                list.push(result.data());
-              });
-              return setLastEntry(() => sortObjectByKey(list, "id", "desc"));
-            } else {
-              return setLastEntry([]);
-            }
-          });
-      }
-    }
-    getLastEntry();
-  }, [isFocused, data.modality, data.month, data.year, consolidate]);
+    getLastEntry({
+      modality: data.modality,
+      month: data.month,
+      year: data.year,
+    })
+      .then((_lastEntry) => {
+        setLastEntry(_lastEntry);
+      })
+      .finally(() => {
+        !lastEntry &&
+          setLoader((loaderState) => ({
+            ...loaderState,
+            lastEntry: true,
+          }));
+      });
+  }, [data.modality, data.month, data.year, consolidate, data.balance]);
 
   React.useEffect(() => {
     if (name && balance && lineChart && segmentChart && homeVisible) {
@@ -244,7 +202,7 @@ const Home = () => {
                     </CardTextView>
                     <Icon
                       name="edit-3"
-                      onPress={() => navigate("LançamentosTab")}
+                      onPress={() => navigate("Lançamentos")}
                     />
                   </CardHeaderView>
                   <>

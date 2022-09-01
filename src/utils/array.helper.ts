@@ -1,3 +1,6 @@
+/**
+ * Ordena um array de objeto pela chave informada
+ */
 export function sortObjectByKey(
   array: Array<any>,
   key: string,

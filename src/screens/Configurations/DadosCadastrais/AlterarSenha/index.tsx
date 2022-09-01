@@ -88,14 +88,14 @@ export const AlterarSenhaScreen = () => {
             <ContainerCenter>
               <FormContainer insideApp>
                 <TextInputPassword
-                  placeholder="Senha atual *"
+                  placeholder="Senha atual"
                   name="oldPassword"
                   returnKeyType="done"
                   control={control}
                   errors={errors.oldPassword}
                 />
                 <TextInputPassword
-                  placeholder="Nova senha *"
+                  placeholder="Nova senha"
                   returnKeyType="done"
                   name="newPassword"
                   control={control}

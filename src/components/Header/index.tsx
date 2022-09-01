@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import firebase from "../../services/firebase";
 import Menu from "../Menu";
 import DatePicker from "../DatePicker";
 import { UserContext } from "../../context/User/userContext";
@@ -9,6 +8,7 @@ import { DataContext } from "../../context/Data/dataContext";
 import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
 import { Skeleton } from "../../styles/general";
 import Icon from "../Icon";
+import { getData } from "./query";
 
 const optionsMonth = [
   "Janeiro",
@@ -49,28 +49,21 @@ const Header = () => {
 
   React.useEffect(() => {
     if (!user.name) {
-      (async function getData() {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then((v) => {
-            // Retorna o nome do usuário
-            setUser((userState) => ({
-              ...userState,
-              name: v.data()?.name.split(" ", 1).toString(),
-              completeName: v.data()?.name,
-              email: v.data()?.email,
-            }));
-          })
-          .catch(() => {
-            setUser((userState) => ({
-              ...userState,
-              name: "",
-            }));
-          });
-      })();
+      getData()
+        .then((data) => {
+          setUser((state) => ({
+            ...state,
+            name: data.name,
+            completeName: data.completeName,
+            email: data.email,
+          }));
+        })
+        .catch(() => {
+          setUser((state) => ({
+            ...state,
+            name: "",
+          }));
+        });
     }
 
     if (user.name.length) {

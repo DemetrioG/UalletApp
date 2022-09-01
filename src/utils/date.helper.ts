@@ -6,9 +6,9 @@ export interface ITimestamp {
 }
 
 /**
+ * Converte data no padrão JS para DD/MM/YYYY
  * @returns Data no padrão DD/MM/YYYY
  */
-
 export function convertDate(date: Date) {
   const newDate = date.toString();
   let month = newDate.slice(4, 7);
@@ -48,10 +48,10 @@ export function convertDate(date: Date) {
 }
 
 /**
+ * Converte da Timestamp para DD/MM/YYYY
  * @param date Data no padrão Numérico
  * @returns    Data no padrão DD/MM/YYY
  */
-
 export function convertDateFromDatabase({ seconds }: ITimestamp) {
   const newDate = new Date(seconds * 1000).toString();
 
@@ -93,10 +93,10 @@ export function convertDateFromDatabase({ seconds }: ITimestamp) {
 }
 
 /**
+ * Converte data DD/MM/YYYY para Timestamp
  * @param date Data no padrão DD/MM/YYY
  * @returns    Data no padrão Firebase
  */
-
 export function convertDateToDatabase(date: string) {
   const day = date.slice(0, 2);
   const month = date.slice(3, 5);
@@ -107,10 +107,9 @@ export function convertDateToDatabase(date: string) {
 }
 
 /**
+ * Conversão de mês entre número e string
  * @param value Mês de referência
  */
-
-// Conversão de mês entre número e string
 export function dateMonthNumber(
   type: "toNumber" | "toMonth",
   value: number,
@@ -177,14 +176,14 @@ export function dateMonthNumber(
           });
       data = month[refMonth.toString()]!;
       return data;
-  } 
+  }
 }
 
 /**
+ * Retorna o último dia do mês informado
  * @param month 1 à 12
  * @returns     Último dia do mês referente
  */
-
 export function getFinalDateMonth(month: number | null, year: number | null) {
   let finalDate = new Date(Number(year), Number(month! - 1) + 1, 0);
 
@@ -192,19 +191,21 @@ export function getFinalDateMonth(month: number | null, year: number | null) {
 }
 
 /**
+ * Valida a data informada
  * @param date Data no padrão DD/MM/YYY
  */
-
 export function dateValidation(date: string) {
-  const dateValidation = /^(0[1-9]|[12][0-9]|3[01])[\/ \/.](0[1-9]|1[012])[\/ \/.](19|20)\d\d$/;
+  const dateValidation =
+    /^(0[1-9]|[12][0-9]|3[01])[\/ \/.](0[1-9]|1[012])[\/ \/.](19|20)\d\d$/;
 
   return dateValidation.test(date);
 }
 
 /**
+ * Retorna a data futura da atual conforme o índice informado.
+ * Ex: date = 01/01/2022 e index = 2. Irá retornar 01/03/2022
  * @param date Data no padrão DD/MM/YYYY
  */
-
 export function futureDate(date: string, index: number) {
   let day: number | string = Number(date.slice(0, 2));
   let month: number | string = Number(date.slice(3, 5));
@@ -229,6 +230,9 @@ export function futureDate(date: string, index: number) {
   return `${day}/${month}/${year}`;
 }
 
+/**
+ * Retorna a data atual
+ */
 export function getAtualDate() {
   const date = new Date();
   const dateInfo = [];
@@ -247,7 +251,9 @@ export function getAtualDate() {
   return dateInfo;
 }
 
-
+/**
+ * Converte segundos para JS Date
+ */
 export function secondsToDate(seconds: number) {
   const date = new Date();
   date.setSeconds(seconds);

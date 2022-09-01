@@ -1,11 +1,9 @@
 import * as React from "react";
 
-import firebase from "../../services/firebase";
 import EmptyChart from "../EmptyChart";
 import { DataContext } from "../../context/Data/dataContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
-import { UserContext } from "../../context/User/userContext";
-import { dateMonthNumber, getFinalDateMonth } from "../../utils/date.helper";
+import { dateMonthNumber } from "../../utils/date.helper";
 import {
   ChartContainer,
   ChartView,
@@ -18,10 +16,10 @@ import {
   PercentualView,
   StyledLineChart,
 } from "./styles";
+import { getData } from "./query";
 
 const LineChart = () => {
   const { data: dataContext } = React.useContext(DataContext);
-  const { user } = React.useContext(UserContext);
   const {
     loader: { homeVisible },
     setLoader,
@@ -38,125 +36,51 @@ const LineChart = () => {
   const [expense, setExpense] = React.useState(0);
 
   React.useEffect(() => {
-    (async function getData() {
-      if (dataContext.year !== 0) {
-        let initialMonth = dataContext.month - 2;
-        let initialYear = dataContext.year;
+    getData(dataContext)
+      .then((data) => {
+        setEmpty(false);
+        if (data) {
+          const [income] = data!;
+          const [, expense] = data!;
 
-        if (initialMonth == -1) {
-          initialMonth = 11;
-          initialYear -= 1;
-        } else if (initialMonth == 0) {
-          initialMonth = 12;
-          initialYear -= 1;
+          /**
+           * Seta os dados finais para renderização do gráfico
+           */
+          income && expense && setData([income, expense]);
+
+          /**
+           * Seta os labels do gráfico
+           */
+          setInitLabel(dateMonthNumber("toMonth", dataContext.month - 2));
+          setFinalLabel(dateMonthNumber("toMonth", dataContext.month));
+
+          /**
+           * Seta os percentuais de Crescimento/Queda
+           */
+
+          setIncome(
+            income[0] == 0
+              ? income[2]
+              : ((income[2] - income[0]) / income[0]) * 100
+          );
+          setExpense(
+            expense[0] == 0
+              ? expense[2]
+              : ((expense[2] - expense[0]) / expense[0]) * 100
+          );
         }
-        const initialDate = new Date(
-          `${initialMonth}/01/${initialYear} 00:00:00`
-        );
-        const finalDate = new Date(
-          `${dataContext.month}/${getFinalDateMonth(
-            dataContext.month,
-            dataContext.year
-          )}/${dataContext.year} 23:59:59`
-        );
-
-        // Busca no banco os dados referente ao Mês - 2 até Mês atual
-        await firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(dataContext.modality)
-          .get()
-          .then((result) => {
-            if (!result.empty) {
-              setEmpty(false);
-              firebase
-                .firestore()
-                .collection("entry")
-                .doc(user.uid)
-                .collection(dataContext.modality)
-                .where("date", ">=", initialDate)
-                .where("date", "<=", finalDate)
-                .onSnapshot((snapshot) => {
-                  let incomeData = [0, 0, 0];
-                  let expenseData = [0, 0, 0];
-
-                  snapshot.forEach((result) => {
-                    const storedDate =
-                      new Date(result.data().date * 1000).getMonth() + 1;
-
-                    let index = 0;
-
-                    let firstMonth = dataContext.month - 2;
-                    let secondMonth = dataContext.month - 1;
-                    const thrirdMonth = dataContext.month;
-
-                    if (firstMonth == -1) {
-                      firstMonth = 11;
-                    } else if (firstMonth == 0) {
-                      firstMonth = 12;
-                    }
-
-                    if (secondMonth == -1) {
-                      secondMonth = 11;
-                    } else if (secondMonth == 0) {
-                      secondMonth = 12;
-                    }
-
-                    // Faz a separação de cada resultado pelo mês de referência
-                    switch (storedDate) {
-                      case firstMonth:
-                        index = 0;
-                        break;
-
-                      case secondMonth:
-                        index = 1;
-                        break;
-
-                      case thrirdMonth:
-                        index = 2;
-                        break;
-                    }
-
-                    if (result.data().type === "Receita") {
-                      incomeData[index] += Math.round(result.data().value);
-                    } else {
-                      expenseData[index] += Math.round(result.data().value);
-                    }
-                  });
-
-                  // Seta os dados finais para renderização do gráfico
-                  setData([incomeData, expenseData]);
-
-                  // Seta os labels do gráfico
-                  setInitLabel(
-                    dateMonthNumber("toMonth", dataContext.month - 2)
-                  );
-                  setFinalLabel(dateMonthNumber("toMonth", dataContext.month));
-
-                  // Seta os percentuais de Crescimento/Queda
-                  setIncome(
-                    incomeData[0] == 0
-                      ? incomeData[2]
-                      : ((incomeData[2] - incomeData[0]) / incomeData[0]) * 100
-                  );
-                  setExpense(
-                    expenseData[0] == 0
-                      ? expenseData[2]
-                      : ((expenseData[2] - expenseData[0]) / expenseData[0]) *
-                          100
-                  );
-                });
-            } else {
-              setEmpty(true);
-            }
-          });
+      })
+      .catch((e) => {
+        if (e === "empty") {
+          setEmpty(true);
+        }
+      })
+      .finally(() => {
         setLoader((loaderState) => ({
           ...loaderState,
           lineChart: true,
         }));
-      }
-    })();
+      });
   }, [dataContext]);
 
   return (

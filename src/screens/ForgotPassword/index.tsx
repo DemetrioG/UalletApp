@@ -1,14 +1,11 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button } from "native-base";
-import Toast from "react-native-toast-message";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../services/firebase";
+import Toast from "react-native-toast-message";
 import TextInput from "../../components/TextInput";
 import {
   BackgroundContainer,
@@ -21,6 +18,9 @@ import {
   StyledKeyboardAvoidingView,
   TextHeader,
 } from "../../styles/general";
+import { resetPassword } from "./querys";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 interface IForm {
   email: string;
 }
@@ -32,8 +32,8 @@ const schema = yup
   .required();
 
 const ForgotPassword = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const [loading, setLoading] = React.useState(false);
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   const {
     control,
@@ -43,22 +43,20 @@ const ForgotPassword = () => {
     resolver: yupResolver(schema),
   });
 
-  async function sendPassword({ email }: IForm) {
+  function sendPassword({ email }: IForm) {
     setLoading(true);
-    await firebase
-      .auth()
-      .sendPasswordResetEmail(email)
-      .then((v) => {
+    resetPassword(email)
+      .then((successMessage) => {
         navigate("Login");
         Toast.show({
           type: "success",
-          text1: "E-mail de redefinição enviado!\nVerifique sua caixa de SPAM",
+          text1: successMessage,
         });
       })
-      .catch(() => {
+      .catch((errorMessage: string) => {
         Toast.show({
           type: "error",
-          text1: "E-mail não encontrado",
+          text1: errorMessage,
         });
       })
       .finally(() => setLoading(false));
@@ -75,14 +73,14 @@ const ForgotPassword = () => {
           </LogoHeader>
           <HeaderTitleContainer>
             <HeaderTitle>
-              Digite o e-mail cadastrado na sua conta.{"\n"}Enviaremos um e-mail
-              para recuperação da senha.
+              Digite o e-mail cadastrado na sua conta.{"\n"}
+              Enviaremos um e-mail para recuperação da senha.
             </HeaderTitle>
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>
               <TextInput
-                placeholder="E-mail *"
+                placeholder="E-mail"
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"

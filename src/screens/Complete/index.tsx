@@ -14,21 +14,22 @@ import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { dateValidation } from "../../utils/date.helper";
 import {
-  BackgroundContainer,
-  ButtonText,
-  ContainerCenter,
-  FormContainer,
-  HeaderTitle,
-  HeaderTitleContainer,
-  LogoHeader,
-  StyledKeyboardAvoidingView,
-  TextHeader,
+    BackgroundContainer,
+    ButtonText,
+    ContainerCenter,
+    FormContainer,
+    HeaderTitle,
+    HeaderTitleContainer,
+    LogoHeader,
+    StyledKeyboardAvoidingView,
+    TextHeader,
 } from "../../styles/general";
 import { GENDER, PROFILE } from "../../components/Picker/options";
+import { updateUserData } from "./querys";
 
 interface IForm {
-  birthdate: string;
-  gender: string;
+    birthdate: string;
+    gender: string;
   profile: string;
   income: string;
 }
@@ -41,8 +42,8 @@ const Complete = () => {
   const [profile, setProfile] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
-  const [genderVisible, setGenderVisible] = React.useState(false);
-  const [profileVisible, setProfileVisible] = React.useState(false);
+    const [genderVisible, setGenderVisible] = React.useState(false);
+    const [profileVisible, setProfileVisible] = React.useState(false);
 
   const schema = yup
     .object({
@@ -68,52 +69,38 @@ const Complete = () => {
     })
     .required();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    resolver: yupResolver(schema),
-  });
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<IForm>({
+        resolver: yupResolver(schema),
+    });
 
   function registerData({ birthdate, income }: IForm) {
+    const userData = {
+      birthDate: birthdate,
+      gender: gender,
+      income: income,
+      profile: profile,
+    };
+
     setLoading(true);
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .get()
-      .then((v) => {
-        if (v.data()) {
-          firebase
-            .firestore()
-            .collection("users")
-            .doc(user.uid)
-            .set(
-              {
-                birthDate: birthdate,
-                gender: gender,
-                income: income,
-                profile: profile,
-              },
-              { merge: true }
-            )
-            .then(() => {
-              navigate("Home");
-              Toast.show({
-                type: "success",
-                text1: "Dados cadastrados com sucesso",
-              });
-            })
-            .catch(() => {
-              Toast.show({
-                type: "error",
-                text1: "Erro ao cadastrar as informações",
-              });
-            });
-        }
-        return setLoading(false);
-      });
+    updateUserData(userData)
+      .then(() => {
+        navigate("Home");
+        Toast.show({
+          type: "success",
+          text1: "Dados cadastrados com sucesso",
+        });
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro ao cadastrar as informações",
+        });
+      })
+      .finally(() => setLoading(false)); 
   }
 
   return (

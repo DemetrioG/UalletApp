@@ -39,30 +39,34 @@ const DatePicker = ({
     );
   });
 
-  // Pega a referência de Mês e Ano, e coloca no Contexto
-  React.useEffect(() => {
-    (async function loadStorage() {
-      const storedMonth = await getStorage("Mês");
-      const storedYear = await getStorage("Ano");
+  /**
+   * Pega a referência de Mês e Ano, e coloca no Contexto
+   */
+  async function loadStorage() {
+    const storedMonth = await getStorage("Mês");
+    const storedYear = await getStorage("Ano");
 
-      if (storedMonth && type === "Mês") {
-        return setData((dataState) => ({
-          ...dataState,
-          month: storedMonth,
-        }));
-      } else if (storedYear && type === "Ano") {
-        return setData((dataState) => ({
-          ...dataState,
-          year: storedYear,
-        }));
-      } else {
-        return setData((dataState) => ({
-          ...dataState,
-          month: type == "Mês" ? new Date().getMonth() + 1 : dataState.month,
-          year: type == "Ano" ? new Date().getFullYear() : dataState.year,
-        }));
-      }
-    })();
+    if (storedMonth && type === "Mês") {
+      return setData((dataState) => ({
+        ...dataState,
+        month: storedMonth,
+      }));
+    } else if (storedYear && type === "Ano") {
+      return setData((dataState) => ({
+        ...dataState,
+        year: storedYear,
+      }));
+    } else {
+      return setData((dataState) => ({
+        ...dataState,
+        month: type == "Mês" ? new Date().getMonth() + 1 : dataState.month,
+        year: type == "Ano" ? new Date().getFullYear() : dataState.year,
+      }));
+    }
+  }
+
+  React.useEffect(() => {
+    loadStorage();
   }, [visibility]);
 
   return (
