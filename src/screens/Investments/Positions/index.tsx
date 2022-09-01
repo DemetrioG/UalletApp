@@ -1,12 +1,15 @@
 import * as React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 
 import { getAssets, getUpdatedInfos, IAsset } from "./query";
+import Tooltip from "../../../components/Tooltip";
 import Icon from "../../../components/Icon";
 import { UserContext } from "../../../context/User/userContext";
+import { LoaderContext } from "../../../context/Loader/loaderContext";
 import {
   Container,
   EmptyText,
@@ -21,9 +24,7 @@ import {
 } from "./styles";
 import { colors, metrics } from "../../../styles";
 import { getRentPercentual, numberToReal } from "../../../utils/number.helper";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { getStorage, setStorage } from "../../../utils/storage.helper";
-import { LoaderContext } from "../../../context/Loader/loaderContext";
 import { Skeleton } from "../../../styles/general";
 
 const ITEMS_WIDTH = {
@@ -294,12 +295,12 @@ const Positions = ({
     const totalEquity = await getStorage("investTotalEquity");
     const data = await getStorage("investPositionsData");
 
-    setTotalValue(totalValue);
-    setTotalRent(totalRent);
-    setTodayValue(todayValue);
-    setTodayRent(todayRent);
-    setTotalEquity(totalEquity);
-    setData(data);
+    totalValue && setTotalValue(totalValue);
+    totalRent && setTotalRent(totalRent);
+    todayValue && setTodayValue(todayValue);
+    todayRent && setTodayRent(todayRent);
+    totalEquity && setTotalEquity(totalEquity);
+    data && setData(data);
 
     if (investVisible) {
       setLoader((state) => ({
@@ -322,12 +323,14 @@ const Positions = ({
     <VStack mt={5}>
       <HStack alignItems="center">
         <HeaderText>Posições RV</HeaderText>
-        <Icon
-          name="info"
-          color={colors.gray}
-          size={16}
-          style={{ marginLeft: metrics.baseMargin }}
-        />
+        <Tooltip text="Seus ativos em Renda Variável">
+          <Icon
+            name="info"
+            color={colors.gray}
+            size={16}
+            style={{ marginLeft: metrics.baseMargin }}
+          />
+        </Tooltip>
       </HStack>
       <Skeleton
         isLoaded={!investVisible}
