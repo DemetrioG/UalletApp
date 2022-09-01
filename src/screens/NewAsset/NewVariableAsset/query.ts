@@ -1,65 +1,101 @@
-import firebase from '../../../services/firebase';
-import { convertDateToDatabase } from '../../../utils/date.helper';
-import { realToNumber } from '../../../utils/number.helper';
+import firebase from "../../../services/firebase";
+import { convertDateToDatabase } from "../../../utils/date.helper";
+import {
+  averageBetweenNumbers,
+  realToNumber,
+} from "../../../utils/number.helper";
 
 export interface IAsset {
-    entrydate: string;
-    segment: 
-        'Ações' | 
-        'FIIs e Fiagro' | 
-        'Criptomoedas' | 
-        "BDR's" | 
-        null;
-    broker: string | null;
-    asset: string;
-    amount: number;
-    price: string;
-    total: string;
-    uid: string;
-  }
+  entrydate: string;
+  segment: "Ações" | "FIIs e Fiagro" | "Criptomoedas" | "BDR's" | null;
+  broker: string | null;
+  asset: string;
+  amount: number;
+  price: string;
+  total: string;
+  uid: string;
+}
+
+interface IAssetDatabase {
+  id: number;
+  amount: number;
+  amountBuyDate: object[];
+  asset: string;
+  broker: string;
+  price: number;
+  segment: string;
+  total: number;
+}
 
 async function _registerAsset(props: IAsset) {
-    const { entrydate, segment, broker, asset, amount, price, total, uid } = props;
+  const { entrydate, segment, broker, asset, amount, price, total, uid } =
+    props;
 
-    let id = 1;
-    // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-    const response = await firebase
+  let id = 1;
+  let itemIsInDatabase: IAssetDatabase = undefined;
+  const item = await firebase
     .firestore()
     .collection("assets")
     .doc(uid)
-    .collection('variable')
-    .orderBy("id", "desc")
-    .limit(1)
-    .get()
+    .collection("variable")
+    .where("asset", "==", asset.toUpperCase())
+    .get();
+
+  item.forEach((result) => {
+    id = result.data().id;
+    itemIsInDatabase = result.data() as IAssetDatabase;
+  });
+
+  if (!itemIsInDatabase) {
+    // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
+    const response = await firebase
+      .firestore()
+      .collection("assets")
+      .doc(uid)
+      .collection("variable")
+      .orderBy("id", "desc")
+      .limit(1)
+      .get();
 
     response.forEach((result) => {
-        id += result.data().id;  
+      id += result.data().id;
     });
+  }
 
-    const items = {
-        id: id,
-        date: convertDateToDatabase(entrydate),
-        segment: segment,
-        broker: broker,
-        asset: asset.toUpperCase(),
-        amount: amount,
-        price: realToNumber(price),
-        total: realToNumber(total)
-    }
+  const amountBuyDate = itemIsInDatabase?.amountBuyDate || [];
+  amountBuyDate.push({
+    amount: amount,
+    date: convertDateToDatabase(entrydate),
+    price: realToNumber(price),
+  });
 
-    return firebase
+  const items: IAssetDatabase = {
+    id: id,
+    amountBuyDate: amountBuyDate,
+    segment: segment!,
+    broker: broker!,
+    asset: asset.toUpperCase(),
+    amount: amount + (itemIsInDatabase?.amount || 0),
+    price: averageBetweenNumbers(
+      realToNumber(price),
+      itemIsInDatabase?.price || realToNumber(price)
+    ),
+    total: realToNumber(total) + (itemIsInDatabase?.total || 0),
+  };
+
+  return firebase
     .firestore()
-    .collection('assets')
+    .collection("assets")
     .doc(uid)
-    .collection('variable')
+    .collection("variable")
     .doc(id.toString())
-    .set(items)
+    .set(items, { merge: true });
 }
 
 export function registerAsset(props: IAsset) {
-    try {
-        return _registerAsset(props);
-    } catch (error) {
-        throw new Error('Erro')
-    }
+  try {
+    return _registerAsset(props);
+  } catch (error) {
+    throw new Error("Erro");
+  }
 }

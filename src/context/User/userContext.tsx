@@ -7,6 +7,7 @@ interface IUser {
   uid: string | undefined;
   name: string;
   hideNumbers: boolean;
+  hideAssetPosition: boolean;
   completeName: string | undefined;
   email: string | undefined;
 }
@@ -17,6 +18,7 @@ export const initialUserState: IUser = {
   uid: undefined,
   name: "",
   hideNumbers: false,
+  hideAssetPosition: false,
   completeName: undefined,
   email: undefined,
 };
@@ -50,6 +52,8 @@ export function UserContextProvider({
         ...userState,
         name: storedData?.name || initialUserState.name,
         hideNumbers: storedData?.hideNumbers || initialUserState.hideNumbers,
+        hideAssetPosition:
+          storedData?.hideAssetPosition || initialUserState.hideAssetPosition,
         completeName: storedData?.completeName,
         email: storedData?.email,
       }));
@@ -61,6 +65,7 @@ export function UserContextProvider({
       const data = {
         name: user.name,
         hideNumbers: user.hideNumbers,
+        hideAssetPosition: user.hideAssetPosition,
         completeName: user.completeName,
         email: user.email,
       };

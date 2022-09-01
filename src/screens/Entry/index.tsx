@@ -93,8 +93,8 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
       <ItemContainer>
         <DescriptionContainer>
           <DescriptionText>
-            {item.description.length > 18
-              ? `${item.description.slice(0, 18)}...`
+            {item.description.length > 17
+              ? `${item.description.slice(0, 17)}...`
               : item.description}
           </DescriptionText>
         </DescriptionContainer>
@@ -313,86 +313,80 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
   }, [isFocused]);
 
   return (
-      <BackgroundContainer>
-          <ViewTab>
-              <ViewTabContent>
-                  <HeaderContainer>
-                      <TextHeaderScreen>Lançamentos</TextHeaderScreen>
-                      <InfoMonthText>
-                          {dateMonthNumber("toMonth", data.month, true)}
-                      </InfoMonthText>
-                  </HeaderContainer>
-                  <ButtonHeaderView>
-                      <ButtonOutlineSmall
-                          onPress={() => navigate("Filtros", filter)}
-                      >
-                          <ButtonOutlineText>FILTROS</ButtonOutlineText>
-                      </ButtonOutlineSmall>
-                      <ButtonSmall onPress={() => navigate("NovoLançamento")}>
-                          <ButtonText>NOVO</ButtonText>
-                      </ButtonSmall>
-                  </ButtonHeaderView>
-                  {filter.isFiltered && (
-                      <RemoveFilterButton onPress={handleRemoveFilter}>
-                          <RemoveFilterText>Remover filtros</RemoveFilterText>
-                          <Icon name="x" size={20} colorVariant="red" />
-                      </RemoveFilterButton>
-                  )}
-                  <LastEntryText>Últimos lançamentos</LastEntryText>
-                  {emptyData ? (
-                      <LoadingText>
-                          Seus lançamentos aparecerão aqui
-                      </LoadingText>
-                  ) : (
-                      <SpaceAroundView>
-                          <Label>DESCRIÇÃO</Label>
-                          <Label>VALOR</Label>
-                      </SpaceAroundView>
-                  )}
-                  {entryList.length > 0 ? (
-                      <FlatList
-                          data={entryList}
-                          keyExtractor={(item) => item.id.toString()}
-                          renderItem={({ item }) => <ItemList item={item} />}
-                      />
-                  ) : (
-                      <ContainerCenter>
-                          {!emptyData ? (
-                              <LottieView
-                                  source={LOADING}
-                                  autoPlay={true}
-                                  loop={true}
-                                  style={{ width: 50 }}
-                              />
-                          ) : (
-                              <LottieView
-                                  source={EMPTY}
-                                  autoPlay={true}
-                                  loop={false}
-                                  style={{ width: 230 }}
-                              />
-                          )}
-                      </ContainerCenter>
-                  )}
-                  <TotalItemContainer>
-                      <TotalLabelText>Total detalhado</TotalLabelText>
-                      <TotalValueContainer>
-                          <TotalText>{entryTotal}</TotalText>
-                      </TotalValueContainer>
-                  </TotalItemContainer>
-                  <TotalItemContainer>
-                      <TotalLabelText>Saldo atual</TotalLabelText>
-                      <TotalValueContainer>
-                          <BalanceText negative={data.balance.includes("-")}>
-                              {!user.hideNumbers
-                                  ? data.balance
-                                  : "** ** ** ** **"}
-                          </BalanceText>
-                      </TotalValueContainer>
-                  </TotalItemContainer>
-              </ViewTabContent>
-          </ViewTab>
-      </BackgroundContainer>
+    <BackgroundContainer>
+      <ViewTab>
+        <ViewTabContent>
+          <HeaderContainer>
+            <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+            <InfoMonthText>
+              {dateMonthNumber("toMonth", data.month, true)}
+            </InfoMonthText>
+          </HeaderContainer>
+          <ButtonHeaderView>
+            <ButtonOutlineSmall onPress={() => navigate("Filtros", filter)}>
+              <ButtonOutlineText>FILTROS</ButtonOutlineText>
+            </ButtonOutlineSmall>
+            <ButtonSmall onPress={() => navigate("NovoLançamento")}>
+              <ButtonText>NOVO</ButtonText>
+            </ButtonSmall>
+          </ButtonHeaderView>
+          {filter.isFiltered && (
+            <RemoveFilterButton onPress={handleRemoveFilter}>
+              <RemoveFilterText>Remover filtros</RemoveFilterText>
+              <Icon name="x" size={20} colorVariant="red" />
+            </RemoveFilterButton>
+          )}
+          <LastEntryText>Últimos lançamentos</LastEntryText>
+          {emptyData ? (
+            <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
+          ) : (
+            <SpaceAroundView>
+              <Label>DESCRIÇÃO</Label>
+              <Label>VALOR</Label>
+            </SpaceAroundView>
+          )}
+          {entryList.length > 0 ? (
+            <FlatList
+              data={entryList}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => <ItemList item={item} />}
+            />
+          ) : (
+            <ContainerCenter>
+              {!emptyData ? (
+                <LottieView
+                  source={LOADING}
+                  autoPlay={true}
+                  loop={true}
+                  style={{ width: 50 }}
+                />
+              ) : (
+                <LottieView
+                  source={EMPTY}
+                  autoPlay={true}
+                  loop={false}
+                  style={{ width: 230 }}
+                />
+              )}
+            </ContainerCenter>
+          )}
+          <TotalItemContainer>
+            <TotalLabelText>Total detalhado</TotalLabelText>
+            <TotalValueContainer>
+              <TotalText>{entryTotal}</TotalText>
+            </TotalValueContainer>
+          </TotalItemContainer>
+          <TotalItemContainer>
+            <TotalLabelText>Saldo atual</TotalLabelText>
+            <TotalValueContainer>
+              <BalanceText negative={data.balance.includes("-")}>
+                {!user.hideNumbers ? data.balance : "** ** ** ** **"}
+              </BalanceText>
+            </TotalValueContainer>
+          </TotalItemContainer>
+        </ViewTabContent>
+      </ViewTab>
+    </BackgroundContainer>
   );
 };
 

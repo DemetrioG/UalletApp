@@ -53,9 +53,9 @@ export const ModalContainer = styled(Center)`
   background-color: ${({ theme: { theme } }) => theme.transparency};
 `;
 
-export const Balance: React.FC<
-  ITextProps & { negative?: boolean }
-> = styled(Text).attrs(() => ({
+export const Balance: React.FC<ITextProps & { negative?: boolean }> = styled(
+  Text
+).attrs(() => ({
   fontFamily: "mono",
   fontWeight: 700,
   fontSize: fonts.larger,
@@ -260,7 +260,6 @@ export const DescriptionContainer = styled(Center)`
 `;
 
 export const DescriptionText = styled(Text)`
-  font-size: ${fonts.regular}px;
   color: ${colors.gray};
 `;
 
@@ -277,7 +276,7 @@ export const ValueText: React.FC<
 > = styled(Text).attrs(() => ({
   fontFamily: "mono",
 }))`
-  font-size: ${fonts.regular}px;
+  font-size: 13px;
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;

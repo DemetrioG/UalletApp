@@ -60,6 +60,7 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 
   if (withoutSign) {
     newValue = newValue.replace("R$", "");
+    newValue = newValue.replace(/\s/g, "");
   }
 
   return newValue;
@@ -73,6 +74,7 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 export function realToNumber(value: string) {
   let newValue = value.replace("R$", "");
   newValue = newValue.split(".").join("");
+  newValue = newValue.replace(/\s/g, "");
 
   return Number(newValue.replace(",", "."));
 }
@@ -82,8 +84,42 @@ export function realToNumber(value: string) {
  * @returns Valor no padrão Numérico
  */
 export function percentualToNumber(value: string) {
-  let newValue = value.replace('% ', '');
-  newValue = newValue.split('.').join('');
+  let newValue = value.replace("% ", "");
+  newValue = newValue.split(".").join("");
 
-  return Number(newValue.replace(',', '.'));
+  return Number(newValue.replace(",", "."));
+}
+
+/**
+ * @param value Valor no padrão Numérico
+ * @returns Valor no padrão % 120,00
+ */
+export function numberToPercentual(value: number) {
+  let newValue = value.toString().replace(".", ",");
+
+  return newValue + "%";
+}
+
+export function averageBetweenNumbers(
+  firstNumber: number,
+  secondNumber: number
+) {
+  const value = Number(((firstNumber + secondNumber) / 2).toFixed(2));
+  return value;
+}
+
+/**
+ * @returns Retorna a o Lucro / Perda entre o primeiro e o segundo número
+ */
+export function getRent(firstNumber: number, secondNumber: number) {
+  const value = Number((secondNumber - firstNumber).toFixed(2));
+  return value;
+}
+
+export function getRentPercentual(firstNumber: number, secondNumber: number) {
+  const value = numberToReal(
+    Number((((secondNumber - firstNumber) / firstNumber) * 100).toFixed(2)),
+    true
+  );
+  return value;
 }

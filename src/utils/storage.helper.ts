@@ -21,5 +21,6 @@ export async function removeStorage(key: string) {
 }
 
 export async function removeAllStorage() {
-  await AsyncStorage.multiRemove(["Ano", "Mês", "authUser", "hideNumbers"]);
+  const data = await getAllStorage();
+  await AsyncStorage.multiRemove(data);
 }
