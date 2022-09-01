@@ -42,18 +42,22 @@ export function UserContextProvider({
 
   const notInitialRender = React.useRef(false);
 
+  /**
+   * Retorna os dados do usuário cacheados
+   */
+  async function loadCache() {
+    const storedData = await getStorage("user");
+    setUser((userState) => ({
+      ...userState,
+      name: storedData?.name || initialUserState.name,
+      hideNumbers: storedData?.hideNumbers || initialUserState.hideNumbers,
+      completeName: storedData?.completeName,
+      email: storedData?.email,
+    }));
+  }
+
   React.useEffect(() => {
-    // Cache dos dados do usuário
-    (async () => {
-      const storedData = await getStorage("user");
-      setUser((userState) => ({
-        ...userState,
-        name: storedData?.name || initialUserState.name,
-        hideNumbers: storedData?.hideNumbers || initialUserState.hideNumbers,
-        completeName: storedData?.completeName,
-        email: storedData?.email,
-      }));
-    })();
+    loadCache();
   }, []);
 
   React.useEffect(() => {

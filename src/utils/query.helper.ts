@@ -2,14 +2,17 @@ import firebase from "../services/firebase";
 import { numberToReal } from "./number.helper";
 import { getStorage } from "./storage.helper";
 
+/**
+ * Retorna os dados de autenticação do usuário logado
+ */
 export const currentUser = async () => {
   return firebase.auth().currentUser || (await getStorage("authUser"));
 };
 
+type TBalance = { month: string; modality: string };
 /**
  * Dada a modalidade/mês retorna o saldo atual do usuário.
  */
-type TBalance = { month: string; modality: string };
 export const getBalance = async ({ month, modality }: TBalance) => {
   const user = await currentUser();
 

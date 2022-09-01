@@ -1,15 +1,17 @@
 import { Platform } from "react-native";
 
-// No Android, o toLocaleString não funciona, então é passado esse require para funcionar corretamente
+/**
+ * No Android, o toLocaleString não funciona, então é passado esse require para funcionar corretamente
+ */
 if (Platform.OS === "android") {
   require("intl");
   require("intl/locale-data/jsonp/en-IN");
 }
 
 /**
- * @returns      Valor no padrão R$ 0,00
+ * Converte número para padrão Real
+ * @returns Valor no padrão R$ 0,00
  */
-
 export function numberToReal(number: number, withoutSign?: boolean) {
   let newValue = number.toLocaleString("pt-br", {
     style: "currency",
@@ -66,10 +68,10 @@ export function numberToReal(number: number, withoutSign?: boolean) {
 }
 
 /**
+ * Converte padrão Real para número
  * @param value Valor no padrão R$0,00
- * @returns     Valor no padrão Numérico
+ * @returns Valor no padrão Numérico
  */
-
 export function realToNumber(value: string) {
   let newValue = value.replace("R$", "");
   newValue = newValue.split(".").join("");
@@ -78,12 +80,13 @@ export function realToNumber(value: string) {
 }
 
 /**
+ * Converte percentual para número
  * @param value Valor no padrão % 120,00
  * @returns Valor no padrão Numérico
  */
 export function percentualToNumber(value: string) {
-  let newValue = value.replace('% ', '');
-  newValue = newValue.split('.').join('');
+  let newValue = value.replace("% ", "");
+  newValue = newValue.split(".").join("");
 
-  return Number(newValue.replace(',', '.'));
+  return Number(newValue.replace(",", "."));
 }
