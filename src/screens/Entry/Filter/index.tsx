@@ -152,7 +152,6 @@ const Filter = ({
                   errors={errors.initialdate}
                   maxLength={10}
                   masked="datetime"
-                  helperText="Verifique a data informada"
                 />
               </HalfContainer>
               <HalfContainer>
@@ -163,7 +162,6 @@ const Filter = ({
                   errors={errors.finaldate}
                   maxLength={10}
                   masked="datetime"
-                  helperText="Verifique a data informada"
                 />
               </HalfContainer>
             </SpaceContainer>
