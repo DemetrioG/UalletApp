@@ -1,11 +1,10 @@
-import { Center, ITextProps, Text, VStack } from "native-base";
+import { ITextProps, Text, VStack } from "native-base";
 import React from "react";
-import { View } from "react-native";
 import styled from "styled-components";
 import { colors, metrics } from "../../../styles";
 
-export const Header = styled(View)`
-  z-index: 10;
+export const Header = styled(VStack)`
+  z-index: 2;
   width: 100%;
   position: absolute;
   border-radius: ${metrics.baseRadius}px;
@@ -20,7 +19,7 @@ export const HeaderText = styled(Text).attrs(() => ({
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const Container = styled(View)`
+export const Container = styled(VStack)`
   border-bottom-left-radius: ${metrics.baseRadius}px;
   border-bottom-right-radius: ${metrics.baseRadius}px;
   padding: ${metrics.basePadding}px;
