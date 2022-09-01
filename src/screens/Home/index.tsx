@@ -128,7 +128,7 @@ const Home = () => {
             balance: true,
           }));
       });
-  }, [data.modality, data.month, data.year]);
+  }, [data.modality, data.month, data.year, consolidate]);
 
   React.useEffect(() => {
     if (!data.year) return;

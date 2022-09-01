@@ -5,9 +5,7 @@ import Toast from "react-native-toast-message";
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
 import Icon from "../Icon";
-import { UserContext } from "../../context/User/userContext";
 import { numberToReal } from "../../utils/number.helper";
-import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import {
   Label,
   ModalContainer,
@@ -42,7 +40,7 @@ import {
   ActionText,
 } from "./styles";
 import { colors } from "../../styles";
-import { toastConfig } from "../Toast/config";
+import { consolidateData, getData } from "./query";
 
 const WRITE = require("../../../assets/icons/write.json");
 
@@ -52,7 +50,6 @@ interface IConsolidate {
 }
 
 const Consolidate = ({ visible, setVisible }: IConsolidate) => {
-  const { user } = React.useContext(UserContext);
   const [page, setPage] = React.useState(1);
   const [isLoading, setIsLoading] = React.useState(false);
   const [entryList, setEntryList] = React.useState<
@@ -60,6 +57,9 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
       (IEntryList & { checked?: boolean }) | firebase.firestore.DocumentData
     >
   >([]);
+
+  const anySelectedEntry =
+    entryList.filter((e) => e.checked || e.checked === false).length > 0;
 
   function handleAction(id: number, type: "check" | "cancel") {
     const list = entryList;
@@ -85,117 +85,32 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
 
   async function handleSubmit() {
     setIsLoading(true);
-    let newId = 1;
-
-    // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection("Real")
-      .orderBy("id", "desc")
-      .limit(1)
-      .get()
-      .then((v) => {
-        v.forEach((result) => {
-          newId += result.data().id;
+    consolidateData(entryList)
+      .then(() => {
+        setIsLoading(false);
+        setVisible(false);
+        return Toast.show({
+          type: "success",
+          text1: "Dados consolidados com sucesso",
+        });
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setVisible(false);
+        return Toast.show({
+          type: "error",
+          text1: "Erro ao consolidar os dados",
         });
       });
-
-    entryList.forEach(
-      async ({ date, description, segment, type, value, id, checked }) => {
-        await firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection("Projetado")
-          .doc(id.toString())
-          .set(
-            {
-              consolidated: {
-                consolidated: checked,
-                wasActionShown: true,
-              },
-            },
-            { merge: true }
-          )
-          .catch(() => {
-            Toast.show({
-              type: "error",
-              text1: "Erro ao consolidar as informações",
-            });
-            return setIsLoading(false);
-          });
-
-        if (checked) {
-          await firebase
-            .firestore()
-            .collection("entry")
-            .doc(user.uid)
-            .collection("Real")
-            .doc(newId.toString())
-            .set({
-              id: newId,
-              date: date,
-              type: type,
-              description: description,
-              modality: "Real",
-              segment: segment,
-              value: value,
-            })
-            .catch(() => {
-              Toast.show({
-                type: "error",
-                text1: "Erro ao consolidar as informações",
-              });
-              return setIsLoading(false);
-            });
-
-          // Atualiza o saldo atual no banco
-          let balance = 0;
-          await firebase
-            .firestore()
-            .collection("balance")
-            .doc(user.uid)
-            .collection("Real")
-            .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
-            .get()
-            .then((v) => {
-              balance = v.data()?.balance || 0;
-            });
-
-          if (type == "Receita") {
-            balance += value;
-          } else {
-            balance -= value;
-          }
-
-          await firebase
-            .firestore()
-            .collection("balance")
-            .doc(user.uid)
-            .collection("Real")
-            .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
-            .set({
-              balance: balance,
-            });
-        }
-      }
-    );
-    setVisible(false);
-    return Toast.show({
-      type: "success",
-      text1: "Dados consolidados com sucesso",
-    });
   }
 
-  function ItemList({
+  const ItemList = ({
     item: { description, type, value, checked, id },
   }: {
     item:
       | (IEntryList & { checked?: boolean })
       | firebase.firestore.DocumentData;
-  }) {
+  }) => {
     return (
       <ItemView>
         <DescriptionView>
@@ -233,36 +148,17 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
         </ActionView>
       </ItemView>
     );
-  }
+  };
 
   React.useEffect(() => {
-    (async function getData() {
-      const date = getAtualDate();
-      const initialDate = date[1];
-      const finalDate = date[2];
-
-      setEntryList([]);
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection("Projetado")
-        .where("date", ">=", initialDate)
-        .where("date", "<=", finalDate)
-        .where("consolidated.wasActionShown", "==", false)
-        .get()
-        .then((v) => {
-          v.forEach((result) => {
-            setEntryList((listState) => [...listState, result.data()]);
-          });
-        });
-    })();
+    getData().then((data) => {
+      setEntryList(data);
+    });
   }, []);
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <ModalContainer>
-        <Toast config={toastConfig} />
         <ModalView large>
           <HeaderContainer>
             <TextHeaderScreen noMarginBottom>
@@ -332,6 +228,7 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
               <StyledButton
                 isLoading={isLoading}
                 onPress={() => handleSubmit()}
+                isDisabled={!anySelectedEntry}
               >
                 <ButtonText>CONFIRMAR</ButtonText>
               </StyledButton>
