@@ -52,7 +52,6 @@ export function UserContextProvider({
         hideNumbers: storedData?.hideNumbers || initialUserState.hideNumbers,
         completeName: storedData?.completeName,
         email: storedData?.email,
-        uid: storedData?.uid || initialUserState.uid
       }));
     })();
   }, []);
@@ -64,7 +63,6 @@ export function UserContextProvider({
         hideNumbers: user.hideNumbers,
         completeName: user.completeName,
         email: user.email,
-        uid: user.uid
       };
       setStorage("user", data);
     } else {
