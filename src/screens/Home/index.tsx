@@ -206,7 +206,7 @@ const Home = () => {
                     </CardTextView>
                     <Icon
                       name="edit-3"
-                      onPress={() => navigate("LançamentosTab")}
+                      onPress={() => navigate("Lançamentos")}
                     />
                   </CardHeaderView>
                   <>
