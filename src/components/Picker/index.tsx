@@ -1,12 +1,7 @@
 import * as React from "react";
 import { FormControl, HStack, View, WarningOutlineIcon } from "native-base";
 import { FieldError } from "react-hook-form";
-import {
-  Modal,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { Modal, ScrollView, Keyboard } from "react-native";
 
 import { colors, metrics } from "../../styles";
 import { ModalContainer, ModalView } from "../../styles/general";

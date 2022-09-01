@@ -78,8 +78,6 @@ const LineChart = () => {
           lineChart: true,
         }));
       });
-
-    // setEmpty(true);
   }, [dataContext]);
 
   return (
