@@ -23,7 +23,7 @@ export const getBalance = async ({ month, modality }: TBalance) => {
     .doc(month)
     .get();
 
-  const { balance } = data.data() as { balance: number };
+  const response = data.data();
 
-  return balance ? numberToReal(balance) : "R$ 0,00";
+  return response?.balance ? numberToReal(response?.balance || 0) : "R$ 0,00";
 };
