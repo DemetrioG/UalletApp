@@ -227,56 +227,64 @@ const Positions = ({
   async function refreshData() {
     await getAssets(uid!)
       .then(async (data) => {
-        await getUpdatedInfos(data).then(async (infos) => {
-          const finalData: IAsset[] = [];
-          let totalValue = 0;
-          let totalInitialPrice = 0;
-          let totalMediumPrice = 0;
-          let totalAtualPrice = 0;
+        if (data.length > 0) {
+          await getUpdatedInfos(data).then(async (infos) => {
+            const finalData: IAsset[] = [];
+            let totalValue = 0;
+            let totalInitialPrice = 0;
+            let totalMediumPrice = 0;
+            let totalAtualPrice = 0;
 
-          infos.map((info) => {
-            const [item] = data.filter((e) => e.asset === info.asset);
-            const newData: IAsset = {
-              id: item.id,
-              amount: item.amount,
-              asset: item.asset,
-              price: item.price,
-              segment: item.segment,
-              total: info.totalPrecoAtual,
-              atualPrice: info.atualPrice,
-              rent: info.rent,
-              rentPercentual: info.rentPercentual,
-              pvp: info.pvp,
-              dy: info.dy,
-              pl: info.pl,
-            };
+            infos.map((info) => {
+              const [item] = data.filter((e) => e.asset === info.asset);
+              const newData: IAsset = {
+                id: item.id,
+                amount: item.amount,
+                asset: item.asset,
+                price: item.price,
+                segment: item.segment,
+                total: info.totalPrecoAtual,
+                atualPrice: info.atualPrice,
+                rent: info.rent,
+                rentPercentual: info.rentPercentual,
+                pvp: info.pvp,
+                dy: info.dy,
+                pl: info.pl,
+              };
 
-            totalValue += info.rent;
-            totalAtualPrice += info.totalPrecoAtual;
-            totalMediumPrice += info.totalPrecoMedio;
-            totalInitialPrice += info.totalPrecoInicial;
+              totalValue += info.rent;
+              totalAtualPrice += info.totalPrecoAtual;
+              totalMediumPrice += info.totalPrecoMedio;
+              totalInitialPrice += info.totalPrecoInicial;
 
-            return finalData.push(newData);
+              return finalData.push(newData);
+            });
+
+            setStorage("investPositionsTotalValue", totalValue);
+            setStorage(
+              "investPositionsTotalRent",
+              getRentPercentual(totalMediumPrice, totalAtualPrice)
+            );
+            setStorage(
+              "investPositionsTodayValue",
+              totalAtualPrice - totalInitialPrice
+            );
+            setStorage(
+              "investPositionsTodayRent",
+              getRentPercentual(totalInitialPrice, totalAtualPrice)
+            );
+            setStorage("investTotalEquity", totalAtualPrice);
+            setStorage("investPositionsData", finalData);
           });
-
-          setStorage("investPositionsTotalValue", totalValue);
-          setStorage(
-            "investPositionsTotalRent",
-            getRentPercentual(totalMediumPrice, totalAtualPrice)
-          );
-          setStorage(
-            "investPositionsTodayValue",
-            totalAtualPrice - totalInitialPrice
-          );
-          setStorage(
-            "investPositionsTodayRent",
-            getRentPercentual(totalInitialPrice, totalAtualPrice)
-          );
-          setStorage("investTotalEquity", totalAtualPrice);
-          setStorage("investPositionsData", finalData);
-
-          await getData();
-        });
+        } else {
+          setStorage("investPositionsTotalValue", 0);
+          setStorage("investPositionsTotalRent", "0,00");
+          setStorage("investPositionsTodayValue", 0);
+          setStorage("investPositionsTodayRent", "0,00");
+          setStorage("investTotalEquity", 0);
+          setStorage("investPositionsData", []);
+        }
+        await getData();
       })
       .catch(() => {
         Toast.show({
