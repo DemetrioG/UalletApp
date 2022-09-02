@@ -1,62 +1,81 @@
-import firebase from '../../../services/firebase';
-import { convertDateToDatabase } from '../../../utils/date.helper';
-import { percentualToNumber, realToNumber } from '../../../utils/number.helper';
+import firebase from "../../../services/firebase";
+import { convertDateToDatabase } from "../../../utils/date.helper";
+import { percentualToNumber, realToNumber } from "../../../utils/number.helper";
 
 export interface IAsset {
-    entrydate: string,
-    title: string | null,
-    cdbname: string | null,
-    broker: string | null,
-    rent: string,
-    rentType: string | null,
-    duedate: string | null,
-    price: string,
-    uid: string,
+  entrydate: string;
+  title: string | null;
+  cdbname: string | null;
+  broker: string | null;
+  rent: string;
+  rentType: string | null;
+  duedate: string | null;
+  price: string;
+  uid: string;
 }
 
 async function _registerAsset(props: IAsset) {
-    const { entrydate, broker, duedate, price, rent, title , uid, cdbname, rentType } = props;
+  const {
+    entrydate,
+    broker,
+    duedate,
+    price,
+    rent,
+    title,
+    uid,
+    cdbname,
+    rentType,
+  } = props;
 
-    let id = 1;
-    // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-    const response = await firebase
+  let id = 1;
+  // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
+  const response = await firebase
     .firestore()
     .collection("assets")
     .doc(uid)
-    .collection('fixed')
+    .collection("fixed")
     .orderBy("id", "desc")
     .limit(1)
-    .get()
+    .get();
 
-    response.forEach((result) => {    
-        id += result.data().id;  
-    });
+  response.forEach((result) => {
+    id += result.data().id;
+  });
 
-    const items = {
-        id: id,
-        date: convertDateToDatabase(entrydate),
-        title: title,
-        cdbname: cdbname && cdbname.toUpperCase(),
-        broker: broker,
-        rent: percentualToNumber(rent),
-        rentType: rentType?.toUpperCase(),
-        duedate: duedate && convertDateToDatabase(duedate),
-        price: realToNumber(price)
-    }
+  const items = {
+    id: id,
+    date: convertDateToDatabase(entrydate),
+    title: title,
+    cdbname: cdbname && cdbname.toUpperCase(),
+    broker: broker,
+    rent: percentualToNumber(rent),
+    rentType: rentType?.toUpperCase(),
+    duedate: duedate && convertDateToDatabase(duedate),
+    price: realToNumber(price),
+  };
 
-    return firebase
+  /**
+   * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
+   */
+  await firebase
     .firestore()
-    .collection('assets')
+    .collection("assets")
     .doc(uid)
-    .collection('fixed')
+    .set({ created: true });
+
+  return firebase
+    .firestore()
+    .collection("assets")
+    .doc(uid)
+    .collection("fixed")
     .doc(id.toString())
-    .set(items)
+    .set(items);
 }
 
 export function registerAsset(props: IAsset) {
-    try {
-        return _registerAsset(props);
-    } catch (error) {    
-        throw new Error('Erro')
-    }
+  try {
+    return _registerAsset(props);
+  } catch (error) {
+    throw new Error("Erro");
+  }
 }

@@ -142,6 +142,15 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
       };
     }
 
+    /**
+     * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
+     */
+    await firebase
+      .firestore()
+      .collection("entry")
+      .doc(user.uid)
+      .set({ created: true });
+
     // Registra o novo lançamento no banco
     await firebase
       .firestore()
@@ -186,6 +195,15 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
         balance -= realToNumber(value) - params.value;
       }
     }
+
+    /**
+     * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
+     */
+    await firebase
+      .firestore()
+      .collection("balance")
+      .doc(user.uid)
+      .set({ created: true });
 
     await firebase
       .firestore()
