@@ -2,9 +2,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Complete from "../screens/Complete";
 import ConfiguracoesScreen from "../screens/Configurations";
-import { DadosCadastraisScreen } from "../screens/Configurations/DadosCadastrais";
-import { AlterarSenhaScreen } from "../screens/Configurations/DadosCadastrais/AlterarSenha";
-import { InformacoesPessoaisScreen } from "../screens/Configurations/DadosCadastrais/InformacoesPessoais";
+import DadosCadastraisScreen from "../screens/Configurations/DadosCadastrais";
+import AlterarSenhaScreen from "../screens/Configurations/DadosCadastrais/AlterarSenha";
+import InformacoesPessoaisScreen from "../screens/Configurations/DadosCadastrais/InformacoesPessoais";
+import SecurityScreen from "../screens/Configurations/Security";
 import Entry from "../screens/Entry";
 import Filter from "../screens/Entry/Filter";
 import FixedEntry from "../screens/FixedEntry";
@@ -103,6 +104,11 @@ export const AppStackRoutes = () => {
       <StackScreen
         name="Configuracoes/DadosCadastrais"
         component={DadosCadastraisScreen}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Configuracoes/Seguranca"
+        component={SecurityScreen}
         options={{ headerShown: false }}
       />
       <StackScreen
