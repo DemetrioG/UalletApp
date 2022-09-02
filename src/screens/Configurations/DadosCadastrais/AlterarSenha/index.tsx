@@ -41,7 +41,7 @@ const schema = yup
   })
   .required();
 
-export const AlterarSenhaScreen = () => {
+const AlterarSenhaScreen = () => {
   const [loading, setLoading] = React.useState(false);
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
@@ -118,3 +118,5 @@ export const AlterarSenhaScreen = () => {
     </StyledKeyboardAvoidingView>
   );
 };
+
+export default AlterarSenhaScreen;
