@@ -46,13 +46,17 @@ const InvestSummary = () => {
   }, []);
 
   return (
-    <VStack>
-      <TotalOpen
-        percentual={totalRent}
-        value={numberToReal(totalValue)}
-        withoutLabel
-      />
-    </VStack>
+    <>
+      {equity && (
+        <VStack>
+          <TotalOpen
+            percentual={totalRent}
+            value={numberToReal(totalValue)}
+            withoutLabel
+          />
+        </VStack>
+      )}
+    </>
   );
 };
 
