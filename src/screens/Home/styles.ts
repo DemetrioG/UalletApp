@@ -1,6 +1,6 @@
 import * as React from "react";
-import { ITextAreaProps, ITextProps, Text } from "native-base";
-import { Image, TextProps, View, ViewProps } from "react-native";
+import { ITextProps, Text } from "native-base";
+import { Image, TextProps, View } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 import {
@@ -14,9 +14,7 @@ export const BackgroundContainer = styled(DefaultBackgroundContainer)`
   padding-top: 0px;
 `;
 
-export const CardHeaderView: React.FC<
-  ViewProps & { balance?: boolean }
-> = styled(View)`
+export const CardHeaderView = styled(View)<{ balance?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -44,7 +42,6 @@ export const Invest = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: fonts.larger,
 }))`
-  margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) =>
     !theme.isOnDarkTheme ? colors.strongPurple : colors.lightYellow};
 `;
