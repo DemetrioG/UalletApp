@@ -21,7 +21,7 @@ const EmpyChart = ({ emphasisText, iconName, helperText }: IEmptyChart) => {
     <ContainerCenter>
       <Icon name={iconName} color={colors.gray} />
       <DefaultText>{emphasisText}</DefaultText>
-      <TouchableOpacity onPress={() => navigate("Lançamentos")}>
+      <TouchableOpacity onPress={() => navigate("Lancamentos")}>
         <HelperText>{helperText}</HelperText>
       </TouchableOpacity>
     </ContainerCenter>

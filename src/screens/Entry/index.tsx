@@ -111,7 +111,7 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
           <Icon
             name="more-horizontal"
             size={16}
-            onPress={() => navigate("NovoLançamento", item)}
+            onPress={() => navigate("Lancamentos/NovoLancamento", item)}
           />
         </MoreContainer>
       </ItemContainer>
@@ -291,10 +291,12 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
             </InfoMonthText>
           </HeaderContainer>
           <ButtonHeaderView>
-            <ButtonOutlineSmall onPress={() => navigate("Filtros", filter)}>
+            <ButtonOutlineSmall
+              onPress={() => navigate("Lancamentos/Filtros", filter)}
+            >
               <ButtonOutlineText>FILTROS</ButtonOutlineText>
             </ButtonOutlineSmall>
-            <ButtonSmall onPress={() => navigate("NovoLançamento")}>
+            <ButtonSmall onPress={() => navigate("Lancamentos/NovoLancamento")}>
               <ButtonText>NOVO</ButtonText>
             </ButtonSmall>
           </ButtonHeaderView>
