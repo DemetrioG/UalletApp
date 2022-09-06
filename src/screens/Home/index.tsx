@@ -1,10 +1,12 @@
 import * as React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { Collapse, VStack } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
+import { TotalOpen as InvestResume } from "../Investments/Positions";
 import Consolidate from "../../components/Consolidate";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
@@ -13,15 +15,11 @@ import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
-import { sortObjectByKey } from "../../utils/array.helper";
-import { getAtualDate, getFinalDateMonth } from "../../utils/date.helper";
 import {
-  CardFooterText,
   CardHeaderText,
   CardHeaderView,
   CardTextView,
   Invest,
-  InvestPercentual,
   LogoCard,
   Section,
   SectionText,
@@ -39,13 +37,14 @@ import {
   Skeleton,
   ValueText,
 } from "../../styles/general";
-import { Collapse } from "native-base";
 import {
   checkFutureDebitsToConsolidate,
   completeUser,
   getLastEntry,
 } from "./querys";
 import { getBalance } from "../../utils/query.helper";
+import { refreshAssetData } from "../Investments/Positions/query";
+import { getStorage } from "../../utils/storage.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -77,7 +76,7 @@ const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
   const {
-    loader: { name, balance, segmentChart, lineChart, homeVisible },
+    loader: { name, balance, segmentChart, lineChart, homeVisible, equity },
     setLoader,
   } = React.useContext(LoaderContext);
   const { data, setData } = React.useContext(DataContext);
@@ -161,7 +160,26 @@ const Home = () => {
         homeVisible: false,
       }));
     }
-  }, [balance, lineChart, segmentChart, name]);
+  }, [balance, lineChart, segmentChart, name, equity]);
+
+  React.useEffect(() => {
+    refreshAssetData()
+      .then(async () => {
+        const totalEquity = await getStorage("investTotalEquity");
+        totalEquity &&
+          setData((state) => ({
+            ...state,
+            equity: totalEquity,
+          }));
+      })
+      .finally(() => {
+        !equity &&
+          setLoader((loaderState) => ({
+            ...loaderState,
+            equity: true,
+          }));
+      });
+  }, []);
 
   return (
     <BackgroundContainer>
@@ -264,20 +282,36 @@ const Home = () => {
         </TouchableOpacity>
         <Collapse isOpen={investShow}>
           <Card>
-            <CardHeaderView>
-              <CardTextView>
-                <CardHeaderText>Patrimônio investido</CardHeaderText>
-              </CardTextView>
-              <Icon name="maximize-2" />
-            </CardHeaderView>
-            <Invest>
-              {!user.hideNumbers ? "R$ 153.000,00" : "** ** ** ** **"}
-            </Invest>
-            <CardTextView>
-              <CardFooterText>Rendimento semanal</CardFooterText>
-              <InvestPercentual>55%</InvestPercentual>
-              <Icon name="arrow-up" size={15} colorVariant="green" />
-            </CardTextView>
+            <Skeleton isLoaded={equity} width={"full"} h={69}>
+              <CardHeaderView>
+                <CardTextView>
+                  <CardHeaderText>Patrimônio investido</CardHeaderText>
+                </CardTextView>
+                <Icon
+                  name="maximize-2"
+                  onPress={() => navigate("Investimentos")}
+                />
+              </CardHeaderView>
+              <Invest>
+                {!user.hideNumbers
+                  ? numberToReal(data.equity)
+                  : "** ** ** ** **"}
+              </Invest>
+              <VStack>
+                <InvestResume
+                  label="HOJE"
+                  percentual="0,00"
+                  value="R$ 0,00"
+                  inlineLabel
+                />
+                <InvestResume
+                  label="TOTAL"
+                  percentual="0,00"
+                  value="R$ 0,00"
+                  inlineLabel
+                />
+              </VStack>
+            </Skeleton>
           </Card>
         </Collapse>
       </ScrollViewTab>
