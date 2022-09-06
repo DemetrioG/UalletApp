@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Animated, Dimensions, Keyboard } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/Icon";
@@ -27,12 +30,15 @@ function getWidth() {
   // Total de Tabs
   return width / 5;
 }
-
 const AppRoutes = () => {
   const [keyboardVisible, setKeyboardVisible] = React.useState(false);
 
   const opacity = React.useRef(new Animated.Value(0)).current;
   const tabOffsetValue = React.useRef(new Animated.Value(0)).current;
+
+  const navigationRef = useNavigationContainerRef();
+  const routeNameRef: React.MutableRefObject<undefined | string> =
+    React.useRef();
 
   React.useEffect(() => {
     Animated.spring(tabOffsetValue, {
@@ -108,8 +114,25 @@ const AppRoutes = () => {
     }).start();
   }
 
+  function changeIndicator(routeNameRef: string) {
+    routeNameRef.includes("Home") && homeActive();
+    routeNameRef.includes("Investimentos") && investActive();
+    routeNameRef.includes("Lancamentos") && entryActive();
+    routeNameRef.includes("Integracoes") && integrateActive();
+    routeNameRef.includes("Relatorios") && reportsActive();
+  }
+
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.getCurrentRoute()?.name;
+      }}
+      onStateChange={() => {
+        const currentRoute = navigationRef.getCurrentRoute()?.name;
+        changeIndicator(currentRoute || "");
+      }}
+    >
       <SafeAreaContainer>
         <BackgroundContainer>
           <ConfirmDialog />
@@ -133,7 +156,7 @@ const AppRoutes = () => {
             })}
           />
           <Tab.Screen
-            name="LançamentosTab"
+            name="LancamentosTab"
             component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
@@ -144,7 +167,7 @@ const AppRoutes = () => {
               tabPress: (event) => {
                 event.preventDefault();
                 entryActive();
-                navigation.navigate("Lançamentos");
+                navigation.navigate("Lancamentos");
               },
             })}
           />
@@ -167,7 +190,7 @@ const AppRoutes = () => {
             })}
           />
           <Tab.Screen
-            name="IntegraçõesTab"
+            name="IntegracoesTab"
             component={AppStackRoutes}
             options={{
               tabBarIcon: () => {
@@ -182,7 +205,7 @@ const AppRoutes = () => {
             })}
           />
           <Tab.Screen
-            name="RelatóriosTab"
+            name="RelatoriosTab"
             component={AppStackRoutes}
             options={{
               tabBarIcon: () => {

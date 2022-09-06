@@ -104,7 +104,7 @@ const Home = () => {
        * Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
        */
       if (!v.data()?.birthDate) {
-        navigate("Complete");
+        navigate("Home/Complete");
       }
     });
   }, []);
@@ -199,7 +199,7 @@ const Home = () => {
                     </CardTextView>
                     <Icon
                       name="edit-3"
-                      onPress={() => navigate("Lançamentos")}
+                      onPress={() => navigate("Lancamentos")}
                     />
                   </CardHeaderView>
                   <>

@@ -16,11 +16,8 @@ import NewFixAsset from "../screens/NewAsset/NewFixAsset";
 import NewVariableAsset from "../screens/NewAsset/NewVariableAsset";
 import NewEntry from "../screens/NewEntry";
 
-const {
-  Navigator: StackNavigator,
-  Screen: StackScreen,
-  Group,
-} = createNativeStackNavigator();
+const { Navigator: StackNavigator, Screen: StackScreen } =
+  createNativeStackNavigator();
 
 export const AppStackRoutes = () => {
   return (
@@ -32,7 +29,7 @@ export const AppStackRoutes = () => {
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="Complete"
+        name="Home/Complete"
         component={Complete}
         options={{ headerShown: false }}
       />
@@ -40,22 +37,22 @@ export const AppStackRoutes = () => {
 
       {/* Lançamentos */}
       <StackScreen
-        name="Lançamentos"
+        name="Lancamentos"
         component={Entry}
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="NovoLançamento"
+        name="Lancamentos/NovoLancamento"
         component={NewEntry}
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="LançamentoFixo"
+        name="Lancamentos/LancamentoFixo"
         component={FixedEntry}
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="Filtros"
+        name="Lancamentos/Filtros"
         component={Filter}
         options={{
           headerShown: false,
@@ -71,17 +68,17 @@ export const AppStackRoutes = () => {
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="NovoAtivo"
+        name="Investimentos/NovoAtivo"
         component={NewAsset}
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="NovoAtivoFixo"
+        name="Investimentos/NovoAtivoFixo"
         component={NewFixAsset}
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="NovoAtivoVariavel"
+        name="Investimentos/NovoAtivoVariavel"
         component={NewVariableAsset}
         options={{ headerShown: false }}
       />

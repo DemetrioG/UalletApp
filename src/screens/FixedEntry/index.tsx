@@ -150,7 +150,7 @@ const FixedEntry = () => {
       type: "success",
       text1: "Dados cadastrados com sucesso",
     });
-    navigate("Lançamentos");
+    navigate("Lancamentos");
     return setIsLoading(false);
   }
 
@@ -160,7 +160,7 @@ const FixedEntry = () => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ViewTabContent noPaddingBottom>
             <HorizontalView>
-              <TouchableOpacity onPress={() => navigate("Lançamentos")}>
+              <TouchableOpacity onPress={() => navigate("Lancamentos")}>
                 <Icon name="chevron-left" style={{ marginRight: 10 }} />
               </TouchableOpacity>
               <TextHeaderScreen noMarginBottom>

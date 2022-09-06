@@ -48,7 +48,7 @@ const Investments = () => {
             <Balance>{numberToReal(data.equity)}</Balance>
           </VStack>
           <Positions setSpinner={setSpinner} />
-          <Button mt={10} onPress={() => navigate("NovoAtivo")}>
+          <Button mt={10} onPress={() => navigate("Investimentos/NovoAtivo")}>
             <ButtonText>ADICIONAR ATIVO</ButtonText>
           </Button>
         </ScrollView>
