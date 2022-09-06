@@ -43,8 +43,6 @@ import {
   getLastEntry,
 } from "./querys";
 import { getBalance } from "../../utils/query.helper";
-import { refreshAssetData } from "../../components/Positions/query";
-import { getStorage } from "../../utils/storage.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
