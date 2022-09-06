@@ -41,7 +41,6 @@ const ITEMS_WIDTH = {
   pl: 75,
 };
 
-let counter = 0;
 export const TotalOpen = ({
   label,
   value,
@@ -218,7 +217,6 @@ const Positions = ({
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
   const isFocused = useIsFocused();
-  console.log(++counter);
 
   function handlePositionVisible() {
     setUser((userState) => ({
