@@ -6,10 +6,10 @@ import { Collapse, HStack, ScrollView, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 
 import { IAsset, refreshAssetData } from "./query";
-import Tooltip from "../../../components/Tooltip";
-import Icon from "../../../components/Icon";
-import { UserContext } from "../../../context/User/userContext";
-import { LoaderContext } from "../../../context/Loader/loaderContext";
+import Tooltip from "../Tooltip";
+import Icon from "../Icon";
+import { UserContext } from "../../context/User/userContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 import {
   Container,
   EmptyText,
@@ -22,11 +22,11 @@ import {
   TotalPercentual,
   TotalValue,
 } from "./styles";
-import { colors, metrics } from "../../../styles";
-import { numberToReal } from "../../../utils/number.helper";
-import { getStorage } from "../../../utils/storage.helper";
-import { Skeleton } from "../../../styles/general";
-import { DataContext } from "../../../context/Data/dataContext";
+import { colors, metrics } from "../../styles";
+import { numberToReal } from "../../utils/number.helper";
+import { getStorage } from "../../utils/storage.helper";
+import { Skeleton } from "../../styles/general";
+import { DataContext } from "../../context/Data/dataContext";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -41,35 +41,31 @@ const ITEMS_WIDTH = {
   pl: 75,
 };
 
+let counter = 0;
 export const TotalOpen = ({
   label,
   value,
   percentual,
-  inlineLabel,
+  withoutLabel,
 }: {
-  label: "HOJE" | "TOTAL";
+  label?: "HOJE" | "TOTAL";
   value: string;
   percentual: string;
-  inlineLabel?: boolean;
+  withoutLabel?: boolean;
 }) => {
   const isPercentualNegative = percentual.includes("-");
   return (
-    <VStack pl={!inlineLabel ? 3 : 0} mb={2}>
-      {!inlineLabel && <TotalLabel>{label}</TotalLabel>}
+    <VStack pl={!withoutLabel ? 3 : 0} mb={2}>
+      {!withoutLabel && <TotalLabel>{label}</TotalLabel>}
       <HStack alignItems="center">
-        {inlineLabel && (
-          <VStack pr={2}>
-            <TotalLabel>{label}</TotalLabel>
-          </VStack>
-        )}
         <Icon
-          name={!isPercentualNegative ? "arrow-up" : "arrow-down"}
+          name={!isPercentualNegative ? "trending-up" : "trending-down"}
           size={16}
           colorVariant={!isPercentualNegative ? "green" : "red"}
         />
         <TotalValue ml={1}>{value}</TotalValue>
         <TotalPercentual ml={2} negative={isPercentualNegative}>
-          {percentual}%
+          ({percentual}%)
         </TotalPercentual>
       </HStack>
     </VStack>
@@ -88,9 +84,10 @@ const TotalClose = ({
     <HStack alignItems="center" mr={3}>
       <TotalLabel>{label}</TotalLabel>
       <Icon
-        name={!isPercentualNegative ? "arrow-up" : "arrow-down"}
+        name={!isPercentualNegative ? "trending-up" : "trending-down"}
         size={16}
         colorVariant={!isPercentualNegative ? "green" : "red"}
+        style={{ marginLeft: 5 }}
       />
       <TotalPercentual ml={2} negative={isPercentualNegative}>
         {percentual}%
@@ -204,7 +201,7 @@ const Positions = ({
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
-    user: { hideAssetPosition, uid },
+    user: { hideAssetPosition },
     setUser,
   } = React.useContext(UserContext);
   const {
@@ -221,6 +218,7 @@ const Positions = ({
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
   const isFocused = useIsFocused();
+  console.log(++counter);
 
   function handlePositionVisible() {
     setUser((userState) => ({

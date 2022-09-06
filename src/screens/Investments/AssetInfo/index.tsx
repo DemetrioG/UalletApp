@@ -6,11 +6,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { IAsset } from "../Positions/query";
+import { IAsset } from "../../../components/Positions/query";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
 import { ConfirmContext } from "../../../context/ConfirmDialog/confirmContext";
-import { ItemContent } from "../Positions/styles";
+import { ItemContent } from "../../../components/Positions/styles";
 import {
   BackgroundContainer,
   ButtonDelete,

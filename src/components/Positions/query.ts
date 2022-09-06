@@ -1,12 +1,12 @@
-import firebase from "../../../services/firebase";
-import axios, { ACOES_URL, FII_URL } from "../../../utils/api.helper";
+import firebase from "../../services/firebase";
+import axios, { ACOES_URL, FII_URL } from "../../utils/api.helper";
 import {
   getRent,
   getRentPercentual,
   realToNumber,
-} from "../../../utils/number.helper";
-import { currentUser } from "../../../utils/query.helper";
-import { setStorage } from "../../../utils/storage.helper";
+} from "../../utils/number.helper";
+import { currentUser } from "../../utils/query.helper";
+import { setStorage } from "../../utils/storage.helper";
 
 export interface IAsset {
   id: number;

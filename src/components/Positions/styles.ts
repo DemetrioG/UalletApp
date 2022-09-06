@@ -1,7 +1,7 @@
 import { ITextProps, Text, VStack } from "native-base";
 import React from "react";
 import styled from "styled-components";
-import { colors, metrics } from "../../../styles";
+import { colors, metrics } from "../../styles";
 
 export const Header = styled(VStack)`
   z-index: 2;

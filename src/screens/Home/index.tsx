@@ -1,12 +1,12 @@
 import * as React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { Collapse, VStack } from "native-base";
+import { Collapse } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
-import { TotalOpen as InvestResume } from "../Investments/Positions";
+import InvestSummary from "../../components/InvestSummary";
 import Consolidate from "../../components/Consolidate";
 import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
@@ -43,7 +43,7 @@ import {
   getLastEntry,
 } from "./querys";
 import { getBalance } from "../../utils/query.helper";
-import { refreshAssetData } from "../Investments/Positions/query";
+import { refreshAssetData } from "../../components/Positions/query";
 import { getStorage } from "../../utils/storage.helper";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
@@ -162,25 +162,6 @@ const Home = () => {
     }
   }, [balance, lineChart, segmentChart, name, equity]);
 
-  React.useEffect(() => {
-    refreshAssetData()
-      .then(async () => {
-        const totalEquity = await getStorage("investTotalEquity");
-        totalEquity &&
-          setData((state) => ({
-            ...state,
-            equity: totalEquity,
-          }));
-      })
-      .finally(() => {
-        !equity &&
-          setLoader((loaderState) => ({
-            ...loaderState,
-            equity: true,
-          }));
-      });
-  }, []);
-
   return (
     <BackgroundContainer>
       <Consolidate visible={consolidate} setVisible={setConsolidate} />
@@ -236,20 +217,6 @@ const Home = () => {
               )}
             </Skeleton>
           </Card>
-          {/* <Card>
-          <CardStatusView>
-          <StatusText bold={true}>Você está indo bem</StatusText>
-          </CardStatusView>
-          <CardStatusView>
-          <StatusText>
-          Sua média de gastos variáveis semanal está representando{" "}
-          <StatusPercentText>3%</StatusPercentText> de sua renda
-          </StatusText>
-          </CardStatusView>
-          <View>
-          <StatusText bold={true}>Continue!! ⚡</StatusText>
-          </View>
-        </Card> */}
           <Card>
             <Skeleton isLoaded={!homeVisible} h={152} width={"full"}>
               <CardHeaderView>
@@ -297,21 +264,8 @@ const Home = () => {
                   ? numberToReal(data.equity)
                   : "** ** ** ** **"}
               </Invest>
-              <VStack>
-                <InvestResume
-                  label="HOJE"
-                  percentual="0,00"
-                  value="R$ 0,00"
-                  inlineLabel
-                />
-                <InvestResume
-                  label="TOTAL"
-                  percentual="0,00"
-                  value="R$ 0,00"
-                  inlineLabel
-                />
-              </VStack>
             </Skeleton>
+            <InvestSummary />
           </Card>
         </Collapse>
       </ScrollViewTab>
