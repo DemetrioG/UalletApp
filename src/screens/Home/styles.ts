@@ -7,12 +7,12 @@ import {
   ValueContainer as DefaultValueContainer,
   DescriptionContainer as DefaultDescriptionContainer,
   DescriptionText as DefaultDescriptionText,
-  BackgroundContainer as DefaultBackgroundContainer
+  BackgroundContainer as DefaultBackgroundContainer,
 } from "../../styles/general";
 
-export const BackgroundContainer = styled(DefaultBackgroundContainer)` 
+export const BackgroundContainer = styled(DefaultBackgroundContainer)`
   padding-top: 0px;
-`
+`;
 
 export const CardHeaderView: React.FC<
   ViewProps & { balance?: boolean }
@@ -67,17 +67,6 @@ export const StatusPercentText = styled(Text)`
   color: ${({ theme: { theme } }) => theme.green};
 `;
 
-export const CardFooterText = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
-  margin-right: ${metrics.baseMargin / 2}px;
-`;
-
-export const InvestPercentual = styled(Text).attrs(() => ({
-  fontFamily: "mono",
-}))`
-  color: ${({ theme: { theme } }) => theme.green};
-`;
-
 export const Section = styled(View)`
   flex-direction: row;
   align-items: center;
@@ -106,8 +95,8 @@ export const DescriptionText = styled(DefaultDescriptionText)`
 
 export const EmptyEntryText = styled(Text).attrs(() => ({
   fontWeight: 500,
-  fontSize: 'md'
+  fontSize: "md",
 }))`
   color: ${colors.gray};
   text-align: center;
-`
+`;
