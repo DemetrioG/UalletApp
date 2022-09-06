@@ -2,6 +2,7 @@ import * as React from "react";
 
 export interface IData {
   balance: string;
+  equity: number;
   isNetworkConnected: boolean | null;
   month: number;
   year: number;
@@ -10,6 +11,7 @@ export interface IData {
 
 export const initialDataState: IData = {
   balance: "R$ 0,00",
+  equity: 0,
   isNetworkConnected: null,
   month: 0,
   year: 0,

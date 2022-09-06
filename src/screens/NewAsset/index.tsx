@@ -39,7 +39,10 @@ const NewAsset = () => {
   });
 
   function submit() {
-    const route = type === "Renda fixa" ? "NovoAtivoFixo" : "NovoAtivoVariavel";
+    const route =
+      type === "Renda fixa"
+        ? "Investimentos/NovoAtivoFixo"
+        : "Investimentos/NovoAtivoVariavel";
     return navigation.navigate(route as never);
   }
 

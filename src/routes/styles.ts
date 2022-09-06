@@ -14,25 +14,26 @@ interface ITabListener {
   };
 }
 
-export const StyledTabNavigation: React.FC<{
-  initialRouteName: string;
-}> = styled(Tab.Navigator).attrs(({ theme: { theme } }) => ({
-  screenOptions: {
-    headerShown: false,
-    tabBarHideOnKeyboard: true,
-    tabBarShowLabel: false,
-    tabBarStyle: {
-      height: IPHONE_BOTTOM_TAB ? 80 : 60,
-      backgroundColor: theme.secondary,
-      position: "absolute",
-      marginHorizontal: metrics.basePadding,
-      borderTopWidth: 0,
-      borderTopLeftRadius: metrics.baseRadius,
-      borderTopRightRadius: metrics.baseRadius,
-      paddingTop: IPHONE_BOTTOM_TAB ? 15 : 0,
+export const StyledTabNavigation = styled(Tab.Navigator).attrs(
+  ({ theme: { theme } }) => ({
+    screenOptions: {
+      headerShown: false,
+      tabBarHideOnKeyboard: true,
+      tabBarShowLabel: false,
+      tabBarActiveTintColor: colors.lightBlue,
+      tabBarStyle: {
+        height: IPHONE_BOTTOM_TAB ? 80 : 60,
+        backgroundColor: theme.secondary,
+        position: "absolute",
+        marginHorizontal: metrics.basePadding,
+        borderTopWidth: 0,
+        borderTopLeftRadius: metrics.baseRadius,
+        borderTopRightRadius: metrics.baseRadius,
+        paddingTop: IPHONE_BOTTOM_TAB ? 15 : 0,
+      },
     },
-  },
-}))``;
+  })
+)``;
 
 export const HomeIconContainer = styled(Box).attrs(() => ({
   shadow: "4",

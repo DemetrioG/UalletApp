@@ -221,7 +221,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
             ? "Lançamento atualizado com sucesso"
             : "Dados cadastrados com sucesso",
         });
-        navigate("Lançamentos");
+        navigate("Lancamentos");
       });
 
     return setIsLoading(false);
@@ -291,7 +291,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
       type: "success",
       text1: "Lançamento excluído com  sucesso",
     });
-    return navigate("Lançamentos");
+    return navigate("Lancamentos");
   }
 
   React.useEffect(() => {
@@ -316,7 +316,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
               <Icon
                 name="chevron-left"
                 style={{ marginRight: 10 }}
-                onPress={() => navigate("Lançamentos")}
+                onPress={() => navigate("Lancamentos")}
               />
               <TextHeaderScreen noMarginBottom>
                 {isEditing ? "Editar lançamento" : "Novo lançamento"}
@@ -390,7 +390,9 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                     >
                       <ButtonText>CADASTRAR</ButtonText>
                     </Button>
-                    <ButtonOutline onPress={() => navigate("LançamentoFixo")}>
+                    <ButtonOutline
+                      onPress={() => navigate("Lancamentos/LancamentoFixo")}
+                    >
                       <ButtonOutlineText>
                         CADASTRAR DESPESAS FIXAS
                       </ButtonOutlineText>

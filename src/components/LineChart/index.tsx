@@ -59,14 +59,20 @@ const LineChart = () => {
            */
 
           setIncome(
-            income[0] == 0
-              ? income[2]
-              : ((income[2] - income[0]) / income[0]) * 100
+            Number(
+              (income[0] == 0
+                ? income[2]
+                : ((income[2] - income[0]) / income[0]) * 100
+              ).toFixed(0)
+            )
           );
           setExpense(
-            expense[0] == 0
-              ? expense[2]
-              : ((expense[2] - expense[0]) / expense[0]) * 100
+            Number(
+              (expense[0] == 0
+                ? expense[2]
+                : ((expense[2] - expense[0]) / expense[0]) * 100
+              ).toFixed(0)
+            )
           );
         }
       })

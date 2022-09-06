@@ -5,11 +5,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 
-import { getAssets, getUpdatedInfos, IAsset } from "./query";
-import Tooltip from "../../../components/Tooltip";
-import Icon from "../../../components/Icon";
-import { UserContext } from "../../../context/User/userContext";
-import { LoaderContext } from "../../../context/Loader/loaderContext";
+import { IAsset, refreshAssetData } from "./query";
+import Tooltip from "../Tooltip";
+import Icon from "../Icon";
+import { UserContext } from "../../context/User/userContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 import {
   Container,
   EmptyText,
@@ -22,10 +22,11 @@ import {
   TotalPercentual,
   TotalValue,
 } from "./styles";
-import { colors, metrics } from "../../../styles";
-import { getRentPercentual, numberToReal } from "../../../utils/number.helper";
-import { getStorage, setStorage } from "../../../utils/storage.helper";
-import { Skeleton } from "../../../styles/general";
+import { colors, metrics } from "../../styles";
+import { numberToReal } from "../../utils/number.helper";
+import { getStorage } from "../../utils/storage.helper";
+import { Skeleton } from "../../styles/general";
+import { DataContext } from "../../context/Data/dataContext";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -40,32 +41,32 @@ const ITEMS_WIDTH = {
   pl: 75,
 };
 
-const TotalOpen = ({
+export const TotalOpen = ({
   label,
   value,
   percentual,
+  withoutLabel,
 }: {
-  label: "HOJE" | "TOTAL";
+  label?: "HOJE" | "TOTAL";
   value: string;
   percentual: string;
+  withoutLabel?: boolean;
 }) => {
   const isPercentualNegative = percentual.includes("-");
   return (
-    <VStack pl={3} mb={2}>
-      <VStack>
-        <TotalLabel>{label}</TotalLabel>
-        <HStack alignItems="center">
-          <Icon
-            name={!isPercentualNegative ? "arrow-up" : "arrow-down"}
-            size={16}
-            colorVariant={!isPercentualNegative ? "green" : "red"}
-          />
-          <TotalValue ml={1}>{value}</TotalValue>
-          <TotalPercentual ml={2} negative={isPercentualNegative}>
-            {percentual}%
-          </TotalPercentual>
-        </HStack>
-      </VStack>
+    <VStack pl={!withoutLabel ? 3 : 0} mb={2}>
+      {!withoutLabel && <TotalLabel>{label}</TotalLabel>}
+      <HStack alignItems="center">
+        <Icon
+          name={!isPercentualNegative ? "trending-up" : "trending-down"}
+          size={16}
+          colorVariant={!isPercentualNegative ? "green" : "red"}
+        />
+        <TotalValue ml={1}>{value}</TotalValue>
+        <TotalPercentual ml={2} negative={isPercentualNegative}>
+          ({percentual}%)
+        </TotalPercentual>
+      </HStack>
     </VStack>
   );
 };
@@ -82,9 +83,10 @@ const TotalClose = ({
     <HStack alignItems="center" mr={3}>
       <TotalLabel>{label}</TotalLabel>
       <Icon
-        name={!isPercentualNegative ? "arrow-up" : "arrow-down"}
+        name={!isPercentualNegative ? "trending-up" : "trending-down"}
         size={16}
         colorVariant={!isPercentualNegative ? "green" : "red"}
+        style={{ marginLeft: 5 }}
       />
       <TotalPercentual ml={2} negative={isPercentualNegative}>
         {percentual}%
@@ -192,21 +194,20 @@ const ItemList = ({
 };
 
 const Positions = ({
-  setTotalEquity,
   setSpinner,
 }: {
-  setTotalEquity: React.Dispatch<React.SetStateAction<number>>;
   setSpinner: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
-    user: { hideAssetPosition, uid },
+    user: { hideAssetPosition },
     setUser,
   } = React.useContext(UserContext);
   const {
     loader: { investVisible },
     setLoader,
   } = React.useContext(LoaderContext);
+  const { setData: setDataContext } = React.useContext(DataContext);
   const [data, setData] = React.useState<IAsset[]>([]);
   const [totalValue, setTotalValue] = React.useState(0);
   const [todayValue, setTodayValue] = React.useState(0);
@@ -225,65 +226,8 @@ const Positions = ({
   }
 
   async function refreshData() {
-    await getAssets(uid!)
-      .then(async (data) => {
-        if (data.length > 0) {
-          await getUpdatedInfos(data).then(async (infos) => {
-            const finalData: IAsset[] = [];
-            let totalValue = 0;
-            let totalInitialPrice = 0;
-            let totalMediumPrice = 0;
-            let totalAtualPrice = 0;
-
-            infos.map((info) => {
-              const [item] = data.filter((e) => e.asset === info.asset);
-              const newData: IAsset = {
-                id: item.id,
-                amount: item.amount,
-                asset: item.asset,
-                price: item.price,
-                segment: item.segment,
-                total: info.totalPrecoAtual,
-                atualPrice: info.atualPrice,
-                rent: info.rent,
-                rentPercentual: info.rentPercentual,
-                pvp: info.pvp,
-                dy: info.dy,
-                pl: info.pl,
-              };
-
-              totalValue += info.rent;
-              totalAtualPrice += info.totalPrecoAtual;
-              totalMediumPrice += info.totalPrecoMedio;
-              totalInitialPrice += info.totalPrecoInicial;
-
-              return finalData.push(newData);
-            });
-
-            setStorage("investPositionsTotalValue", totalValue);
-            setStorage(
-              "investPositionsTotalRent",
-              getRentPercentual(totalMediumPrice, totalAtualPrice)
-            );
-            setStorage(
-              "investPositionsTodayValue",
-              totalAtualPrice - totalInitialPrice
-            );
-            setStorage(
-              "investPositionsTodayRent",
-              getRentPercentual(totalInitialPrice, totalAtualPrice)
-            );
-            setStorage("investTotalEquity", totalAtualPrice);
-            setStorage("investPositionsData", finalData);
-          });
-        } else {
-          setStorage("investPositionsTotalValue", 0);
-          setStorage("investPositionsTotalRent", "0,00");
-          setStorage("investPositionsTodayValue", 0);
-          setStorage("investPositionsTodayRent", "0,00");
-          setStorage("investTotalEquity", 0);
-          setStorage("investPositionsData", []);
-        }
+    refreshAssetData()
+      .then(async () => {
         await getData();
       })
       .catch(() => {
@@ -307,13 +251,16 @@ const Positions = ({
     totalRent && setTotalRent(totalRent);
     todayValue && setTodayValue(todayValue);
     todayRent && setTodayRent(todayRent);
-    totalEquity && setTotalEquity(totalEquity);
+    totalEquity &&
+      setDataContext((state) => ({
+        ...state,
+        equity: totalEquity,
+      }));
     data && setData(data);
 
     if (investVisible) {
       setLoader((state) => ({
         ...state,
-        equity: true,
         positions: true,
       }));
     }

@@ -87,7 +87,7 @@ const Filter = ({
   });
 
   function handleClose() {
-    navigate("Lançamentos", filter);
+    navigate("Lancamentos", filter);
   }
 
   async function handleFilter({
@@ -111,7 +111,7 @@ const Filter = ({
     };
 
     setFilter(data);
-    navigate("Lançamentos", data);
+    navigate("Lancamentos", data);
     return setLoading(false);
   }
 

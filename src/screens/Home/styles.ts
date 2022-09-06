@@ -1,22 +1,20 @@
 import * as React from "react";
-import { ITextAreaProps, ITextProps, Text } from "native-base";
-import { Image, TextProps, View, ViewProps } from "react-native";
+import { ITextProps, Text } from "native-base";
+import { Image, TextProps, View } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 import {
   ValueContainer as DefaultValueContainer,
   DescriptionContainer as DefaultDescriptionContainer,
   DescriptionText as DefaultDescriptionText,
-  BackgroundContainer as DefaultBackgroundContainer
+  BackgroundContainer as DefaultBackgroundContainer,
 } from "../../styles/general";
 
-export const BackgroundContainer = styled(DefaultBackgroundContainer)` 
+export const BackgroundContainer = styled(DefaultBackgroundContainer)`
   padding-top: 0px;
-`
+`;
 
-export const CardHeaderView: React.FC<
-  ViewProps & { balance?: boolean }
-> = styled(View)`
+export const CardHeaderView = styled(View)<{ balance?: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -44,7 +42,6 @@ export const Invest = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: fonts.larger,
 }))`
-  margin-bottom: ${metrics.baseMargin}px;
   color: ${({ theme: { theme } }) =>
     !theme.isOnDarkTheme ? colors.strongPurple : colors.lightYellow};
 `;
@@ -64,17 +61,6 @@ export const StatusText: React.FC<TextProps & { bold?: boolean }> = styled(
 
 export const StatusPercentText = styled(Text)`
   font-family: ${fonts.montserratExtraBold};
-  color: ${({ theme: { theme } }) => theme.green};
-`;
-
-export const CardFooterText = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
-  margin-right: ${metrics.baseMargin / 2}px;
-`;
-
-export const InvestPercentual = styled(Text).attrs(() => ({
-  fontFamily: "mono",
-}))`
   color: ${({ theme: { theme } }) => theme.green};
 `;
 
@@ -106,8 +92,8 @@ export const DescriptionText = styled(DefaultDescriptionText)`
 
 export const EmptyEntryText = styled(Text).attrs(() => ({
   fontWeight: 500,
-  fontSize: 'md'
+  fontSize: "md",
 }))`
   color: ${colors.gray};
   text-align: center;
-`
+`;
