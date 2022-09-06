@@ -8,7 +8,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../services/firebase";
 import TextInput from "../../components/TextInput";
 import TextInputPassword from "../../components/TextInputPassword";
 import {
@@ -23,8 +22,9 @@ import {
   TextHeader,
 } from "../../styles/general";
 import PasswordRules from "./PasswordRules";
+import { registerUser } from "./query";
 
-interface IForm {
+export interface IRegister {
   name: string;
   email: string;
   password: string;
@@ -47,6 +47,8 @@ const schema = yup
   })
   .required();
 
+const LOGO = require("../../../assets/images/logo.png");
+
 const Register = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const [loading, setLoading] = React.useState(false);
@@ -56,73 +58,36 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<IForm>({
+  } = useForm<IRegister>({
     resolver: yupResolver(schema),
   });
 
   const passwordText = watch("password");
 
-  async function registerUser({ name, email, password, confirm }: IForm) {
-    if (password !== confirm) {
-      return Toast.show({
-        type: "error",
-        text1: "As senhas informadas são diferentes",
-      });
-    }
-
+  function submit(props: IRegister) {
     setLoading(true);
-    await firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((v) => {
-        firebase.firestore().collection("users").doc(v.user?.uid).set({
-          name: name,
-          email: email,
-          typeUser: "default",
-          dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-        });
+    registerUser(props)
+      .then(() => {
         Toast.show({
           type: "success",
-          text1: "Usuário criado com sucesso",
+          text1: "Usuário cadastrado com sucesso",
         });
         return navigate("Login");
       })
       .catch((error) => {
-        switch (error.code) {
-          case "auth/weak-password":
-            Toast.show({
-              type: "error",
-              text1: "Sua senha deve ter no mínimo 6 caracteres",
-            });
-            break;
-          case "auth/invalid-email":
-            Toast.show({
-              type: "error",
-              text1: "O e-mail informado é inválido",
-            });
-            break;
-          case "auth/email-already-in-use":
-            Toast.show({
-              type: "error",
-              text1: "Usuário já cadastrado",
-            });
-            break;
-          default:
-            Toast.show({
-              type: "error",
-              text1: "Erro ao cadastrar usuário",
-            });
-            break;
-        }
-      });
-    return setLoading(false);
+        return Toast.show({
+          type: "error",
+          text1: error,
+        });
+      })
+      .finally(() => setLoading(false));
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BackgroundContainer>
         <LogoHeader>
-          <Logo source={require("../../../assets/images/logo.png")} />
+          <Logo source={LOGO} />
           <TextHeader withMarginLeft>Uallet</TextHeader>
         </LogoHeader>
         <HeaderTitleContainer>
@@ -156,7 +121,7 @@ const Register = () => {
             />
             <TextInputPassword
               placeholder="Confirme sua senha"
-              onSubmitEditing={handleSubmit(registerUser)}
+              onSubmitEditing={handleSubmit(submit)}
               returnKeyType="done"
               name="confirm"
               control={control}
@@ -164,7 +129,7 @@ const Register = () => {
               helperText="Informe todos os campos"
             />
             <PasswordRules mb={5} content={passwordText} />
-            <Button isLoading={loading} onPress={handleSubmit(registerUser)}>
+            <Button isLoading={loading} onPress={handleSubmit(submit)}>
               <ButtonText>CRIAR CONTA</ButtonText>
             </Button>
           </FormContainer>
