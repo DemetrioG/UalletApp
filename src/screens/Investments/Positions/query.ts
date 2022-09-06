@@ -5,6 +5,8 @@ import {
   getRentPercentual,
   realToNumber,
 } from "../../../utils/number.helper";
+import { currentUser } from "../../../utils/query.helper";
+import { setStorage } from "../../../utils/storage.helper";
 
 export interface IAsset {
   id: number;
@@ -66,14 +68,6 @@ async function _getAssets(uid: string) {
   return data;
 }
 
-export function getAssets(uid: string) {
-  try {
-    return _getAssets(uid);
-  } catch (error) {
-    throw new Error("Erro");
-  }
-}
-
 async function _getUpdatedInfos(data: IAsset[]) {
   const assetsInfo: IInfos[] = [];
 
@@ -110,10 +104,87 @@ async function _getUpdatedInfos(data: IAsset[]) {
   return assetsInfo;
 }
 
+async function _refreshAssetData() {
+  const user = await currentUser();
+
+  if (!user) return Promise.reject();
+
+  await getAssets(user.uid)
+    .then(async (data) => {
+      await getUpdatedInfos(data).then(async (infos) => {
+        const finalData: IAsset[] = [];
+        let totalValue = 0;
+        let totalInitialPrice = 0;
+        let totalMediumPrice = 0;
+        let totalAtualPrice = 0;
+
+        infos.map((info) => {
+          const [item] = data.filter((e) => e.asset === info.asset);
+          const newData: IAsset = {
+            id: item.id,
+            amount: item.amount,
+            asset: item.asset,
+            price: item.price,
+            segment: item.segment,
+            total: info.totalPrecoAtual,
+            atualPrice: info.atualPrice,
+            rent: info.rent,
+            rentPercentual: info.rentPercentual,
+            pvp: info.pvp,
+            dy: info.dy,
+            pl: info.pl,
+          };
+
+          totalValue += info.rent;
+          totalAtualPrice += info.totalPrecoAtual;
+          totalMediumPrice += info.totalPrecoMedio;
+          totalInitialPrice += info.totalPrecoInicial;
+
+          return finalData.push(newData);
+        });
+
+        setStorage("investPositionsTotalValue", totalValue);
+        setStorage(
+          "investPositionsTotalRent",
+          getRentPercentual(totalMediumPrice, totalAtualPrice)
+        );
+        setStorage(
+          "investPositionsTodayValue",
+          totalAtualPrice - totalInitialPrice
+        );
+        setStorage(
+          "investPositionsTodayRent",
+          getRentPercentual(totalInitialPrice, totalAtualPrice)
+        );
+        setStorage("investTotalEquity", totalAtualPrice);
+        setStorage("investPositionsData", finalData);
+      });
+    })
+    .catch(() => {
+      return Promise.reject();
+    });
+}
+
+export function getAssets(uid: string) {
+  try {
+    return _getAssets(uid);
+  } catch (error) {
+    throw new Error("Erro");
+  }
+}
+
 export function getUpdatedInfos(data: IAsset[]) {
   try {
     return _getUpdatedInfos(data);
   } catch (error) {
     throw new Error("Erro");
+  }
+}
+
+export function refreshAssetData() {
+  try {
+    return _refreshAssetData();
+  } catch (error) {
+    throw new Error("Erro ao atualizar as posições");
   }
 }
