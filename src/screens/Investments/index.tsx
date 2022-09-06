@@ -3,19 +3,19 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, HStack, ScrollView, VStack } from "native-base";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import Positions from "./Positions";
+import Positions from "../../components/Positions";
 import { numberToReal } from "../../utils/number.helper";
 import {
   BackgroundContainer,
   Balance,
   ButtonText,
-  Skeleton,
   TextHeaderScreen,
   ViewTab,
 } from "../../styles/general";
 import { metrics } from "../../styles";
 import { PatrimonyText, Spinner } from "./styles";
 import { LoaderContext } from "../../context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
 
 const Investments = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -23,17 +23,17 @@ const Investments = () => {
     loader: { positions, equity, investVisible },
     setLoader,
   } = React.useContext(LoaderContext);
-  const [totalEquity, setTotalEquity] = React.useState(0);
+  const { data } = React.useContext(DataContext);
   const [spinner, setSpinner] = React.useState(true);
 
   React.useEffect(() => {
-    if (equity && positions) {
+    if (positions) {
       setLoader((state) => ({
         ...state,
         investVisible: false,
       }));
     }
-  }, [equity, positions]);
+  }, [positions]);
 
   return (
     <BackgroundContainer>
@@ -45,11 +45,9 @@ const Investments = () => {
           </HStack>
           <PatrimonyText>Patrimônio investido</PatrimonyText>
           <VStack mt={1}>
-            <Skeleton isLoaded={!investVisible} mt={2}>
-              <Balance>{numberToReal(totalEquity)}</Balance>
-            </Skeleton>
+            <Balance>{numberToReal(data.equity)}</Balance>
           </VStack>
-          <Positions setTotalEquity={setTotalEquity} setSpinner={setSpinner} />
+          <Positions setSpinner={setSpinner} />
           <Button mt={10} onPress={() => navigate("NovoAtivo")}>
             <ButtonText>ADICIONAR ATIVO</ButtonText>
           </Button>
