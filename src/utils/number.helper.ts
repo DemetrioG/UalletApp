@@ -127,9 +127,13 @@ export function getRent(firstNumber: number, secondNumber: number) {
  * Retorna o percentual de crescimento entre dois números
  */
 export function getRentPercentual(firstNumber: number, secondNumber: number) {
-  const value = numberToReal(
-    Number((((secondNumber - firstNumber) / firstNumber) * 100).toFixed(2)),
-    true
-  );
-  return value;
+  if (firstNumber && secondNumber) {
+    const value = numberToReal(
+      Number((((secondNumber - firstNumber) / firstNumber) * 100).toFixed(2)),
+      true
+    );
+    return value;
+  } else {
+    return "0,00";
+  }
 }
