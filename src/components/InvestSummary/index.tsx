@@ -7,6 +7,7 @@ import { LoaderContext } from "../../context/Loader/loaderContext";
 import { numberToReal } from "../../utils/number.helper";
 import { getStorage } from "../../utils/storage.helper";
 import { refreshAssetData } from "../Positions/query";
+import { useIsFocused } from "@react-navigation/native";
 
 const InvestSummary = () => {
   const { setData } = React.useContext(DataContext);
@@ -16,6 +17,8 @@ const InvestSummary = () => {
   } = React.useContext(LoaderContext);
   const [totalValue, setTotalValue] = React.useState(0);
   const [totalRent, setTotalRent] = React.useState("0,00");
+
+  const isFocused = useIsFocused();
 
   async function getData() {
     const totalValue = await getStorage("investPositionsTotalValue");
@@ -32,18 +35,19 @@ const InvestSummary = () => {
   }
 
   React.useEffect(() => {
-    refreshAssetData()
-      .then(async () => {
-        await getData();
-      })
-      .finally(() => {
-        !equity &&
-          setLoader((loaderState) => ({
-            ...loaderState,
-            equity: true,
-          }));
-      });
-  }, []);
+    isFocused &&
+      refreshAssetData()
+        .then(async () => {
+          await getData();
+        })
+        .finally(() => {
+          !equity &&
+            setLoader((loaderState) => ({
+              ...loaderState,
+              equity: true,
+            }));
+        });
+  }, [isFocused]);
 
   return (
     <>
