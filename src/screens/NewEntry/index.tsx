@@ -38,7 +38,7 @@ import {
 import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
 import Toast from "react-native-toast-message";
 
-interface IForm {
+export interface IForm {
   entrydate: string;
   description: string;
   modality: string;
