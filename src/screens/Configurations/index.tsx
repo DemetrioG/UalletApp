@@ -16,9 +16,15 @@ const actions = [
     icon: "user",
     color: "blue",
   },
+  {
+    label: "Segurança",
+    url: "Configuracoes/Seguranca",
+    icon: "shield",
+    color: "blue",
+  },
 ];
 
-function ConfiguracoesScreen() {
+const ConfiguracoesScreen = () => {
   const { goBack, navigate } = useNavigation();
 
   function goTo(url: string) {
@@ -36,7 +42,11 @@ function ConfiguracoesScreen() {
         {actions.map((action) => (
           <TouchableOpacity onPress={() => goTo(action.url)} key={action.url}>
             <ItemContainer>
-              <HStack justifyContent="space-between" flex={1}>
+              <HStack
+                justifyContent="space-between"
+                flex={1}
+                alignItems={"center"}
+              >
                 <HStack alignItems="center" space={3}>
                   <Icon
                     colorVariant={action.color}
@@ -53,6 +63,6 @@ function ConfiguracoesScreen() {
       </ViewTab>
     </BackgroundContainer>
   );
-}
+};
 
 export default ConfiguracoesScreen;
