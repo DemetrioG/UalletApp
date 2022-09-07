@@ -247,15 +247,23 @@ const Positions = ({
     const totalEquity = await getStorage("investTotalEquity");
     const data = await getStorage("investPositionsData");
 
-    totalValue && setTotalValue(totalValue);
-    totalRent && setTotalRent(totalRent);
-    todayValue && setTodayValue(todayValue);
-    todayRent && setTodayRent(todayRent);
-    totalEquity &&
+    totalValue !== undefined &&
+      totalValue !== null &&
+      setTotalValue(totalValue);
+
+    todayValue !== undefined &&
+      todayValue !== null &&
+      setTodayValue(todayValue);
+
+    totalEquity !== undefined &&
+      totalEquity !== null &&
       setDataContext((state) => ({
         ...state,
         equity: totalEquity,
       }));
+
+    totalRent && setTotalRent(totalRent);
+    todayRent && setTodayRent(todayRent);
     data && setData(data);
 
     if (investVisible) {
