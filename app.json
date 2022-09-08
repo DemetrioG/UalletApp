@@ -44,6 +44,13 @@
           "facebookAppId": "623678532217571",
           "facebookDisplayName": "Uallet"
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/src/icon.png",
+          "color": "#FFFFFF"
+        }
       ]
     ]
   }
