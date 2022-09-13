@@ -11,7 +11,7 @@ async function setupPushNotificationsListener() {
 
   const responseListener =
     Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
+      return;
     });
 
   return () => {
