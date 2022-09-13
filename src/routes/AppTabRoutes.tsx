@@ -133,103 +133,101 @@ const AppRoutes = () => {
         changeIndicator(currentRoute || "");
       }}
     >
-      <SafeAreaContainer>
-        <BackgroundContainer>
-          <ConfirmDialog />
-          <Header />
-        </BackgroundContainer>
-        <StyledTabNavigation initialRouteName="HomeTab">
-          <Tab.Screen
-            name="InvestimentosTab"
-            component={AppStackRoutes}
-            options={{
-              tabBarIcon: () => {
-                return <Icon name="pie-chart" />;
-              },
-            }}
-            listeners={({ navigation }) => ({
-              tabPress: (event) => {
-                event.preventDefault();
-                investActive();
-                navigation.navigate("Investimentos");
-              },
-            })}
-          />
-          <Tab.Screen
-            name="LancamentosTab"
-            component={AppStackRoutes}
-            options={{
-              tabBarIcon: () => {
-                return <Icon name="edit-3" />;
-              },
-            }}
-            listeners={({ navigation }) => ({
-              tabPress: (event) => {
-                event.preventDefault();
-                entryActive();
-                navigation.navigate("Lancamentos");
-              },
-            })}
-          />
-          <Tab.Screen
-            name="HomeTab"
-            component={AppStackRoutes}
-            options={{
-              tabBarIcon: () => (
-                <HomeIconContainer>
-                  <Icon name="home" color={colors.white} />
-                </HomeIconContainer>
-              ),
-            }}
-            listeners={({ navigation }) => ({
-              tabPress: (event) => {
-                event.preventDefault();
-                homeActive();
-                navigation.navigate("Home");
-              },
-            })}
-          />
-          <Tab.Screen
-            name="IntegracoesTab"
-            component={AppStackRoutes}
-            options={{
-              tabBarIcon: () => {
-                return <Icon name="refresh-cw" />;
-              },
-            }}
-            listeners={({ navigation }) => ({
-              tabPress: (e) => {
-                e.preventDefault();
-                integrateActive();
-              },
-            })}
-          />
-          <Tab.Screen
-            name="RelatoriosTab"
-            component={AppStackRoutes}
-            options={{
-              tabBarIcon: () => {
-                return <Icon name="list" />;
-              },
-            }}
-            listeners={({ navigation }) => ({
-              tabPress: (e) => {
-                e.preventDefault();
-                reportsActive();
-              },
-            })}
-          />
-        </StyledTabNavigation>
-        {!keyboardVisible && (
-          <ActiveMenuIcon
-            iconWidth={getWidth()}
-            style={{
-              opacity,
-              transform: [{ translateX: tabOffsetValue }],
-            }}
-          />
-        )}
-      </SafeAreaContainer>
+      <BackgroundContainer>
+        <ConfirmDialog />
+        <Header />
+      </BackgroundContainer>
+      <StyledTabNavigation initialRouteName="HomeTab">
+        <Tab.Screen
+          name="InvestimentosTab"
+          component={AppStackRoutes}
+          options={{
+            tabBarIcon: () => {
+              return <Icon name="pie-chart" />;
+            },
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (event) => {
+              event.preventDefault();
+              investActive();
+              navigation.navigate("Investimentos");
+            },
+          })}
+        />
+        <Tab.Screen
+          name="LancamentosTab"
+          component={AppStackRoutes}
+          options={{
+            tabBarIcon: () => {
+              return <Icon name="edit-3" />;
+            },
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (event) => {
+              event.preventDefault();
+              entryActive();
+              navigation.navigate("Lancamentos");
+            },
+          })}
+        />
+        <Tab.Screen
+          name="HomeTab"
+          component={AppStackRoutes}
+          options={{
+            tabBarIcon: () => (
+              <HomeIconContainer>
+                <Icon name="home" color={colors.white} />
+              </HomeIconContainer>
+            ),
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (event) => {
+              event.preventDefault();
+              homeActive();
+              navigation.navigate("Home");
+            },
+          })}
+        />
+        <Tab.Screen
+          name="IntegracoesTab"
+          component={AppStackRoutes}
+          options={{
+            tabBarIcon: () => {
+              return <Icon name="refresh-cw" />;
+            },
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              integrateActive();
+            },
+          })}
+        />
+        <Tab.Screen
+          name="RelatoriosTab"
+          component={AppStackRoutes}
+          options={{
+            tabBarIcon: () => {
+              return <Icon name="list" />;
+            },
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              reportsActive();
+            },
+          })}
+        />
+      </StyledTabNavigation>
+      {!keyboardVisible && (
+        <ActiveMenuIcon
+          iconWidth={getWidth()}
+          style={{
+            opacity,
+            transform: [{ translateX: tabOffsetValue }],
+          }}
+        />
+      )}
     </NavigationContainer>
   );
 };
