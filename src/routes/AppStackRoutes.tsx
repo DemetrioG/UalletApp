@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Complete from "../screens/Complete";
 import ConfiguracoesScreen from "../screens/Configurations";
+import AlertsScreen from "../screens/Configurations/Alerts";
+import VariableEntryScreen from "../screens/Configurations/Alerts/VariableEntry";
 import DadosCadastraisScreen from "../screens/Configurations/DadosCadastrais";
 import AlterarSenhaScreen from "../screens/Configurations/DadosCadastrais/AlterarSenha";
 import InformacoesPessoaisScreen from "../screens/Configurations/DadosCadastrais/InformacoesPessoais";
@@ -105,6 +107,16 @@ export const AppStackRoutes = () => {
         options={{ headerShown: false }}
       />
       <StackScreen
+        name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
+        component={InformacoesPessoaisScreen}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Configuracoes/DadosCadastrais/AlterarSenha"
+        component={AlterarSenhaScreen}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
         name="Configuracoes/Seguranca"
         component={SecurityScreen}
         options={{ headerShown: false }}
@@ -115,13 +127,13 @@ export const AppStackRoutes = () => {
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
-        component={InformacoesPessoaisScreen}
+        name="Configuracoes/Alertas"
+        component={AlertsScreen}
         options={{ headerShown: false }}
       />
       <StackScreen
-        name="Configuracoes/DadosCadastrais/AlterarSenha"
-        component={AlterarSenhaScreen}
+        name="Configuracoes/Alertas/DespesasVariaveis"
+        component={VariableEntryScreen}
         options={{ headerShown: false }}
       />
       {/* !Configuracoes */}
