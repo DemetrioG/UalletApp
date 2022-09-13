@@ -28,6 +28,7 @@ import {
 } from "./styles";
 import { IThemeProvider } from "../../../App";
 import { useNavigation } from "@react-navigation/native";
+import { refreshAuthDevice } from "./query";
 
 const Menu = () => {
   const { navigate } = useNavigation();
@@ -51,6 +52,7 @@ const Menu = () => {
   }
 
   function logout() {
+    refreshAuthDevice(data.expoPushToken!);
     removeAllStorage()
       .then(() => {})
       .catch(() => {})
