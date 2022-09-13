@@ -22,8 +22,8 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "../../../../styles/general";
-import { InfoText } from "./styles";
 import { deleteAccount } from "./query";
+import { InfoText } from "../../styles";
 
 interface IForm {
   password: string;
