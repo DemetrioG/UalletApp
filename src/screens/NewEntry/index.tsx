@@ -1,6 +1,10 @@
 import * as React from "react";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Button } from "native-base";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
+import { Button, HStack, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -13,7 +17,7 @@ import Picker from "../../components/Picker";
 import Calendar from "../../components/Calendar";
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
-import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
+import { CLASSIFICATION, ENTRY_SEGMENT } from "../../components/Picker/options";
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import {
   dateValidation,
@@ -21,7 +25,7 @@ import {
   convertDateFromDatabase,
 } from "../../utils/date.helper";
 import { numberToReal } from "../../utils/number.helper";
-import { HorizontalView, TypeText, TypeView } from "./styles";
+import { FixEntryText, HorizontalView, Schema, TypeText } from "./styles";
 import {
   ButtonOutlineText,
   ButtonText,
@@ -35,11 +39,12 @@ import {
   ViewTab,
 } from "../../styles/general";
 import { deleteEntry, INewEntry, registerNewEntry, updateEntry } from "./query";
+import { DataContext } from "../../context/Data/dataContext";
 
 interface IForm {
   entrydate: string;
   description: string;
-  modality: string;
+  classif: string;
   segment: string;
   value: string;
 }
@@ -47,16 +52,17 @@ interface IForm {
 const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setConfirm } = React.useContext(ConfirmContext);
+  const {
+    data: { modality },
+  } = React.useContext(DataContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const [type, setType] = React.useState<"Receita" | "Despesa">("Receita");
-  const [modality, setModality] = React.useState<"Projetado" | "Real" | null>(
-    null
-  );
+  const [classif, setClassif] = React.useState<string | null>(null);
+  const [classifVisible, setClassifVisible] = React.useState(false);
   const [segment, setSegment] = React.useState<string | null>(null);
-  const [modalityVisible, setModalityVisible] = React.useState(false);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
 
@@ -70,9 +76,11 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
           dateValidation(value!)
         ),
       description: yup.string().required(),
-      modality: yup
+      classif: yup
         .string()
-        .test("modality", "Informe a modalidade", () => Boolean(modality!)),
+        .test("classif", "Informe a classificação", () =>
+          type === "Despesa" ? Boolean(classif!) : true
+        ),
       segment: yup
         .string()
         .test("segment", "Informe o segmento", () =>
@@ -106,7 +114,8 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
       description: description,
       entrydate: entrydate,
       value: value,
-      modality: modality!,
+      modality: modality,
+      classification: classif!,
       segment: segment!,
       type: type!,
     };
@@ -178,7 +187,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
     if (params) {
       setIsEditing(true);
       setType(params.type);
-      setModality(params.modality);
+      setClassif(params.classification);
       setSegment(params.segment || null);
       setValue("entrydate", convertDateFromDatabase(params.date));
       setValue("description", params.description);
@@ -197,22 +206,33 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                 style={{ marginRight: 10 }}
                 onPress={() => navigate("Lancamentos")}
               />
-              <TextHeaderScreen noMarginBottom>
-                {isEditing ? "Editar lançamento" : "Novo lançamento"}
-              </TextHeaderScreen>
-            </HorizontalView>
-            <TypeView>
-              <TypeText type={type}>{type}</TypeText>
-              {!isEditing && (
-                <Icon
-                  name="refresh-cw"
-                  size={16}
-                  onPress={() =>
-                    type == "Receita" ? setType("Despesa") : setType("Receita")
-                  }
-                />
+              {isEditing ? (
+                <TextHeaderScreen noMarginBottom>
+                  Editar lançamento <Schema>{modality}</Schema>
+                </TextHeaderScreen>
+              ) : (
+                <TextHeaderScreen noMarginBottom>
+                  Novo lançamento <Schema>{modality}</Schema>
+                </TextHeaderScreen>
               )}
-            </TypeView>
+            </HorizontalView>
+            {!isEditing ? (
+              <TouchableOpacity
+                onPress={() =>
+                  type == "Receita" ? setType("Despesa") : setType("Receita")
+                }
+              >
+                <HStack alignItems={"center"} ml={33} mt={3}>
+                  <TypeText type={type}>{type}</TypeText>
+                  <Icon name="repeat" size={18} />
+                </HStack>
+              </TouchableOpacity>
+            ) : (
+              <HStack alignItems={"center"} ml={33} mt={3}>
+                <TypeText type={type}>{type}</TypeText>
+              </HStack>
+            )}
+
             <ContainerCenter>
               <FormContainer insideApp>
                 <TextInput
@@ -233,25 +253,27 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   errors={errors.description}
                   maxLength={40}
                 />
-                <Picker
-                  options={MODALITY}
-                  selectedValue={setModality}
-                  value={!modality ? "Modalidade" : modality}
-                  type="Modalidade"
-                  visibility={modalityVisible}
-                  setVisibility={setModalityVisible}
-                  errors={errors.modality}
-                />
                 {type == "Despesa" && (
-                  <Picker
-                    options={ENTRY_SEGMENT}
-                    selectedValue={setSegment}
-                    value={!segment ? "Segmento" : segment}
-                    type="Segmento"
-                    visibility={segmentVisible}
-                    setVisibility={setSegmentVisible}
-                    errors={errors.segment}
-                  />
+                  <>
+                    <Picker
+                      options={CLASSIFICATION}
+                      selectedValue={setClassif}
+                      value={!classif ? "Classificação" : classif}
+                      type="Classificação"
+                      visibility={classifVisible}
+                      setVisibility={setClassifVisible}
+                      errors={errors.classif}
+                    />
+                    <Picker
+                      options={ENTRY_SEGMENT}
+                      selectedValue={setSegment}
+                      value={!segment ? "Segmento" : segment}
+                      type="Segmento"
+                      visibility={segmentVisible}
+                      setVisibility={setSegmentVisible}
+                      errors={errors.segment}
+                    />
+                  </>
                 )}
                 <TextInput
                   name="value"
@@ -262,21 +284,12 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   helperText="Informe todos os campos"
                 />
                 {!isEditing && (
-                  <>
-                    <Button
-                      isLoading={isLoading}
-                      onPress={handleSubmit((e) => submitRegister(e))}
-                    >
-                      <ButtonText>CADASTRAR</ButtonText>
-                    </Button>
-                    <ButtonOutline
-                      onPress={() => navigate("Lancamentos/LancamentoFixo")}
-                    >
-                      <ButtonOutlineText>
-                        CADASTRAR DESPESAS FIXAS
-                      </ButtonOutlineText>
-                    </ButtonOutline>
-                  </>
+                  <Button
+                    isLoading={isLoading}
+                    onPress={handleSubmit((e) => submitRegister(e))}
+                  >
+                    <ButtonText>CADASTRAR</ButtonText>
+                  </Button>
                 )}
                 {isEditing && (
                   <>
@@ -299,13 +312,22 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   </>
                 )}
               </FormContainer>
-              <Calendar
-                date={new Date()}
-                setDateToInput={setDateToInput}
-                calendarIsShow={calendar}
-                edit={isEditing}
-              />
             </ContainerCenter>
+            {type === "Despesa" && !isEditing && (
+              <VStack alignItems="center" pb={5}>
+                <TouchableOpacity
+                  onPress={() => navigate("Lancamentos/LancamentoFixo")}
+                >
+                  <FixEntryText>CADASTRAR DESPESAS FIXAS</FixEntryText>
+                </TouchableOpacity>
+              </VStack>
+            )}
+            <Calendar
+              date={new Date()}
+              setDateToInput={setDateToInput}
+              calendarIsShow={calendar}
+              edit={isEditing}
+            />
           </ViewTabContent>
         </TouchableWithoutFeedback>
       </ViewTab>

@@ -11,6 +11,7 @@ export interface INewEntry {
   description: string;
   entrydate: string;
   value: string;
+  classification: string;
   modality: "Real" | "Projetado";
   type: "Receita" | "Despesa";
   segment: string;
@@ -21,7 +22,15 @@ async function _registerNewEntry(props: INewEntry) {
 
   if (!user) return Promise.reject();
 
-  const { description, entrydate, value, modality, segment, type } = props;
+  const {
+    description,
+    entrydate,
+    value,
+    modality,
+    segment,
+    type,
+    classification,
+  } = props;
   let id = 1;
 
   /**
@@ -49,6 +58,7 @@ async function _registerNewEntry(props: INewEntry) {
     type: type,
     description: description,
     modality: modality!,
+    classification: classification,
     segment: segment,
     value: realToNumber(value),
   };
@@ -132,7 +142,15 @@ async function _updateEntry(
 
   if (!user) return Promise.reject();
 
-  const { description, entrydate, value, modality, segment, type } = props;
+  const {
+    description,
+    entrydate,
+    value,
+    modality,
+    segment,
+    type,
+    classification,
+  } = props;
 
   const items: IEntryList & {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
@@ -142,6 +160,7 @@ async function _updateEntry(
     type: type,
     description: description,
     modality: modality!,
+    classification: classification,
     segment: segment,
     value: realToNumber(value),
   };
