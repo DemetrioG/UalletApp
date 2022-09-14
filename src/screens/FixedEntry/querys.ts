@@ -31,6 +31,7 @@ type InserNewEntryProps = {
   date: firebase.firestore.Timestamp;
   type: string;
   description: string;
+  classification: string;
   segment: string;
   value: number;
 };

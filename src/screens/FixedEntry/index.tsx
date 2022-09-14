@@ -33,12 +33,14 @@ import {
 } from "../../styles/general";
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
-import { ENTRY_SEGMENT, MODALITY } from "../../components/Picker/options";
+import { CLASSIFICATION, ENTRY_SEGMENT } from "../../components/Picker/options";
 import {
   insertNewEntry,
   lastIdFromEntry,
   updateCurrentBalance,
 } from "./querys";
+import { DataContext } from "../../context/Data/dataContext";
+import { Schema } from "../NewEntry/styles";
 
 interface IForm {
   entrydate: string;
@@ -53,14 +55,13 @@ const optionsExpenseAmount = Array.from({ length: 12 }, (_, i) => ++i);
 
 const FixedEntry = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const {
+    data: { modality },
+  } = React.useContext(DataContext);
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [modality, setModality] = React.useState<"Projetado" | "Real" | null>(
-    null
-  );
   const [segment, setSegment] = React.useState<string | null>(null);
   const [expenseAmount, setExpenseAmount] = React.useState<string | null>(null);
-  const [modalityVisible, setModalityVisible] = React.useState(false);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [expenseAmountVisible, setExpenseAmountVisible] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
@@ -75,9 +76,6 @@ const FixedEntry = () => {
           dateValidation(value!)
         ),
       description: yup.string().required(),
-      modality: yup
-        .string()
-        .test("modality", "Informe a modalidade", () => Boolean(modality!)),
       segment: yup
         .string()
         .test("segment", "Informe o segmento", () => Boolean(segment!)),
@@ -125,7 +123,8 @@ const FixedEntry = () => {
         date: convertDateToDatabase(finalDate),
         type: "Despesa",
         description: description,
-        modality: modality!,
+        modality: modality,
+        classification: CLASSIFICATION[0],
         segment: segment!,
         value: realToNumber(value),
       });
@@ -160,11 +159,13 @@ const FixedEntry = () => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ViewTabContent noPaddingBottom>
             <HorizontalView>
-              <TouchableOpacity onPress={() => navigate("Lancamentos")}>
+              <TouchableOpacity
+                onPress={() => navigate("Lancamentos/NovoLancamento")}
+              >
                 <Icon name="chevron-left" style={{ marginRight: 10 }} />
               </TouchableOpacity>
               <TextHeaderScreen noMarginBottom>
-                Novo lançamento
+                Novo lançamento <Schema>{modality}</Schema>
               </TextHeaderScreen>
             </HorizontalView>
             <TypeView>
@@ -189,15 +190,6 @@ const FixedEntry = () => {
                   control={control}
                   errors={errors.description}
                   maxLength={40}
-                />
-                <Picker
-                  options={MODALITY}
-                  selectedValue={setModality}
-                  value={!modality ? "Modalidade" : modality}
-                  type="Modalidade"
-                  visibility={modalityVisible}
-                  setVisibility={setModalityVisible}
-                  errors={errors.modality}
                 />
                 <Picker
                   options={ENTRY_SEGMENT}
