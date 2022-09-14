@@ -27,11 +27,9 @@ import {
 import { numberToReal } from "../../utils/number.helper";
 import { FixEntryText, HorizontalView, Schema, TypeText } from "./styles";
 import {
-  ButtonOutlineText,
   ButtonText,
   ContainerCenter,
   FormContainer,
-  ButtonOutline,
   TextHeaderScreen,
   ViewTabContent,
   ButtonDelete,
@@ -44,7 +42,7 @@ import { DataContext } from "../../context/Data/dataContext";
 interface IForm {
   entrydate: string;
   description: string;
-  classif: string;
+  classification: string;
   segment: string;
   value: string;
 }
@@ -60,8 +58,11 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
   const [type, setType] = React.useState<"Receita" | "Despesa">("Receita");
-  const [classif, setClassif] = React.useState<string | null>(null);
-  const [classifVisible, setClassifVisible] = React.useState(false);
+  const [classification, setClassification] = React.useState<string | null>(
+    null
+  );
+  const [classificationVisible, setClassificationVisible] =
+    React.useState(false);
   const [segment, setSegment] = React.useState<string | null>(null);
   const [segmentVisible, setSegmentVisible] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
@@ -76,10 +77,10 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
           dateValidation(value!)
         ),
       description: yup.string().required(),
-      classif: yup
+      classification: yup
         .string()
-        .test("classif", "Informe a classificação", () =>
-          type === "Despesa" ? Boolean(classif!) : true
+        .test("classification", "Informe a classificação", () =>
+          type === "Despesa" ? Boolean(classification!) : true
         ),
       segment: yup
         .string()
@@ -115,7 +116,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
       entrydate: entrydate,
       value: value,
       modality: modality,
-      classification: classif!,
+      classification: classification!,
       segment: segment!,
       type: type!,
     };
@@ -187,7 +188,7 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
     if (params) {
       setIsEditing(true);
       setType(params.type);
-      setClassif(params.classification);
+      setClassification(params.classification);
       setSegment(params.segment || null);
       setValue("entrydate", convertDateFromDatabase(params.date));
       setValue("description", params.description);
@@ -257,12 +258,12 @@ const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
                   <>
                     <Picker
                       options={CLASSIFICATION}
-                      selectedValue={setClassif}
-                      value={!classif ? "Classificação" : classif}
+                      selectedValue={setClassification}
+                      value={!classification ? "Classificação" : classification}
                       type="Classificação"
-                      visibility={classifVisible}
-                      setVisibility={setClassifVisible}
-                      errors={errors.classif}
+                      visibility={classificationVisible}
+                      setVisibility={setClassificationVisible}
+                      errors={errors.classification}
                     />
                     <Picker
                       options={ENTRY_SEGMENT}
