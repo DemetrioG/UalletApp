@@ -106,7 +106,7 @@ const Menu = () => {
             <ItemContainer>
               <ItemContent onPress={changeModality}>
                 <ItemText>{data.modality}</ItemText>
-                <Icon name="refresh-cw" size={16} />
+                <Icon name="repeat" size={16} />
               </ItemContent>
             </ItemContainer>
             <ItemContainer>

@@ -193,7 +193,7 @@ const AppRoutes = () => {
           component={AppStackRoutes}
           options={{
             tabBarIcon: () => {
-              return <Icon name="refresh-cw" />;
+              return <Icon name="link" />;
             },
           }}
           listeners={({ navigation }) => ({
