@@ -159,7 +159,7 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <ModalContainer>
-        <ModalView large>
+        <ModalView>
           <HeaderContainer>
             <TextHeaderScreen noMarginBottom>
               Consolidação de Lançamentos

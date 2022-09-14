@@ -5,9 +5,7 @@ import {
   Platform,
   ScrollView,
   ScrollViewProps,
-  TextProps,
   View,
-  ViewProps,
 } from "react-native";
 import {
   Button,
@@ -15,11 +13,10 @@ import {
   Flex,
   Text,
   Skeleton as NativeSkeleton,
-  ISkeletonProps,
   IButtonProps,
   HStack,
-  ITextProps,
 } from "native-base";
+import NativeSlider from "@react-native-community/slider";
 import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
@@ -53,20 +50,16 @@ export const ModalContainer = styled(Center)`
   background-color: ${({ theme: { theme } }) => theme.transparency};
 `;
 
-export const Balance: React.FC<ITextProps & { negative?: boolean }> = styled(
-  Text
-).attrs(() => ({
+export const Balance = styled(Text).attrs(() => ({
   fontFamily: "mono",
   fontWeight: 700,
   fontSize: fonts.larger,
-}))`
+}))<{ negative?: boolean }>`
   color: ${({ theme: { theme }, negative }) =>
     !negative ? theme.blue : theme.red};
 `;
 
-export const ModalView: React.FC<
-  ViewProps & { height?: number | null; center?: boolean; large?: boolean }
-> = styled(View)`
+export const ModalView = styled(View)<{ center?: boolean }>`
   width: 80%;
   padding: ${metrics.topBottomPadding}px;
   margin: 180px 0px;
@@ -91,18 +84,14 @@ export const ViewTab = styled(View)`
   min-height: 490px;
 `;
 
-export const ViewTabContent: React.FC<
-  ViewProps & { noPaddingBottom?: boolean }
-> = styled(View)`
+export const ViewTabContent = styled(View)<{ noPaddingBottom?: boolean }>`
   flex: 1;
   padding-bottom: ${({ noPaddingBottom }) =>
     noPaddingBottom ? 0 : metrics.basePadding * 1.5}px;
   background-color: ${({ theme: { theme } }) => theme.secondary};
 `;
 
-export const FormContainer: React.FC<
-  ViewProps & { insideApp?: boolean }
-> = styled(View)`
+export const FormContainer = styled(View)<{ insideApp?: boolean }>`
   padding: 0px ${({ insideApp }) => (!insideApp ? 50 : 35)}px;
 `;
 
@@ -116,6 +105,19 @@ export const ButtonOutline: React.FC<IButtonProps> = styled(Button).attrs(
     borderColor: theme.blue,
   })
 )``;
+
+export const ButtonIcon = styled(Button).attrs<{ icon: JSX.Element }>(
+  ({ icon }) => ({
+    width: "12",
+    minW: 0,
+    minH: 0,
+    p: 0,
+    backgroundColor: "transparent",
+    size: "sm",
+    startIcon: icon,
+    marginBottom: 0,
+  })
+)<{ icon: JSX.Element }>``;
 
 export const ButtonSmall = styled(Button).attrs(() => ({
   minW: "20",
@@ -177,12 +179,10 @@ export const Logo = styled(Image)`
   height: 58px;
 `;
 
-export const TextHeader: React.FC<
-  ITextProps & { withMarginLeft?: boolean; withMarginTop?: boolean }
-> = styled(Text).attrs(({ fontSize }) => ({
+export const TextHeader = styled(Text).attrs(({ fontSize }) => ({
   fontWeight: 800,
   fontSize: fontSize ? fontSize : "3xl",
-}))`
+}))<{ withMarginLeft?: boolean; withMarginTop?: boolean }>`
   color: ${({ theme: { theme } }) => theme.text};
   ${({ withMarginLeft, withMarginTop }) => {
     if (withMarginLeft) {
@@ -197,12 +197,10 @@ export const TextHeader: React.FC<
   }}
 `;
 
-export const TextHeaderScreen: React.FC<
-  TextProps & { noMarginBottom?: boolean }
-> = styled(Text).attrs(() => ({
+export const TextHeaderScreen = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: "md",
-}))`
+}))<{ noMarginBottom?: boolean }>`
   color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${({ noMarginBottom }) =>
     noMarginBottom ? 0 : metrics.baseMargin}px;
@@ -224,11 +222,11 @@ export const Card = styled(View)`
   margin-bottom: ${metrics.baseMargin}px;
 `;
 
-export const Skeleton: React.FC<
-  ISkeletonProps & { secondary?: boolean }
-> = styled(NativeSkeleton).attrs(({ secondary, theme: { theme } }) => ({
-  startColor: secondary ? theme.secondary : theme.primary,
-}))``;
+export const Skeleton = styled(NativeSkeleton).attrs<{ secondary?: boolean }>(
+  ({ secondary, theme: { theme } }) => ({
+    startColor: secondary ? theme.secondary : theme.primary,
+  })
+)<{ secondary?: boolean }>``;
 
 export const ButtonHeaderView = styled(HStack)`
   align-items: center;
@@ -271,11 +269,9 @@ export const ValueContainer = styled(View)`
   padding: 0px 8px;
 `;
 
-export const ValueText: React.FC<
-  TextProps & { type: "Receita" | "Despesa" }
-> = styled(Text).attrs(() => ({
+export const ValueText = styled(Text).attrs(() => ({
   fontFamily: "mono",
-}))`
+}))<{ type: "Receita" | "Despesa" }>`
   font-size: 13px;
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
@@ -284,3 +280,11 @@ export const ValueText: React.FC<
 export const HalfContainer = styled(View)`
   width: 48%;
 `;
+
+export const Slider = styled(NativeSlider).attrs<{ colorVariant?: string }>(
+  ({ colorVariant, theme: { theme } }) => ({
+    thumbTintColor: colorVariant ? theme[colorVariant] : theme.blue,
+    minimumTrackTintColor: colorVariant ? theme[colorVariant] : theme.blue,
+    maximumTrackTintColor: theme.gray,
+  })
+)<{ colorVariant?: string }>``;

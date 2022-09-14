@@ -22,6 +22,12 @@ const actions = [
     icon: "shield",
     color: "blue",
   },
+  {
+    label: "Alertas",
+    url: "Configuracoes/Alertas",
+    icon: "flag",
+    color: "blue",
+  },
 ];
 
 const ConfiguracoesScreen = () => {

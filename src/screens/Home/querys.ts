@@ -46,6 +46,9 @@ export const getLastEntry = async ({
   return [];
 };
 
+/**
+ * Verifica se há despesas projetadas para consolidar na data atual
+ */
 export const checkFutureDebitsToConsolidate = async () => {
   const [, initialDate, finalDate] = getAtualDate();
   const user = await currentUser();

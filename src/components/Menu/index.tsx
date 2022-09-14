@@ -28,6 +28,7 @@ import {
 } from "./styles";
 import { IThemeProvider } from "../../../App";
 import { useNavigation } from "@react-navigation/native";
+import { refreshAuthDevice } from "./query";
 
 const Menu = () => {
   const { navigate } = useNavigation();
@@ -51,6 +52,7 @@ const Menu = () => {
   }
 
   function logout() {
+    refreshAuthDevice(data.expoPushToken!);
     removeAllStorage()
       .then(() => {})
       .catch(() => {})
@@ -104,7 +106,7 @@ const Menu = () => {
             <ItemContainer>
               <ItemContent onPress={changeModality}>
                 <ItemText>{data.modality}</ItemText>
-                <Icon name="refresh-cw" size={16} />
+                <Icon name="repeat" size={16} />
               </ItemContent>
             </ItemContainer>
             <ItemContainer>

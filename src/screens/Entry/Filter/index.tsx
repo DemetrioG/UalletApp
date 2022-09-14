@@ -190,7 +190,7 @@ const Filter = ({
             />
             {typeEntry !== "Receita" && (
               <Picker
-                options={ENTRY_SEGMENT}
+                options={["Todos", ...ENTRY_SEGMENT]}
                 selectedValue={setSegment}
                 value={!segment ? "Segmento" : segment}
                 type="Segmento"

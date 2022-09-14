@@ -6,6 +6,7 @@ import AppRoutes from "./AppTabRoutes";
 import { UserContext } from "../context/User/userContext";
 import { DataContext } from "../context/Data/dataContext";
 import { getStorage, removeAllStorage } from "../utils/storage.helper";
+import { setupPushNotifications } from "../utils/notification.helper";
 
 const Routes = () => {
   const { setData } = React.useContext(DataContext);
@@ -30,7 +31,17 @@ const Routes = () => {
     return removeAllStorage();
   }
 
+  async function setupNotifications() {
+    await setupPushNotifications().then((token) => {
+      setData((state) => ({
+        ...state,
+        expoPushToken: token,
+      }));
+    });
+  }
+
   React.useEffect(() => {
+    setupNotifications();
     userIsAuthenticated();
     NetInfo.addEventListener(({ isConnected }) => {
       setData((dataState) => ({

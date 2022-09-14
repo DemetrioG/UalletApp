@@ -1,24 +1,71 @@
 import firebase from "../../services/firebase";
+import { convertDate, convertDateToDatabase } from "../../utils/date.helper";
 //import * as AuthSession from "expo-auth-session";
 //import * as Facebook from "expo-facebook";
 
-type TLoginByEmailAndPassword = { email: string, password: string };
-type TLoggedSucceed = { uid: string, date: Date };
+type TLoginByEmailAndPassword = {
+  email: string;
+  password: string;
+  expoPushToken: string;
+};
+type TLoggedSucceed = { uid: string; date: Date };
 
-export const loginByEmailAndPassword = async ({ email, password }: TLoginByEmailAndPassword): Promise<TLoggedSucceed> => {
+export const loginByEmailAndPassword = async (
+  props: TLoginByEmailAndPassword
+): Promise<TLoggedSucceed> => {
+  const { email, password, expoPushToken } = props;
+  const expirationAuthDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
   try {
     const { user } = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
 
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(user?.uid)
+      .get()
+      .then((v) => {
+        const data = v.data()?.devices || [];
+        const atualDeviceData = {
+          token: expoPushToken,
+          logged: true,
+          expirationDate: convertDateToDatabase(
+            convertDate(expirationAuthDate)
+          ),
+        };
+        const [anotherDevices] = data.filter(
+          ({ token }: { token: string }) => token !== expoPushToken
+        );
+        const [currentDevice] = data.filter(
+          ({ token }: { token: string }) => token === expoPushToken
+        );
+
+        if (currentDevice) {
+          currentDevice["logged"] = atualDeviceData.logged;
+          currentDevice["expirationDate"] = atualDeviceData.expirationDate;
+        }
+
+        const atualDevice = currentDevice ? currentDevice : atualDeviceData;
+        const updatedData = anotherDevices
+          ? [anotherDevices, atualDevice]
+          : [atualDevice];
+
+        firebase.firestore().collection("users").doc(user?.uid).set(
+          {
+            devices: updatedData,
+          },
+          { merge: true }
+        );
+      });
+
     return Promise.resolve({
       uid: user?.uid as string,
       // Salva no storage a data atual + 15 dias, para deixar o usuário
       // autenticado sem precisar logar em toda entrada do app.
-      date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+      date: expirationAuthDate,
     });
-  }
-  catch {
+  } catch {
     return Promise.reject("Usuário e senha ");
   }
 };
@@ -78,7 +125,7 @@ export const loginByGoogle = async () => {
       return setLoading(false);
     }
    */
-}
+};
 
 export const loginByFacebook = async () => {
   throw new Error("Método não implementado");
@@ -132,4 +179,4 @@ export const loginByFacebook = async () => {
       }
     }
    */
-}
+};

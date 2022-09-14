@@ -86,23 +86,21 @@ const Home = () => {
   >([]);
 
   React.useEffect(() => {
-    // Verifica se há despesas projetadas para consolidar na data atual
     checkFutureDebitsToConsolidate().then((v) => {
       v.forEach((result) => {
         result.data() && setConsolidate(true);
       });
     });
 
+    /**
+     * Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
+     */
     if (user.complete) return;
-
     completeUser().then((v) => {
       setUser((userState) => ({
         ...userState,
         complete: true,
       }));
-      /**
-       * Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
-       */
       if (!v.data()?.birthDate) {
         navigate("Home/Complete");
       }

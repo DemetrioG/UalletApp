@@ -43,6 +43,7 @@ import {
   loginByFacebook,
   loginByGoogle,
 } from "./querys";
+import { DataContext } from "../../context/Data/dataContext";
 interface IForm {
   email: string;
   password: string;
@@ -65,6 +66,7 @@ const ICONS = {
 const Login = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setUser } = React.useContext(UserContext);
+  const { data: dataContext } = React.useContext(DataContext);
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -76,9 +78,13 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
 
-  async function loginUser({ email, password }: IForm) {
+  async function loginUser(props: IForm) {
+    const data = {
+      ...props,
+      expoPushToken: dataContext.expoPushToken!,
+    };
     setLoading(true);
-    loginByEmailAndPassword({ email, password })
+    loginByEmailAndPassword(data)
       .then((loggedSucceedData) => {
         setStorage("authUser", loggedSucceedData);
         setUser((userState) => ({

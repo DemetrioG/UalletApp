@@ -57,6 +57,7 @@ export interface IEntryList {
   description: string;
   id: number;
   modality: "Real" | "Projetado";
+  classification: string | null;
   segment: string | null;
   type: "Receita" | "Despesa";
   value: number;
