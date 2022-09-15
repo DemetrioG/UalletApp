@@ -1,7 +1,7 @@
 import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
-import { currentUser } from "../../utils/query.helper";
+import { currentUser, updateCurrentBalance } from "../../utils/query.helper";
 
 type IConsolidate = Array<
   (IEntryList & { checked?: boolean }) | firebase.firestore.DocumentData
@@ -69,35 +69,15 @@ async function _consolidateData(data: IConsolidate) {
           return Promise.reject("Erro ao consolidar as informações");
         });
 
-      // Atualiza o saldo atual no banco
-      let balance = 0;
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection("Real")
-        .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
-        .get()
-        .then((v) => {
-          balance = v.data()?.balance || 0;
-        });
-
-      if (type == "Receita") {
-        balance += value;
-      } else {
-        balance -= value;
-      }
-
-      await firebase
-        .firestore()
-        .collection("balance")
-        .doc(user.uid)
-        .collection("Real")
-        .doc(Number(convertDateFromDatabase(date).slice(3, 5)).toString())
-        .set({
-          balance: balance,
-        })
-        .catch(() => Promise.reject("Erro ao atualizar o saldo"));
+      const docRef = `${Number(
+        convertDateFromDatabase(date).slice(3, 5)
+      ).toString()}_${convertDateFromDatabase(date).slice(6, 10)}`;
+      await updateCurrentBalance({
+        modality: "Real",
+        sumBalance: type === "Receita",
+        docDate: docRef,
+        value: value,
+      });
 
       return Promise.resolve("Dados consolidados com sucesso");
     }

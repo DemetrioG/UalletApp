@@ -34,13 +34,10 @@ import {
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
 import { CLASSIFICATION, ENTRY_SEGMENT } from "../../components/Picker/options";
-import {
-  insertNewEntry,
-  lastIdFromEntry,
-  updateCurrentBalance,
-} from "./querys";
+import { insertNewEntry, lastIdFromEntry } from "./querys";
 import { DataContext } from "../../context/Data/dataContext";
 import { Schema } from "../NewEntry/styles";
+import { updateCurrentBalance } from "../../utils/query.helper";
 
 interface IForm {
   entrydate: string;
@@ -129,11 +126,14 @@ const FixedEntry = () => {
         value: realToNumber(value),
       });
 
-      // Atualiza o saldo atual no banco
+      const docRef = `${Number(
+        finalDate.slice(3, 5)
+      ).toString()}_${finalDate.slice(6, 10)}`;
       const didUpdateBalanceSucceed = await updateCurrentBalance({
         modality: modality!,
+        sumBalance: false,
         value: realToNumber(value),
-        docDate: Number(finalDate.slice(3, 5)).toString(),
+        docDate: docRef,
       });
 
       if (!didInsertSucceed || !didUpdateBalanceSucceed) {
