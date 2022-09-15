@@ -4,6 +4,7 @@ import {
   averageBetweenNumbers,
   realToNumber,
 } from "../../../utils/number.helper";
+import { createCollection } from "../../../utils/query.helper";
 
 export interface IAsset {
   entrydate: string;
@@ -83,14 +84,7 @@ async function _registerAsset(props: IAsset) {
     total: realToNumber(total) + (itemIsInDatabase?.total || 0),
   };
 
-  /**
-   * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
-   */
-  await firebase
-    .firestore()
-    .collection("assets")
-    .doc(uid)
-    .set({ created: true });
+  await createCollection("assets");
 
   return firebase
     .firestore()

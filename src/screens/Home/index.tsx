@@ -111,7 +111,8 @@ const Home = () => {
     if (!data.year) return;
 
     getBalance({
-      month: data.month.toString(),
+      month: data.month,
+      year: data.year,
       modality: data.modality,
     })
       .then((balance) => {

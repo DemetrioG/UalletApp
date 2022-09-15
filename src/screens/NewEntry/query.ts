@@ -1,5 +1,9 @@
 import firebase from "../../services/firebase";
-import { currentUser } from "../../utils/query.helper";
+import {
+  createCollection,
+  currentUser,
+  updateCurrentBalance,
+} from "../../utils/query.helper";
 import { IEntryList } from "../Entry";
 import {
   convertDateFromDatabase,
@@ -70,14 +74,7 @@ async function _registerNewEntry(props: INewEntry) {
     };
   }
 
-  /**
-   * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
-   */
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .set({ created: true });
+  await createCollection("entry");
 
   /**
    *  Registra o novo lançamento no banco
@@ -90,45 +87,18 @@ async function _registerNewEntry(props: INewEntry) {
     .doc(id.toString())
     .set(items);
 
-  /**
-   * Atualiza o saldo atual no banco
-   */
-  let balance = 0;
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .collection(modality!)
-    .doc(Number(entrydate.slice(3, 5)).toString())
-    .get()
-    .then((v) => {
-      balance = v.data()?.balance || 0;
-    });
+  await createCollection("balance");
 
-  if (type == "Receita") {
-    balance += realToNumber(value);
-  } else {
-    balance -= realToNumber(value);
-  }
-
-  /**
-   * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
-   */
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .set({ created: true });
-
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .collection(modality!)
-    .doc(Number(entrydate?.slice(3, 5)).toString())
-    .set({
-      balance: balance,
-    });
+  const docRef = `${Number(entrydate.slice(3, 5)).toString()}_${entrydate.slice(
+    6,
+    10
+  )}`;
+  await updateCurrentBalance({
+    modality: modality,
+    sumBalance: type === "Receita",
+    docDate: docRef,
+    value: realToNumber(value),
+  });
 
   return Promise.resolve();
 }
@@ -172,14 +142,7 @@ async function _updateEntry(
     };
   }
 
-  /**
-   * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
-   */
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .set({ created: true });
+  await createCollection("entry");
 
   /**
    * Registra o novo lançamento no banco
@@ -192,45 +155,18 @@ async function _updateEntry(
     .doc(idRegister.toString())
     .set(items);
 
-  /**
-   * Atualiza o saldo atual no banco
-   */
-  let balance = 0;
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .collection(modality!)
-    .doc(Number(entrydate.slice(3, 5)).toString())
-    .get()
-    .then((v) => {
-      balance = v.data()?.balance || 0;
-    });
+  await createCollection("balance");
 
-  if (type == "Receita") {
-    balance += realToNumber(value) - routeParams.value;
-  } else {
-    balance -= realToNumber(value) - routeParams.value;
-  }
-
-  /**
-   * Esta query é setada, pois caso contrário, o firebase criar a coleção como virtualizada, sendo assim, não é possível ter acesso à ela.
-   */
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .set({ created: true });
-
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .collection(modality!)
-    .doc(Number(entrydate?.slice(3, 5)).toString())
-    .set({
-      balance: balance,
-    });
+  const docRef = `${Number(entrydate.slice(3, 5)).toString()}_${entrydate.slice(
+    6,
+    10
+  )}`;
+  await updateCurrentBalance({
+    modality: modality,
+    sumBalance: type === "Receita",
+    docDate: docRef,
+    value: realToNumber(value) - routeParams.value,
+  });
 
   return Promise.resolve();
 }
@@ -249,39 +185,15 @@ async function _deleteEntry(routeParams: IEntryList) {
     .doc(id.toString())
     .delete();
 
-  /**
-   * Atualiza o saldo atual no banco
-   */
-  let balance = 0;
-  const dateMonth = Number(
+  const docRef = `${Number(
     convertDateFromDatabase(date).slice(3, 5)
-  ).toString();
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .collection(modality)
-    .doc(dateMonth)
-    .get()
-    .then((v) => {
-      balance = v.data()?.balance || 0;
-    });
-
-  if (type == "Despesa") {
-    balance += value;
-  } else {
-    balance -= value;
-  }
-
-  await firebase
-    .firestore()
-    .collection("balance")
-    .doc(user.uid)
-    .collection(modality)
-    .doc(dateMonth)
-    .set({
-      balance: balance,
-    });
+  ).toString()}_${convertDateFromDatabase(date).slice(6, 10)}`;
+  await updateCurrentBalance({
+    modality: modality,
+    docDate: docRef,
+    sumBalance: type === "Despesa",
+    value: value,
+  });
 
   return Promise.resolve();
 }

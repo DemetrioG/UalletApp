@@ -258,7 +258,8 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
     if (!data.month) return;
 
     getBalance({
-      month: data.month.toString(),
+      month: data.month,
+      year: data.year,
       modality: data.modality,
     }).then((balance) => {
       setData((dataState) => ({
