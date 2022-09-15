@@ -14,6 +14,7 @@ async function _deleteAccount(password: string) {
   await firebase.firestore().collection("balance").doc(user.uid).delete();
   await firebase.firestore().collection("entry").doc(user.uid).delete();
   await firebase.firestore().collection("users").doc(user.uid).delete();
+  await firebase.firestore().collection("alerts").doc(user.uid).delete();
   await user?.reauthenticateWithCredential(credential);
   user?.delete();
   return Promise.resolve("Success");
