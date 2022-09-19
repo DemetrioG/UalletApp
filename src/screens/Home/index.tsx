@@ -8,7 +8,6 @@ import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
 import InvestSummary from "../../components/InvestSummary";
 import Consolidate from "../../components/Consolidate";
-import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
 import Icon from "../../components/Icon";
 import { UserContext } from "../../context/User/userContext";
@@ -43,6 +42,8 @@ import {
   getLastEntry,
 } from "./querys";
 import { getBalance } from "../../utils/query.helper";
+import EntrySegmentChart from "./EntrySegmentChart";
+import { refreshAssetData } from "../../components/Positions/query";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -105,6 +106,8 @@ const Home = () => {
         navigate("Home/Complete");
       }
     });
+
+    refreshAssetData();
   }, []);
 
   React.useEffect(() => {
@@ -232,7 +235,7 @@ const Home = () => {
                 </CardTextView>
               </CardHeaderView>
             </Skeleton>
-            <SegmentChart />
+            <EntrySegmentChart />
           </Card>
         </Collapse>
         <TouchableOpacity onPress={() => setInvestShow(!investShow)}>
