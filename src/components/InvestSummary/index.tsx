@@ -5,9 +5,8 @@ import { TotalOpen } from "../Positions";
 import { DataContext } from "../../context/Data/dataContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { numberToReal } from "../../utils/number.helper";
-import { getStorage } from "../../utils/storage.helper";
-import { refreshAssetData } from "../Positions/query";
 import { useIsFocused } from "@react-navigation/native";
+import { getAssets, IAsset, ITotal } from "../Positions/query";
 
 const InvestSummary = () => {
   const { setData } = React.useContext(DataContext);
@@ -16,29 +15,31 @@ const InvestSummary = () => {
     setLoader,
   } = React.useContext(LoaderContext);
   const [totalValue, setTotalValue] = React.useState(0);
-  const [totalRent, setTotalRent] = React.useState("0,00");
+  const [totalRent, setTotalRent] = React.useState(0);
 
   const isFocused = useIsFocused();
 
-  async function getData() {
-    const totalValue = await getStorage("investPositionsTotalValue");
-    const totalRent = await getStorage("investPositionsTotalRent");
-    const totalEquity = await getStorage("investTotalEquity");
-
+  function setValues({
+    assets,
+    total: { totalValue, totalRent, equity },
+  }: {
+    assets: IAsset[];
+    total: ITotal;
+  }) {
     totalValue && setTotalValue(totalValue);
     totalRent && setTotalRent(totalRent);
-    totalEquity &&
+    equity &&
       setData((state) => ({
         ...state,
-        equity: totalEquity,
+        equity: equity,
       }));
   }
 
   React.useEffect(() => {
     isFocused &&
-      refreshAssetData()
-        .then(async () => {
-          await getData();
+      getAssets()
+        .then((data) => {
+          setValues(data);
         })
         .finally(() => {
           !equity &&

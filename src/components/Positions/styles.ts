@@ -1,5 +1,4 @@
-import { ITextProps, Text, VStack } from "native-base";
-import React from "react";
+import { Text, VStack } from "native-base";
 import styled from "styled-components";
 import { colors, metrics } from "../../styles";
 
@@ -11,12 +10,6 @@ export const Header = styled(VStack)`
   padding: ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
   justify-content: center;
-`;
-
-export const HeaderText = styled(Text).attrs(() => ({
-  fontSize: "md",
-}))`
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const Container = styled(VStack)`
@@ -40,11 +33,11 @@ export const Label = styled(Text).attrs(() => ({
   color: ${({ theme: { theme } }) => theme.text};
 `;
 
-export const ItemContent: React.FC<
-  ITextProps & { number?: boolean; withColor?: boolean; negative?: boolean }
-> = styled(Text).attrs(({ number }) => ({
-  fontFamily: number ? "mono" : "body",
-}))`
+export const ItemContent = styled(Text).attrs<{ number?: boolean }>(
+  ({ number }) => ({
+    fontFamily: number ? "mono" : "body",
+  })
+)<{ number?: boolean; withColor?: boolean; negative?: boolean }>`
   color: ${({ withColor, negative, theme: { theme } }) =>
     withColor ? (negative ? theme.red : theme.green) : theme.text};
 `;
