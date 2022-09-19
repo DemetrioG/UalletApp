@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 
-import { getAssets, IAsset, ITotal } from "./query";
+import { getAssets, IAsset, ITotal, refreshAssetData } from "./query";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
@@ -135,30 +135,30 @@ const ItemList = ({
               <HStack key={i}>
                 <ItemContainer minW={ITEMS_WIDTH.price}>
                   <ItemContent number>
-                    {numberToReal(e.atualPrice, true)}
+                    {numberToReal(e.atualPrice || 0, true)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.rentPercentual}>
                   <ItemContent
                     number
                     withColor
-                    negative={numberToReal(e.rentPercentual).includes("-")}
+                    negative={numberToReal(e.rentPercentual || 0).includes("-")}
                   >
-                    {numberToReal(e.rentPercentual, true) + "%"}
+                    {numberToReal(e.rentPercentual || 0, true) + "%"}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.rent}>
                   <ItemContent
                     number
                     withColor
-                    negative={numberToReal(e.rent).includes("-")}
+                    negative={numberToReal(e.rent || 0).includes("-")}
                   >
-                    {numberToReal(e.rent)}
+                    {numberToReal(e.rent || 0)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.price}>
                   <ItemContent number>
-                    {numberToReal(e.price, true)}
+                    {numberToReal(e.price || 0, true)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.amount}>
@@ -170,16 +170,18 @@ const ItemList = ({
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.pvp}>
-                  <ItemContent number>{numberToReal(e.pvp, true)}</ItemContent>
+                  <ItemContent number>
+                    {numberToReal(e.pvp || 0, true)}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.dy}>
                   <ItemContent number>
-                    {numberToReal(e.dy, true) + "%"}
+                    {numberToReal(e.dy || 0, true) + "%"}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.pl}>
                   <ItemContent number>
-                    {numberToReal(e.pl, true) || "-"}
+                    {numberToReal(e.pl || 0, true) || "-"}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.segment}>
@@ -233,17 +235,19 @@ const Positions = ({
   }
 
   async function refreshData() {
-    getAssets()
-      .then((data) => {
-        setValues(data);
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao atualizar as posições",
-        });
-      })
-      .finally(() => setSpinner(false));
+    refreshAssetData().finally(() => {
+      getAssets()
+        .then((data) => {
+          setValues(data);
+        })
+        .catch(() => {
+          Toast.show({
+            type: "error",
+            text1: "Erro ao atualizar as posições",
+          });
+        })
+        .finally(() => setSpinner(false));
+    });
   }
 
   function setValues({

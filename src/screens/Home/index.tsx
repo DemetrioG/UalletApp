@@ -43,7 +43,6 @@ import {
 } from "./querys";
 import { getBalance } from "../../utils/query.helper";
 import EntrySegmentChart from "./EntrySegmentChart";
-import { refreshAssetData } from "../../components/Positions/query";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -106,8 +105,6 @@ const Home = () => {
         navigate("Home/Complete");
       }
     });
-
-    refreshAssetData();
   }, []);
 
   React.useEffect(() => {

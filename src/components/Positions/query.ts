@@ -7,7 +7,6 @@ import {
   realToNumber,
 } from "../../utils/number.helper";
 import { currentUser } from "../../utils/query.helper";
-import { setStorage } from "../../utils/storage.helper";
 
 export interface IAsset {
   id: number;
