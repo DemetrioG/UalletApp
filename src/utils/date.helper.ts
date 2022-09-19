@@ -239,13 +239,17 @@ export function getAtualDate() {
   const atualDate = `${
     date.getMonth() + 1
   }/${date.getDate()}/${date.getFullYear()}`;
+  const atualDateBR = `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()}`;
   const initialDate = atualDate + " 00:00:01";
   const finalDate = atualDate + " 23:59:59";
 
   dateInfo.push(
     new Date(atualDate),
     new Date(initialDate),
-    new Date(finalDate)
+    new Date(finalDate),
+    atualDateBR
   );
 
   return dateInfo;

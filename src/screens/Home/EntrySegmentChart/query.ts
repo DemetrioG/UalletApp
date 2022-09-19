@@ -1,8 +1,8 @@
-import firebase from "../../services/firebase";
-import { IData } from "../../context/Data/dataContext";
-import { getFinalDateMonth } from "../../utils/date.helper";
-import { currentUser } from "../../utils/query.helper";
-import { IChartData } from ".";
+import firebase from "../../../services/firebase";
+import { IData } from "../../../context/Data/dataContext";
+import { getFinalDateMonth } from "../../../utils/date.helper";
+import { currentUser } from "../../../utils/query.helper";
+import { IChartData } from "../../../components/SegmentChart";
 
 async function _getData(context: IData, defaultData: IChartData[]) {
   const user = await currentUser();
@@ -16,6 +16,7 @@ async function _getData(context: IData, defaultData: IChartData[]) {
       `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
     );
 
+    let total = 0;
     let needs = 0;
     let invest = 0;
     let leisure = 0;
@@ -40,36 +41,34 @@ async function _getData(context: IData, defaultData: IChartData[]) {
           .where("date", "<=", finalDate)
           .get()
           .then((v) => {
-            let total = 0;
             if (v.empty) {
               return Promise.reject("empty");
             } else {
               v.forEach((result) => {
                 const segmentData = [result.data()];
-                segmentData.forEach(({ segment }) => {
+                segmentData.forEach(({ segment, value }) => {
                   switch (segment) {
                     case "Necessidades":
-                      needs++;
+                      needs += value;
                       break;
 
                     case "Investimentos":
-                      invest++;
+                      invest += value;
                       break;
 
                     case "Lazer":
-                      leisure++;
+                      leisure += value;
                       break;
 
                     case "Educação":
-                      education++;
+                      education += value;
                       break;
 
                     case "Curto e médio prazo":
-                      shortAndMediumTime++;
+                      shortAndMediumTime += value;
                       break;
                   }
-
-                  total++;
+                  total += value;
                 });
               });
             }
