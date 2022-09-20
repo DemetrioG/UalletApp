@@ -9,11 +9,11 @@ import { useIsFocused } from "@react-navigation/native";
 const defaultChartData = [
   {
     label: "Renda Fixa, LCI e LCA",
-    value: 10,
+    value: 0,
   },
   {
     label: "Ações",
-    value: 5,
+    value: 0,
   },
   {
     label: "FIIs e Fiagro",
@@ -40,7 +40,7 @@ const AssetSegmentChart = () => {
 
   React.useEffect(() => {
     isFocused &&
-      getData(dataContext, defaultChartData)
+      getData(defaultChartData)
         .then((data) => {
           setEmpty(false);
           if (data) {
@@ -58,7 +58,7 @@ const AssetSegmentChart = () => {
         .finally(() => {
           setLoader((loaderState) => ({
             ...loaderState,
-            segmentChart: true,
+            assetSegmentChart: true,
           }));
         });
   }, [dataContext, isFocused]);
@@ -68,6 +68,7 @@ const AssetSegmentChart = () => {
       data={data}
       empty={empty}
       emptyText="Parece que você não cadastrou nenhum ativo"
+      screen="invest"
     />
   );
 };
