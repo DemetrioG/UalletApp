@@ -65,7 +65,9 @@ async function _getData(defaultData: IChartData[]) {
     })
     .catch((e) => Promise.reject(e));
 
-  empty && Promise.reject("empty");
+  if (empty) {
+    return Promise.reject("empty");
+  }
 
   rendaFixa = (rendaFixa / total) * 100;
   acoes = (acoes / total) * 100;
