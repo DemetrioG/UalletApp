@@ -213,7 +213,7 @@ async function _refreshAssetData() {
     });
 }
 
-export function getAssets() {
+function getAssets() {
   try {
     return _getAssets();
   } catch (error) {

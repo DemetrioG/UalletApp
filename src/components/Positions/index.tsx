@@ -3,9 +3,9 @@ import { TouchableOpacity, View } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
-import Toast from "react-native-toast-message";
 
-import { getAssets, IAsset, ITotal, refreshAssetData } from "./query";
+import firebase from "../../services/firebase";
+import { IAsset, ITotal, refreshAssetData } from "./query";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
@@ -26,6 +26,7 @@ import { numberToReal } from "../../utils/number.helper";
 import { Skeleton } from "../../styles/general";
 import { DataContext } from "../../context/Data/dataContext";
 import { Title } from "../../screens/Investments/styles";
+import { currentUser } from "../../utils/query.helper";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -202,11 +203,7 @@ const ItemList = ({
   );
 };
 
-const Positions = ({
-  setSpinner,
-}: {
-  setSpinner: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const Positions = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
     user: { hideAssetPosition },
@@ -218,10 +215,11 @@ const Positions = ({
   } = React.useContext(LoaderContext);
   const { setData: setDataContext } = React.useContext(DataContext);
   const [data, setData] = React.useState<IAsset[]>([]);
-  const [totalValue, setTotalValue] = React.useState(0);
-  const [todayValue, setTodayValue] = React.useState(0);
-  const [totalRent, setTotalRent] = React.useState(0);
-  const [todayRent, setTodayRent] = React.useState(0);
+  const [totalData, setTotalData] = React.useState<ITotal | null>(null);
+  const totalValue = totalData?.totalValue || 0;
+  const todayValue = totalData?.todayValue || 0;
+  const totalRent = totalData?.totalRent || 0;
+  const todayRent = totalData?.todayRent || 0;
 
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
@@ -234,59 +232,58 @@ const Positions = ({
     }));
   }
 
-  async function refreshData() {
-    refreshAssetData().finally(() => {
-      getAssets()
-        .then((data) => {
-          setValues(data);
-        })
-        .catch(() => {
-          Toast.show({
-            type: "error",
-            text1: "Erro ao atualizar as posições",
+  async function getAssets() {
+    const user = await currentUser();
+
+    if (!user) return Promise.reject();
+
+    firebase
+      .firestore()
+      .collection("assets")
+      .doc(user.uid)
+      .collection("variable")
+      .orderBy("segment")
+      .onSnapshot(
+        (v) => {
+          const assetsData: IAsset[] | firebase.firestore.DocumentData = [];
+          v.forEach((result) => {
+            assetsData.push(result.data());
           });
-        })
-        .finally(() => setSpinner(false));
-    });
-  }
+          setData(assetsData as IAsset[]);
+        },
+        () => Promise.reject()
+      );
 
-  function setValues({
-    assets,
-    total: { equity, todayRent, todayValue, totalRent, totalValue },
-  }: {
-    assets: IAsset[];
-    total: ITotal;
-  }) {
-    totalValue !== undefined &&
-      totalValue !== null &&
-      setTotalValue(totalValue);
-
-    todayValue !== undefined &&
-      todayValue !== null &&
-      setTodayValue(todayValue);
-
-    equity !== undefined &&
-      equity !== null &&
-      setDataContext((state) => ({
-        ...state,
-        equity: equity,
-      }));
-
-    totalRent && setTotalRent(totalRent);
-    todayRent && setTodayRent(todayRent);
-    assets && setData(assets);
-
-    if (investVisible) {
-      setLoader((state) => ({
-        ...state,
-        positions: true,
-      }));
-    }
+    firebase
+      .firestore()
+      .collection("equity")
+      .doc(user.uid)
+      .onSnapshot(
+        (v) => {
+          const data = v.data() as ITotal;
+          setTotalData(data);
+          setDataContext((state) => ({
+            ...state,
+            equity: data.equity,
+          }));
+        },
+        () => Promise.reject()
+      );
   }
 
   React.useEffect(() => {
-    isFocused && refreshData();
+    isFocused && refreshAssetData();
   }, [isFocused]);
+
+  React.useEffect(() => {
+    getAssets().finally(() => {
+      investVisible &&
+        setLoader((state) => ({
+          ...state,
+          positions: true,
+        }));
+    });
+  }, []);
 
   return (
     <VStack mt={5}>
