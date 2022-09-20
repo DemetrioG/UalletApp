@@ -8,6 +8,7 @@ async function _getData(defaultData: IChartData[]) {
 
   if (!user) return Promise.reject();
 
+  let empty = true;
   let rendaFixa = 0;
   let acoes = 0;
   let fiis = 0;
@@ -22,11 +23,14 @@ async function _getData(defaultData: IChartData[]) {
     .collection("fixed")
     .get()
     .then((data) => {
-      data.forEach((v) => {
-        const value = v.data()?.price || 0;
-        rendaFixa += value;
-        total += value;
-      });
+      if (!data.empty) {
+        empty = false;
+        data.forEach((v) => {
+          const value = v.data()?.price || 0;
+          rendaFixa += value;
+          total += value;
+        });
+      }
     })
     .catch((e) => Promise.reject(e));
 
@@ -37,9 +41,8 @@ async function _getData(defaultData: IChartData[]) {
     .collection("variable")
     .get()
     .then((data) => {
-      if (data.empty) {
-        return Promise.reject("empty");
-      } else {
+      if (!data.empty) {
+        empty = false;
         data.forEach((v) => {
           const data = v.data() as IAsset;
           switch (data.segment) {
@@ -61,6 +64,8 @@ async function _getData(defaultData: IChartData[]) {
       }
     })
     .catch((e) => Promise.reject(e));
+
+  empty && Promise.reject("empty");
 
   rendaFixa = (rendaFixa / total) * 100;
   acoes = (acoes / total) * 100;

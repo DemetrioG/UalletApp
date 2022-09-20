@@ -1,5 +1,6 @@
 import firebase from "../../services/firebase";
 import { convertDate, convertDateToDatabase } from "../../utils/date.helper";
+import * as Device from "expo-device";
 //import * as AuthSession from "expo-auth-session";
 //import * as Facebook from "expo-facebook";
 
@@ -20,44 +21,46 @@ export const loginByEmailAndPassword = async (
       .auth()
       .signInWithEmailAndPassword(email, password);
 
-    await firebase
-      .firestore()
-      .collection("users")
-      .doc(user?.uid)
-      .get()
-      .then((v) => {
-        const data = v.data()?.devices || [];
-        const atualDeviceData = {
-          token: expoPushToken,
-          logged: true,
-          expirationDate: convertDateToDatabase(
-            convertDate(expirationAuthDate)
-          ),
-        };
-        const [anotherDevices] = data.filter(
-          ({ token }: { token: string }) => token !== expoPushToken
-        );
-        const [currentDevice] = data.filter(
-          ({ token }: { token: string }) => token === expoPushToken
-        );
+    if (Device.isDevice) {
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(user?.uid)
+        .get()
+        .then((v) => {
+          const data = v.data()?.devices || [];
+          const atualDeviceData = {
+            token: expoPushToken,
+            logged: true,
+            expirationDate: convertDateToDatabase(
+              convertDate(expirationAuthDate)
+            ),
+          };
+          const [anotherDevices] = data.filter(
+            ({ token }: { token: string }) => token !== expoPushToken
+          );
+          const [currentDevice] = data.filter(
+            ({ token }: { token: string }) => token === expoPushToken
+          );
 
-        if (currentDevice) {
-          currentDevice["logged"] = atualDeviceData.logged;
-          currentDevice["expirationDate"] = atualDeviceData.expirationDate;
-        }
+          if (currentDevice) {
+            currentDevice["logged"] = atualDeviceData.logged;
+            currentDevice["expirationDate"] = atualDeviceData.expirationDate;
+          }
 
-        const atualDevice = currentDevice ? currentDevice : atualDeviceData;
-        const updatedData = anotherDevices
-          ? [anotherDevices, atualDevice]
-          : [atualDevice];
+          const atualDevice = currentDevice ? currentDevice : atualDeviceData;
+          const updatedData = anotherDevices
+            ? [anotherDevices, atualDevice]
+            : [atualDevice];
 
-        firebase.firestore().collection("users").doc(user?.uid).set(
-          {
-            devices: updatedData,
-          },
-          { merge: true }
-        );
-      });
+          firebase.firestore().collection("users").doc(user?.uid).set(
+            {
+              devices: updatedData,
+            },
+            { merge: true }
+          );
+        });
+    }
 
     return Promise.resolve({
       uid: user?.uid as string,
