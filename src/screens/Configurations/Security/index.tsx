@@ -1,7 +1,7 @@
 import * as React from "react";
 import { HStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 
 import Icon from "../../../components/Icon";
 import { ItemContainer, ItemText } from "../../../components/Menu/styles";

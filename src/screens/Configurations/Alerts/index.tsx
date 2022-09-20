@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { HStack, VStack } from "native-base";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 
 import firebase from "../../../services/firebase";
@@ -79,9 +79,9 @@ const AlertsScreen = () => {
           <TextHeaderScreen noMarginBottom>Alertas</TextHeaderScreen>
         </HStack>
         {actions.map((action, index) => (
-          <>
+          <VStack key={index}>
             {!action.data.value ? (
-              <TouchableOpacity key={index} onPress={() => goTo(action.url)}>
+              <TouchableOpacity onPress={() => goTo(action.url)}>
                 <ItemContainer>
                   <HStack
                     justifyContent="space-between"
@@ -94,7 +94,7 @@ const AlertsScreen = () => {
                 </ItemContainer>
               </TouchableOpacity>
             ) : (
-              <ItemContainer key={index}>
+              <ItemContainer>
                 <HStack
                   justifyContent="space-between"
                   flex={1}
@@ -122,7 +122,7 @@ const AlertsScreen = () => {
                 </HStack>
               </ItemContainer>
             )}
-          </>
+          </VStack>
         ))}
       </ViewTab>
     </BackgroundContainer>
