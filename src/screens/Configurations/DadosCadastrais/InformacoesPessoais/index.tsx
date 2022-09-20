@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "react-native";
 import {
   BackgroundContainer,
   Skeleton,
@@ -51,27 +50,33 @@ const InformacoesPessoaisScreen = () => {
           <ScrollView>
             <VStack mb={3}>
               <ItemText fontWeight="bold">Nome</ItemText>
-              <ItemText>{userInfo?.name}</ItemText>
+              <ItemText>{userInfo?.name || "Não informado"}</ItemText>
             </VStack>
             <VStack mb={3}>
               <ItemText fontWeight="bold">E-mail</ItemText>
-              <ItemText>{userInfo?.email}</ItemText>
+              <ItemText>{userInfo?.email || "Não informado"}</ItemText>
             </VStack>
             <VStack mb={3}>
               <ItemText fontWeight="bold">Perfil</ItemText>
-              <ItemText>{userInfo?.profile}</ItemText>
+              <ItemText>{userInfo?.profile || "Não informado"}</ItemText>
             </VStack>
             <VStack mb={3}>
               <ItemText fontWeight="bold">Renda</ItemText>
-              <ItemText fontFamily={"mono"}>{userInfo?.income}</ItemText>
+              <ItemText fontFamily={"mono"}>
+                {userInfo?.income || "Não informado"}
+              </ItemText>
             </VStack>
             <VStack mb={3}>
               <ItemText fontWeight="bold">Data de nascimento</ItemText>
-              <ItemText fontFamily={"mono"}>{userInfo?.birthDate}</ItemText>
+              <ItemText fontFamily={"mono"}>
+                {userInfo?.birthDate || "Não informado"}
+              </ItemText>
             </VStack>
             <VStack mb={3}>
               <ItemText fontWeight="bold">Data de registro</ItemText>
-              <ItemText fontFamily={"mono"}>{dataRegistro}</ItemText>
+              <ItemText fontFamily={"mono"}>
+                {dataRegistro || "Não informado"}
+              </ItemText>
             </VStack>
           </ScrollView>
         </Skeleton>
