@@ -1,12 +1,12 @@
 import firebase from "../../services/firebase";
 import axios, { ACOES_URL, FII_URL } from "../../utils/api.helper";
+import { getAtualDate } from "../../utils/date.helper";
 import {
   getRent,
   getRentPercentual,
   realToNumber,
 } from "../../utils/number.helper";
 import { currentUser } from "../../utils/query.helper";
-import { setStorage } from "../../utils/storage.helper";
 
 export interface IAsset {
   id: number;
@@ -15,57 +15,73 @@ export interface IAsset {
   amount: number;
   segment: string;
   atualPrice: number;
-  rentPercentual: string;
+  rentPercentual: number;
   rent: number;
-  total?: number;
-  dy?: string;
-  pvp?: string;
-  pl?: string;
+  total: number;
+  totalAtual: number;
+  dy: number;
+  pvp: number;
+  pl: number;
 }
 
 interface IInfos {
+  id: number;
   asset: string;
   atualPrice: number;
   rent: number;
-  rentPercentual: string;
-  dy: string;
-  pvp: string;
-  pl: string;
+  rentPercentual: number;
+  dy: number;
+  pvp: number;
+  pl: number;
   totalPrecoAtual: number;
   totalPrecoMedio: number;
   totalPrecoInicial: number;
 }
 
-async function _getAssets(uid: string) {
-  const data: IAsset[] = [];
+export interface ITotal {
+  date: firebase.firestore.Timestamp;
+  equity: number;
+  todayRent: number;
+  todayValue: number;
+  totalRent: number;
+  totalValue: number;
+}
+
+async function _getAssets() {
+  const user = await currentUser();
+
+  if (!user) return Promise.reject();
+
+  const assetsData: IAsset[] | firebase.firestore.DocumentData = [];
   await firebase
     .firestore()
     .collection("assets")
-    .doc(uid)
+    .doc(user.uid)
     .collection("variable")
     .orderBy("segment")
     .get()
     .then((v) => {
       v.forEach((result) => {
-        const asset = {
-          id: result.data().id,
-          asset: result.data().asset,
-          price: result.data().price,
-          amount: result.data().amount,
-          segment: result.data().segment,
-          atualPrice: result.data().price,
-          total: result.data().total,
-          rentPercentual: "0,00%",
-          rent: 0,
-        };
-        data.push(asset);
+        assetsData.push(result.data());
       });
     })
-    .catch(() => {
-      throw new Error();
-    });
+    .catch(() => Promise.reject());
 
-  return data;
+  let totalData: firebase.firestore.DocumentData | undefined = {};
+  await firebase
+    .firestore()
+    .collection("equity")
+    .doc(user.uid)
+    .get()
+    .then((v) => {
+      totalData = v.data();
+    })
+    .catch(() => Promise.reject());
+
+  return {
+    assets: assetsData as IAsset[],
+    total: totalData as ITotal,
+  };
 }
 
 async function _getUpdatedInfos(data: IAsset[]) {
@@ -79,22 +95,30 @@ async function _getUpdatedInfos(data: IAsset[]) {
     }
 
     await axios.get(URL).then(({ data }) => {
+      const defaultReal = "R$0,00";
       const infos: IInfos = {
+        id: item.id,
         asset: data.TICKER,
-        atualPrice: data.PRECO,
+        atualPrice: realToNumber(data.PRECO || defaultReal),
         rent: Number(
-          (getRent(item.price, realToNumber(data.PRECO)) * item.amount).toFixed(
-            2
-          )
+          (
+            getRent(item.price, realToNumber(data.PRECO || defaultReal)) *
+            item.amount
+          ).toFixed(2)
         ),
-        rentPercentual:
-          getRentPercentual(item.price, realToNumber(data.PRECO)) + "%",
-        dy: data.DY + "%",
-        pvp: data.P_VP,
-        pl: data.P_L,
-        totalPrecoAtual: realToNumber(data.PRECO) * item.amount,
+        rentPercentual: realToNumber(
+          getRentPercentual(
+            item.price,
+            realToNumber(data.PRECO || defaultReal)
+          ) || defaultReal
+        ),
+        dy: realToNumber(data.DY || defaultReal),
+        pvp: realToNumber(data.P_VP || defaultReal),
+        pl: realToNumber(data.P_L || defaultReal),
+        totalPrecoAtual: realToNumber(data.PRECO || defaultReal) * item.amount,
         totalPrecoMedio: item.total || 0,
-        totalPrecoInicial: realToNumber(data.PRECO_ABERTURA) * item.amount,
+        totalPrecoInicial:
+          realToNumber(data.PRECO_ABERTURA || defaultReal) * item.amount,
       };
 
       return assetsInfo.push(infos);
@@ -109,73 +133,95 @@ async function _refreshAssetData() {
 
   if (!user) return Promise.reject();
 
-  await getAssets(user.uid)
-    .then(async (data) => {
-      const finalData: IAsset[] = [];
+  await getAssets()
+    .then(async ({ assets }) => {
       let totalValue = 0;
       let totalInitialPrice = 0;
       let totalMediumPrice = 0;
       let totalAtualPrice = 0;
 
-      if (data.length > 0) {
-        await getUpdatedInfos(data).then(async (infos) => {
-          infos.map((info) => {
-            const [item] = data.filter((e) => e.asset === info.asset);
-            const newData: IAsset = {
-              id: item.id,
-              amount: item.amount,
-              asset: item.asset,
-              price: item.price,
-              segment: item.segment,
-              total: info.totalPrecoAtual,
-              atualPrice: info.atualPrice,
-              rent: info.rent,
-              rentPercentual: info.rentPercentual,
+      if (assets.length > 0) {
+        await getUpdatedInfos(assets as IAsset[]).then(async (infos) => {
+          for (const info of infos) {
+            const newData = {
+              id: info.id,
+              totalAtual: Number(info.totalPrecoAtual.toFixed(2)),
+              atualPrice: Number(info.atualPrice.toFixed(2)),
+              rent: Number(info.rent.toFixed(2)),
+              rentPercentual: Number(info.rentPercentual.toFixed(2)),
               pvp: info.pvp,
               dy: info.dy,
               pl: info.pl,
             };
 
+            await firebase
+              .firestore()
+              .collection("assets")
+              .doc(user.uid)
+              .collection("variable")
+              .doc(info.id.toString())
+              .set(newData, { merge: true });
+
             totalValue += info.rent;
             totalAtualPrice += info.totalPrecoAtual;
             totalMediumPrice += info.totalPrecoMedio;
             totalInitialPrice += info.totalPrecoInicial;
-
-            return finalData.push(newData);
-          });
+          }
         });
       }
 
-      setStorage("investPositionsTotalValue", totalValue);
-      setStorage(
-        "investPositionsTotalRent",
-        getRentPercentual(totalMediumPrice, totalAtualPrice)
-      );
-      setStorage(
-        "investPositionsTodayValue",
-        totalAtualPrice - totalInitialPrice
-      );
-      setStorage(
-        "investPositionsTodayRent",
-        getRentPercentual(totalInitialPrice, totalAtualPrice)
-      );
-      setStorage("investTotalEquity", totalAtualPrice);
-      setStorage("investPositionsData", finalData);
+      const [, currentDateInitial, , currentDate] = getAtualDate();
+      const dateRef = currentDate as string;
+      const equityData = {
+        date: currentDateInitial,
+        totalValue: Number(totalValue.toFixed(2)),
+        totalRent: Number(
+          realToNumber(
+            getRentPercentual(totalMediumPrice, totalAtualPrice)
+          ).toFixed(2)
+        ),
+        todayValue: Number((totalAtualPrice - totalInitialPrice).toFixed(2)),
+        todayRent: Number(
+          realToNumber(
+            getRentPercentual(totalInitialPrice, totalAtualPrice)
+          ).toFixed(2)
+        ),
+      };
+
+      await firebase
+        .firestore()
+        .collection("equity")
+        .doc(user.uid)
+        .collection("variable")
+        .doc(dateRef.replace(/[/]/g, "_"))
+        .set(equityData);
+
+      await firebase
+        .firestore()
+        .collection("equity")
+        .doc(user.uid)
+        .set(
+          {
+            equity: Number(totalAtualPrice.toFixed(2)),
+            ...equityData,
+          },
+          { merge: true }
+        );
     })
     .catch(() => {
       return Promise.reject();
     });
 }
 
-export function getAssets(uid: string) {
+function getAssets() {
   try {
-    return _getAssets(uid);
+    return _getAssets();
   } catch (error) {
     throw new Error("Erro");
   }
 }
 
-export function getUpdatedInfos(data: IAsset[]) {
+function getUpdatedInfos(data: IAsset[]) {
   try {
     return _getUpdatedInfos(data);
   } catch (error) {

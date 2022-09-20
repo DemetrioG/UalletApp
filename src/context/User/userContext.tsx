@@ -18,7 +18,7 @@ export const initialUserState: IUser = {
   uid: undefined,
   name: "",
   hideNumbers: false,
-  hideAssetPosition: false,
+  hideAssetPosition: true,
   completeName: undefined,
   email: undefined,
 };

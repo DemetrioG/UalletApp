@@ -1,9 +1,8 @@
 import * as React from "react";
-import { View } from "native-base";
+import { View, VStack } from "native-base";
 
 import EmptyChart from "../EmptyChart";
 import { LoaderContext } from "../../context/Loader/loaderContext";
-import { DataContext } from "../../context/Data/dataContext";
 import {
   StyledPieChart,
   PieChartLabel,
@@ -16,7 +15,7 @@ import {
   PieCenter,
 } from "./styles";
 import { metrics } from "../../styles";
-import { getData } from "./query";
+import { Skeleton } from "../../styles/general";
 
 interface ISlices {
   slices?: [
@@ -30,6 +29,11 @@ interface ISlices {
     }
   ];
   data: number[];
+}
+
+export interface IChartData {
+  label: string;
+  value: number;
 }
 
 // Criação de labels para o Pie Chart
@@ -55,90 +59,61 @@ export const Label = ({ slices, data }: ISlices) => {
   );
 };
 
-const SegmentChart = () => {
-  const { data: dataContext } = React.useContext(DataContext);
+const SegmentChart = ({
+  data,
+  empty,
+  emptyText,
+  screen,
+}: {
+  data: IChartData[];
+  empty: boolean;
+  emptyText: string;
+  screen: "home" | "invest";
+}) => {
   const {
-    loader: { homeVisible },
-    setLoader,
+    loader: { homeVisible, investVisible },
   } = React.useContext(LoaderContext);
-  /**
-   * INDEX
-   * 0: Leisure
-   * 1: Invest
-   * 2: Education
-   * 3: Short and Medium Time
-   * 4: Needs
-   */
-  const [data, setData] = React.useState([0, 0, 0, 0, 0]);
-  const [empty, setEmpty] = React.useState(false);
 
-  React.useEffect(() => {
-    getData(dataContext)
-      .then((data) => {
-        setEmpty(false);
-        if (data) {
-          /**
-           * Seta os dados finais para renderização do gráfico
-           */
-          setData(data);
-        }
-      })
-      .catch((e) => {
-        if (e === "empty") {
-          setEmpty(true);
-        }
-      })
-      .finally(() => {
-        setLoader((loaderState) => ({
-          ...loaderState,
-          segmentChart: true,
-        }));
-      });
-  }, [dataContext]);
+  const loader = screen === "home" ? homeVisible : investVisible;
+  const chartValues = data.map(({ value }) => value);
 
   return (
     <>
-      {!homeVisible && (
+      {!loader ? (
         <ChartContainer>
           {empty ? (
             <EmptyChart
-              emphasisText="Parece que você não cadastrou nenhuma despesa para o período"
+              emphasisText={emptyText}
               iconName="pie-chart"
               helperText="Realize seu primeiro lançamento!"
             />
           ) : (
             <>
               <SegmentChartView>
-                <StyledPieChart data={data}>
-                  <Label data={data} />
+                <StyledPieChart data={chartValues}>
+                  <Label data={chartValues} />
                   <PieCenter />
                 </StyledPieChart>
               </SegmentChartView>
               <SegmentLabelView>
-                <ContentLabel>
-                  <DotView index={0} />
-                  <SegmentLabelText>Lazer</SegmentLabelText>
-                </ContentLabel>
-                <ContentLabel>
-                  <DotView index={2} />
-                  <SegmentLabelText>Educação</SegmentLabelText>
-                </ContentLabel>
-                <ContentLabel>
-                  <DotView index={1} />
-                  <SegmentLabelText>Investimentos</SegmentLabelText>
-                </ContentLabel>
-                <ContentLabel>
-                  <DotView index={4} />
-                  <SegmentLabelText>Necessidades</SegmentLabelText>
-                </ContentLabel>
-                <ContentLabel>
-                  <DotView index={3} />
-                  <SegmentLabelText>Curto e médio prazo</SegmentLabelText>
-                </ContentLabel>
+                {data.map(({ label, value }, index) => {
+                  return (
+                    <VStack key={index}>
+                      {value ? (
+                        <ContentLabel>
+                          <DotView index={index} />
+                          <SegmentLabelText>{label}</SegmentLabelText>
+                        </ContentLabel>
+                      ) : null}
+                    </VStack>
+                  );
+                })}
               </SegmentLabelView>
             </>
           )}
         </ChartContainer>
+      ) : (
+        <Skeleton isLoaded={!loader} h={130} width={"full"} />
       )}
     </>
   );

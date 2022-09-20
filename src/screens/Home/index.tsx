@@ -8,7 +8,6 @@ import firebase from "../../services/firebase";
 import { IEntryList } from "../Entry";
 import InvestSummary from "../../components/InvestSummary";
 import Consolidate from "../../components/Consolidate";
-import SegmentChart from "../../components/SegmentChart";
 import LineChart from "../../components/LineChart";
 import Icon from "../../components/Icon";
 import { UserContext } from "../../context/User/userContext";
@@ -43,6 +42,7 @@ import {
   getLastEntry,
 } from "./querys";
 import { getBalance } from "../../utils/query.helper";
+import EntrySegmentChart from "./EntrySegmentChart";
 
 const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
 
@@ -74,7 +74,14 @@ const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { user, setUser } = React.useContext(UserContext);
   const {
-    loader: { name, balance, segmentChart, lineChart, homeVisible, equity },
+    loader: {
+      name,
+      balance,
+      entrySegmentChart,
+      lineChart,
+      homeVisible,
+      equity,
+    },
     setLoader,
   } = React.useContext(LoaderContext);
   const { data, setData } = React.useContext(DataContext);
@@ -151,13 +158,13 @@ const Home = () => {
   }, [data.modality, data.month, data.year, consolidate, data.balance]);
 
   React.useEffect(() => {
-    if (name && balance && lineChart && segmentChart && homeVisible) {
+    if (name && balance && lineChart && entrySegmentChart && homeVisible) {
       setLoader((loaderState) => ({
         ...loaderState,
         homeVisible: false,
       }));
     }
-  }, [balance, lineChart, segmentChart, name, equity]);
+  }, [balance, lineChart, entrySegmentChart, name, equity]);
 
   return (
     <BackgroundContainer>
@@ -225,14 +232,14 @@ const Home = () => {
             <LineChart />
           </Card>
           <Card>
-            <Skeleton isLoaded={!homeVisible} h={168} width={"full"}>
+            <Skeleton isLoaded={!homeVisible} h={12} width={"full"}>
               <CardHeaderView>
                 <CardTextView>
                   <CardHeaderText>Despesas por segmento</CardHeaderText>
                 </CardTextView>
               </CardHeaderView>
             </Skeleton>
-            <SegmentChart />
+            <EntrySegmentChart />
           </Card>
         </Collapse>
         <TouchableOpacity onPress={() => setInvestShow(!investShow)}>

@@ -3,9 +3,9 @@ import { TouchableOpacity, View } from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
-import Toast from "react-native-toast-message";
 
-import { IAsset, refreshAssetData } from "./query";
+import firebase from "../../services/firebase";
+import { IAsset, ITotal, refreshAssetData } from "./query";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
@@ -14,7 +14,6 @@ import {
   Container,
   EmptyText,
   Header,
-  HeaderText,
   ItemContainer,
   ItemContent,
   Label,
@@ -24,9 +23,10 @@ import {
 } from "./styles";
 import { colors, metrics } from "../../styles";
 import { numberToReal } from "../../utils/number.helper";
-import { getStorage } from "../../utils/storage.helper";
 import { Skeleton } from "../../styles/general";
 import { DataContext } from "../../context/Data/dataContext";
+import { Title } from "../../screens/Investments/styles";
+import { currentUser } from "../../utils/query.helper";
 
 const ITEMS_WIDTH = {
   asset: 78,
@@ -49,10 +49,11 @@ export const TotalOpen = ({
 }: {
   label?: "HOJE" | "TOTAL";
   value: string;
-  percentual: string;
+  percentual: number;
   withoutLabel?: boolean;
 }) => {
-  const isPercentualNegative = percentual.includes("-");
+  const formattedPercentual = numberToReal(percentual, true);
+  const isPercentualNegative = formattedPercentual.includes("-");
   return (
     <VStack pl={!withoutLabel ? 3 : 0} mb={2}>
       {!withoutLabel && <TotalLabel>{label}</TotalLabel>}
@@ -64,7 +65,7 @@ export const TotalOpen = ({
         />
         <TotalValue ml={1}>{value}</TotalValue>
         <TotalPercentual ml={2} negative={isPercentualNegative}>
-          ({percentual}%)
+          ({formattedPercentual}%)
         </TotalPercentual>
       </HStack>
     </VStack>
@@ -76,9 +77,10 @@ const TotalClose = ({
   percentual,
 }: {
   label: "HOJE" | "TOTAL";
-  percentual: string;
+  percentual: number;
 }) => {
-  const isPercentualNegative = percentual.includes("-");
+  const formattedPercentual = numberToReal(percentual, true);
+  const isPercentualNegative = formattedPercentual.includes("-");
   return (
     <HStack alignItems="center" mr={3}>
       <TotalLabel>{label}</TotalLabel>
@@ -89,7 +91,7 @@ const TotalClose = ({
         style={{ marginLeft: 5 }}
       />
       <TotalPercentual ml={2} negative={isPercentualNegative}>
-        {percentual}%
+        {formattedPercentual}%
       </TotalPercentual>
     </HStack>
   );
@@ -133,29 +135,31 @@ const ItemList = ({
             return (
               <HStack key={i}>
                 <ItemContainer minW={ITEMS_WIDTH.price}>
-                  <ItemContent number>{e.atualPrice}</ItemContent>
+                  <ItemContent number>
+                    {numberToReal(e.atualPrice || 0, true)}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.rentPercentual}>
                   <ItemContent
                     number
                     withColor
-                    negative={e.rentPercentual.includes("-")}
+                    negative={numberToReal(e.rentPercentual || 0).includes("-")}
                   >
-                    {e.rentPercentual}
+                    {numberToReal(e.rentPercentual || 0, true) + "%"}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.rent}>
                   <ItemContent
                     number
                     withColor
-                    negative={numberToReal(e.rent).includes("-")}
+                    negative={numberToReal(e.rent || 0).includes("-")}
                   >
-                    {numberToReal(e.rent)}
+                    {numberToReal(e.rent || 0)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.price}>
                   <ItemContent number>
-                    {numberToReal(e.price, true)}
+                    {numberToReal(e.price || 0, true)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.amount}>
@@ -163,17 +167,23 @@ const ItemList = ({
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.amount}>
                   <ItemContent number>
-                    {numberToReal(e.total || 0, true)}
+                    {numberToReal(e.totalAtual || 0, true)}
                   </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.pvp}>
-                  <ItemContent number>{e.pvp}</ItemContent>
+                  <ItemContent number>
+                    {numberToReal(e.pvp || 0, true)}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.dy}>
-                  <ItemContent number>{e.dy}</ItemContent>
+                  <ItemContent number>
+                    {numberToReal(e.dy || 0, true) + "%"}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.pl}>
-                  <ItemContent number>{e.pl || "-"}</ItemContent>
+                  <ItemContent number>
+                    {numberToReal(e.pl || 0, true) || "-"}
+                  </ItemContent>
                 </ItemContainer>
                 <ItemContainer minW={ITEMS_WIDTH.segment}>
                   <ItemContent number>{e.segment}</ItemContent>
@@ -193,11 +203,7 @@ const ItemList = ({
   );
 };
 
-const Positions = ({
-  setSpinner,
-}: {
-  setSpinner: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const Positions = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
     user: { hideAssetPosition },
@@ -209,10 +215,11 @@ const Positions = ({
   } = React.useContext(LoaderContext);
   const { setData: setDataContext } = React.useContext(DataContext);
   const [data, setData] = React.useState<IAsset[]>([]);
-  const [totalValue, setTotalValue] = React.useState(0);
-  const [todayValue, setTodayValue] = React.useState(0);
-  const [totalRent, setTotalRent] = React.useState("0,00");
-  const [todayRent, setTodayRent] = React.useState("0,00");
+  const [totalData, setTotalData] = React.useState<ITotal | null>(null);
+  const totalValue = totalData?.totalValue || 0;
+  const todayValue = totalData?.todayValue || 0;
+  const totalRent = totalData?.totalRent || 0;
+  const todayRent = totalData?.todayRent || 0;
 
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
@@ -225,67 +232,63 @@ const Positions = ({
     }));
   }
 
-  async function refreshData() {
-    refreshAssetData()
-      .then(async () => {
-        await getData();
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao atualizar as posições",
-        });
-      })
-      .finally(() => setSpinner(false));
-  }
+  async function getAssets() {
+    const user = await currentUser();
 
-  async function getData() {
-    const totalValue = await getStorage("investPositionsTotalValue");
-    const totalRent = await getStorage("investPositionsTotalRent");
-    const todayValue = await getStorage("investPositionsTodayValue");
-    const todayRent = await getStorage("investPositionsTodayRent");
-    const totalEquity = await getStorage("investTotalEquity");
-    const data = await getStorage("investPositionsData");
+    if (!user) return Promise.reject();
 
-    totalValue !== undefined &&
-      totalValue !== null &&
-      setTotalValue(totalValue);
+    firebase
+      .firestore()
+      .collection("assets")
+      .doc(user.uid)
+      .collection("variable")
+      .orderBy("segment")
+      .onSnapshot(
+        (v) => {
+          const assetsData: IAsset[] | firebase.firestore.DocumentData = [];
+          v.forEach((result) => {
+            assetsData.push(result.data());
+          });
+          setData(assetsData as IAsset[]);
+        },
+        () => Promise.reject()
+      );
 
-    todayValue !== undefined &&
-      todayValue !== null &&
-      setTodayValue(todayValue);
-
-    totalEquity !== undefined &&
-      totalEquity !== null &&
-      setDataContext((state) => ({
-        ...state,
-        equity: totalEquity,
-      }));
-
-    totalRent && setTotalRent(totalRent);
-    todayRent && setTodayRent(todayRent);
-    data && setData(data);
-
-    if (investVisible) {
-      setLoader((state) => ({
-        ...state,
-        positions: true,
-      }));
-    }
+    firebase
+      .firestore()
+      .collection("equity")
+      .doc(user.uid)
+      .onSnapshot(
+        (v) => {
+          const data = v.data() as ITotal;
+          setTotalData(data);
+          setDataContext((state) => ({
+            ...state,
+            equity: data.equity,
+          }));
+        },
+        () => Promise.reject()
+      );
   }
 
   React.useEffect(() => {
-    isFocused && refreshData();
+    isFocused && refreshAssetData();
   }, [isFocused]);
 
   React.useEffect(() => {
-    getData();
+    getAssets().finally(() => {
+      investVisible &&
+        setLoader((state) => ({
+          ...state,
+          positions: true,
+        }));
+    });
   }, []);
 
   return (
     <VStack mt={5}>
       <HStack alignItems="center">
-        <HeaderText>Posições RV</HeaderText>
+        <Title>Posições RV</Title>
         <Tooltip text="Seus ativos em Renda Variável">
           <Icon
             name="info"
@@ -300,7 +303,7 @@ const Positions = ({
         mt={4}
         h={hideAssetPosition ? 52 : 200}
       >
-        <VStack mt={5} mb={!hideAssetPosition ? 0 : 10}>
+        <VStack mt={5} mb={!hideAssetPosition ? 0 : 53}>
           <Header>
             <TouchableOpacity onPress={handlePositionVisible}>
               <HStack justifyContent="space-between" alignItems="center">

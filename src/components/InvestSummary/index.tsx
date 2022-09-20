@@ -1,13 +1,14 @@
 import * as React from "react";
 import { VStack } from "native-base";
 
+import firebase from "../../services/firebase";
 import { TotalOpen } from "../Positions";
 import { DataContext } from "../../context/Data/dataContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { numberToReal } from "../../utils/number.helper";
-import { getStorage } from "../../utils/storage.helper";
-import { refreshAssetData } from "../Positions/query";
 import { useIsFocused } from "@react-navigation/native";
+import { ITotal, refreshAssetData } from "../Positions/query";
+import { currentUser } from "../../utils/query.helper";
 
 const InvestSummary = () => {
   const { setData } = React.useContext(DataContext);
@@ -15,39 +16,47 @@ const InvestSummary = () => {
     loader: { equity },
     setLoader,
   } = React.useContext(LoaderContext);
-  const [totalValue, setTotalValue] = React.useState(0);
-  const [totalRent, setTotalRent] = React.useState("0,00");
+  const [totalData, setTotalData] = React.useState<ITotal | null>(null);
+  const totalValue = totalData?.totalValue || 0;
+  const totalRent = totalData?.totalRent || 0;
 
   const isFocused = useIsFocused();
 
-  async function getData() {
-    const totalValue = await getStorage("investPositionsTotalValue");
-    const totalRent = await getStorage("investPositionsTotalRent");
-    const totalEquity = await getStorage("investTotalEquity");
+  async function getAssets() {
+    const user = await currentUser();
 
-    totalValue && setTotalValue(totalValue);
-    totalRent && setTotalRent(totalRent);
-    totalEquity &&
-      setData((state) => ({
-        ...state,
-        equity: totalEquity,
-      }));
+    if (!user) return Promise.reject();
+
+    firebase
+      .firestore()
+      .collection("equity")
+      .doc(user.uid)
+      .onSnapshot(
+        (v) => {
+          const data = v.data() as ITotal;
+          setTotalData(data);
+          setData((state) => ({
+            ...state,
+            equity: data.equity,
+          }));
+        },
+        () => Promise.reject()
+      );
   }
 
   React.useEffect(() => {
-    isFocused &&
-      refreshAssetData()
-        .then(async () => {
-          await getData();
-        })
-        .finally(() => {
-          !equity &&
-            setLoader((loaderState) => ({
-              ...loaderState,
-              equity: true,
-            }));
-        });
+    isFocused && refreshAssetData();
   }, [isFocused]);
+
+  React.useEffect(() => {
+    getAssets().finally(() => {
+      !equity &&
+        setLoader((loaderState) => ({
+          ...loaderState,
+          equity: true,
+        }));
+    });
+  }, []);
 
   return (
     <>

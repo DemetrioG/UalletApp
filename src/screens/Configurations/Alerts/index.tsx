@@ -81,8 +81,8 @@ const AlertsScreen = () => {
         {actions.map((action, index) => (
           <>
             {!action.data.value ? (
-              <TouchableOpacity onPress={() => goTo(action.url)}>
-                <ItemContainer key={index}>
+              <TouchableOpacity key={index} onPress={() => goTo(action.url)}>
+                <ItemContainer>
                   <HStack
                     justifyContent="space-between"
                     flex={1}
