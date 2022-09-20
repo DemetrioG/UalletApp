@@ -15,6 +15,7 @@ import {
   PieCenter,
 } from "./styles";
 import { metrics } from "../../styles";
+import { Skeleton } from "../../styles/general";
 
 interface ISlices {
   slices?: [
@@ -62,20 +63,23 @@ const SegmentChart = ({
   data,
   empty,
   emptyText,
+  screen,
 }: {
   data: IChartData[];
   empty: boolean;
   emptyText: string;
+  screen: "home" | "invest";
 }) => {
   const {
-    loader: { homeVisible },
+    loader: { homeVisible, investVisible },
   } = React.useContext(LoaderContext);
 
+  const loader = screen === "home" ? homeVisible : investVisible;
   const chartValues = data.map(({ value }) => value);
 
   return (
     <>
-      {!homeVisible && (
+      {!loader ? (
         <ChartContainer>
           {empty ? (
             <EmptyChart
@@ -108,6 +112,8 @@ const SegmentChart = ({
             </>
           )}
         </ChartContainer>
+      ) : (
+        <Skeleton isLoaded={!loader} h={130} width={"full"} />
       )}
     </>
   );

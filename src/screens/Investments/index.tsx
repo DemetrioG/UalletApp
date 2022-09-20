@@ -21,20 +21,19 @@ import AssetSegmentChart from "./AssetSegmentChart";
 const Investments = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const {
-    loader: { positions },
+    loader: { positions, assetSegmentChart },
     setLoader,
   } = React.useContext(LoaderContext);
   const { data } = React.useContext(DataContext);
-  const [spinner, setSpinner] = React.useState(true);
 
   React.useEffect(() => {
-    if (positions) {
+    if (positions && assetSegmentChart) {
       setLoader((state) => ({
         ...state,
         investVisible: false,
       }));
     }
-  }, [positions]);
+  }, [positions, assetSegmentChart]);
 
   return (
     <BackgroundContainer>
@@ -42,13 +41,12 @@ const Investments = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <HStack mb={metrics.baseMargin} justifyContent={"space-between"}>
             <TextHeaderScreen noMarginBottom>Investimentos</TextHeaderScreen>
-            {spinner && <Spinner />}
           </HStack>
           <PatrimonyText>Patrimônio investido</PatrimonyText>
           <VStack mt={1}>
             <Balance>{numberToReal(data.equity)}</Balance>
           </VStack>
-          <Positions setSpinner={setSpinner} />
+          <Positions />
           <VStack mt={5}>
             <Title>Alocação por segmento</Title>
             <VStack mt={5}>

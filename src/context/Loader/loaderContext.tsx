@@ -3,22 +3,24 @@ import * as React from "react";
 interface ILoader {
   balance?: boolean;
   lineChart?: boolean;
-  segmentChart?: boolean;
+  entrySegmentChart?: boolean;
   name?: boolean;
   homeVisible?: boolean;
   equity?: boolean;
   positions?: boolean;
+  assetSegmentChart?: boolean;
   investVisible?: boolean;
 }
 
 export const initialLoaderState: ILoader = {
   balance: false,
   lineChart: false,
-  segmentChart: false,
+  entrySegmentChart: false,
   name: false,
   homeVisible: true,
   equity: false,
   positions: false,
+  assetSegmentChart: false,
   investVisible: true,
 };
 

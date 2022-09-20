@@ -31,7 +31,7 @@ const defaultChartData = [
 const EntrySegmentChart = () => {
   const { data: dataContext } = React.useContext(DataContext);
   const {
-    loader: { segmentChart },
+    loader: { entrySegmentChart },
     setLoader,
   } = React.useContext(LoaderContext);
 
@@ -55,10 +55,10 @@ const EntrySegmentChart = () => {
         }
       })
       .finally(() => {
-        !segmentChart &&
+        !entrySegmentChart &&
           setLoader((loaderState) => ({
             ...loaderState,
-            segmentChart: true,
+            entrySegmentChart: true,
           }));
       });
   }, [dataContext]);
@@ -68,6 +68,7 @@ const EntrySegmentChart = () => {
       data={data}
       empty={empty}
       emptyText="Parece que você não cadastrou nenhuma despesa para o período"
+      screen="home"
     />
   );
 };
