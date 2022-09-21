@@ -13,10 +13,11 @@ import {
   ViewTab,
 } from "../../styles/general";
 import { metrics } from "../../styles";
-import { PatrimonyText, Spinner, Title } from "./styles";
+import { PatrimonyText, Title } from "./styles";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import AssetSegmentChart from "./AssetSegmentChart";
+import EvolutionLineChart from "./EvolutionLineChart";
 
 const Investments = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -45,6 +46,10 @@ const Investments = () => {
           <PatrimonyText>Patrimônio investido</PatrimonyText>
           <VStack mt={1}>
             <Balance>{numberToReal(data.equity)}</Balance>
+          </VStack>
+          <VStack mt={5}>
+            <Title>Evolução da carteira</Title>
+            <EvolutionLineChart />
           </VStack>
           <Positions />
           <VStack mt={5}>
