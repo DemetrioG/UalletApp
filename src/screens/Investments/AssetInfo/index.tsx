@@ -101,7 +101,7 @@ const AssetInfoScreen = ({
             <ItemContent
               number
               withColor
-              negative={params.rentPercentual.includes("-")}
+              negative={params.rentPercentual.toString().includes("-")}
               fontSize={"md"}
             >
               {params.rentPercentual}

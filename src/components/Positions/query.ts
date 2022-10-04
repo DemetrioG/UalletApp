@@ -1,5 +1,5 @@
 import firebase from "../../services/firebase";
-import axios, { ACOES_URL, FII_URL } from "../../utils/api.helper";
+import { AssetSegment } from "../../types/types";
 import { getAtualDate } from "../../utils/date.helper";
 import {
   getRent,
@@ -14,28 +14,21 @@ export interface IAsset {
   price: number;
   amount: number;
   segment: string;
-  atualPrice: number;
   rentPercentual: number;
   rent: number;
   total: number;
   totalAtual: number;
-  dy: number;
-  pvp: number;
-  pl: number;
 }
 
-interface IInfos {
-  id: number;
-  asset: string;
+interface IPrices {
   atualPrice: number;
-  rent: number;
-  rentPercentual: number;
   dy: number;
+  lastRefresh: string;
+  openPrice: number;
   pvp: number;
   pl: number;
-  totalPrecoAtual: number;
-  totalPrecoMedio: number;
-  totalPrecoInicial: number;
+  segment: AssetSegment;
+  ticker: string;
 }
 
 export interface ITotal {
@@ -84,48 +77,17 @@ async function _getAssets() {
   };
 }
 
-async function _getUpdatedInfos(data: IAsset[]) {
-  const assetsInfo: IInfos[] = [];
+async function _getPrice(ticker: string) {
+  const data = (await firebase
+    .firestore()
+    .collection("prices")
+    .doc(ticker)
+    .get()
+    .then((v) => {
+      return v.data();
+    })) as IPrices;
 
-  for (const item of data) {
-    let URL = ACOES_URL + item.asset;
-
-    if (item.segment === "FIIs e Fiagro") {
-      URL = FII_URL + item.asset;
-    }
-
-    await axios.get(URL).then(({ data }) => {
-      const defaultReal = "R$0,00";
-      const infos: IInfos = {
-        id: item.id,
-        asset: data.TICKER,
-        atualPrice: realToNumber(data.PRECO || defaultReal),
-        rent: Number(
-          (
-            getRent(item.price, realToNumber(data.PRECO || defaultReal)) *
-            item.amount
-          ).toFixed(2)
-        ),
-        rentPercentual: realToNumber(
-          getRentPercentual(
-            item.price,
-            realToNumber(data.PRECO || defaultReal)
-          ) || defaultReal
-        ),
-        dy: realToNumber(data.DY || defaultReal),
-        pvp: realToNumber(data.P_VP || defaultReal),
-        pl: realToNumber(data.P_L || defaultReal),
-        totalPrecoAtual: realToNumber(data.PRECO || defaultReal) * item.amount,
-        totalPrecoMedio: item.total || 0,
-        totalPrecoInicial:
-          realToNumber(data.PRECO_ABERTURA || defaultReal) * item.amount,
-      };
-
-      return assetsInfo.push(infos);
-    });
-  }
-
-  return assetsInfo;
+  return data;
 }
 
 async function _refreshAssetData() {
@@ -140,34 +102,38 @@ async function _refreshAssetData() {
       let totalMediumPrice = 0;
       let totalAtualPrice = 0;
 
-      if (assets.length > 0) {
-        await getUpdatedInfos(assets as IAsset[]).then(async (infos) => {
-          for (const info of infos) {
-            const newData = {
-              id: info.id,
-              totalAtual: Number(info.totalPrecoAtual.toFixed(2)),
-              atualPrice: Number(info.atualPrice.toFixed(2)),
-              rent: Number(info.rent.toFixed(2)),
-              rentPercentual: Number(info.rentPercentual.toFixed(2)),
-              pvp: info.pvp,
-              dy: info.dy,
-              pl: info.pl,
-            };
+      for (const asset of assets) {
+        const { id, asset: ticker, amount, price, total } = asset;
 
-            await firebase
-              .firestore()
-              .collection("assets")
-              .doc(user.uid)
-              .collection("variable")
-              .doc(info.id.toString())
-              .set(newData, { merge: true });
+        const { atualPrice, openPrice } = await getPrice(ticker);
 
-            totalValue += info.rent;
-            totalAtualPrice += info.totalPrecoAtual;
-            totalMediumPrice += info.totalPrecoMedio;
-            totalInitialPrice += info.totalPrecoInicial;
-          }
-        });
+        const rent = Number((getRent(price, atualPrice) * amount).toFixed(2));
+        const totalAtual = Number((atualPrice * amount).toFixed(2));
+        const rentPercentual = realToNumber(
+          getRentPercentual(price, atualPrice)
+        );
+        const totalOpen = Number(
+          ((openPrice || atualPrice) * amount).toFixed(2)
+        );
+
+        const data = {
+          totalAtual: totalAtual,
+          rent: rent,
+          rentPercentual: rentPercentual,
+        };
+
+        await firebase
+          .firestore()
+          .collection("assets")
+          .doc(user.uid)
+          .collection("variable")
+          .doc(id.toString())
+          .set(data, { merge: true });
+
+        totalValue += rent;
+        totalAtualPrice += totalAtual;
+        totalMediumPrice += total;
+        totalInitialPrice += totalOpen;
       }
 
       const [, currentDateInitial, , currentDate] = getAtualDate();
@@ -221,18 +187,19 @@ function getAssets() {
   }
 }
 
-function getUpdatedInfos(data: IAsset[]) {
-  try {
-    return _getUpdatedInfos(data);
-  } catch (error) {
-    throw new Error("Erro");
-  }
-}
-
 export function refreshAssetData() {
   try {
     return _refreshAssetData();
   } catch (error) {
     throw new Error("Erro ao atualizar as posições");
+  }
+}
+
+export async function getPrice(ticker: string) {
+  try {
+    return await _getPrice(ticker);
+  } catch (error) {
+    console.log(error);
+    throw new Error("Erro ao retornar o preço do ativo");
   }
 }
