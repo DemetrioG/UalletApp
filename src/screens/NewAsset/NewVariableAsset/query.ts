@@ -1,4 +1,5 @@
 import firebase from "../../../services/firebase";
+import { AssetSegment } from "../../../types/types";
 import { convertDateToDatabase } from "../../../utils/date.helper";
 import {
   averageBetweenNumbers,
@@ -8,7 +9,7 @@ import { createCollection } from "../../../utils/query.helper";
 
 export interface IAsset {
   entrydate: string;
-  segment: "Ações" | "FIIs e Fiagro" | "Criptomoedas" | "BDR's" | null;
+  segment: AssetSegment | null;
   broker: string | null;
   asset: string;
   amount: number;

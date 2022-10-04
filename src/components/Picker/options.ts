@@ -1,3 +1,5 @@
+import { AssetSegment } from "../../types/types";
+
 /**
  * Opções genéricas para aplicação no Picker Select
  */
@@ -13,11 +15,13 @@ export const ENTRY_SEGMENT = [
   "Curto e médio prazo",
 ];
 export const CLASSIFICATION = ["Despesas fixas", "Despesas variáveis"];
-export const ASSET_SEGMENT = [
+export const ASSET_SEGMENT: AssetSegment[] = [
   "Ações",
-  "FIIs e Fiagro",
+  "FIIs",
+  "Fiagro",
   "Criptomoedas",
   "BDR's",
+  "ETF's",
 ];
 export const BROKER = [
   "BANCO DO BRASIL S/A",
