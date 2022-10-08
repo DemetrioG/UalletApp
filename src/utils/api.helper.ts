@@ -1,27 +1,7 @@
-import defaultAxios from "axios";
-import { AWS_WEBSERVICE_ENDPOINT } from "@env";
-
-export interface ITesouro {
-  VALOR_VENDA: string;
-  INDEXADOR: string;
-  VENCIMENTO: string;
-  SELIC: string;
-  NOME: string;
-  VALOR_COMPRA: string;
-  ID: string;
-  RENT: string;
-}
-
 export const STATUS_INVEST_BASE_URL = "https://statusinvest.com.br/";
-export const TESOURO_URL = "tesouro/";
 export const ACOES_URL = "acoes/";
-export const FII_URL = "fiis/";
-
-/**
- * Instância do axios para chamada de API
- */
-const axios = defaultAxios.create({
-  baseURL: AWS_WEBSERVICE_ENDPOINT?.toString() || "http://3.87.93.70:8080/",
-});
-
-export default axios;
+export const FII_URL = "fundos-imobiliarios/";
+export const FIAGRO_URL = "fiagros/";
+export const BDRS_URL = "bdrs/";
+export const ETFS_URL = "etfs/";
+export const CRIPTO_URL = "criptomoedas/";
