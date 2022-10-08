@@ -1,11 +1,11 @@
 import * as React from "react";
 import { TouchableOpacity } from "react-native";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, VStack } from "native-base";
 
 import firebase from "../../services/firebase";
-import { getPrice, ITotal, refreshAssetData } from "./query";
+import { getPrice, ITotal } from "./query";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
@@ -18,6 +18,7 @@ import { DataContext } from "../../context/Data/dataContext";
 import { Title } from "../../screens/Investments/styles";
 import { currentUser } from "../../utils/query.helper";
 import { ItemList, ITEMS_WIDTH, TotalClose, TotalOpen } from "./components";
+import { IVariableIncome } from "../../types/assets";
 
 export interface IPosition {
   id: number;
@@ -55,8 +56,6 @@ const Positions = () => {
 
   const headerScrollRef = React.useRef() as React.MutableRefObject<any>;
 
-  const isFocused = useIsFocused();
-
   function handlePositionVisible() {
     setUser((userState) => ({
       ...userState,
@@ -74,24 +73,35 @@ const Positions = () => {
       .collection("assets")
       .doc(user.uid)
       .collection("variable")
-      .orderBy("segment")
       .onSnapshot(
-        (v) => {
+        async (v) => {
+          const assets = await firebase
+            .firestore()
+            .collection("assets")
+            .doc(user.uid)
+            .collection("variable")
+            .orderBy("segment")
+            .get()
+            .then((v) => {
+              const data: IVariableIncome[] = [];
+              v.forEach((result) => {
+                data.push(result.data() as IVariableIncome);
+              });
+              return data;
+            });
+
           const assetsData: IPosition[] | firebase.firestore.DocumentData = [];
-          v.forEach(async (result) => {
-            const { atualPrice, dy, pl, pvp } = await getPrice(
-              result.data().asset
-            );
+          for (const asset of assets) {
+            const { atualPrice, dy, pl, pvp } = await getPrice(asset.asset);
             const data = {
-              ...result.data(),
+              ...asset,
               atualPrice,
               dy,
               pl,
               pvp,
             };
             assetsData.push(data);
-          });
-
+          }
           setData(assetsData as IPosition[]);
         },
         () => Promise.reject()
@@ -113,10 +123,6 @@ const Positions = () => {
         () => Promise.reject()
       );
   }
-
-  React.useEffect(() => {
-    isFocused && refreshAssetData();
-  }, [isFocused]);
 
   React.useEffect(() => {
     getAssets().finally(() => {

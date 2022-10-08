@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { IAsset, registerAsset } from "./query";
+import { getTreasure, registerAsset } from "./query";
 import { UserContext } from "../../../context/User/userContext";
 import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
@@ -18,7 +18,6 @@ import TextInput from "../../../components/TextInput";
 import Calendar from "../../../components/Calendar";
 import { BROKER } from "../../../components/Picker/options";
 import { convertDate, dateValidation } from "../../../utils/date.helper";
-import axios, { ITesouro, TESOURO_URL } from "../../../utils/api.helper";
 import { sortObjectByKey } from "../../../utils/array.helper";
 import {
   BackgroundContainer,
@@ -33,6 +32,7 @@ import {
 import { RentTypeText } from "./styles";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { IFixedIncome } from "../../../types/assets";
 
 interface IForm {
   entrydate: string;
@@ -122,7 +122,7 @@ const NewFixAsset = () => {
     const DUEDATE = duedate && duedate !== "";
 
     setLoading(true);
-    const data: IAsset = {
+    const data: IFixedIncome = {
       entrydate: entrydate,
       title: title,
       cdbname: CDB ? cdbname : null,
@@ -160,16 +160,12 @@ const NewFixAsset = () => {
         "Letra de Crédito do Agronegócio",
       ];
 
-      axios.get(TESOURO_URL).then(({ data }: { data: ITesouro[] }) => {
-        const selic = data.filter((e) => e.NOME.includes("Tesouro Selic"))[0]
-          .SELIC;
-        setSelic(selic);
-
-        const sortedData = sortObjectByKey(data, "NOME", "asc");
-        sortedData.map((e) => names.push(e.NOME));
-
-        return SET_TITLE_OPTIONS(names);
+      getTreasure().then((data) => {
+        const sortedData = sortObjectByKey(data, "name", "asc");
+        sortedData.map((e) => names.push(e.name));
       });
+
+      return SET_TITLE_OPTIONS(names);
     };
     fillTitlePicker();
   }, []);
