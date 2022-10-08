@@ -1,5 +1,6 @@
+import { IForm } from ".";
 import firebase from "../../../services/firebase";
-import { AssetSegment } from "../../../types/types";
+import { IVariableIncome } from "../../../types/assets";
 import { convertDateToDatabase } from "../../../utils/date.helper";
 import {
   averageBetweenNumbers,
@@ -7,34 +8,12 @@ import {
 } from "../../../utils/number.helper";
 import { createCollection } from "../../../utils/query.helper";
 
-export interface IAsset {
-  entrydate: string;
-  segment: AssetSegment | null;
-  broker: string | null;
-  asset: string;
-  amount: number;
-  price: string;
-  total: string;
-  uid: string;
-}
-
-interface IAssetDatabase {
-  id: number;
-  amount: number;
-  amountBuyDate: object[];
-  asset: string;
-  broker: string;
-  price: number;
-  segment: string;
-  total: number;
-}
-
-async function _registerAsset(props: IAsset) {
+async function _registerAsset(props: IForm) {
   const { entrydate, segment, broker, asset, amount, price, total, uid } =
     props;
 
   let id = 1;
-  let itemIsInDatabase: IAssetDatabase = undefined;
+  let itemIsInDatabase: IVariableIncome = undefined;
   const item = await firebase
     .firestore()
     .collection("assets")
@@ -45,7 +24,7 @@ async function _registerAsset(props: IAsset) {
 
   item.forEach((result) => {
     id = result.data().id;
-    itemIsInDatabase = result.data() as IAssetDatabase;
+    itemIsInDatabase = result.data() as IVariableIncome;
   });
 
   if (!itemIsInDatabase) {
@@ -71,7 +50,7 @@ async function _registerAsset(props: IAsset) {
     price: realToNumber(price),
   });
 
-  const items: IAssetDatabase = {
+  const items: IVariableIncome = {
     id: id,
     amountBuyDate: amountBuyDate,
     segment: segment!,
@@ -96,7 +75,7 @@ async function _registerAsset(props: IAsset) {
     .set(items, { merge: true });
 }
 
-export function registerAsset(props: IAsset) {
+export function registerAsset(props: IForm) {
   try {
     return _registerAsset(props);
   } catch (error) {

@@ -1,4 +1,5 @@
 import firebase from "../../services/firebase";
+import { IVariableIncome } from "../../types/assets";
 import { AssetSegment } from "../../types/types";
 import { getAtualDate } from "../../utils/date.helper";
 import {
@@ -7,19 +8,6 @@ import {
   realToNumber,
 } from "../../utils/number.helper";
 import { currentUser } from "../../utils/query.helper";
-
-export interface IAsset {
-  id: number;
-  asset: string;
-  price: number;
-  amount: number;
-  segment: string;
-  rentPercentual: number;
-  rent: number;
-  total: number;
-  totalAtual: number;
-}
-
 interface IPrices {
   atualPrice: number;
   dy: number;
@@ -45,7 +33,7 @@ async function _getAssets() {
 
   if (!user) return Promise.reject();
 
-  const assetsData: IAsset[] | firebase.firestore.DocumentData = [];
+  const assetsData: IVariableIncome[] | firebase.firestore.DocumentData = [];
   await firebase
     .firestore()
     .collection("assets")
@@ -72,7 +60,7 @@ async function _getAssets() {
     .catch(() => Promise.reject());
 
   return {
-    assets: assetsData as IAsset[],
+    assets: assetsData as IVariableIncome[],
     total: totalData as ITotal,
   };
 }
