@@ -128,6 +128,7 @@ async function _refreshAssetData() {
       const dateRef = currentDate as string;
       const equityData = {
         date: currentDateInitial,
+        equity: Number(totalAtualPrice.toFixed(2)),
         totalValue: Number(totalValue.toFixed(2)),
         totalRent: Number(
           realToNumber(
@@ -154,13 +155,7 @@ async function _refreshAssetData() {
         .firestore()
         .collection("equity")
         .doc(user.uid)
-        .set(
-          {
-            equity: Number(totalAtualPrice.toFixed(2)),
-            ...equityData,
-          },
-          { merge: true }
-        );
+        .set(equityData, { merge: true });
     })
     .catch(() => {
       return Promise.reject();
