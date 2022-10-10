@@ -33,18 +33,16 @@ import { AssetSegment } from "../../../types/types";
 
 export interface IForm {
   entrydate: string;
-  segment: AssetSegment | null;
-  broker: string | null;
+  segment?: AssetSegment | null;
+  broker?: string | null;
   asset: string;
   amount: number;
   price: string;
-  total: string;
-  uid: string;
+  total?: string;
 }
 
 const NewVariableAsset = () => {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const { user } = React.useContext(UserContext);
   const [calendar, setCalendar] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [segment, setSegment] = React.useState(null);
@@ -120,7 +118,6 @@ const NewVariableAsset = () => {
       broker: broker,
       segment: segment,
       total: total,
-      uid: user.uid!,
     };
 
     registerAsset(data)

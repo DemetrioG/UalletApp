@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Toast from "react-native-toast-message";
 
 import Icon from "../../../components/Icon";
 import TabView from "../../../components/TabView";
@@ -20,8 +21,10 @@ import { convertDate, dateValidation } from "../../../utils/date.helper";
 import TextInput from "../../../components/TextInput";
 import Calendar from "../../../components/Calendar";
 import { IPosition } from "../../../components/Positions";
+import { deleteAsset } from "./query";
+import { registerAsset } from "../../NewAsset/NewVariableAsset/query";
 
-interface IForm {
+export interface IForm {
   entrydate: string;
   asset: string;
   amount: number;
@@ -37,7 +40,7 @@ const schema = yup
       .test("date", "Verifique a data informada", (value) =>
         dateValidation(value!)
       ),
-    asset: yup.string().required(),
+    asset: yup.string(),
     amount: yup.number().required(),
     price: yup
       .string()
@@ -48,6 +51,10 @@ const schema = yup
 
 const Form = ({ title, asset }: IPosition & { title: string }) => {
   const [calendar, setCalendar] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const { goBack } = useNavigation();
+
+  const defaultValues = { asset: asset };
 
   const {
     control,
@@ -56,10 +63,48 @@ const Form = ({ title, asset }: IPosition & { title: string }) => {
     formState: { errors },
   } = useForm<IForm>({
     resolver: yupResolver(schema),
+    defaultValues,
   });
 
   function setDateToInput(date: Date) {
     setValue("entrydate", convertDate(date));
+  }
+
+  async function submit(fields: IForm) {
+    setLoading(true);
+    if (title === "VENDA") {
+      deleteAsset(fields)
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Lançamento registrado com sucesso",
+          });
+          return goBack();
+        })
+        .catch(() => {
+          return Toast.show({
+            type: "error",
+            text1: "Erro ao registrar lançamento",
+          });
+        })
+        .finally(() => setLoading(false));
+    } else if (title === "COMPRA") {
+      registerAsset(fields)
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Lançamento registrado com sucesso",
+          });
+          return goBack();
+        })
+        .catch(() => {
+          return Toast.show({
+            type: "error",
+            text1: "Erro ao registrar lançamento",
+          });
+        })
+        .finally(() => setLoading(false));
+    }
   }
 
   return (
@@ -81,7 +126,6 @@ const Form = ({ title, asset }: IPosition & { title: string }) => {
             name="asset"
             placeholder="Ativo"
             control={control}
-            value={asset}
             isDisabled
           />
           <TextInput
@@ -103,7 +147,7 @@ const Form = ({ title, asset }: IPosition & { title: string }) => {
                 : "Informe todos os campos"
             }
           />
-          <Button mt={3}>
+          <Button mt={3} onPress={handleSubmit(submit)} isLoading={loading}>
             <ButtonText>CONFIRMAR {title}</ButtonText>
           </Button>
           <Calendar
