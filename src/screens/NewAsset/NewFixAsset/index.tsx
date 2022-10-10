@@ -4,8 +4,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Button, HStack } from "native-base";
+import { Button, HStack, Text } from "native-base";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -29,9 +31,6 @@ import {
   ViewTab,
   ViewTabContent,
 } from "../../../styles/general";
-import { RentTypeText } from "./styles";
-import Toast from "react-native-toast-message";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IFixedIncome } from "../../../types/assets";
 
 interface IForm {
@@ -249,7 +248,7 @@ const NewFixAsset = () => {
                 />
                 <TouchableOpacity onPress={changeRentType}>
                   <HStack mb={1} alignItems={"center"}>
-                    <RentTypeText>{rentType}</RentTypeText>
+                    <Text>{rentType}</Text>
                     <Icon name="corner-right-down" size={12} />
                   </HStack>
                 </TouchableOpacity>

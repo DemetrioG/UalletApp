@@ -31,9 +31,9 @@ export function ThemeContextProvider({
   });
 
   React.useEffect(() => {
-    Appearance.addChangeListener((preference) => {
+    Appearance.addChangeListener(({ colorScheme }) => {
       setTheme(() => ({
-        mode: preference || "light",
+        mode: colorScheme || "light",
       }));
     });
   }, []);

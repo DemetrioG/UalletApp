@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Center, HStack, VStack } from "native-base";
+import { Button, Center, HStack, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
@@ -11,7 +11,6 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "../../../../styles/general";
-import { InfoText } from "../../styles";
 import { registerAlert } from "./query";
 import { InfoNumber } from "./styles";
 
@@ -51,11 +50,11 @@ const VariableEntryScreen = ({
           <TextHeaderScreen noMarginBottom>Alertas</TextHeaderScreen>
         </HStack>
         <VStack paddingX={2}>
-          <InfoText>
+          <Text fontSize={"md"}>
             Quando suas despesas variáveis ultrapassarem{" "}
             <InfoNumber>{value}%</InfoNumber> de sua receita mensal enviaremos
             um alerta para você!
-          </InfoText>
+          </Text>
         </VStack>
         <Center flex={1}>
           <VStack w={"full"}>

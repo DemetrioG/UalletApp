@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Button } from "native-base";
+import { Button, Text } from "native-base";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -12,7 +12,6 @@ import {
   ButtonText,
   ContainerCenter,
   FormContainer,
-  HeaderTitle,
   HeaderTitleContainer,
   LogoHeader,
   StyledKeyboardAvoidingView,
@@ -21,6 +20,7 @@ import {
 import { resetPassword } from "./querys";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { metrics } from "../../styles";
 interface IForm {
   email: string;
 }
@@ -67,15 +67,15 @@ const ForgotPassword = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
           <LogoHeader>
-            <TextHeader withMarginTop fontSize={"2xl"}>
+            <TextHeader mt={metrics.baseMargin} fontSize={"2xl"}>
               Recuperar senha
             </TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
-            <HeaderTitle>
+            <Text>
               Digite o e-mail cadastrado na sua conta.{"\n"}
               Enviaremos um e-mail para recuperação da senha.
-            </HeaderTitle>
+            </Text>
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>

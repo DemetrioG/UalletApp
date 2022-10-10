@@ -25,34 +25,30 @@ export const LabelView: React.FC<ViewProps> = styled(View)`
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
-export const LabelText = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
-export const StyledLineChart: React.FC<ChartProps<any>> = styled(
-  LineChart
-).attrs(({ theme: { theme }, data }) => ({
-  data: [
-    {
-      data: data[0],
-      svg: {
-        stroke: theme.green,
-        strokeWidth: 2,
+export const StyledLineChart = styled(LineChart).attrs<{ data: number[][] }>(
+  ({ theme: { theme }, data }) => ({
+    data: [
+      {
+        data: data[0],
+        svg: {
+          stroke: theme.green,
+          strokeWidth: 2,
+        },
       },
-    },
-    {
-      data: data[1],
-      svg: {
-        stroke: theme.red,
-        strokeWidth: 2,
+      {
+        data: data[1],
+        svg: {
+          stroke: theme.red,
+          strokeWidth: 2,
+        },
       },
+    ],
+    contentInset: {
+      top: 5,
+      bottom: 5,
     },
-  ],
-  contentInset: {
-    top: 5,
-    bottom: 5,
-  },
-}))`
+  })
+)<{ data: number[][] }>`
   height: 60px;
 `;
 
@@ -72,18 +68,11 @@ export const PercentualContainer = styled(View)`
   justify-content: space-between;
 `;
 
-export const PercentualText = styled(Text)`
-  font-size: ${fonts.regular}px;
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
-export const PercentualValue: React.FC<
-  TextProps & { percentual: number; type: "income" | "expense" }
-> = styled(Text).attrs(() => ({
+export const PercentualValue = styled(Text).attrs(() => ({
   fontFamily: "mono",
   fontWeight: 700,
   fontSize: "sm",
-}))`
+}))<{ percentual: number; type: "income" | "expense" }>`
   color: ${({ percentual, type, theme }) =>
     type === "income"
       ? percentual > -1
@@ -94,11 +83,16 @@ export const PercentualValue: React.FC<
       : theme.theme.red};
 `;
 
-export const PercentualIcon: React.FC<
-  Omit<IconProps, "name"> & { percentual: number; type: "income" | "expense" }
-> = styled(Feather).attrs(({ percentual }) => ({
+type PercentualIcon = Omit<IconProps, "name"> & {
+  percentual: number;
+  type: "income" | "expense";
+};
+
+export const PercentualIcon: React.FC<PercentualIcon> = styled(
+  Feather
+).attrs<PercentualIcon>(({ percentual }) => ({
   name: percentual > -1 ? "arrow-up" : "arrow-down",
-}))`
+}))<PercentualIcon>`
   color: ${({ percentual, type, theme }) =>
     type === "income"
       ? percentual > -1

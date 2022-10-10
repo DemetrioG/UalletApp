@@ -1,10 +1,11 @@
 import React from "react";
 import { LineChart } from "react-native-svg-charts";
 import { Line } from "react-native-svg";
-import { CompleteWrapper, Income, Label, Title, Wrapper } from "./styles";
-import { HStack, VStack } from "native-base";
+import { CompleteWrapper, Income, Wrapper } from "./styles";
+import { HStack, Text, VStack } from "native-base";
 import Icon from "../../../components/Icon";
 import { TouchableOpacity } from "react-native";
+import { fonts } from "../../../styles";
 
 const data = [50, 10, 40, 95, -4, -24];
 
@@ -25,7 +26,7 @@ const EvolutionLineChart = () => {
   return (
     <VStack>
       <Wrapper mt={3} paddingY={5} paddingX={5}>
-        <Title>Rendimentos</Title>
+        <Text>Rendimentos</Text>
         <HStack mt={2} alignItems={"center"}>
           <Icon name="trending-up" colorVariant="green" size={18} />
           <Income ml={2}>R$ 10.347,89 - 16,70%</Income>
@@ -46,15 +47,17 @@ const EvolutionLineChart = () => {
           </LineChart>
         </VStack>
         <HStack justifyContent={"space-around"}>
-          <Label>Jan/2022</Label>
-          <Label>Fev/2022</Label>
-          <Label>Mar/2022</Label>
+          <Text fontSize={fonts.regular}>Jan/2022</Text>
+          <Text fontSize={fonts.regular}>Fev/2022</Text>
+          <Text fontSize={fonts.regular}>Mar/2022</Text>
         </HStack>
       </Wrapper>
       <TouchableOpacity>
         <CompleteWrapper paddingX={5} paddingY={2}>
           <HStack alignItems={"center"}>
-            <Label mr={1}>Ver evolução completa</Label>
+            <Text mr={1} fontSize={fonts.regular}>
+              Ver evolução completa
+            </Text>
             <Icon name="chevron-right" size={16} />
           </HStack>
         </CompleteWrapper>

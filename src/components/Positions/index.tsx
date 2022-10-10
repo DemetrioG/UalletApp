@@ -2,7 +2,7 @@ import * as React from "react";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Collapse, HStack, ScrollView, VStack } from "native-base";
+import { Collapse, HStack, ScrollView, Text, VStack } from "native-base";
 
 import firebase from "../../services/firebase";
 import { getPrice, ITotal } from "./query";
@@ -10,12 +10,11 @@ import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
-import { Container, EmptyText, Header, ItemContainer, Label } from "./styles";
+import { Container, EmptyText, Header, ItemContainer } from "./styles";
 import { colors, metrics } from "../../styles";
 import { numberToReal } from "../../utils/number.helper";
 import { Skeleton } from "../../styles/general";
 import { DataContext } from "../../context/Data/dataContext";
-import { Title } from "../../screens/Investments/styles";
 import { currentUser } from "../../utils/query.helper";
 import { ItemList, ITEMS_WIDTH, TotalClose, TotalOpen } from "./components";
 import { IVariableIncome } from "../../types/assets";
@@ -137,7 +136,7 @@ const Positions = () => {
   return (
     <VStack mt={5}>
       <HStack alignItems="center">
-        <Title>Posições RV</Title>
+        <Text fontSize={"md"}>Posições RV</Text>
         <Tooltip text="Seus ativos em Renda Variável">
           <Icon
             name="info"
@@ -187,7 +186,7 @@ const Positions = () => {
                 <>
                   <HStack>
                     <ItemContainer minW={ITEMS_WIDTH.asset}>
-                      <Label>TICKER</Label>
+                      <Text fontWeight={700}>TICKER</Text>
                     </ItemContainer>
                     <ScrollView
                       horizontal
@@ -197,37 +196,37 @@ const Positions = () => {
                     >
                       <HStack>
                         <ItemContainer minW={ITEMS_WIDTH.price}>
-                          <Label>PREÇO ATUAL</Label>
+                          <Text fontWeight={700}>PREÇO ATUAL</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.rentPercentual}>
-                          <Label>RENTABILIDADE %</Label>
+                          <Text fontWeight={700}>RENTABILIDADE %</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.rent}>
-                          <Label>RENTABILIDADE</Label>
+                          <Text fontWeight={700}>RENTABILIDADE</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.price}>
-                          <Label>PREÇO MÉDIO</Label>
+                          <Text fontWeight={700}>PREÇO MÉDIO</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.amount}>
-                          <Label>COTAS</Label>
+                          <Text fontWeight={700}>COTAS</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.amount}>
-                          <Label>TOTAL</Label>
+                          <Text fontWeight={700}>TOTAL</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.pvp}>
-                          <Label>P/VP</Label>
+                          <Text fontWeight={700}>P/VP</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.dy}>
-                          <Label>DY</Label>
+                          <Text fontWeight={700}>DY</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.pl}>
-                          <Label>P/L</Label>
+                          <Text fontWeight={700}>P/L</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.segment}>
-                          <Label>SEGMENTO</Label>
+                          <Text fontWeight={700}>SEGMENTO</Text>
                         </ItemContainer>
                         <ItemContainer minW={ITEMS_WIDTH.info}>
-                          <Label>INFO</Label>
+                          <Text fontWeight={700}>INFO</Text>
                         </ItemContainer>
                       </HStack>
                     </ScrollView>

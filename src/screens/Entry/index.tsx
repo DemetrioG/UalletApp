@@ -18,14 +18,9 @@ import { defaultFilter, IActiveFilter } from "./Filter/helper";
 import {
   MoreContainer,
   LoadingText,
-  RemoveFilterText,
   RemoveFilterButton,
-  InfoMonthText,
   HeaderContainer,
-  LastEntryText,
   BalanceText,
-  TotalLabelText,
-  TotalText,
   TotalItemContainer,
   TotalValueContainer,
 } from "./styles";
@@ -51,6 +46,8 @@ import {
 import Icon from "../../components/Icon";
 import { getEntryList } from "./querys";
 import { getBalance } from "../../utils/query.helper";
+import { Text } from "native-base";
+import { metrics } from "../../styles";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -288,9 +285,9 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
         <ViewTabContent>
           <HeaderContainer>
             <TextHeaderScreen>Lançamentos</TextHeaderScreen>
-            <InfoMonthText>
+            <Text fontWeight={700} fontSize={"md"} ml={2}>
               {dateMonthNumber("toMonth", data.month, true)}
-            </InfoMonthText>
+            </Text>
           </HeaderContainer>
           <ButtonHeaderView>
             <ButtonOutlineSmall
@@ -304,11 +301,13 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
           </ButtonHeaderView>
           {filter.isFiltered && (
             <RemoveFilterButton onPress={handleRemoveFilter}>
-              <RemoveFilterText>Remover filtros</RemoveFilterText>
+              <Text mr={3}>Remover filtros</Text>
               <Icon name="x" size={20} colorVariant="red" />
             </RemoveFilterButton>
           )}
-          <LastEntryText>Últimos lançamentos</LastEntryText>
+          <Text fontSize={"md"} mb={metrics.baseMargin}>
+            Últimos lançamentos
+          </Text>
           {emptyData ? (
             <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
           ) : (
@@ -343,13 +342,13 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
             </ContainerCenter>
           )}
           <TotalItemContainer>
-            <TotalLabelText>Total detalhado</TotalLabelText>
+            <Text mr={10}>Total detalhado</Text>
             <TotalValueContainer>
-              <TotalText>{entryTotal}</TotalText>
+              <Text fontFamily={"mono"}>{entryTotal}</Text>
             </TotalValueContainer>
           </TotalItemContainer>
           <TotalItemContainer>
-            <TotalLabelText>Saldo atual</TotalLabelText>
+            <Text mr={10}>Saldo atual</Text>
             <TotalValueContainer>
               <BalanceText negative={data.balance.includes("-")}>
                 {!user.hideNumbers ? data.balance : "** ** ** ** **"}

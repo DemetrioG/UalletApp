@@ -6,10 +6,6 @@ import { metrics } from "../../styles";
 const GREEN_TITLES = ["COMPRA", "RECEITA"];
 const RED_TITLES = ["VENDA", "DESPESA"];
 
-export const HeaderText = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
 export const Touchable = styled(TouchableOpacity)<{
   title?: string;
   active?: boolean;

@@ -27,12 +27,6 @@ export const ItemContainer = styled(VStack)`
   height: 40px;
 `;
 
-export const Label = styled(Text).attrs(() => ({
-  fontWeight: 700,
-}))`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
 export const ItemContent = styled(Text).attrs<{ number?: boolean }>(
   ({ number }) => ({
     fontFamily: number ? "mono" : "body",

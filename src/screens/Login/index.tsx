@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { Actionsheet, Button } from "native-base";
+import { Actionsheet, Button, Text } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -17,7 +17,6 @@ import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { setStorage } from "../../utils/storage.helper";
 import {
-  ActionText,
   AppleLogo,
   FacebookLogo,
   GoogleLogo,
@@ -30,13 +29,12 @@ import {
   LogoHeader,
   StyledKeyboardAvoidingView,
   HeaderTitleContainer,
-  HeaderTitle,
   ContainerCenter,
   FormContainer,
   ButtonText,
   TextHeader,
 } from "../../styles/general";
-import { colors } from "../../styles";
+import { colors, fonts, metrics } from "../../styles";
 import TextInputPassword from "../../components/TextInputPassword";
 import {
   loginByEmailAndPassword,
@@ -108,13 +106,13 @@ const Login = () => {
         <BackgroundContainer>
           <LogoHeader>
             <Logo source={LOGO} />
-            <TextHeader withMarginLeft>Uallet</TextHeader>
+            <TextHeader ml={metrics.baseMargin}>Uallet</TextHeader>
           </LogoHeader>
           <HeaderTitleContainer>
-            <HeaderTitle>
+            <Text>
               É um prazer ter você aqui novamente.{"\n"}Realize seu login
               abaixo!
-            </HeaderTitle>
+            </Text>
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>
@@ -141,10 +139,14 @@ const Login = () => {
               </Button>
             </FormContainer>
             <TouchableOpacity onPress={() => setSheetOpen(true)}>
-              <ActionText>Prefere entrar com as redes sociais?</ActionText>
+              <Text fontSize={fonts.regular} mb={metrics.baseMargin}>
+                Prefere entrar com as redes sociais?
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigate("Forgot")}>
-              <ActionText>Esqueceu sua senha?</ActionText>
+              <Text fontSize={fonts.regular} mb={metrics.baseMargin}>
+                Esqueceu sua senha?
+              </Text>
             </TouchableOpacity>
           </ContainerCenter>
         </BackgroundContainer>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pressable, useContrastText } from "native-base";
+import { Pressable, Text } from "native-base";
 import { useTheme } from "styled-components";
 import Modal from "react-native-modal";
 
@@ -16,7 +16,6 @@ import {
   Avatar,
   AvatarMenu,
   AvatarMenuText,
-  AvatarText,
   Container,
   Email,
   ItemContainer,
@@ -83,9 +82,9 @@ const Menu = () => {
     <>
       <Pressable onPress={() => setVisible(!visible)}>
         <Avatar backgroundColor={theme?.secondary}>
-          <AvatarText color={theme?.text}>
+          <Text fontSize={"sm"} fontWeight={700}>
             {homeVisible ? "-" : user.name[0]}
-          </AvatarText>
+          </Text>
         </Avatar>
       </Pressable>
       <Modal

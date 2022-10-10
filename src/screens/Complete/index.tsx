@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button } from "native-base";
+import { Button, Text } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -8,28 +8,25 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import firebase from "../../services/firebase";
 import Picker from "../../components/Picker";
 import TextInput from "../../components/TextInput";
 import { UserContext } from "../../context/User/userContext";
 import { dateValidation } from "../../utils/date.helper";
 import {
-    BackgroundContainer,
-    ButtonText,
-    ContainerCenter,
-    FormContainer,
-    HeaderTitle,
-    HeaderTitleContainer,
-    LogoHeader,
-    StyledKeyboardAvoidingView,
-    TextHeader,
+  BackgroundContainer,
+  ButtonText,
+  ContainerCenter,
+  FormContainer,
+  HeaderTitleContainer,
+  LogoHeader,
+  StyledKeyboardAvoidingView,
 } from "../../styles/general";
 import { GENDER, PROFILE } from "../../components/Picker/options";
 import { updateUserData } from "./querys";
 
 interface IForm {
-    birthdate: string;
-    gender: string;
+  birthdate: string;
+  gender: string;
   profile: string;
   income: string;
 }
@@ -42,8 +39,8 @@ const Complete = () => {
   const [profile, setProfile] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
-    const [genderVisible, setGenderVisible] = React.useState(false);
-    const [profileVisible, setProfileVisible] = React.useState(false);
+  const [genderVisible, setGenderVisible] = React.useState(false);
+  const [profileVisible, setProfileVisible] = React.useState(false);
 
   const schema = yup
     .object({
@@ -69,13 +66,13 @@ const Complete = () => {
     })
     .required();
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<IForm>({
-        resolver: yupResolver(schema),
-    });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    resolver: yupResolver(schema),
+  });
 
   function registerData({ birthdate, income }: IForm) {
     const userData = {
@@ -100,7 +97,7 @@ const Complete = () => {
           text1: "Erro ao cadastrar as informações",
         });
       })
-      .finally(() => setLoading(false)); 
+      .finally(() => setLoading(false));
   }
 
   return (
@@ -108,13 +105,15 @@ const Complete = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
           <LogoHeader>
-            <TextHeader fontSize={"2xl"}>Complete seu cadastro</TextHeader>
+            <Text fontSize={"2xl"} fontWeight={800}>
+              Complete seu cadastro
+            </Text>
           </LogoHeader>
           <HeaderTitleContainer>
-            <HeaderTitle>
+            <Text>
               Seus dados serão utilizados para melhorar{"\n"}sua experiência
               dentro do app.
-            </HeaderTitle>
+            </Text>
           </HeaderTitleContainer>
           <ContainerCenter>
             <FormContainer>

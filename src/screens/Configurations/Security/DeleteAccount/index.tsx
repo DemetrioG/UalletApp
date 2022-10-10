@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Center, HStack, VStack } from "native-base";
+import { Center, HStack, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,7 +23,6 @@ import {
   ViewTab,
 } from "../../../../styles/general";
 import { deleteAccount } from "./query";
-import { InfoText } from "../../styles";
 
 interface IForm {
   password: string;
@@ -85,9 +84,9 @@ const DeleteAccountScreen = () => {
             <TextHeaderScreen noMarginBottom>Excluir conta</TextHeaderScreen>
           </HStack>
           <VStack paddingX={2}>
-            <InfoText>
+            <Text fontSize={"md"}>
               Por questões de segurança, informe sua senha abaixo
-            </InfoText>
+            </Text>
           </VStack>
           <Center flex={1}>
             <FormContainer insideApp>

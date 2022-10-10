@@ -1,11 +1,11 @@
-import { HStack } from "native-base";
+import { HStack, Text } from "native-base";
 import * as React from "react";
 import {
   TabView as NativeTabView,
   SceneRendererProps,
   NavigationState,
 } from "react-native-tab-view";
-import { HeaderText, Touchable } from "./styles";
+import { Touchable } from "./styles";
 
 type TRenderScene = (
   props: SceneRendererProps & {
@@ -45,7 +45,7 @@ const TabView = ({
               active={isActive}
               onPress={() => setIndex(i)}
             >
-              <HeaderText>{route.title}</HeaderText>
+              <Text>{route.title}</Text>
             </Touchable>
           );
         })}

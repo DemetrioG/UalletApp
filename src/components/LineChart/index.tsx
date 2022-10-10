@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Text } from "native-base";
 
 import EmptyChart from "../EmptyChart";
 import { DataContext } from "../../context/Data/dataContext";
@@ -7,16 +8,15 @@ import { dateMonthNumber } from "../../utils/date.helper";
 import {
   ChartContainer,
   ChartView,
-  LabelText,
   LabelView,
   PercentualContainer,
   PercentualIcon,
-  PercentualText,
   PercentualValue,
   PercentualView,
   StyledLineChart,
 } from "./styles";
 import { getData } from "./query";
+import { fonts } from "../../styles";
 
 const LineChart = () => {
   const { data: dataContext } = React.useContext(DataContext);
@@ -104,24 +104,24 @@ const LineChart = () => {
               <ChartView>
                 <StyledLineChart data={data} />
                 <LabelView>
-                  <LabelText>{initLabel}</LabelText>
-                  <LabelText>{finalLabel}</LabelText>
+                  <Text>{initLabel}</Text>
+                  <Text>{finalLabel}</Text>
                 </LabelView>
               </ChartView>
               <PercentualView>
                 <PercentualContainer>
-                  <PercentualText>
+                  <Text fontSize={fonts.regular}>
                     Receita mensal{"\u00A0"}
                     {"\u00A0"}
                     {"\u00A0"}
-                  </PercentualText>
+                  </Text>
                   <PercentualValue type="income" percentual={income}>
                     {income}%
                   </PercentualValue>
                   <PercentualIcon percentual={income} type="income" size={15} />
                 </PercentualContainer>
                 <PercentualContainer>
-                  <PercentualText>Despesa mensal{"\u00A0"}</PercentualText>
+                  <Text fontSize={fonts.regular}>Despesa mensal{"\u00A0"}</Text>
                   <PercentualValue type="expense" percentual={expense}>
                     {expense}%
                   </PercentualValue>

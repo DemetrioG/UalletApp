@@ -182,21 +182,7 @@ export const Logo = styled(Image)`
 export const TextHeader = styled(Text).attrs(({ fontSize }) => ({
   fontWeight: 800,
   fontSize: fontSize ? fontSize : "3xl",
-}))<{ withMarginLeft?: boolean; withMarginTop?: boolean }>`
-  color: ${({ theme: { theme } }) => theme.text};
-  ${({ withMarginLeft, withMarginTop }) => {
-    if (withMarginLeft) {
-      return `
-      margin-left: ${metrics.baseMargin}px;
-      `;
-    } else if (withMarginTop) {
-      return `
-      margin-top: ${metrics.baseMargin}px;
-      `;
-    }
-  }}
-`;
-
+}))``;
 export const TextHeaderScreen = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: "md",
@@ -209,10 +195,6 @@ export const TextHeaderScreen = styled(Text).attrs(() => ({
 export const HeaderTitleContainer = styled(View)`
   margin-top: ${metrics.baseMargin}px;
   padding: 0px ${metrics.basePadding}px;
-`;
-
-export const HeaderTitle = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const Card = styled(View)`

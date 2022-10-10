@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button, HStack } from "native-base";
+import { Button, HStack, Text } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -28,7 +28,7 @@ import {
   ViewTab,
   ViewTabContent,
 } from "../../../styles/general";
-import { Total, TotalLabel } from "./styles";
+import { Total } from "./styles";
 import { AssetSegment } from "../../../types/types";
 
 export interface IForm {
@@ -217,7 +217,7 @@ const NewVariableAsset = () => {
                   onEndEditing={calculatesTotal}
                 />
                 <HStack mb={3} alignItems={"center"}>
-                  <TotalLabel>Total</TotalLabel>
+                  <Text>Total</Text>
                   <Total>{total}</Total>
                 </HStack>
                 <Button onPress={handleSubmit(submit)} isLoading={loading}>

@@ -1,4 +1,4 @@
-import { HStack, ITextProps, Text } from "native-base";
+import { HStack, Text } from "native-base";
 import { TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 import styled from "styled-components";
 import { colors, metrics } from "../../styles";
@@ -13,11 +13,9 @@ export const ItemContainer = styled(HStack)`
   padding: 20px;
 `;
 
-export const ItemText: React.FC<ITextProps & { logout?: boolean }> = styled(
-  Text
-).attrs(() => ({
+export const ItemText = styled(Text).attrs(() => ({
   fontSize: "md",
-}))`
+}))<{ logout?: boolean }>`
   color: ${({ logout, theme: { theme } }) =>
     !logout ? theme.text : theme.red};
 `;
@@ -35,11 +33,6 @@ export const Avatar = styled(NativeAvatar).attrs(() => ({
   size: "sm",
   fontFamily: "body",
   shadow: "2",
-}))``;
-
-export const AvatarText = styled(Text).attrs(() => ({
-  fontSize: "sm",
-  fontWeight: 700,
 }))``;
 
 export const AvatarMenu = styled(NativeAvatar).attrs(() => ({

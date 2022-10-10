@@ -10,11 +10,9 @@ export interface IThemeProvider {
 }
 
 const BaseProvider = ({ children }: { children: React.ReactNode }) => {
-  const { theme } = React.useContext(ThemeContext);
+  const { theme: themeContext } = React.useContext(ThemeContext);
 
-  function currentTheme() {
-    return theme.mode === "dark" ? DARK : LIGHT;
-  }
+  const theme = themeContext.mode === "dark" ? DARK : LIGHT;
 
   const baseTheme = extendTheme({
     fonts: {
@@ -63,7 +61,7 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
         defaultProps: {
           fontFamily: "body",
           fontWeight: 500,
-          color: currentTheme().text,
+          color: theme.text,
         },
       },
       Input: {
@@ -96,9 +94,7 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
   });
   return (
     <NativeBaseProvider theme={baseTheme}>
-      <ThemeProvider theme={{ theme: currentTheme() }}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={{ theme: theme }}>{children}</ThemeProvider>
     </NativeBaseProvider>
   );
 };
