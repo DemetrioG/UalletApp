@@ -26,7 +26,7 @@ import {
   Name,
   ProfileContainer,
 } from "./styles";
-import { IThemeProvider } from "../../../App";
+import { IThemeProvider } from "../../styles/baseTheme";
 import { useNavigation } from "@react-navigation/native";
 import { refreshAuthDevice } from "./query";
 

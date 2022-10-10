@@ -1,9 +1,22 @@
 import * as React from "react";
+import { ThemeProvider } from "styled-components";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import { colors, metrics } from ".";
+import { ThemeContext } from "../context/Theme/themeContext";
+import { DARK, LIGHT } from "./theme";
+
+export interface IThemeProvider {
+  theme?: typeof LIGHT;
+}
 
 const BaseProvider = ({ children }: { children: React.ReactNode }) => {
-  const theme = extendTheme({
+  const { theme } = React.useContext(ThemeContext);
+
+  function currentTheme() {
+    return theme.mode === "dark" ? DARK : LIGHT;
+  }
+
+  const baseTheme = extendTheme({
     fonts: {
       heading: "Raleway",
       body: "Raleway",
@@ -50,6 +63,7 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
         defaultProps: {
           fontFamily: "body",
           fontWeight: 500,
+          color: currentTheme().text,
         },
       },
       Input: {
@@ -80,7 +94,13 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
       },
     },
   });
-  return <NativeBaseProvider theme={theme}>{children}</NativeBaseProvider>;
+  return (
+    <NativeBaseProvider theme={baseTheme}>
+      <ThemeProvider theme={{ theme: currentTheme() }}>
+        {children}
+      </ThemeProvider>
+    </NativeBaseProvider>
+  );
 };
 
 export default BaseProvider;
