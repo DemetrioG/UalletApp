@@ -15,6 +15,7 @@ import FixedEntry from "../screens/FixedEntry";
 import Home from "../screens/Home";
 import Investments from "../screens/Investments";
 import AssetInfoScreen from "../screens/Investments/AssetInfo";
+import AssetMovement from "../screens/Investments/AssetMovement";
 import NewAsset from "../screens/NewAsset";
 import NewFixAsset from "../screens/NewAsset/NewFixAsset";
 import NewVariableAsset from "../screens/NewAsset/NewVariableAsset";
@@ -89,6 +90,11 @@ export const AppStackRoutes = () => {
       <StackScreen
         name="Investimentos/AtivoInfo"
         component={AssetInfoScreen}
+        options={{ headerShown: false }}
+      />
+      <StackScreen
+        name="Investimentos/AtivoInfo/Movimentacoes"
+        component={AssetMovement}
         options={{ headerShown: false }}
       />
       {/* !Investimentos */}
