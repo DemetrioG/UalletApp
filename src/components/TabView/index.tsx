@@ -16,9 +16,10 @@ type TRenderScene = (
   }
 ) => React.ReactNode;
 
-interface IRoutes {
+export interface IRoutes {
   key: string;
   title: string;
+  selected?: boolean;
 }
 
 const TabView = ({
@@ -30,6 +31,15 @@ const TabView = ({
 }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState(tabRoutes);
+  const [hasSelectedRoute, setHasSelectedRoute] = React.useState(false);
+
+  React.useEffect(() => {
+    const selectedRoute = tabRoutes.findIndex((e) => e.selected);
+    if (selectedRoute !== -1) {
+      setIndex(selectedRoute);
+      setHasSelectedRoute(true);
+    }
+  }, []);
 
   const TabHeader = (
     props: SceneRendererProps & { navigationState: NavigationState<IRoutes> }
@@ -43,7 +53,7 @@ const TabView = ({
               key={i}
               title={route.title}
               active={isActive}
-              onPress={() => setIndex(i)}
+              onPress={() => !hasSelectedRoute && setIndex(i)}
             >
               <Text>{route.title}</Text>
             </Touchable>
@@ -59,6 +69,7 @@ const TabView = ({
       renderScene={renderScene}
       onIndexChange={setIndex}
       renderTabBar={TabHeader}
+      swipeEnabled={!hasSelectedRoute}
     />
   );
 };
