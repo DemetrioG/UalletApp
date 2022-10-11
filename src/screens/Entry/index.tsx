@@ -18,14 +18,9 @@ import { defaultFilter, IActiveFilter } from "./Filter/helper";
 import {
   MoreContainer,
   LoadingText,
-  RemoveFilterText,
   RemoveFilterButton,
-  InfoMonthText,
   HeaderContainer,
-  LastEntryText,
   BalanceText,
-  TotalLabelText,
-  TotalText,
   TotalItemContainer,
   TotalValueContainer,
 } from "./styles";
@@ -42,7 +37,6 @@ import {
   TextHeaderScreen,
   ValueContainer,
   ValueText,
-  ViewTabContent,
   ButtonOutlineSmall,
   ButtonSmall,
   ViewTab,
@@ -51,6 +45,9 @@ import {
 import Icon from "../../components/Icon";
 import { getEntryList } from "./querys";
 import { getBalance } from "../../utils/query.helper";
+import { Text, VStack } from "native-base";
+import { metrics } from "../../styles";
+import { TEntryType } from "../../types/types";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -59,7 +56,7 @@ export interface IEntryList {
   modality: "Real" | "Projetado";
   classification: string | null;
   segment: string | null;
-  type: "Receita" | "Despesa";
+  type: TEntryType;
   value: number;
 }
 
@@ -285,78 +282,80 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
   return (
     <BackgroundContainer>
       <ViewTab>
-        <ViewTabContent>
-          <HeaderContainer>
-            <TextHeaderScreen>Lançamentos</TextHeaderScreen>
-            <InfoMonthText>
-              {dateMonthNumber("toMonth", data.month, true)}
-            </InfoMonthText>
-          </HeaderContainer>
-          <ButtonHeaderView>
-            <ButtonOutlineSmall
-              onPress={() => navigate("Lancamentos/Filtros", filter)}
-            >
-              <ButtonOutlineText>FILTROS</ButtonOutlineText>
-            </ButtonOutlineSmall>
-            <ButtonSmall onPress={() => navigate("Lancamentos/NovoLancamento")}>
-              <ButtonText>NOVO</ButtonText>
-            </ButtonSmall>
-          </ButtonHeaderView>
-          {filter.isFiltered && (
-            <RemoveFilterButton onPress={handleRemoveFilter}>
-              <RemoveFilterText>Remover filtros</RemoveFilterText>
-              <Icon name="x" size={20} colorVariant="red" />
-            </RemoveFilterButton>
-          )}
-          <LastEntryText>Últimos lançamentos</LastEntryText>
-          {emptyData ? (
-            <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
-          ) : (
-            <SpaceAroundView>
-              <Label>DESCRIÇÃO</Label>
-              <Label>VALOR</Label>
-            </SpaceAroundView>
-          )}
-          {entryList.length > 0 ? (
-            <FlatList
-              data={entryList}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <ItemList item={item} />}
-            />
-          ) : (
-            <ContainerCenter>
-              {!emptyData ? (
-                <LottieView
-                  source={LOADING}
-                  autoPlay={true}
-                  loop={true}
-                  style={{ width: 50 }}
-                />
-              ) : (
-                <LottieView
-                  source={EMPTY}
-                  autoPlay={true}
-                  loop={false}
-                  style={{ width: 230 }}
-                />
-              )}
-            </ContainerCenter>
-          )}
+        <HeaderContainer>
+          <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+          <Text fontWeight={700} fontSize={"md"} ml={2}>
+            {dateMonthNumber("toMonth", data.month, true)}
+          </Text>
+        </HeaderContainer>
+        <ButtonHeaderView>
+          <ButtonOutlineSmall
+            onPress={() => navigate("Lancamentos/Filtros", filter)}
+          >
+            <ButtonOutlineText>FILTROS</ButtonOutlineText>
+          </ButtonOutlineSmall>
+          <ButtonSmall onPress={() => navigate("Lancamentos/NovoLancamento")}>
+            <ButtonText>NOVO</ButtonText>
+          </ButtonSmall>
+        </ButtonHeaderView>
+        {filter.isFiltered && (
+          <RemoveFilterButton onPress={handleRemoveFilter}>
+            <Text mr={3}>Remover filtros</Text>
+            <Icon name="x" size={20} colorVariant="red" />
+          </RemoveFilterButton>
+        )}
+        <Text fontSize={"md"} mb={metrics.baseMargin}>
+          Últimos lançamentos
+        </Text>
+        {emptyData ? (
+          <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
+        ) : (
+          <SpaceAroundView>
+            <Label>DESCRIÇÃO</Label>
+            <Label>VALOR</Label>
+          </SpaceAroundView>
+        )}
+        {entryList.length > 0 ? (
+          <FlatList
+            data={entryList}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <ItemList item={item} />}
+          />
+        ) : (
+          <ContainerCenter>
+            {!emptyData ? (
+              <LottieView
+                source={LOADING}
+                autoPlay={true}
+                loop={true}
+                style={{ width: 50 }}
+              />
+            ) : (
+              <LottieView
+                source={EMPTY}
+                autoPlay={true}
+                loop={false}
+                style={{ width: 230 }}
+              />
+            )}
+          </ContainerCenter>
+        )}
+        <VStack mb={5}>
           <TotalItemContainer>
-            <TotalLabelText>Total detalhado</TotalLabelText>
+            <Text mr={10}>Total detalhado</Text>
             <TotalValueContainer>
-              <TotalText>{entryTotal}</TotalText>
+              <Text fontFamily={"mono"}>{entryTotal}</Text>
             </TotalValueContainer>
           </TotalItemContainer>
           <TotalItemContainer>
-            <TotalLabelText>Saldo atual</TotalLabelText>
+            <Text mr={10}>Saldo atual</Text>
             <TotalValueContainer>
               <BalanceText negative={data.balance.includes("-")}>
                 {!user.hideNumbers ? data.balance : "** ** ** ** **"}
               </BalanceText>
             </TotalValueContainer>
           </TotalItemContainer>
-        </ViewTabContent>
+        </VStack>
       </ViewTab>
     </BackgroundContainer>
   );

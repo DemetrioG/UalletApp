@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FlatList, Modal, TouchableOpacity, View } from "react-native";
+import { Text } from "native-base";
 import Toast from "react-native-toast-message";
 
 import firebase from "../../services/firebase";
@@ -21,7 +22,6 @@ import {
   HelperText,
   IconContainer,
   InfoContainer,
-  InfoText,
   StyledLottieView,
   StyledButton,
   ButtonText,
@@ -169,16 +169,18 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
           {page === 1 && (
             <View>
               <InfoContainer>
-                <InfoText>
+                <Text textAlign={"center"}>
                   Verificamos alguns lançamentos que você Projetou para o dia de
                   hoje.
-                </InfoText>
+                </Text>
               </InfoContainer>
               <IconContainer>
                 <StyledLottieView source={WRITE} autoPlay loop={false} />
               </IconContainer>
               <HelperContainer>
-                <HelperText>Prossiga para realizar a consolidação!</HelperText>
+                <HelperText textAlign={"center"}>
+                  Prossiga para realizar a consolidação!
+                </HelperText>
               </HelperContainer>
             </View>
           )}
@@ -204,10 +206,10 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
                 />
               </DataContainer>
               <InfoContainer>
-                <InfoText>
+                <Text textAlign={"center"}>
                   Confirme os lançamentos que realmente aconteceram confirme
                   você Projetou!
-                </InfoText>
+                </Text>
               </InfoContainer>
             </View>
           )}

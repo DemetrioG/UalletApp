@@ -1,10 +1,6 @@
 import * as React from "react";
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
-import { Button } from "native-base";
+import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Button, HStack, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -21,7 +17,7 @@ import {
   futureDate,
 } from "../../utils/date.helper";
 import { realToNumber } from "../../utils/number.helper";
-import { HorizontalView, TypeText, TypeView } from "./styles";
+import { TypeText, TypeView } from "./styles";
 import {
   BackgroundContainer,
   ButtonText,
@@ -29,7 +25,6 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../styles/general";
 import Icon from "../../components/Icon";
 import TextInput from "../../components/TextInput";
@@ -51,7 +46,7 @@ interface IForm {
 const optionsExpenseAmount = Array.from({ length: 12 }, (_, i) => ++i);
 
 const FixedEntry = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
   const {
     data: { modality },
   } = React.useContext(DataContext);
@@ -157,17 +152,13 @@ const FixedEntry = () => {
     <BackgroundContainer>
       <ViewTab>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ViewTabContent noPaddingBottom>
-            <HorizontalView>
-              <TouchableOpacity
-                onPress={() => navigate("Lancamentos/NovoLancamento")}
-              >
-                <Icon name="chevron-left" style={{ marginRight: 10 }} />
-              </TouchableOpacity>
+          <VStack flex={1}>
+            <HStack alignItems="center" space={3} mb={1}>
+              <Icon name="chevron-left" size={24} onPress={goBack} />
               <TextHeaderScreen noMarginBottom>
                 Novo lançamento <Schema>{modality}</Schema>
               </TextHeaderScreen>
-            </HorizontalView>
+            </HStack>
             <TypeView>
               <TypeText>Despesas Fixas</TypeText>
             </TypeView>
@@ -230,7 +221,7 @@ const FixedEntry = () => {
                 calendarIsShow={calendar}
               />
             </ContainerCenter>
-          </ViewTabContent>
+          </VStack>
         </TouchableWithoutFeedback>
       </ViewTab>
     </BackgroundContainer>

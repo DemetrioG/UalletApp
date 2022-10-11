@@ -1,82 +1,25 @@
 import * as React from "react";
-import { HStack, ScrollView, VStack } from "native-base";
-import Toast from "react-native-toast-message";
+import { Button, HStack, ScrollView, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
-import { IAsset } from "../../../components/Positions/query";
 import Icon from "../../../components/Icon";
-import TextInput from "../../../components/TextInput";
-import { ConfirmContext } from "../../../context/ConfirmDialog/confirmContext";
 import { ItemContent } from "../../../components/Positions/styles";
 import {
   BackgroundContainer,
-  ButtonDelete,
   ButtonText,
   TextHeaderScreen,
   ViewTab,
 } from "../../../styles/general";
 import { ItemText } from "./styles";
-import { deleteAsset } from "./query";
-import { UserContext } from "../../../context/User/userContext";
 import { numberToReal } from "../../../utils/number.helper";
-
-interface IForm {
-  amount: number;
-}
-
-const schema = yup
-  .object({
-    amount: yup.number().required(),
-  })
-  .required();
+import { IPosition } from "../../../components/Positions";
 
 const AssetInfoScreen = ({
   route: { params },
 }: {
-  route: { params: IAsset };
+  route: { params: IPosition };
 }) => {
-  const { goBack } = useNavigation();
-  const { setConfirm } = React.useContext(ConfirmContext);
-  const { user } = React.useContext(UserContext);
-  const [loading, setLoading] = React.useState(false);
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    resolver: yupResolver(schema),
-  });
-
-  function submit({ amount }: IForm) {
-    setConfirm(() => ({
-      title: "Deseja realmente excluir este ativo?",
-      visibility: true,
-      callbackFunction: () => handleDelete(amount),
-    }));
-  }
-
-  function handleDelete(amount: number) {
-    setLoading(true);
-    deleteAsset(params.asset, user.uid!, amount)
-      .then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Ativo excluído com sucesso",
-        });
-        goBack();
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao excluir ativo",
-        });
-      })
-      .finally(() => setLoading(false));
-  }
+  const { goBack, navigate } = useNavigation();
 
   return (
     <BackgroundContainer>
@@ -101,7 +44,7 @@ const AssetInfoScreen = ({
             <ItemContent
               number
               withColor
-              negative={params.rentPercentual.includes("-")}
+              negative={params.rentPercentual.toString().includes("-")}
               fontSize={"md"}
             >
               {params.rentPercentual}
@@ -173,16 +116,16 @@ const AssetInfoScreen = ({
             <ItemText fontFamily={"mono"}>{params.segment}</ItemText>
           </VStack>
         </ScrollView>
-        <TextInput
-          control={control}
-          name="amount"
-          keyboardType="decimal-pad"
-          placeholder="Quantidade de cotas"
-          errors={errors.amount}
-        />
-        <ButtonDelete onPress={handleSubmit(submit)} isLoading={loading}>
-          <ButtonText>EXCLUIR ATIVO</ButtonText>
-        </ButtonDelete>
+        <Button
+          onPress={() =>
+            navigate(
+              "Investimentos/AtivoInfo/Movimentacoes" as never,
+              params as never
+            )
+          }
+        >
+          <ButtonText>COMPRAR / VENDER</ButtonText>
+        </Button>
       </ViewTab>
     </BackgroundContainer>
   );

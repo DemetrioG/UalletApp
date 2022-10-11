@@ -1,5 +1,8 @@
+import { IForm } from ".";
 import firebase from "../../../services/firebase";
-import { getAtualDate } from "../../../utils/date.helper";
+import { convertDateToDatabase } from "../../../utils/date.helper";
+import { realToNumber } from "../../../utils/number.helper";
+import { currentUser } from "../../../utils/query.helper";
 
 interface IAsset {
   id: number;
@@ -17,14 +20,18 @@ const defaultAsset = {
   amountDeleteDate: [],
 };
 
-async function _deleteAsset(asset: string, uid: string, amount: number) {
-  const [, date] = getAtualDate();
+async function _deleteAsset(formData: IForm) {
+  const { amount, asset, price, entrydate } = formData;
+  const user = await currentUser();
+
+  if (!user) return Promise.reject();
+
   let amountDeleteDate = [];
   let data: IAsset = defaultAsset;
   const item = await firebase
     .firestore()
     .collection("assets")
-    .doc(uid)
+    .doc(user.uid)
     .collection("variable")
     .where("asset", "==", asset.toUpperCase())
     .get();
@@ -38,13 +45,14 @@ async function _deleteAsset(asset: string, uid: string, amount: number) {
     if (data.amount - amount > 0) {
       amountDeleteDate.push({
         amount: amount,
-        date: date,
+        date: convertDateToDatabase(entrydate),
+        price: realToNumber(price),
       });
 
       return firebase
         .firestore()
         .collection("assets")
-        .doc(uid)
+        .doc(user.uid)
         .collection("variable")
         .doc(data.id.toString())
         .set(
@@ -59,7 +67,7 @@ async function _deleteAsset(asset: string, uid: string, amount: number) {
       return firebase
         .firestore()
         .collection("assets")
-        .doc(uid)
+        .doc(user.uid)
         .collection("variable")
         .doc(data.id.toString())
         .delete();
@@ -67,9 +75,9 @@ async function _deleteAsset(asset: string, uid: string, amount: number) {
   }
 }
 
-export function deleteAsset(asset: string, uid: string, amount: number) {
+export function deleteAsset(formData: IForm) {
   try {
-    return _deleteAsset(asset, uid, amount);
+    return _deleteAsset(formData);
   } catch (error) {
     throw new Error("Erro");
   }

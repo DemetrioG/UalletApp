@@ -1,6 +1,6 @@
-import { Flex, VStack } from "native-base";
-import { ProgressBar, Text } from "./style";
 import * as React from "react";
+import { Flex, Text, VStack } from "native-base";
+import { ProgressBar } from "./styles";
 import { fonts } from "../../styles";
 
 const dataRules = [
@@ -70,11 +70,11 @@ function PasswordRules({
       </Text>
       {dataRules.map((rule, index) => (
         <Flex key={index} direction="row" alignItems="center">
-          <Text style={{ fontSize: 5 }}>
+          <Text fontSize={5} mr={1}>
             {"\u2B24 "}
             {"  "}
           </Text>
-          <Text>{rule}</Text>
+          <Text fontSize={"xs"}>{rule}</Text>
         </Flex>
       ))}
     </VStack>

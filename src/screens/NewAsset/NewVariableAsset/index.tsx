@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button, HStack } from "native-base";
+import { Button, HStack, Text, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { IAsset, registerAsset } from "./query";
-import { UserContext } from "../../../context/User/userContext";
+import { registerAsset } from "./query";
 import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
@@ -21,27 +21,26 @@ import {
   BackgroundContainer,
   ButtonText,
   ContainerCenter,
-  FormContainer,
   HalfContainer,
+  FormContainer,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../../styles/general";
-import { Total, TotalLabel } from "./styles";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Total } from "./styles";
+import { AssetSegment } from "../../../types/types";
 
-interface IForm {
+export interface IForm {
   entrydate: string;
-  segment: string;
-  broker: string;
+  segment?: AssetSegment | null;
+  broker?: string | null;
   asset: string;
   amount: number;
   price: string;
+  total?: string;
 }
 
 const NewVariableAsset = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const { user } = React.useContext(UserContext);
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
   const [calendar, setCalendar] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [segment, setSegment] = React.useState(null);
@@ -87,6 +86,7 @@ const NewVariableAsset = () => {
     watch,
     formState: { errors },
   } = useForm<IForm>({
+    reValidateMode: "onBlur",
     resolver: yupResolver(schema),
   });
 
@@ -95,8 +95,9 @@ const NewVariableAsset = () => {
   }
 
   async function checkAsset(value: string) {
-    const response = await checkAssetValid(value, segment!);
-    return response || false;
+    return await checkAssetValid(value, segment!)
+      .then((response) => response)
+      .catch(() => false);
   }
 
   function calculatesTotal() {
@@ -107,7 +108,7 @@ const NewVariableAsset = () => {
 
   function submit({ entrydate, amount, asset, price }: IForm) {
     setLoading(true);
-    const data: IAsset = {
+    const data: IForm = {
       entrydate: entrydate,
       amount: amount,
       asset: asset,
@@ -115,7 +116,6 @@ const NewVariableAsset = () => {
       broker: broker,
       segment: segment,
       total: total,
-      uid: user.uid!,
     };
 
     registerAsset(data)
@@ -124,7 +124,7 @@ const NewVariableAsset = () => {
           type: "success",
           text1: "Ativo cadastrado com sucesso",
         });
-        return navigation.navigate("Investimentos");
+        return navigate("Investimentos");
       })
       .catch(() => {
         return Toast.show({
@@ -139,13 +139,9 @@ const NewVariableAsset = () => {
     <BackgroundContainer>
       <ViewTab>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ViewTabContent noPaddingBottom>
-            <HStack>
-              <Icon
-                name="chevron-left"
-                style={{ marginRight: 10 }}
-                onPress={() => navigation.goBack()}
-              />
+          <VStack flex={1}>
+            <HStack alignItems="center" space={3} mb={1}>
+              <Icon name="chevron-left" size={24} onPress={goBack} />
               <TextHeaderScreen noMarginBottom>Renda variável</TextHeaderScreen>
             </HStack>
             <ContainerCenter>
@@ -215,7 +211,7 @@ const NewVariableAsset = () => {
                   onEndEditing={calculatesTotal}
                 />
                 <HStack mb={3} alignItems={"center"}>
-                  <TotalLabel>Total</TotalLabel>
+                  <Text>Total</Text>
                   <Total>{total}</Total>
                 </HStack>
                 <Button onPress={handleSubmit(submit)} isLoading={loading}>
@@ -228,7 +224,7 @@ const NewVariableAsset = () => {
               setDateToInput={setDateToInput}
               calendarIsShow={calendar}
             />
-          </ViewTabContent>
+          </VStack>
         </TouchableWithoutFeedback>
       </ViewTab>
     </BackgroundContainer>

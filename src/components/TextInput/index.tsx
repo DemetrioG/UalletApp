@@ -84,10 +84,6 @@ const UTextInput = (
   );
 };
 
-const StyledTextInput = styled(UTextInput)`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
 const TextInput = ({
   name,
   control,
@@ -103,7 +99,7 @@ const TextInput = ({
       name={name}
       control={control}
       render={({ field: { onChange, onBlur, value } }) => (
-        <StyledTextInput
+        <UTextInput
           onChangeText={onChange}
           onBlur={onBlur}
           value={value}

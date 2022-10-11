@@ -5,10 +5,11 @@ import DatePicker from "../DatePicker";
 import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
-import { HeaderIconView, HeaderText, HeaderView, NetworkCard } from "./styles";
+import { HeaderIconView, HeaderView, NetworkCard } from "./styles";
 import { Skeleton } from "../../styles/general";
 import Icon from "../Icon";
 import { getData } from "./query";
+import { Text } from "native-base";
 
 const optionsMonth = [
   "Janeiro",
@@ -91,7 +92,7 @@ const Header = () => {
           setVisibility={setPickerYearVisible}
         />
         <Skeleton isLoaded={!homeVisible} h={4} width={150} secondary>
-          <HeaderText>Bem vindo (a), {user.name}!</HeaderText>
+          <Text>Bem vindo (a), {user.name}!</Text>
         </Skeleton>
         <HeaderIconView>
           <Icon
@@ -105,7 +106,7 @@ const Header = () => {
       </HeaderView>
       {!data.isNetworkConnected && (
         <NetworkCard>
-          <HeaderText>Sem conexão com a internet</HeaderText>
+          <Text>Sem conexão com a internet</Text>
           <Icon name="wifi-off" colorVariant="red" />
         </NetworkCard>
       )}

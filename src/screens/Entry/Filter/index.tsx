@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ScrollView, Modal } from "react-native";
-import { Button } from "native-base";
+import { Button, Text } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,7 @@ import {
   ModalContainer,
   ModalView,
 } from "../../../styles/general";
-import { ButtonContainer, SpaceContainer, Title } from "./styles";
+import { ButtonContainer, SpaceContainer } from "./styles";
 import { metrics } from "../../../styles";
 import {
   ENTRY_SEGMENT,
@@ -136,7 +136,9 @@ const Filter = ({
       <ModalContainer>
         <ModalView>
           <SpaceContainer>
-            <Title>Filtros</Title>
+            <Text fontSize={"md"} fontWeight={700}>
+              Filtros
+            </Text>
             <Icon name="x" onPress={handleClose} />
           </SpaceContainer>
           <ScrollView

@@ -1,13 +1,14 @@
-import React from "react";
-import { View, ViewProps } from "react-native";
+import { View } from "react-native";
 import styled from "styled-components";
 import { PieChart } from "react-native-svg-charts";
-import { colors, fonts, metrics } from "../../styles";
-import { Center, ITextProps, Text } from "native-base";
+import { colors, metrics } from "../../styles";
+import { Center, Text } from "native-base";
+import React from "react";
 
-export const StyledPieChart: React.FC<{ data: number[] }> = styled(
+type TPieChart = { data: number[] };
+export const StyledPieChart: React.FC<TPieChart> = styled(
   PieChart
-).attrs(({ theme: { theme }, data }) => ({
+).attrs<TPieChart>(({ theme: { theme }, data }) => ({
   data: [
     {
       key: 1,
@@ -35,7 +36,7 @@ export const StyledPieChart: React.FC<{ data: number[] }> = styled(
       svg: { fill: theme.colorPieChart[4] },
     },
   ],
-}))`
+}))<TPieChart>`
   height: 130px;
 `;
 
@@ -43,11 +44,9 @@ export const ChartContainer = styled(Center)`
   flex-direction: row;
 `;
 
-export const PieChartLabel: React.FC<
-  ITextProps & { x: number; y: number }
-> = styled(Text).attrs(() => ({
+export const PieChartLabel = styled(Text).attrs(() => ({
   fontFamily: "mono",
-}))`
+}))<{ x: number; y: number }>`
   position: absolute;
   top: ${({ y }) => y}px;
   left: ${({ x }) => x}px;
@@ -80,19 +79,14 @@ export const ContentLabel = styled(View)`
   margin-left: ${metrics.baseMargin}px;
 `;
 
-export const DotView: React.FC<ViewProps & { index: number }> = styled(
-  View
-).attrs(({ theme: { theme }, index }) => ({
-  backgroundColor: theme.colorPieChart[index],
-}))`
+export const DotView = styled(View).attrs<{ index: number }>(
+  ({ theme: { theme }, index }) => ({
+    backgroundColor: theme.colorPieChart[index],
+  })
+)<{ index: number }>`
   width: 10px;
   height: 10px;
   border-radius: 100px;
   margin-top: 2px;
   margin-right: ${metrics.baseMargin / 2}px;
-`;
-
-export const SegmentLabelText = styled(Text)`
-  font-size: ${fonts.regular}px;
-  color: ${({ theme: { theme } }) => theme.text};
 `;

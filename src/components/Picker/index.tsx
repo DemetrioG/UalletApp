@@ -1,14 +1,19 @@
 import * as React from "react";
-import { FormControl, HStack, View, WarningOutlineIcon } from "native-base";
+import {
+  FormControl,
+  HStack,
+  Text,
+  View,
+  WarningOutlineIcon,
+} from "native-base";
 import { FieldError } from "react-hook-form";
 import { Modal, ScrollView, Keyboard } from "react-native";
 
-import { colors, metrics } from "../../styles";
+import { colors, fonts, metrics } from "../../styles";
 import { ModalContainer, ModalView } from "../../styles/general";
 import Icon from "../Icon";
 import {
   ItemPicker,
-  ItemText,
   PickerText,
   SpaceItems,
   StyledInput,
@@ -48,7 +53,9 @@ const Picker = ({
   const option = OPTIONS.map((item, index) => {
     return (
       <ItemPicker key={index} onPress={() => onPressItem(item)}>
-        <ItemText>{item}</ItemText>
+        <Text fontWeight={700} fontSize={fonts.regular}>
+          {item}
+        </Text>
         <Icon name="chevron-right" size={20} />
       </ItemPicker>
     );

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ImageURISource } from "react-native";
-import { Button, Center, Flex, Spacer } from "native-base";
+import { Button, Center, Flex, Spacer, Text } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Swiper from "react-native-swiper";
@@ -11,7 +11,7 @@ import {
   ButtonText,
   ButtonOutline,
 } from "../../styles/general";
-import { ImageCarousel, TitleCarousel } from "./styles";
+import { ImageCarousel } from "./styles";
 
 interface ISlidesMockup {
   key: number;
@@ -51,7 +51,9 @@ const Index = () => {
         <ImageCarousel source={item.image} />
         <Spacer />
         <Center>
-          <TitleCarousel fontSize={"2xl"}>{item.title}</TitleCarousel>
+          <Text fontSize={"2xl"} fontWeight={800}>
+            {item.title}
+          </Text>
         </Center>
       </Flex>
     );

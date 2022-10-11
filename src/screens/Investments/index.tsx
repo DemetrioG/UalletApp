@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Button, HStack, ScrollView, VStack } from "native-base";
+import { Button, HStack, ScrollView, Text, VStack } from "native-base";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import Positions from "../../components/Positions";
@@ -13,10 +13,10 @@ import {
   ViewTab,
 } from "../../styles/general";
 import { metrics } from "../../styles";
-import { PatrimonyText, Spinner, Title } from "./styles";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import AssetSegmentChart from "./AssetSegmentChart";
+import EvolutionLineChart from "./EvolutionLineChart";
 
 const Investments = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -42,13 +42,19 @@ const Investments = () => {
           <HStack mb={metrics.baseMargin} justifyContent={"space-between"}>
             <TextHeaderScreen noMarginBottom>Investimentos</TextHeaderScreen>
           </HStack>
-          <PatrimonyText>Patrimônio investido</PatrimonyText>
+          <Text fontSize={"lg"} fontWeight={700}>
+            Patrimônio investido
+          </Text>
           <VStack mt={1}>
             <Balance>{numberToReal(data.equity)}</Balance>
           </VStack>
+          <VStack mt={5}>
+            <Text fontSize={"md"}>Evolução da carteira</Text>
+            <EvolutionLineChart />
+          </VStack>
           <Positions />
           <VStack mt={5}>
-            <Title>Alocação por segmento</Title>
+            <Text fontSize={"md"}>Alocação por segmento</Text>
             <VStack mt={5}>
               <AssetSegmentChart />
             </VStack>

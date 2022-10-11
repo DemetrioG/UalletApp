@@ -14,12 +14,11 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../styles/general";
 import { TYPE_OF_INVEST } from "../../components/Picker/options";
 
 const NewAsset = () => {
-  const navigation = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const [type, setType] = React.useState(null);
   const [typeVisible, setTypeVisible] = React.useState(false);
 
@@ -43,19 +42,16 @@ const NewAsset = () => {
       type === "Renda fixa"
         ? "Investimentos/NovoAtivoFixo"
         : "Investimentos/NovoAtivoVariavel";
-    return navigation.navigate(route as never);
+    return navigate(route as never);
   }
 
   return (
     <BackgroundContainer>
       <ViewTab>
-        <ViewTabContent noPaddingBottom>
-          <HStack>
-            <Icon
-              name="chevron-left"
-              style={{ marginRight: 10 }}
-              onPress={() => navigation.goBack()}
-            />
+        <VStack flex={1}>
+          <HStack alignItems="center" space={3} mb={1}>
+            <Icon name="chevron-left" size={24} onPress={goBack} />
+
             <TextHeaderScreen noMarginBottom>
               Tipo de investimento
             </TextHeaderScreen>
@@ -79,7 +75,7 @@ const NewAsset = () => {
               <ButtonText>AVANÇAR</ButtonText>
             </Button>
           </ContainerCenter>
-        </ViewTabContent>
+        </VStack>
       </ViewTab>
     </BackgroundContainer>
   );

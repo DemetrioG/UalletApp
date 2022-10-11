@@ -16,11 +16,19 @@ const defaultChartData = [
     value: 0,
   },
   {
-    label: "FIIs e Fiagro",
+    label: "FIIs",
+    value: 0,
+  },
+  {
+    label: "Fiagro",
     value: 0,
   },
   {
     label: "Criptomoedas",
+    value: 0,
+  },
+  {
+    label: "ETF's",
     value: 0,
   },
   {

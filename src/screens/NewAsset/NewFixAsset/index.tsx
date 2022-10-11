@@ -4,13 +4,15 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Button, HStack } from "native-base";
+import { Button, HStack, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { IAsset, registerAsset } from "./query";
+import { getTreasure, registerAsset } from "./query";
 import { UserContext } from "../../../context/User/userContext";
 import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
@@ -18,7 +20,6 @@ import TextInput from "../../../components/TextInput";
 import Calendar from "../../../components/Calendar";
 import { BROKER } from "../../../components/Picker/options";
 import { convertDate, dateValidation } from "../../../utils/date.helper";
-import axios, { ITesouro, TESOURO_URL } from "../../../utils/api.helper";
 import { sortObjectByKey } from "../../../utils/array.helper";
 import {
   BackgroundContainer,
@@ -28,11 +29,8 @@ import {
   HalfContainer,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../../styles/general";
-import { RentTypeText } from "./styles";
-import Toast from "react-native-toast-message";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { IFixedIncome } from "../../../types/assets";
 
 interface IForm {
   entrydate: string;
@@ -47,7 +45,7 @@ interface IForm {
 const RENT_OPTIONS = ["Selic", "CDI", "IPCA +", "Pré Fix.", "Pós Fix."];
 
 const NewFixAsset = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
   const [selic, setSelic] = React.useState<string | null>(null);
   const [rentType, setRentType] = React.useState("Selic");
@@ -122,7 +120,7 @@ const NewFixAsset = () => {
     const DUEDATE = duedate && duedate !== "";
 
     setLoading(true);
-    const data: IAsset = {
+    const data: IFixedIncome = {
       entrydate: entrydate,
       title: title,
       cdbname: CDB ? cdbname : null,
@@ -140,7 +138,7 @@ const NewFixAsset = () => {
           type: "success",
           text1: "Ativo cadastrado com sucesso",
         });
-        return navigation.navigate("Investimentos");
+        return navigate("Investimentos");
       })
       .catch(() => {
         return Toast.show({
@@ -160,16 +158,12 @@ const NewFixAsset = () => {
         "Letra de Crédito do Agronegócio",
       ];
 
-      axios.get(TESOURO_URL).then(({ data }: { data: ITesouro[] }) => {
-        const selic = data.filter((e) => e.NOME.includes("Tesouro Selic"))[0]
-          .SELIC;
-        setSelic(selic);
-
-        const sortedData = sortObjectByKey(data, "NOME", "asc");
-        sortedData.map((e) => names.push(e.NOME));
-
-        return SET_TITLE_OPTIONS(names);
+      getTreasure().then((data) => {
+        const sortedData = sortObjectByKey(data, "name", "asc");
+        sortedData.map((e) => names.push(e.name));
       });
+
+      return SET_TITLE_OPTIONS(names);
     };
     fillTitlePicker();
   }, []);
@@ -203,13 +197,9 @@ const NewFixAsset = () => {
     <BackgroundContainer>
       <ViewTab>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ViewTabContent noPaddingBottom>
-            <HStack>
-              <Icon
-                name="chevron-left"
-                style={{ marginRight: 10 }}
-                onPress={() => navigation.goBack()}
-              />
+          <VStack flex={1}>
+            <HStack alignItems="center" space={3} mb={1}>
+              <Icon name="chevron-left" size={24} onPress={goBack} />
               <TextHeaderScreen noMarginBottom>Renda fixa</TextHeaderScreen>
             </HStack>
             <ContainerCenter>
@@ -253,7 +243,7 @@ const NewFixAsset = () => {
                 />
                 <TouchableOpacity onPress={changeRentType}>
                   <HStack mb={1} alignItems={"center"}>
-                    <RentTypeText>{rentType}</RentTypeText>
+                    <Text>{rentType}</Text>
                     <Icon name="corner-right-down" size={12} />
                   </HStack>
                 </TouchableOpacity>
@@ -303,7 +293,7 @@ const NewFixAsset = () => {
               setDateToInput={setDateToInput}
               calendarIsShow={calendar}
             />
-          </ViewTabContent>
+          </VStack>
         </TouchableWithoutFeedback>
       </ViewTab>
     </BackgroundContainer>

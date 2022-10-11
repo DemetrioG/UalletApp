@@ -1,50 +1,33 @@
+import { IForm } from ".";
 import firebase from "../../../services/firebase";
+import { IVariableIncome } from "../../../types/assets";
 import { convertDateToDatabase } from "../../../utils/date.helper";
 import {
   averageBetweenNumbers,
   realToNumber,
 } from "../../../utils/number.helper";
-import { createCollection } from "../../../utils/query.helper";
+import { createCollection, currentUser } from "../../../utils/query.helper";
 
-export interface IAsset {
-  entrydate: string;
-  segment: "Ações" | "FIIs e Fiagro" | "Criptomoedas" | "BDR's" | null;
-  broker: string | null;
-  asset: string;
-  amount: number;
-  price: string;
-  total: string;
-  uid: string;
-}
+async function _registerAsset(props: IForm) {
+  const { entrydate, segment, broker, asset, amount, price, total } = props;
 
-interface IAssetDatabase {
-  id: number;
-  amount: number;
-  amountBuyDate: object[];
-  asset: string;
-  broker: string;
-  price: number;
-  segment: string;
-  total: number;
-}
+  const user = await currentUser();
 
-async function _registerAsset(props: IAsset) {
-  const { entrydate, segment, broker, asset, amount, price, total, uid } =
-    props;
+  if (!user) return Promise.reject();
 
   let id = 1;
-  let itemIsInDatabase: IAssetDatabase = undefined;
+  let itemIsInDatabase: IVariableIncome = undefined;
   const item = await firebase
     .firestore()
     .collection("assets")
-    .doc(uid)
+    .doc(user.uid)
     .collection("variable")
     .where("asset", "==", asset.toUpperCase())
     .get();
 
   item.forEach((result) => {
     id = result.data().id;
-    itemIsInDatabase = result.data() as IAssetDatabase;
+    itemIsInDatabase = result.data() as IVariableIncome;
   });
 
   if (!itemIsInDatabase) {
@@ -52,7 +35,7 @@ async function _registerAsset(props: IAsset) {
     const response = await firebase
       .firestore()
       .collection("assets")
-      .doc(uid)
+      .doc(user.uid)
       .collection("variable")
       .orderBy("id", "desc")
       .limit(1)
@@ -70,7 +53,7 @@ async function _registerAsset(props: IAsset) {
     price: realToNumber(price),
   });
 
-  const items: IAssetDatabase = {
+  const items: IVariableIncome = {
     id: id,
     amountBuyDate: amountBuyDate,
     segment: segment!,
@@ -89,13 +72,13 @@ async function _registerAsset(props: IAsset) {
   return firebase
     .firestore()
     .collection("assets")
-    .doc(uid)
+    .doc(user.uid)
     .collection("variable")
     .doc(id.toString())
     .set(items, { merge: true });
 }
 
-export function registerAsset(props: IAsset) {
+export function registerAsset(props: IForm) {
   try {
     return _registerAsset(props);
   } catch (error) {
