@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Button, HStack, Text } from "native-base";
+import { Button, HStack, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
@@ -29,7 +29,6 @@ import {
   HalfContainer,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../../styles/general";
 import { IFixedIncome } from "../../../types/assets";
 
@@ -46,7 +45,7 @@ interface IForm {
 const RENT_OPTIONS = ["Selic", "CDI", "IPCA +", "Pré Fix.", "Pós Fix."];
 
 const NewFixAsset = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
   const { user } = React.useContext(UserContext);
   const [selic, setSelic] = React.useState<string | null>(null);
   const [rentType, setRentType] = React.useState("Selic");
@@ -139,7 +138,7 @@ const NewFixAsset = () => {
           type: "success",
           text1: "Ativo cadastrado com sucesso",
         });
-        return navigation.navigate("Investimentos");
+        return navigate("Investimentos");
       })
       .catch(() => {
         return Toast.show({
@@ -198,13 +197,9 @@ const NewFixAsset = () => {
     <BackgroundContainer>
       <ViewTab>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ViewTabContent noPaddingBottom>
-            <HStack>
-              <Icon
-                name="chevron-left"
-                style={{ marginRight: 10 }}
-                onPress={() => navigation.goBack()}
-              />
+          <VStack flex={1}>
+            <HStack alignItems="center" space={3} mb={1}>
+              <Icon name="chevron-left" size={24} onPress={goBack} />
               <TextHeaderScreen noMarginBottom>Renda fixa</TextHeaderScreen>
             </HStack>
             <ContainerCenter>
@@ -298,7 +293,7 @@ const NewFixAsset = () => {
               setDateToInput={setDateToInput}
               calendarIsShow={calendar}
             />
-          </ViewTabContent>
+          </VStack>
         </TouchableWithoutFeedback>
       </ViewTab>
     </BackgroundContainer>

@@ -37,7 +37,6 @@ import {
   TextHeaderScreen,
   ValueContainer,
   ValueText,
-  ViewTabContent,
   ButtonOutlineSmall,
   ButtonSmall,
   ViewTab,
@@ -46,8 +45,9 @@ import {
 import Icon from "../../components/Icon";
 import { getEntryList } from "./querys";
 import { getBalance } from "../../utils/query.helper";
-import { Text } from "native-base";
+import { Text, VStack } from "native-base";
 import { metrics } from "../../styles";
+import { TEntryType } from "../../types/types";
 
 export interface IEntryList {
   date: ITimestamp;
@@ -56,7 +56,7 @@ export interface IEntryList {
   modality: "Real" | "Projetado";
   classification: string | null;
   segment: string | null;
-  type: "Receita" | "Despesa";
+  type: TEntryType;
   value: number;
 }
 
@@ -282,65 +282,65 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
   return (
     <BackgroundContainer>
       <ViewTab>
-        <ViewTabContent>
-          <HeaderContainer>
-            <TextHeaderScreen>Lançamentos</TextHeaderScreen>
-            <Text fontWeight={700} fontSize={"md"} ml={2}>
-              {dateMonthNumber("toMonth", data.month, true)}
-            </Text>
-          </HeaderContainer>
-          <ButtonHeaderView>
-            <ButtonOutlineSmall
-              onPress={() => navigate("Lancamentos/Filtros", filter)}
-            >
-              <ButtonOutlineText>FILTROS</ButtonOutlineText>
-            </ButtonOutlineSmall>
-            <ButtonSmall onPress={() => navigate("Lancamentos/NovoLancamento")}>
-              <ButtonText>NOVO</ButtonText>
-            </ButtonSmall>
-          </ButtonHeaderView>
-          {filter.isFiltered && (
-            <RemoveFilterButton onPress={handleRemoveFilter}>
-              <Text mr={3}>Remover filtros</Text>
-              <Icon name="x" size={20} colorVariant="red" />
-            </RemoveFilterButton>
-          )}
-          <Text fontSize={"md"} mb={metrics.baseMargin}>
-            Últimos lançamentos
+        <HeaderContainer>
+          <TextHeaderScreen>Lançamentos</TextHeaderScreen>
+          <Text fontWeight={700} fontSize={"md"} ml={2}>
+            {dateMonthNumber("toMonth", data.month, true)}
           </Text>
-          {emptyData ? (
-            <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
-          ) : (
-            <SpaceAroundView>
-              <Label>DESCRIÇÃO</Label>
-              <Label>VALOR</Label>
-            </SpaceAroundView>
-          )}
-          {entryList.length > 0 ? (
-            <FlatList
-              data={entryList}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <ItemList item={item} />}
-            />
-          ) : (
-            <ContainerCenter>
-              {!emptyData ? (
-                <LottieView
-                  source={LOADING}
-                  autoPlay={true}
-                  loop={true}
-                  style={{ width: 50 }}
-                />
-              ) : (
-                <LottieView
-                  source={EMPTY}
-                  autoPlay={true}
-                  loop={false}
-                  style={{ width: 230 }}
-                />
-              )}
-            </ContainerCenter>
-          )}
+        </HeaderContainer>
+        <ButtonHeaderView>
+          <ButtonOutlineSmall
+            onPress={() => navigate("Lancamentos/Filtros", filter)}
+          >
+            <ButtonOutlineText>FILTROS</ButtonOutlineText>
+          </ButtonOutlineSmall>
+          <ButtonSmall onPress={() => navigate("Lancamentos/NovoLancamento")}>
+            <ButtonText>NOVO</ButtonText>
+          </ButtonSmall>
+        </ButtonHeaderView>
+        {filter.isFiltered && (
+          <RemoveFilterButton onPress={handleRemoveFilter}>
+            <Text mr={3}>Remover filtros</Text>
+            <Icon name="x" size={20} colorVariant="red" />
+          </RemoveFilterButton>
+        )}
+        <Text fontSize={"md"} mb={metrics.baseMargin}>
+          Últimos lançamentos
+        </Text>
+        {emptyData ? (
+          <LoadingText>Seus lançamentos aparecerão aqui</LoadingText>
+        ) : (
+          <SpaceAroundView>
+            <Label>DESCRIÇÃO</Label>
+            <Label>VALOR</Label>
+          </SpaceAroundView>
+        )}
+        {entryList.length > 0 ? (
+          <FlatList
+            data={entryList}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <ItemList item={item} />}
+          />
+        ) : (
+          <ContainerCenter>
+            {!emptyData ? (
+              <LottieView
+                source={LOADING}
+                autoPlay={true}
+                loop={true}
+                style={{ width: 50 }}
+              />
+            ) : (
+              <LottieView
+                source={EMPTY}
+                autoPlay={true}
+                loop={false}
+                style={{ width: 230 }}
+              />
+            )}
+          </ContainerCenter>
+        )}
+        <VStack mb={5}>
           <TotalItemContainer>
             <Text mr={10}>Total detalhado</Text>
             <TotalValueContainer>
@@ -355,7 +355,7 @@ const Entry = ({ route: { params } }: { route: { params: IActiveFilter } }) => {
               </BalanceText>
             </TotalValueContainer>
           </TotalItemContainer>
-        </ViewTabContent>
+        </VStack>
       </ViewTab>
     </BackgroundContainer>
   );

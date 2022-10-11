@@ -8,6 +8,7 @@ import {
   ButtonSmall,
   ButtonText as GeneralButtonText,
 } from "../../styles/general";
+import { TEntryType } from "../../types/types";
 
 export const HeaderContainer = styled(Center)`
   flex-direction: row;
@@ -113,7 +114,7 @@ export const ValueView = styled(ValueSize)`
 export const ValueText = styled(Text).attrs(() => ({
   fontFamily: "mono",
   fontSize: fonts.regular,
-}))<{ type: "Receita" | "Despesa" }>`
+}))<{ type: TEntryType }>`
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;

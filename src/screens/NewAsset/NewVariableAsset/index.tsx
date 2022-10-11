@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button, HStack, Text } from "native-base";
+import { Button, HStack, Text, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -9,7 +9,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { registerAsset } from "./query";
-import { UserContext } from "../../../context/User/userContext";
 import Picker from "../../../components/Picker";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
@@ -26,7 +25,6 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-  ViewTabContent,
 } from "../../../styles/general";
 import { Total } from "./styles";
 import { AssetSegment } from "../../../types/types";
@@ -42,7 +40,7 @@ export interface IForm {
 }
 
 const NewVariableAsset = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
   const [calendar, setCalendar] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [segment, setSegment] = React.useState(null);
@@ -126,7 +124,7 @@ const NewVariableAsset = () => {
           type: "success",
           text1: "Ativo cadastrado com sucesso",
         });
-        return navigation.navigate("Investimentos");
+        return navigate("Investimentos");
       })
       .catch(() => {
         return Toast.show({
@@ -141,13 +139,9 @@ const NewVariableAsset = () => {
     <BackgroundContainer>
       <ViewTab>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ViewTabContent noPaddingBottom>
-            <HStack>
-              <Icon
-                name="chevron-left"
-                style={{ marginRight: 10 }}
-                onPress={() => navigation.goBack()}
-              />
+          <VStack flex={1}>
+            <HStack alignItems="center" space={3} mb={1}>
+              <Icon name="chevron-left" size={24} onPress={goBack} />
               <TextHeaderScreen noMarginBottom>Renda variável</TextHeaderScreen>
             </HStack>
             <ContainerCenter>
@@ -230,7 +224,7 @@ const NewVariableAsset = () => {
               setDateToInput={setDateToInput}
               calendarIsShow={calendar}
             />
-          </ViewTabContent>
+          </VStack>
         </TouchableWithoutFeedback>
       </ViewTab>
     </BackgroundContainer>

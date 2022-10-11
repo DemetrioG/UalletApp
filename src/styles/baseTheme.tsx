@@ -71,7 +71,7 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
             borderColor: colors.strongBlue,
           },
           selectionColor: colors.lightBlue,
-          color: colors.white,
+          color: theme.text,
           borderColor: colors.gray,
           fontFamily: "body",
           fontWeight: 700,
