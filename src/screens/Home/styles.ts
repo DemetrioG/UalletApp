@@ -1,12 +1,10 @@
-import * as React from "react";
-import { ITextProps, Text } from "native-base";
-import { Image, TextProps, View } from "react-native";
+import { Text } from "native-base";
+import { Image, View } from "react-native";
 import styled from "styled-components";
 import { colors, fonts, metrics } from "../../styles";
 import {
   ValueContainer as DefaultValueContainer,
   DescriptionContainer as DefaultDescriptionContainer,
-  DescriptionText as DefaultDescriptionText,
   BackgroundContainer as DefaultBackgroundContainer,
 } from "../../styles/general";
 
@@ -19,12 +17,6 @@ export const CardHeaderView = styled(View)<{ balance?: boolean }>`
   align-items: center;
   justify-content: space-between;
   margin-bottom: ${({ balance }) => (balance ? metrics.baseMargin : 20)}px;
-`;
-
-export const CardHeaderText: React.FC<ITextProps> = styled(Text).attrs(() => ({
-  fontSize: "md",
-}))`
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const CardTextView = styled(View)`
@@ -48,15 +40,6 @@ export const Invest = styled(Text).attrs(() => ({
 
 export const CardStatusView = styled(View)`
   margin-bottom: ${metrics.baseMargin}px;
-`;
-
-export const StatusText: React.FC<TextProps & { bold?: boolean }> = styled(
-  Text
-)`
-  font-family: ${({ bold }) =>
-    bold ? fonts.ralewayExtraBold : fonts.ralewayMedium};
-  font-size: ${fonts.medium}px;
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const StatusPercentText = styled(Text)`
@@ -84,10 +67,6 @@ export const DescriptionContainer = styled(DefaultDescriptionContainer)`
   flex: 1;
   border-right-width: 0px;
   align-items: baseline;
-`;
-
-export const DescriptionText = styled(DefaultDescriptionText)`
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const EmptyEntryText = styled(Text).attrs(() => ({

@@ -1,21 +1,8 @@
-import * as React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  Image,
-} from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import { Flex } from "native-base";
 import styled from "styled-components";
 
-import { fonts, metrics } from "../../styles";
-
-export const ActionText = styled(Text)`
-  font-family: ${fonts.ralewayMedium};
-  font-size: ${fonts.regular}px;
-  color: ${({ theme: { theme } }) => theme.text};
-  margin-bottom: ${metrics.baseMargin}px;
-`;
+import { metrics } from "../../styles";
 
 export const SheetView = styled(Flex)`
   width: 100%;
@@ -25,9 +12,9 @@ export const SheetView = styled(Flex)`
   justify-content: space-around;
 `;
 
-export const SocialContainer: React.FC<
-  TouchableOpacityProps & { backgroundColor: string }
-> = styled(TouchableOpacity)`
+export const SocialContainer = styled(TouchableOpacity)<{
+  backgroundColor: string;
+}>`
   padding: 8px;
   width: 70px;
   height: 50px;

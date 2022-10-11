@@ -10,6 +10,7 @@ import {
   convertDateToDatabase,
 } from "../../utils/date.helper";
 import { realToNumber } from "../../utils/number.helper";
+import { TEntryType } from "../../types/types";
 
 export interface INewEntry {
   description: string;
@@ -17,7 +18,7 @@ export interface INewEntry {
   value: string;
   classification: string;
   modality: "Real" | "Projetado";
-  type: "Receita" | "Despesa";
+  type: TEntryType;
   segment: string;
 }
 

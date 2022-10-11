@@ -23,6 +23,7 @@ import metrics from "./metrics";
 import fonts from "./fonts";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
+import { TEntryType } from "../types/types";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -82,13 +83,6 @@ export const ViewTab = styled(View)`
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.secondary};
   min-height: 490px;
-`;
-
-export const ViewTabContent = styled(View)<{ noPaddingBottom?: boolean }>`
-  flex: 1;
-  padding-bottom: ${({ noPaddingBottom }) =>
-    noPaddingBottom ? 0 : metrics.basePadding * 1.5}px;
-  background-color: ${({ theme: { theme } }) => theme.secondary};
 `;
 
 export const FormContainer = styled(View)<{ insideApp?: boolean }>`
@@ -182,21 +176,7 @@ export const Logo = styled(Image)`
 export const TextHeader = styled(Text).attrs(({ fontSize }) => ({
   fontWeight: 800,
   fontSize: fontSize ? fontSize : "3xl",
-}))<{ withMarginLeft?: boolean; withMarginTop?: boolean }>`
-  color: ${({ theme: { theme } }) => theme.text};
-  ${({ withMarginLeft, withMarginTop }) => {
-    if (withMarginLeft) {
-      return `
-      margin-left: ${metrics.baseMargin}px;
-      `;
-    } else if (withMarginTop) {
-      return `
-      margin-top: ${metrics.baseMargin}px;
-      `;
-    }
-  }}
-`;
-
+}))``;
 export const TextHeaderScreen = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: "md",
@@ -209,10 +189,6 @@ export const TextHeaderScreen = styled(Text).attrs(() => ({
 export const HeaderTitleContainer = styled(View)`
   margin-top: ${metrics.baseMargin}px;
   padding: 0px ${metrics.basePadding}px;
-`;
-
-export const HeaderTitle = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const Card = styled(View)`
@@ -271,7 +247,7 @@ export const ValueContainer = styled(View)`
 
 export const ValueText = styled(Text).attrs(() => ({
   fontFamily: "mono",
-}))<{ type: "Receita" | "Despesa" }>`
+}))<{ type: TEntryType }>`
   font-size: 13px;
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};

@@ -8,21 +8,12 @@ export const Wrapper = styled(VStack)`
   border-top-right-radius: ${metrics.baseRadius}px;
 `;
 
-export const Title = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
-`;
-
 export const Income = styled(Text).attrs(() => ({
   fontSize: "md",
   fontFamily: "mono",
   fontWeight: 500,
 }))`
   color: ${({ theme: { theme } }) => theme.green};
-`;
-
-export const Label = styled(Text)`
-  font-size: 12px;
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const CompleteWrapper = styled(VStack)`

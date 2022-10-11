@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, VStack } from "native-base";
+import { Text, View, VStack } from "native-base";
 
 import EmptyChart from "../EmptyChart";
 import { LoaderContext } from "../../context/Loader/loaderContext";
@@ -10,11 +10,10 @@ import {
   SegmentLabelView,
   ContentLabel,
   DotView,
-  SegmentLabelText,
   ChartContainer,
   PieCenter,
 } from "./styles";
-import { metrics } from "../../styles";
+import { fonts, metrics } from "../../styles";
 import { Skeleton } from "../../styles/general";
 
 interface ISlices {
@@ -102,7 +101,7 @@ const SegmentChart = ({
                       {value ? (
                         <ContentLabel>
                           <DotView index={index} />
-                          <SegmentLabelText>{label}</SegmentLabelText>
+                          <Text fontSize={fonts.regular}>{label}</Text>
                         </ContentLabel>
                       ) : null}
                     </VStack>

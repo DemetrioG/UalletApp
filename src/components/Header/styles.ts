@@ -1,4 +1,4 @@
-import { HStack, Text } from "native-base";
+import { HStack } from "native-base";
 import { View } from "react-native";
 import styled from "styled-components";
 
@@ -12,10 +12,6 @@ export const HeaderView = styled(View)`
   padding-horizontal: ${metrics.basePadding}px;
   padding-bottom: 10px;
   z-index: 5;
-`;
-
-export const HeaderText = styled(Text)`
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const HeaderIconView = styled(HStack)`

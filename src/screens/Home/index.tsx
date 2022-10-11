@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { Collapse } from "native-base";
+import { Collapse, Text } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -15,7 +15,6 @@ import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
 import {
-  CardHeaderText,
   CardHeaderView,
   CardTextView,
   Invest,
@@ -24,7 +23,6 @@ import {
   SectionText,
   ValueContainer,
   DescriptionContainer,
-  DescriptionText,
   EmptyEntryText,
   BackgroundContainer,
 } from "./styles";
@@ -54,11 +52,11 @@ function ItemList({
   return (
     <ItemContainer>
       <DescriptionContainer>
-        <DescriptionText>
+        <Text>
           {item.description.length > 18
             ? `${item.description.slice(0, 18)}...`
             : item.description}
-        </DescriptionText>
+        </Text>
       </DescriptionContainer>
       <ValueContainer>
         <ValueText type={item.type}>
@@ -184,7 +182,7 @@ const Home = () => {
             <Skeleton isLoaded={!homeVisible} width={"full"} h={69}>
               <CardHeaderView balance>
                 <CardTextView>
-                  <CardHeaderText>Saldo atual</CardHeaderText>
+                  <Text fontSize={"md"}>Saldo atual</Text>
                 </CardTextView>
                 <View>
                   <LogoCard source={LOGO_SMALL} width={1} />
@@ -201,7 +199,7 @@ const Home = () => {
                 <>
                   <CardHeaderView>
                     <CardTextView>
-                      <CardHeaderText>Últimos lançamentos</CardHeaderText>
+                      <Text fontSize={"md"}>Últimos lançamentos</Text>
                     </CardTextView>
                     <Icon
                       name="edit-3"
@@ -225,7 +223,7 @@ const Home = () => {
             <Skeleton isLoaded={!homeVisible} h={152} width={"full"}>
               <CardHeaderView>
                 <CardTextView>
-                  <CardHeaderText>Receitas x Despesas</CardHeaderText>
+                  <Text fontSize={"md"}>Receitas x Despesas</Text>
                 </CardTextView>
               </CardHeaderView>
             </Skeleton>
@@ -235,7 +233,7 @@ const Home = () => {
             <Skeleton isLoaded={!homeVisible} h={12} width={"full"}>
               <CardHeaderView>
                 <CardTextView>
-                  <CardHeaderText>Despesas por segmento</CardHeaderText>
+                  <Text fontSize={"md"}>Despesas por segmento</Text>
                 </CardTextView>
               </CardHeaderView>
             </Skeleton>
@@ -256,7 +254,7 @@ const Home = () => {
             <Skeleton isLoaded={equity} width={"full"} h={69}>
               <CardHeaderView>
                 <CardTextView>
-                  <CardHeaderText>Patrimônio investido</CardHeaderText>
+                  <Text fontSize={"md"}>Patrimônio investido</Text>
                 </CardTextView>
                 <Icon
                   name="maximize-2"

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Button } from "native-base";
+import { Button, Text } from "native-base";
 import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +15,6 @@ import {
   ButtonText,
   ContainerCenter,
   FormContainer,
-  HeaderTitle,
   HeaderTitleContainer,
   Logo,
   LogoHeader,
@@ -23,6 +22,7 @@ import {
 } from "../../styles/general";
 import PasswordRules from "./PasswordRules";
 import { registerUser } from "./query";
+import { metrics } from "../../styles";
 
 export interface IRegister {
   name: string;
@@ -88,12 +88,12 @@ const Register = () => {
       <BackgroundContainer>
         <LogoHeader>
           <Logo source={LOGO} />
-          <TextHeader withMarginLeft>Uallet</TextHeader>
+          <TextHeader ml={metrics.baseMargin}>Uallet</TextHeader>
         </LogoHeader>
         <HeaderTitleContainer>
-          <HeaderTitle>
+          <Text>
             Informe seus dados, que o resto{"\n"}a gente cuida para você!
-          </HeaderTitle>
+          </Text>
         </HeaderTitleContainer>
         <ContainerCenter>
           <FormContainer>

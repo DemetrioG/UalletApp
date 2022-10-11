@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextProps, View } from "react-native";
+import { View } from "react-native";
 import { Center, HStack, Text } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
@@ -8,6 +8,7 @@ import {
   ButtonSmall,
   ButtonText as GeneralButtonText,
 } from "../../styles/general";
+import { TEntryType } from "../../types/types";
 
 export const HeaderContainer = styled(Center)`
   flex-direction: row;
@@ -16,11 +17,6 @@ export const HeaderContainer = styled(Center)`
 
 export const InfoContainer = styled(View)`
   padding: 30px 0px 10px 0px;
-`;
-
-export const InfoText = styled(Text)`
-  text-align: center;
-  color: ${({ theme: { theme } }) => theme.text};
 `;
 
 export const IconContainer = styled(Center)`
@@ -41,10 +37,7 @@ export const HelperContainer = styled(View)`
 export const HelperText = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: "md",
-}))`
-  text-align: center;
-  color: ${({ theme: { theme } }) => theme.text};
-`;
+}))``;
 
 export const Footer = styled(Center)`
   flex-direction: row;
@@ -58,11 +51,11 @@ export const CirclesContainer = styled(HStack)`
   justify-content: space-around;
 `;
 
-export const Circle: React.FC<{ isActive?: boolean }> = styled(View)`
+export const Circle = styled(View)<{ isActive?: boolean }>`
   width: 10px;
   height: 10px;
   border-radius: 50px;
-  background-color: ${({ isActive, theme: { theme } }) =>
+  background-color: ${({ isActive }) =>
     isActive ? colors.strongBlue : colors.gray};
 `;
 
@@ -118,12 +111,10 @@ export const ValueView = styled(ValueSize)`
   padding: 0px ${metrics.basePadding / 2}px;
 `;
 
-export const ValueText: React.FC<
-  TextProps & { type: "Receita" | "Despesa" }
-> = styled(Text).attrs(() => ({
-  fontFamily: 'mono',
-  fontSize: fonts.regular
-}))`
+export const ValueText = styled(Text).attrs(() => ({
+  fontFamily: "mono",
+  fontSize: fonts.regular,
+}))<{ type: TEntryType }>`
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};
 `;
@@ -134,9 +125,9 @@ export const ActionView = styled(ActionSize)`
   padding: ${metrics.basePadding / 2}px 0px;
 `;
 
-export const ButtonActionContainer: React.FC<{
+export const ButtonActionContainer = styled(View)<{
   type: "check" | "cancel";
-}> = styled(View)`
+}>`
   width: 28px;
   height: 28px;
   border-radius: 50px;
@@ -145,7 +136,7 @@ export const ButtonActionContainer: React.FC<{
     type === "check" ? theme.green : theme.red};
 `;
 
-export const ActionText: React.FC<{ checked: boolean }> = styled(Text)`
+export const ActionText = styled(Text)<{ checked: boolean }>`
   text-align: center;
   font-size: ${fonts.regular}px;
   color: ${({ checked, theme: { theme } }) =>

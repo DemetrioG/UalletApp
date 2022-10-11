@@ -6,18 +6,21 @@ import {
   averageBetweenNumbers,
   realToNumber,
 } from "../../../utils/number.helper";
-import { createCollection } from "../../../utils/query.helper";
+import { createCollection, currentUser } from "../../../utils/query.helper";
 
 async function _registerAsset(props: IForm) {
-  const { entrydate, segment, broker, asset, amount, price, total, uid } =
-    props;
+  const { entrydate, segment, broker, asset, amount, price, total } = props;
+
+  const user = await currentUser();
+
+  if (!user) return Promise.reject();
 
   let id = 1;
   let itemIsInDatabase: IVariableIncome = undefined;
   const item = await firebase
     .firestore()
     .collection("assets")
-    .doc(uid)
+    .doc(user.uid)
     .collection("variable")
     .where("asset", "==", asset.toUpperCase())
     .get();
@@ -32,7 +35,7 @@ async function _registerAsset(props: IForm) {
     const response = await firebase
       .firestore()
       .collection("assets")
-      .doc(uid)
+      .doc(user.uid)
       .collection("variable")
       .orderBy("id", "desc")
       .limit(1)
@@ -61,7 +64,7 @@ async function _registerAsset(props: IForm) {
       realToNumber(price),
       itemIsInDatabase?.price || realToNumber(price)
     ),
-    total: realToNumber(total) + (itemIsInDatabase?.total || 0),
+    total: realToNumber(total || "0,00") + (itemIsInDatabase?.total || 0),
   };
 
   await createCollection("assets");
@@ -69,7 +72,7 @@ async function _registerAsset(props: IForm) {
   return firebase
     .firestore()
     .collection("assets")
-    .doc(uid)
+    .doc(user.uid)
     .collection("variable")
     .doc(id.toString())
     .set(items, { merge: true });

@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native";
 import NativeTooltip from "react-native-walkthrough-tooltip";
 import { colors, metrics } from "../../styles";
 import { useTheme } from "styled-components";
-import { IThemeProvider } from "../../../App";
+import { IThemeProvider } from "../../styles/baseTheme";
 
 const Tooltip = ({
   text,

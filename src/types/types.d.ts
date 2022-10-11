@@ -5,3 +5,5 @@ export type AssetSegment =
   | "Criptomoedas"
   | "BDR's"
   | "ETF's";
+
+export type TEntryType = "Receita" | "Despesa";

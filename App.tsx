@@ -1,22 +1,17 @@
 import * as React from "react";
-import { LogBox, Appearance } from "react-native";
-import { ThemeProvider } from "styled-components";
+import { LogBox } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 
 import AppContent from "./src/screens/App";
-import { LIGHT, DARK } from "./src/styles/theme";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { ConfirmContextProvider } from "./src/context/ConfirmDialog/confirmContext";
 import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
 import { DataContextProvider } from "./src/context/Data/dataContext";
 import BaseProvider from "./src/styles/baseTheme";
+import { ThemeContextProvider } from "./src/context/Theme/themeContext";
 
 LogBox.ignoreAllLogs(true);
-
-export interface IThemeProvider {
-  theme?: typeof LIGHT;
-}
 
 const customFonts = {
   Montserrat_500Medium: require("./assets/fonts/Montserrat-Medium.ttf"),
@@ -30,19 +25,7 @@ const customFonts = {
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  const [theme, setTheme] = React.useState<IThemeProvider>();
   const [fontLoaded, setFontLoaded] = React.useState(false);
-
-  function setDefaultTheme(theme: string) {
-    setTheme(theme == "dark" ? { theme: DARK } : { theme: LIGHT });
-  }
-
-  React.useEffect(() => {
-    setDefaultTheme(Appearance.getColorScheme() || "light");
-    Appearance.addChangeListener((preference) =>
-      setDefaultTheme(preference.colorScheme || "light")
-    );
-  }, []);
 
   React.useEffect(() => {
     (async () => {
@@ -69,8 +52,8 @@ const App = () => {
   }
 
   return (
-    <BaseProvider>
-      <ThemeProvider theme={theme}>
+    <ThemeContextProvider>
+      <BaseProvider>
         <UserContextProvider>
           <DataContextProvider>
             <ConfirmContextProvider>
@@ -80,8 +63,8 @@ const App = () => {
             </ConfirmContextProvider>
           </DataContextProvider>
         </UserContextProvider>
-      </ThemeProvider>
-    </BaseProvider>
+      </BaseProvider>
+    </ThemeContextProvider>
   );
 };
 export default App;
