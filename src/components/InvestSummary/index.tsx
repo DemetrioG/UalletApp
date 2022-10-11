@@ -43,6 +43,7 @@ const InvestSummary = () => {
     firebase
       .firestore()
       .collection("prices")
+      .doc("_DATA_REFRESHED")
       .onSnapshot((v) => {
         refreshAssetData();
       });
