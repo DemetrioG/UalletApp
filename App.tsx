@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LogBox } from "react-native";
+import { LogBox, Text } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 
@@ -58,7 +58,7 @@ const App = () => {
           <DataContextProvider>
             <ConfirmContextProvider>
               <LoaderContextProvider>
-                <AppContent />
+                {/* <AppContent /> */}
               </LoaderContextProvider>
             </ConfirmContextProvider>
           </DataContextProvider>
