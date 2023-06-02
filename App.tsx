@@ -58,7 +58,7 @@ const App = () => {
           <DataContextProvider>
             <ConfirmContextProvider>
               <LoaderContextProvider>
-                {/* <AppContent /> */}
+                <AppContent />
               </LoaderContextProvider>
             </ConfirmContextProvider>
           </DataContextProvider>

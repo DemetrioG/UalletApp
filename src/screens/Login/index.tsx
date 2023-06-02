@@ -62,7 +62,7 @@ const ICONS = {
 };
 
 const Login = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  // const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setUser } = React.useContext(UserContext);
   const { data: dataContext } = React.useContext(DataContext);
   const [sheetOpen, setSheetOpen] = React.useState(false);
@@ -77,27 +77,27 @@ const Login = () => {
   });
 
   async function loginUser(props: IForm) {
-    const data = {
-      ...props,
-      expoPushToken: dataContext.expoPushToken!,
-    };
-    setLoading(true);
-    loginByEmailAndPassword(data)
-      .then((loggedSucceedData) => {
-        setStorage("authUser", loggedSucceedData);
-        setUser((userState) => ({
-          ...userState,
-          uid: loggedSucceedData.uid || "",
-          signed: true,
-        }));
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Verifique os campos informados",
-        });
-      })
-      .finally(() => setLoading(false));
+    // const data = {
+    //   ...props,
+    //   expoPushToken: dataContext.expoPushToken!,
+    // };
+    // setLoading(true);
+    // loginByEmailAndPassword(data)
+    //   .then((loggedSucceedData) => {
+    //     setStorage("authUser", loggedSucceedData);
+    //     setUser((userState) => ({
+    //       ...userState,
+    //       uid: loggedSucceedData.uid || "",
+    //       signed: true,
+    //     }));
+    //   })
+    //   .catch(() => {
+    //     Toast.show({
+    //       type: "error",
+    //       text1: "Verifique os campos informados",
+    //     });
+    //   })
+    //   .finally(() => setLoading(false));
   }
 
   return (
@@ -143,11 +143,11 @@ const Login = () => {
                 Prefere entrar com as redes sociais?
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigate("Forgot")}>
+            {/* <TouchableOpacity onPress={() => navigate("Forgot")}>
               <Text fontSize={fonts.regular} mb={metrics.baseMargin}>
                 Esqueceu sua senha?
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </ContainerCenter>
         </BackgroundContainer>
       </TouchableWithoutFeedback>

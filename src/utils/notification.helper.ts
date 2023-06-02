@@ -45,7 +45,11 @@ export async function setupPushNotifications() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") return;
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    token = (
+      await Notifications.getExpoPushTokenAsync({
+        projectId: "87d0b7d4-bbd1-44ae-bc18-478c2aecb7ec",
+      })
+    ).data;
   }
 
   if (Platform.OS === "android") {

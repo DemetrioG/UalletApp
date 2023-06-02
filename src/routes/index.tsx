@@ -51,7 +51,8 @@ const Routes = () => {
     });
   }, []);
 
-  return user.signed ? <AppRoutes /> : <AuthRoutes />;
+  // return user.signed ? <AppRoutes /> : <AuthRoutes />;
+  return <AuthRoutes />;
 };
 
 export default Routes;
