@@ -7,7 +7,6 @@ import {
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/Icon";
-import { SafeAreaContainer } from "../styles/general";
 import {
   ActiveMenuIcon,
   BackgroundContainer,
