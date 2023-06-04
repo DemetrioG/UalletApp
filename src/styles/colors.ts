@@ -1,8 +1,8 @@
 const colors = {
-  darkPrimary: "#252333",
-  darkSecondary: "#312F42",
-  lightPrimary: "#F9F8F8",
-  lightSecondary: "#E3DEDE",
+  darkPrimary: "#000000",
+  darkSecondary: "#1D293A",
+  lightPrimary: "#FFFFFF",
+  lightSecondary: "#F6F9FD",
   white: "#FFFFFF",
   black: "#000000",
   infoBlack: "#1F1F1F",
@@ -23,7 +23,7 @@ const colors = {
   lightYellow: "#FFFD82",
   transpDark: "rgba(49, 47, 66, 0.95)",
   transpLight: "rgba(227, 222, 222, 0.95)",
-  invalidInputColor: '#dc2626'
+  invalidInputColor: "#dc2626",
 };
 
 export default colors;
