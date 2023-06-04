@@ -1,77 +1,36 @@
 import * as React from "react";
-import { ImageURISource } from "react-native";
-import { Button, Center, Flex, Spacer, Text } from "native-base";
+import { Image, TouchableOpacity } from "react-native";
+import { HStack, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import Swiper from "react-native-swiper";
 
-import {
-  BackgroundContainerCenter,
-  ButtonOutlineText,
-  ButtonText,
-  ButtonOutline,
-} from "../../styles/general";
-import { ImageCarousel } from "./styles";
+import Swipeable from "../../components/Button/Swipeable";
+import { BackgroundContainerCenter } from "../../styles/general";
+import { LoginText } from "./styles";
 
-interface ISlidesMockup {
-  key: number;
-  title: string;
-  image: ImageURISource;
-}
-
-const slides: ISlidesMockup[] = [
-  {
-    key: 1,
-    title: "Suas finanças",
-    image: require("../../../assets/images/iphoneHome.png"),
-  },
-  {
-    key: 2,
-    title: "Seus investimentos",
-    image: require("../../../assets/images/iphoneInvest.png"),
-  },
-  {
-    key: 3,
-    title: "Integrações bancárias",
-    image: require("../../../assets/images/iphoneIntegracoes.png"),
-  },
-  {
-    key: 4,
-    title: "Tudo em um só lugar",
-    image: require("../../../assets/images/iphoneUallet.png"),
-  },
-];
+import Cards from "../../../assets/images/cards.png";
 
 const Index = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
-  function RenderSlide({ item }: { item: ISlidesMockup }) {
-    return (
-      <Flex>
-        <ImageCarousel source={item.image} />
-        <Spacer />
-        <Center>
-          <Text fontSize={"2xl"} fontWeight={800}>
-            {item.title}
-          </Text>
-        </Center>
-      </Flex>
-    );
-  }
-
   return (
     <BackgroundContainerCenter>
-      <Swiper autoplay>
-        {slides.map((e, i) => {
-          return <RenderSlide key={i} item={slides[i]} />;
-        })}
-      </Swiper>
-      <Button onPress={() => navigate("Register")}>
-        <ButtonText>CRIAR CONTA</ButtonText>
-      </Button>
-      <ButtonOutline onPress={() => navigate("Login")}>
-        <ButtonOutlineText>ENTRAR</ButtonOutlineText>
-      </ButtonOutline>
+      <Image
+        source={Cards}
+        style={{ width: "90%", height: "70%", right: -20 }}
+      />
+      <VStack width="90%" mt={5} mb={5}>
+        <Swipeable
+          title="Começar"
+          onSwipeSuccess={() => navigate("Register")}
+        />
+      </VStack>
+      <HStack space={3}>
+        <Text>Já tem uma conta?</Text>
+        <TouchableOpacity onPress={() => navigate("Login")}>
+          <LoginText fontWeight={600}>Login</LoginText>
+        </TouchableOpacity>
+      </HStack>
     </BackgroundContainerCenter>
   );
 };

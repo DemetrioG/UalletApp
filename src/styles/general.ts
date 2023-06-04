@@ -31,7 +31,6 @@ export const SafeAreaContainer = styled(SafeAreaView)`
 
 export const BackgroundContainerCenter = styled(Center)`
   flex: 1;
-  padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
