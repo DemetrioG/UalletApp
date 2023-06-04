@@ -1,7 +1,7 @@
-import * as React from "react";
-import { LogBox, Text } from "react-native";
+import { useEffect } from "react";
+import { LogBox } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import * as Font from "expo-font";
+import { useFonts } from "expo-font";
 
 import AppContent from "./src/screens/App";
 import { UserContextProvider } from "./src/context/User/userContext";
@@ -12,34 +12,12 @@ import BaseProvider from "./src/styles/baseTheme";
 import { ThemeContextProvider } from "./src/context/Theme/themeContext";
 
 LogBox.ignoreAllLogs(true);
-
-const customFonts = {
-  Montserrat_500Medium: require("./assets/fonts/Montserrat-Medium.ttf"),
-  Montserrat_700Bold: require("./assets/fonts/Montserrat-Bold.ttf"),
-  Montserrat_800ExtraBold: require("./assets/fonts/Montserrat-ExtraBold.ttf"),
-  Raleway_500Medium: require("./assets/fonts/Raleway-Medium.ttf"),
-  Raleway_700Bold: require("./assets/fonts/Raleway-Bold.ttf"),
-  Raleway_800ExtraBold: require("./assets/fonts/Raleway-ExtraBold.ttf"),
-};
-
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  const [fontLoaded, setFontLoaded] = React.useState(false);
+  const [fontLoaded] = useFonts(customFonts);
 
-  React.useEffect(() => {
-    (async () => {
-      try {
-        await Font.loadAsync(customFonts);
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setFontLoaded(true);
-      }
-    })();
-  }, []);
-
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
       if (fontLoaded) {
         await SplashScreen.hideAsync();
@@ -68,3 +46,11 @@ const App = () => {
   );
 };
 export default App;
+
+const customFonts = {
+  "Montserrat-Regular": require("./assets/fonts/Montserrat-Regular.ttf"),
+  "Montserrat-Medium": require("./assets/fonts/Montserrat-Medium.ttf"),
+  "Montserrat-SemiBold": require("./assets/fonts/Montserrat-SemiBold.ttf"),
+  "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
+  "Montserrat-ExtraBold": require("./assets/fonts/Montserrat-ExtraBold.ttf"),
+};
