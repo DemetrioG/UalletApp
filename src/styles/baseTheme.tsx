@@ -16,31 +16,26 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
 
   const baseTheme = extendTheme({
     fonts: {
-      heading: "Raleway",
-      body: "Raleway",
+      heading: "Montserrat",
+      body: "Montserrat",
       mono: "Montserrat",
     },
     fontConfig: {
-      Raleway: {
-        500: {
-          normal: "Raleway_500Medium",
-        },
-        700: {
-          normal: "Raleway_700Bold",
-        },
-        800: {
-          normal: "Raleway_800ExtraBold",
-        },
-      },
       Montserrat: {
+        400: {
+          normal: "Montserrat-Regular",
+        },
         500: {
-          normal: "Montserrat_500Medium",
+          normal: "Montserrat-Medium",
+        },
+        600: {
+          normal: "Montserrat-SemiBold",
         },
         700: {
-          normal: "Montserrat_700Bold",
+          normal: "Montserrat-Bold",
         },
         800: {
-          normal: "Montserrat_800ExtraBold",
+          normal: "Montserrat-ExtraBold",
         },
       },
     },
@@ -60,7 +55,8 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
       Text: {
         defaultProps: {
           fontFamily: "body",
-          fontWeight: 500,
+          fontWeight: 400,
+          fontSize: 16,
           color: theme.text,
         },
       },

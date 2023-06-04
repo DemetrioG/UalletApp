@@ -17,7 +17,7 @@ const StyledToastSuccess = styled(BaseToast).attrs(({ theme: { theme } }) => ({
   },
   text1Style: {
     fontSize: fonts.medium,
-    fontFamily: fonts.ralewayBold,
+    fontFamily: fonts.montserratBold,
     color: theme.isOnDarkTheme ? colors.darkPrimary : colors.white,
     marginTop: 3,
   },

@@ -16,7 +16,7 @@ export const StyledInput = styled(View)<{ isInvalid: boolean }>`
   border-radius: 6.5px;
   border: 1px solid
     ${({ isInvalid }) => (isInvalid ? colors.invalidInputColor : colors.gray)};
-  font-family: ${fonts.ralewayBold};
+  font-family: ${fonts.montserratBold};
   font-size: ${fonts.regular}px;
 `;
 

@@ -9,7 +9,7 @@ export const ChangeType = styled(TouchableOpacity)`
 `;
 
 export const Schema = styled(NativeText)`
-  font-family: ${fonts.ralewayExtraBold};
+  font-family: ${fonts.montserratExtraBold};
 `;
 
 export const FixEntryText = styled(Text).attrs(() => ({
