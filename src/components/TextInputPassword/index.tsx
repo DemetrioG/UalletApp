@@ -3,12 +3,11 @@ import styled from "styled-components";
 import { Control, FieldValues } from "react-hook-form";
 
 import TextInput from "../TextInput";
-import { colors, metrics } from "../../styles";
+import { metrics } from "../../styles";
 import DefaultIcon from "../Icon";
 
 const Icon = styled(DefaultIcon)`
   margin-right: ${metrics.baseMargin}px;
-  color: ${colors.gray};
 `;
 
 const TextInputPassword = (

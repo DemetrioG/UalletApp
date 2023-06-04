@@ -5,7 +5,7 @@
 export const LIGHT = {
   isOnDarkTheme: false,
   primary: "#F9F8F8",
-  secondary: "#F6F9FD",
+  secondary: "#E9EDF1",
   tertiary: "rgba(38, 109, 211, 0.2)",
   text: "#000000",
   blue: "#266DD3",

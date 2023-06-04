@@ -162,20 +162,6 @@ export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
   flex: 1;
 `;
 
-export const LogoHeader = styled(HStack)`
-  align-items: baseline;
-  padding: 0px ${metrics.basePadding}px;
-`;
-
-export const Logo = styled(Image)`
-  width: 48px;
-  height: 58px;
-`;
-
-export const TextHeader = styled(Text).attrs(({ fontSize }) => ({
-  fontWeight: 800,
-  fontSize: fontSize ? fontSize : "3xl",
-}))``;
 export const TextHeaderScreen = styled(Text).attrs(() => ({
   fontWeight: 700,
   fontSize: "md",
@@ -183,11 +169,6 @@ export const TextHeaderScreen = styled(Text).attrs(() => ({
   color: ${({ theme: { theme } }) => theme.text};
   margin-bottom: ${({ noMarginBottom }) =>
     noMarginBottom ? 0 : metrics.baseMargin}px;
-`;
-
-export const HeaderTitleContainer = styled(View)`
-  margin-top: ${metrics.baseMargin}px;
-  padding: 0px ${metrics.basePadding}px;
 `;
 
 export const Card = styled(View)`

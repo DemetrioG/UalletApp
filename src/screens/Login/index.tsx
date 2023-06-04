@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { Actionsheet, Button, Text } from "native-base";
+import { Actionsheet, Button, Text, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -25,16 +25,11 @@ import {
 } from "./styles";
 import {
   BackgroundContainer,
-  Logo,
-  LogoHeader,
   StyledKeyboardAvoidingView,
-  HeaderTitleContainer,
   ContainerCenter,
-  FormContainer,
   ButtonText,
-  TextHeader,
 } from "../../styles/general";
-import { colors, fonts, metrics } from "../../styles";
+import { colors } from "../../styles";
 import TextInputPassword from "../../components/TextInputPassword";
 import {
   loginByEmailAndPassword,
@@ -42,6 +37,9 @@ import {
   loginByGoogle,
 } from "./querys";
 import { DataContext } from "../../context/Data/dataContext";
+
+import { ChevronLeft } from "lucide-react-native";
+import When from "../../components/When";
 interface IForm {
   email: string;
   password: string;
@@ -54,7 +52,6 @@ const schema = yup
   })
   .required();
 
-const LOGO = require("../../../assets/images/logo.png");
 const ICONS = {
   apple: require("../../../assets/images/appleIcon.png"),
   google: require("../../../assets/images/googleIcon.png"),
@@ -104,61 +101,57 @@ const Login = () => {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          <LogoHeader>
-            <Logo source={LOGO} />
-            <TextHeader ml={metrics.baseMargin}>Uallet</TextHeader>
-          </LogoHeader>
-          <HeaderTitleContainer>
-            <Text>
-              É um prazer ter você aqui novamente.{"\n"}Realize seu login
-              abaixo!
+          <VStack space={5}>
+            <TouchableOpacity>
+              <ChevronLeft color="white" />
+            </TouchableOpacity>
+            <Text fontSize="36" fontWeight="700">
+              Realize{"\n"}seu login!
             </Text>
-          </HeaderTitleContainer>
+          </VStack>
           <ContainerCenter>
-            <FormContainer>
-              <TextInput
-                placeholder="E-mail"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="email"
-                control={control}
-                errors={errors.email}
-              />
-              <TextInputPassword
-                placeholder="Senha"
-                onSubmitEditing={handleSubmit(loginUser)}
-                returnKeyType="done"
-                name="password"
-                control={control}
-                errors={errors}
-                helperText="Informe todos os campos"
-              />
-              <Button isLoading={loading} onPress={handleSubmit(loginUser)}>
-                <ButtonText>ENTRAR</ButtonText>
-              </Button>
-            </FormContainer>
-            <TouchableOpacity onPress={() => setSheetOpen(true)}>
-              <Text fontSize={fonts.regular} mb={metrics.baseMargin}>
-                Prefere entrar com as redes sociais?
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigate("Forgot")}>
-              <Text fontSize={fonts.regular} mb={metrics.baseMargin}>
-                Esqueceu sua senha?
-              </Text>
-            </TouchableOpacity>
+            <TextInput
+              placeholder="E-mail"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              name="email"
+              control={control}
+              errors={errors.email}
+            />
+            <TextInputPassword
+              placeholder="Senha"
+              onSubmitEditing={handleSubmit(loginUser)}
+              returnKeyType="done"
+              name="password"
+              control={control}
+              errors={errors}
+              helperText="Informe todos os campos"
+            />
+            <VStack width="100%" alignItems="flex-end">
+              <TouchableOpacity onPress={() => navigate("Forgot")}>
+                <Text>Esqueceu sua senha</Text>
+              </TouchableOpacity>
+            </VStack>
           </ContainerCenter>
+          <VStack alignItems="center" width="100%" mb={8} space={2}>
+            <Button isLoading={loading} onPress={handleSubmit(loginUser)}>
+              <ButtonText>Entrar</ButtonText>
+            </Button>
+            <TouchableOpacity onPress={() => setSheetOpen(true)}>
+              <Text>Prefere entrar com as redes sociais?</Text>
+            </TouchableOpacity>
+          </VStack>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
       <Actionsheet isOpen={sheetOpen} onClose={() => setSheetOpen(false)}>
         <Actionsheet.Content backgroundColor={colors.transpDark}>
           <SheetView>
-            {Platform.OS === "ios" && (
+            <When is={Platform.OS === "ios"}>
               <SocialContainer backgroundColor={colors.black}>
                 <AppleLogo source={ICONS.apple} />
               </SocialContainer>
-            )}
+            </When>
             <SocialContainer
               backgroundColor={colors.white}
               onPress={loginByGoogle}

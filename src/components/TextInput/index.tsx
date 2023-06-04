@@ -7,7 +7,7 @@ import {
 import { Controller } from "react-hook-form";
 import { FormControl as NativeFormControl } from "native-base";
 
-import { colors, metrics } from "../../styles";
+import { metrics } from "../../styles";
 import NativeIcon from "../Icon";
 import styled from "styled-components";
 
@@ -31,7 +31,6 @@ const CalendarIcon = ({
     <Icon
       name="calendar"
       size={18}
-      color={colors.gray}
       onPress={() => setCalendar((calendarState: boolean) => !calendarState)}
     />
   );

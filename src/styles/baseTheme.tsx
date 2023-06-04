@@ -41,15 +41,14 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
     },
     components: {
       Button: {
-        baseStyle: {
-          rounded: "md",
-        },
         defaultProps: {
           minW: "56",
-          minH: "10",
+          minH: "12",
           shadow: "4",
-          colorScheme: "blue",
+          borderRadius: "13",
+          bgColor: theme.blue,
           marginBottom: metrics.baseMargin,
+          width: "full",
         },
       },
       Text: {
@@ -63,16 +62,18 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
       Input: {
         defaultProps: {
           _focus: {
-            backgroundColor: "transparent",
             borderColor: colors.strongBlue,
           },
+          placeholderTextColor: theme.text,
+          backgroundColor: theme.secondary,
           selectionColor: colors.lightBlue,
           color: theme.text,
-          borderColor: colors.gray,
+          borderColor: "transparent",
           fontFamily: "body",
-          fontWeight: 700,
-          borderRadius: "md",
-          minH: "10",
+          fontWeight: 400,
+          fontSize: 14,
+          borderRadius: "13",
+          minH: "12",
           width: "full",
         },
       },
