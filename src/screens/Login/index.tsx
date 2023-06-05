@@ -18,6 +18,7 @@ import { UserContext } from "../../context/User/userContext";
 import { setStorage } from "../../utils/storage.helper";
 import {
   AppleLogo,
+  BackgroundEffect,
   FacebookLogo,
   GoogleLogo,
   SheetView,
@@ -101,11 +102,12 @@ const Login = () => {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
+          <BackgroundEffect />
           <VStack space={5}>
             <TouchableOpacity>
               <ChevronLeft color="white" />
             </TouchableOpacity>
-            <Text fontSize="36" fontWeight="700">
+            <Text fontSize="36" fontWeight="700" color="white">
               Realize{"\n"}seu login!
             </Text>
           </VStack>

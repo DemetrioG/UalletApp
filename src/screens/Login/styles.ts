@@ -3,6 +3,7 @@ import { Flex } from "native-base";
 import styled from "styled-components";
 
 import { metrics } from "../../styles";
+import { View } from "react-native";
 
 export const SheetView = styled(Flex)`
   width: 100%;
@@ -38,4 +39,15 @@ export const FacebookLogo = styled(Image)`
 export const GoogleLogo = styled(Image)`
   width: 60%;
   height: 100%;
+`;
+
+export const BackgroundEffect = styled(View)`
+  position: absolute;
+  top: -10%;
+  left: -20%;
+  border-radius: 200%;
+  width: 400px;
+  height: 400px;
+  background-color: ${({ theme: { theme } }) =>
+    theme.isOnDarkTheme ? theme.tertiary : theme.blue};
 `;
