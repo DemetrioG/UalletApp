@@ -39,6 +39,7 @@ export const BackgroundContainer = styled(Flex)`
   padding: ${metrics.topBottomPadding}px ${metrics.basePadding}px 0px
     ${metrics.basePadding}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
+  overflow: hidden;
 `;
 
 export const ContainerCenter = styled(Center)`

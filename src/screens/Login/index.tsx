@@ -104,7 +104,7 @@ const Login = () => {
         <BackgroundContainer>
           <BackgroundEffect />
           <VStack space={5}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigate("Index")}>
               <ChevronLeft color="white" />
             </TouchableOpacity>
             <Text fontSize="36" fontWeight="700" color="white">
