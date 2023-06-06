@@ -99,6 +99,7 @@ const Register = () => {
             name="name"
             control={control}
             errors={errors.name}
+            isRequired
           />
           <TextInput
             placeholder="E-mail"
@@ -108,12 +109,14 @@ const Register = () => {
             name="email"
             control={control}
             errors={errors.email}
+            isRequired
           />
           <TextInputPassword
             placeholder="Senha"
             name="password"
             control={control}
             errors={errors.password}
+            isRequired
           />
           <TextInputPassword
             placeholder="Confirme sua senha"
@@ -123,6 +126,7 @@ const Register = () => {
             control={control}
             errors={errors.password}
             helperText="Informe todos os campos"
+            isRequired
           />
           <VStack width="100%">
             <PasswordRules mb={5} content={passwordText} />

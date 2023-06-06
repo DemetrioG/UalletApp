@@ -1,6 +1,10 @@
 import * as React from "react";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Button, Text } from "native-base";
+import {
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
+import { Button, Text, VStack } from "native-base";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -9,18 +13,15 @@ import Toast from "react-native-toast-message";
 import TextInput from "../../components/TextInput";
 import {
   BackgroundContainer,
+  BackgroundEffect,
   ButtonText,
   ContainerCenter,
-  FormContainer,
-  HeaderTitleContainer,
-  LogoHeader,
   StyledKeyboardAvoidingView,
-  TextHeader,
 } from "../../styles/general";
 import { resetPassword } from "./querys";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { metrics } from "../../styles";
+import { ChevronLeft } from "lucide-react-native";
 interface IForm {
   email: string;
 }
@@ -66,34 +67,32 @@ const ForgotPassword = () => {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          <LogoHeader>
-            <TextHeader mt={metrics.baseMargin} fontSize={"2xl"}>
-              Recuperar senha
-            </TextHeader>
-          </LogoHeader>
-          <HeaderTitleContainer>
-            <Text>
-              Digite o e-mail cadastrado na sua conta.{"\n"}
-              Enviaremos um e-mail para recuperação da senha.
+          <BackgroundEffect />
+          <VStack space={5}>
+            <TouchableOpacity onPress={() => navigate("Login")}>
+              <ChevronLeft color="white" />
+            </TouchableOpacity>
+            <Text fontSize="36" fontWeight="700" color="white">
+              Recuperar{"\n"}senha
             </Text>
-          </HeaderTitleContainer>
+            <Text color="white">Verifique sua caixa de spam!</Text>
+          </VStack>
           <ContainerCenter>
-            <FormContainer>
-              <TextInput
-                placeholder="E-mail"
-                keyboardType="email-address"
-                autoCorrect={false}
-                autoCapitalize="none"
-                name="email"
-                control={control}
-                errors={errors}
-                helperText="Informe um e-mail válido"
-              />
-              <Button isLoading={loading} onPress={handleSubmit(sendPassword)}>
-                <ButtonText>ENVIAR</ButtonText>
-              </Button>
-            </FormContainer>
+            <TextInput
+              placeholder="E-mail"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              name="email"
+              control={control}
+              errors={errors}
+              helperText="Informe um e-mail válido"
+              isRequired
+            />
           </ContainerCenter>
+          <Button isLoading={loading} onPress={handleSubmit(sendPassword)}>
+            <ButtonText>ENVIAR</ButtonText>
+          </Button>
         </BackgroundContainer>
       </TouchableWithoutFeedback>
     </StyledKeyboardAvoidingView>

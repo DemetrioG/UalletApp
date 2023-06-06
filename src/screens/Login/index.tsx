@@ -120,6 +120,7 @@ const Login = () => {
               name="email"
               control={control}
               errors={errors.email}
+              isRequired
             />
             <TextInputPassword
               placeholder="Senha"
@@ -129,6 +130,7 @@ const Login = () => {
               control={control}
               errors={errors}
               helperText="Informe todos os campos"
+              isRequired
             />
             <VStack width="100%" alignItems="flex-end">
               <TouchableOpacity onPress={() => navigate("Forgot")}>

@@ -10,6 +10,7 @@ import { FormControl as NativeFormControl } from "native-base";
 import { metrics } from "../../styles";
 import NativeIcon from "../Icon";
 import styled from "styled-components";
+import When from "../When";
 
 const Icon = styled(NativeIcon)`
   position: absolute;
@@ -47,35 +48,50 @@ const UTextInput = (
   }
 ) => {
   const [isInvalid, setIsInvalid] = React.useState(false);
+  const {
+    masked,
+    withIcon,
+    helperText,
+    errors,
+    setCalendar,
+    isRequired,
+    placeholder,
+    ...restProps
+  } = props;
 
   React.useEffect(() => {
-    if (props.errors && Object.keys(props.errors).length > 0) {
+    if (errors && Object.keys(errors).length > 0) {
       setIsInvalid(true);
     } else {
       setIsInvalid(false);
     }
-  }, [props.errors]);
+  }, [errors]);
 
   return (
     <>
       <FormControl isInvalid={isInvalid}>
         <>
-          {props.masked ? (
+          <When is={!!masked}>
             <TextInputMask
-              {...props}
+              {...restProps}
               customTextInput={Input}
-              type={props.masked}
+              type={masked}
+              placeholder={isRequired ? `${placeholder} *` : placeholder}
             />
-          ) : (
-            <Input {...props} />
-          )}
-          {props.masked === "datetime" && props.withIcon && (
-            <CalendarIcon setCalendar={props.setCalendar!} />
-          )}
+          </When>
+          <When is={!masked}>
+            <Input
+              {...restProps}
+              placeholder={isRequired ? `${placeholder} *` : placeholder}
+            />
+          </When>
+          <When is={masked === "datetime" && !!withIcon}>
+            <CalendarIcon setCalendar={setCalendar!} />
+          </When>
         </>
-        {props.helperText && (
+        {helperText && (
           <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {props.helperText}
+            {helperText}
           </FormControl.ErrorMessage>
         )}
       </FormControl>
