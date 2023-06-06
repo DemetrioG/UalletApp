@@ -244,3 +244,14 @@ export const Slider = styled(NativeSlider).attrs<{ colorVariant?: string }>(
     maximumTrackTintColor: theme.gray,
   })
 )<{ colorVariant?: string }>``;
+
+export const BackgroundEffect = styled(View)`
+  position: absolute;
+  top: -10%;
+  left: -20%;
+  border-radius: 200%;
+  width: 400px;
+  height: 400px;
+  background-color: ${({ theme: { theme } }) =>
+    theme.isOnDarkTheme ? theme.tertiary : theme.blue};
+`;

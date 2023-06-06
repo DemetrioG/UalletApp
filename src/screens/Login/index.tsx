@@ -18,7 +18,6 @@ import { UserContext } from "../../context/User/userContext";
 import { setStorage } from "../../utils/storage.helper";
 import {
   AppleLogo,
-  BackgroundEffect,
   FacebookLogo,
   GoogleLogo,
   SheetView,
@@ -29,6 +28,7 @@ import {
   StyledKeyboardAvoidingView,
   ContainerCenter,
   ButtonText,
+  BackgroundEffect,
 } from "../../styles/general";
 import { colors } from "../../styles";
 import TextInputPassword from "../../components/TextInputPassword";

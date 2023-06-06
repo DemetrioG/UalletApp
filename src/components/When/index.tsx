@@ -1,5 +1,3 @@
-import { PropsWithChildren } from "react";
-
 const When = ({ children, is }: { children: JSX.Element; is: boolean }) => {
   return is ? children : <></>;
 };

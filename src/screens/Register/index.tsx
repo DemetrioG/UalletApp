@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Button, Text } from "native-base";
+import { Button, Text, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -12,17 +12,14 @@ import TextInput from "../../components/TextInput";
 import TextInputPassword from "../../components/TextInputPassword";
 import {
   BackgroundContainer,
+  BackgroundEffect,
   ButtonText,
   ContainerCenter,
-  FormContainer,
-  HeaderTitleContainer,
-  Logo,
-  LogoHeader,
-  TextHeader,
 } from "../../styles/general";
 import PasswordRules from "./PasswordRules";
 import { registerUser } from "./query";
-import { metrics } from "../../styles";
+import { TouchableOpacity } from "react-native";
+import { ChevronLeft } from "lucide-react-native";
 
 export interface IRegister {
   name: string;
@@ -86,54 +83,54 @@ const Register = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BackgroundContainer>
-        <LogoHeader>
-          <Logo source={LOGO} />
-          <TextHeader ml={metrics.baseMargin}>Uallet</TextHeader>
-        </LogoHeader>
-        <HeaderTitleContainer>
-          <Text>
-            Informe seus dados, que o resto{"\n"}a gente cuida para você!
+        <BackgroundEffect />
+        <VStack space={5}>
+          <TouchableOpacity>
+            <ChevronLeft color="white" />
+          </TouchableOpacity>
+          <Text fontSize="36" fontWeight="700" color="white">
+            Crie sua{"\n"}conta!
           </Text>
-        </HeaderTitleContainer>
+        </VStack>
         <ContainerCenter>
-          <FormContainer>
-            <TextInput
-              placeholder="Nome completo"
-              maxLength={40}
-              name="name"
-              control={control}
-              errors={errors.name}
-            />
-            <TextInput
-              placeholder="E-mail"
-              keyboardType="email-address"
-              autoCorrect={false}
-              autoCapitalize="none"
-              name="email"
-              control={control}
-              errors={errors.email}
-            />
-            <TextInputPassword
-              placeholder="Senha"
-              name="password"
-              control={control}
-              errors={errors.password}
-            />
-            <TextInputPassword
-              placeholder="Confirme sua senha"
-              onSubmitEditing={handleSubmit(submit)}
-              returnKeyType="done"
-              name="confirm"
-              control={control}
-              errors={errors.password}
-              helperText="Informe todos os campos"
-            />
+          <TextInput
+            placeholder="Nome completo"
+            maxLength={40}
+            name="name"
+            control={control}
+            errors={errors.name}
+          />
+          <TextInput
+            placeholder="E-mail"
+            keyboardType="email-address"
+            autoCorrect={false}
+            autoCapitalize="none"
+            name="email"
+            control={control}
+            errors={errors.email}
+          />
+          <TextInputPassword
+            placeholder="Senha"
+            name="password"
+            control={control}
+            errors={errors.password}
+          />
+          <TextInputPassword
+            placeholder="Confirme sua senha"
+            onSubmitEditing={handleSubmit(submit)}
+            returnKeyType="done"
+            name="confirm"
+            control={control}
+            errors={errors.password}
+            helperText="Informe todos os campos"
+          />
+          <VStack width="100%">
             <PasswordRules mb={5} content={passwordText} />
-            <Button isLoading={loading} onPress={handleSubmit(submit)}>
-              <ButtonText>CRIAR CONTA</ButtonText>
-            </Button>
-          </FormContainer>
+          </VStack>
         </ContainerCenter>
+        <Button isLoading={loading} onPress={handleSubmit(submit)}>
+          <ButtonText>Criar conta</ButtonText>
+        </Button>
       </BackgroundContainer>
     </TouchableWithoutFeedback>
   );

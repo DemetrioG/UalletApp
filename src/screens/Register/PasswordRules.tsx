@@ -1,15 +1,10 @@
 import * as React from "react";
-import { Flex, Text, VStack } from "native-base";
+import { HStack, Text, VStack } from "native-base";
 import { ProgressBar } from "./styles";
-import { fonts } from "../../styles";
-
-const dataRules = [
-  "Uma letra maiúscula",
-  "Uma letra minúscula",
-  "Um caracter especial",
-  "Um número",
-  "Oito caracteres",
-];
+import { Info } from "lucide-react-native";
+import { useTheme } from "styled-components";
+import { IThemeProvider } from "../../styles/baseTheme";
+import Tooltip from "../../components/Tooltip";
 
 /**
  * https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
@@ -42,6 +37,7 @@ function PasswordRules({
   content = "",
   ...props
 }: { content: string } & React.ComponentProps<typeof VStack>) {
+  const { theme }: IThemeProvider = useTheme();
   const [passwordStrength, setPasswordStrenght] = React.useState(0);
   const hasLength = content.length;
 
@@ -55,9 +51,18 @@ function PasswordRules({
     <VStack space={1} {...props}>
       {!!hasLength && (
         <>
-          <Text fontSize={fonts.regular} fontWeight="bold">
-            {passwordStrength && PasswordStrengthLabel[passwordStrength]}
-          </Text>
+          <Tooltip
+            label={
+              "Sua senha deve conter pelo menos:\n  Uma letra maiúscula\n  Uma letra minúscula\n  Um caracter especial\n  Um número\n  Oito caracteres"
+            }
+          >
+            <HStack space={2} mb={1} mt={2}>
+              <Info color={theme?.text} />
+              <Text fontSize="16" fontWeight="600">
+                {passwordStrength && PasswordStrengthLabel[passwordStrength]}
+              </Text>
+            </HStack>
+          </Tooltip>
           <ProgressBar
             value={passwordStrength}
             strength={passwordStrength}
@@ -65,18 +70,6 @@ function PasswordRules({
           />
         </>
       )}
-      <Text fontSize="sm" fontWeight={700}>
-        Sua senha deve conter pelo menos
-      </Text>
-      {dataRules.map((rule, index) => (
-        <Flex key={index} direction="row" alignItems="center">
-          <Text fontSize={5} mr={1}>
-            {"\u2B24 "}
-            {"  "}
-          </Text>
-          <Text fontSize={"xs"}>{rule}</Text>
-        </Flex>
-      ))}
     </VStack>
   );
 }
