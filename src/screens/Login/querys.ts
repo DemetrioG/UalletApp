@@ -1,15 +1,9 @@
 import firebase from "../../services/firebase";
 import { convertDate, convertDateToDatabase } from "../../utils/date.helper";
 import * as Device from "expo-device";
+import { TLoggedSucceed, TLoginByEmailAndPassword } from "./types";
 //import * as AuthSession from "expo-auth-session";
 //import * as Facebook from "expo-facebook";
-
-type TLoginByEmailAndPassword = {
-  email: string;
-  password: string;
-  expoPushToken: string;
-};
-type TLoggedSucceed = { uid: string; date: Date };
 
 export const loginByEmailAndPassword = async (
   props: TLoginByEmailAndPassword

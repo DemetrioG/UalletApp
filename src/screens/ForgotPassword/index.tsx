@@ -79,7 +79,7 @@ const ForgotPassword = () => {
           </VStack>
           <ContainerCenter>
             <TextInput
-              placeholder="E-mail"
+              placeholder="E-mail cadastrado"
               keyboardType="email-address"
               autoCorrect={false}
               autoCapitalize="none"
