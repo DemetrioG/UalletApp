@@ -1,5 +1,5 @@
 import firebase from "../../services/firebase";
-import { IRegister } from ".";
+import { IRegister } from "./Form";
 
 async function _registerUser(props: IRegister) {
   const { name, email, password, confirm } = props;
