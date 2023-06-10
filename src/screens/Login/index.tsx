@@ -1,8 +1,8 @@
 import { FormProvider } from "react-hook-form";
-import LoginForm from "./Form";
+import { LoginForm } from "./Form";
 import { useFormLogin } from "./hooks/useLogin";
 
-const Login = () => {
+export const Login = () => {
   const { formMethods } = useFormLogin();
 
   return (
@@ -11,5 +11,3 @@ const Login = () => {
     </FormProvider>
   );
 };
-
-export default Login;

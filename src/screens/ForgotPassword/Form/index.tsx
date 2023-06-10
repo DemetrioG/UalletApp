@@ -23,7 +23,7 @@ import { usePromise } from "../../../hooks/usePromise";
 import { ForgotPasswordDTO } from "../types";
 import { useFormContext } from "react-hook-form";
 
-const ForgotPasswordForm = () => {
+export const ForgotPasswordForm = () => {
   const { isLoading, handleExecute } = usePromise(sendPassword);
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const formMethods = useFormContext();
@@ -83,5 +83,3 @@ const ForgotPasswordForm = () => {
     </StyledKeyboardAvoidingView>
   );
 };
-
-export default ForgotPasswordForm;

@@ -1,8 +1,8 @@
 import { FormProvider } from "react-hook-form";
-import ForgotPasswordForm from "./Form";
+import { ForgotPasswordForm } from "./Form";
 import { useFormForgotPassword } from "./hooks/useForgotPassword";
 
-const ForgotPassword = () => {
+export const ForgotPassword = () => {
   const { formMethods } = useFormForgotPassword();
   return (
     <FormProvider {...formMethods}>
@@ -10,5 +10,3 @@ const ForgotPassword = () => {
     </FormProvider>
   );
 };
-
-export default ForgotPassword;

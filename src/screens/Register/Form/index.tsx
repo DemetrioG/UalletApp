@@ -21,7 +21,7 @@ import { ChevronLeft } from "lucide-react-native";
 import { usePromise } from "../../../hooks/usePromise";
 import { RegisterDTO } from "../types";
 
-const RegisterForm = () => {
+export const RegisterForm = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { isLoading, handleExecute } = usePromise(register);
   const formMethods = useFormContext<RegisterDTO>();
@@ -109,5 +109,3 @@ const RegisterForm = () => {
     </TouchableWithoutFeedback>
   );
 };
-
-export default RegisterForm;

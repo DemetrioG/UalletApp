@@ -41,7 +41,7 @@ import {
 } from "../querys";
 import { LoginDTO } from "../types";
 
-const LoginForm = () => {
+export const LoginForm = () => {
   const formMethods = useFormContext<LoginDTO>();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setUser } = React.useContext(UserContext);
@@ -156,5 +156,3 @@ const ICONS = {
   google: require("../../../../assets/images/googleIcon.png"),
   facebook: require("../../../../assets/images/facebookIcon.png"),
 };
-
-export default LoginForm;

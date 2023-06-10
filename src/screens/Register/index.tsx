@@ -1,8 +1,8 @@
 import { FormProvider } from "react-hook-form";
-import RegisterForm from "./Form";
+import { RegisterForm } from "./Form";
 import { useFormRegister } from "./hooks/useRegister";
 
-const Register = () => {
+export const Register = () => {
   const { formMethods } = useFormRegister();
   return (
     <FormProvider {...formMethods}>
@@ -10,5 +10,3 @@ const Register = () => {
     </FormProvider>
   );
 };
-
-export default Register;

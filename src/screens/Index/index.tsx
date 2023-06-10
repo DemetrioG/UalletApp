@@ -10,7 +10,7 @@ import { LoginText } from "./styles";
 
 import Cards from "../../../assets/images/cards.png";
 
-const Index = () => {
+export const Index = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   return (
@@ -34,5 +34,3 @@ const Index = () => {
     </BackgroundContainerCenter>
   );
 };
-
-export default Index;
