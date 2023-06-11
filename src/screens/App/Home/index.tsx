@@ -33,7 +33,7 @@ import {
   Skeleton,
   ValueText,
   BackgroundContainer,
-} from "../../../styles/general";
+} from "@styles/general";
 import {
   checkFutureDebitsToConsolidate,
   completeUser,
@@ -42,7 +42,7 @@ import {
 import { getBalance } from "@utils/query.helper";
 import EntrySegmentChart from "./EntrySegmentChart";
 import { useTheme } from "styled-components";
-import { IThemeProvider } from "../../../styles/baseTheme";
+import { IThemeProvider } from "@styles/baseTheme";
 import { Path, Svg, SvgFromUri, SvgUri } from "react-native-svg";
 import { Menu } from "../../../components/Menu";
 

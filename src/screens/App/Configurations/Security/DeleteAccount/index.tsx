@@ -21,7 +21,7 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-} from "../../../../../styles/general";
+} from "@styles/general";
 import { deleteAccount } from "./query";
 
 interface IForm {

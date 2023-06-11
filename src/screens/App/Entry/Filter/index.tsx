@@ -18,7 +18,7 @@ import {
   HalfContainer,
   ModalContainer,
   ModalView,
-} from "../../../../styles/general";
+} from "@styles/general";
 import { ButtonContainer, SpaceContainer } from "./styles";
 import { metrics } from "../../../../styles";
 import {

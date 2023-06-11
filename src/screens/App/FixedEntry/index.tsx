@@ -25,7 +25,7 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-} from "../../../styles/general";
+} from "@styles/general";
 import Icon from "../../../components/Icon";
 import TextInput from "../../../components/TextInput";
 import {

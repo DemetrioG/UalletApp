@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import Swipeable from "../../../components/Button/Swipeable";
-import { BackgroundContainerCenter } from "../../../styles/general";
+import { BackgroundContainerCenter } from "@styles/general";
 import { LoginText } from "./styles";
 
 import Cards from "../../../../assets/images/cards.png";

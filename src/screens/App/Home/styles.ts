@@ -6,7 +6,7 @@ import {
   ValueContainer as DefaultValueContainer,
   DescriptionContainer as DefaultDescriptionContainer,
   BackgroundContainer as DefaultBackgroundContainer,
-} from "../../../styles/general";
+} from "@styles/general";
 
 export const BackgroundContainer = styled(DefaultBackgroundContainer)``;
 

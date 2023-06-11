@@ -14,7 +14,7 @@ import {
   PieCenter,
 } from "./styles";
 import { fonts, metrics } from "../../styles";
-import { Skeleton } from "../../styles/general";
+import { Skeleton } from "@styles/general";
 
 interface ISlices {
   slices?: [

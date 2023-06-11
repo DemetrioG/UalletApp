@@ -37,7 +37,7 @@ import {
   ButtonDelete,
   BackgroundContainer,
   ViewTab,
-} from "../../../styles/general";
+} from "@styles/general";
 import { deleteEntry, INewEntry, registerNewEntry, updateEntry } from "./query";
 import { DataContext } from "../../../context/Data/dataContext";
 import TabView, { IRoutes } from "../../../components/TabView";

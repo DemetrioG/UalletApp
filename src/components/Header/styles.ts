@@ -3,7 +3,7 @@ import { View } from "react-native";
 import styled from "styled-components";
 
 import { metrics } from "../../styles";
-import { Card } from "../../styles/general";
+import { Card } from "@styles/general";
 
 export const HeaderView = styled(View)`
   flex-direction: row;

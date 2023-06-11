@@ -10,7 +10,7 @@ import {
   Slider,
   TextHeaderScreen,
   ViewTab,
-} from "../../../../../styles/general";
+} from "@styles/general";
 import { registerAlert } from "./query";
 import { InfoNumber } from "./styles";
 

@@ -12,7 +12,7 @@ import {
   ButtonIcon,
   TextHeaderScreen,
   ViewTab,
-} from "../../../../styles/general";
+} from "@styles/general";
 import { deleteData, getData } from "./query";
 
 interface IData {

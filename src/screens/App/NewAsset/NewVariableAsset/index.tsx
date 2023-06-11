@@ -25,7 +25,7 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-} from "../../../../styles/general";
+} from "@styles/general";
 import { Total } from "./styles";
 import { AssetSegment } from "../../../../types/types";
 

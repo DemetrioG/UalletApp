@@ -3,7 +3,7 @@ import { Modal, ScrollView } from "react-native";
 
 import { getStorage, setStorage } from "@utils/storage.helper";
 import { HeaderView, ItemPicker, TextItem, Title } from "./styles";
-import { ModalContainer, ModalView } from "../../styles/general";
+import { ModalContainer, ModalView } from "@styles/general";
 import Icon from "../Icon";
 import { DataContext } from "../../context/Data/dataContext";
 

@@ -18,7 +18,7 @@ import {
   StyledKeyboardAvoidingView,
   TextHeaderScreen,
   ViewTab,
-} from "../../../../../styles/general";
+} from "@styles/general";
 import PasswordRules from "../../../../Auth/Register/PasswordRules";
 import { changePassword } from "./querys";
 

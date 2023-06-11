@@ -14,7 +14,7 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-} from "../../../styles/general";
+} from "@styles/general";
 import { TYPE_OF_INVEST } from "../../../components/Picker/options";
 
 const NewAsset = () => {

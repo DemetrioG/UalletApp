@@ -12,7 +12,7 @@ import {
   ModalContainer,
   ModalView,
   TextHeaderScreen,
-} from "../../styles/general";
+} from "@styles/general";
 import {
   Circle,
   CirclesContainer,

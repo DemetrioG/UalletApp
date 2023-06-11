@@ -10,7 +10,7 @@ import { FieldError } from "react-hook-form";
 import { Modal, ScrollView, Keyboard } from "react-native";
 
 import { colors, fonts, metrics } from "../../styles";
-import { ModalContainer, ModalView } from "../../styles/general";
+import { ModalContainer, ModalView } from "@styles/general";
 import Icon from "../Icon";
 import {
   ItemPicker,

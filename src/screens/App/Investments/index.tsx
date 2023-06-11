@@ -11,7 +11,7 @@ import {
   ButtonText,
   TextHeaderScreen,
   ViewTab,
-} from "../../../styles/general";
+} from "@styles/general";
 import { metrics } from "../../../styles";
 import { LoaderContext } from "../../../context/Loader/loaderContext";
 import { DataContext } from "../../../context/Data/dataContext";

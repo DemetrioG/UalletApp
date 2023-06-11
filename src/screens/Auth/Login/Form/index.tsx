@@ -32,7 +32,7 @@ import {
   ContainerCenter,
   ButtonText,
   BackgroundEffect,
-} from "../../../../styles/general";
+} from "@styles/general";
 import { colors } from "../../../../styles";
 import {
   loginByEmailAndPassword,
