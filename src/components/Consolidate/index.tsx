@@ -3,7 +3,7 @@ import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 import { Text } from "native-base";
 import Toast from "react-native-toast-message";
 
-import firebase from "../../services/firebase";
+import firebase from "@services/firebase";
 import { IEntryList } from "../../screens/Entry";
 import Icon from "../Icon";
 import { numberToReal } from "../../utils/number.helper";

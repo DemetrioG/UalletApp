@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Collapse, HStack, ScrollView, Text, VStack } from "native-base";
 
-import firebase from "../../services/firebase";
+import firebase from "@services/firebase";
 import { getPrice, ITotal } from "./query";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";

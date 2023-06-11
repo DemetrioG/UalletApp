@@ -1,4 +1,4 @@
-import firebase from "../services/firebase";
+import firebase from "@services/firebase";
 
 export interface ITimestamp {
   nanoseconds: number;

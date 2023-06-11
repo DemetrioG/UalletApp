@@ -1,4 +1,4 @@
-import firebase from "../services/firebase";
+import firebase from "@services/firebase";
 import { numberToReal } from "./number.helper";
 import { getStorage } from "./storage.helper";
 

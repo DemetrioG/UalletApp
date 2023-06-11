@@ -1,4 +1,4 @@
-import firebase from "../../../services/firebase";
+import firebase from "@services/firebase";
 import { RegisterDTO } from "./types";
 
 async function _registerUser(props: RegisterDTO) {

@@ -1,4 +1,4 @@
-import firebase from "../../../services/firebase";
+import firebase from "@services/firebase";
 
 export const resetPassword = async (email: string): Promise<string> => {
   try {

@@ -4,7 +4,7 @@ import { HStack, VStack } from "native-base";
 import { TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 
-import firebase from "../../../../services/firebase";
+import firebase from "@services/firebase";
 import Icon from "../../../../components/Icon";
 import { ItemContainer, ItemText } from "../../../../components/Menu/styles";
 import {
