@@ -4,12 +4,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
 import { App as AppContent } from "./src/screens";
-import { UserContextProvider } from "./src/context/User/userContext";
-import { ConfirmContextProvider } from "./src/context/ConfirmDialog/confirmContext";
-import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
-import { DataContextProvider } from "./src/context/Data/dataContext";
+import { UserContextProvider } from "@context/User/userContext";
+import { ConfirmContextProvider } from "@context/ConfirmDialog/confirmContext";
+import { LoaderContextProvider } from "@context/Loader/loaderContext";
+import { DataContextProvider } from "@context/Data/dataContext";
 import BaseProvider from "@styles/baseTheme";
-import { ThemeContextProvider } from "./src/context/Theme/themeContext";
+import { ThemeContextProvider } from "@context/Theme/themeContext";
 
 LogBox.ignoreAllLogs(true);
 SplashScreen.preventAutoHideAsync();

@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { LoaderContext } from "../../../../context/Loader/loaderContext";
-import { DataContext } from "../../../../context/Data/dataContext";
+import { LoaderContext } from "@context/Loader/loaderContext";
+import { DataContext } from "@context/Data/dataContext";
 import { getData } from "./query";
 import SegmentChart from "@components/SegmentChart";
 

@@ -10,9 +10,9 @@ import InvestSummary from "@components/InvestSummary";
 import Consolidate from "@components/Consolidate";
 import LineChart from "@components/LineChart";
 import Icon from "@components/Icon";
-import { UserContext } from "../../../context/User/userContext";
-import { LoaderContext } from "../../../context/Loader/loaderContext";
-import { DataContext } from "../../../context/Data/dataContext";
+import { UserContext } from "@context/User/userContext";
+import { LoaderContext } from "@context/Loader/loaderContext";
+import { DataContext } from "@context/Data/dataContext";
 import { numberToReal } from "@utils/number.helper";
 import {
   CardHeaderView,

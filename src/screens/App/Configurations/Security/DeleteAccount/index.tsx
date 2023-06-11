@@ -9,11 +9,8 @@ import Toast from "react-native-toast-message";
 
 import Icon from "@components/Icon";
 import TextInputPassword from "@components/TextInputPassword";
-import { ConfirmContext } from "../../../../../context/ConfirmDialog/confirmContext";
-import {
-  initialUserState,
-  UserContext,
-} from "../../../../../context/User/userContext";
+import { ConfirmContext } from "@context/ConfirmDialog/confirmContext";
+import { initialUserState, UserContext } from "@context/User/userContext";
 import {
   BackgroundContainer,
   ButtonDelete,

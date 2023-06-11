@@ -15,7 +15,8 @@
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"],
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/components/*"],
+      "@context/*": ["src/context/*"]
     }
   },
   "exclude": [

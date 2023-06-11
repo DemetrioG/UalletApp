@@ -3,8 +3,8 @@ import NetInfo from "@react-native-community/netinfo";
 
 import AuthRoutes from "./AuthRoutes";
 import AppRoutes from "./AppTabRoutes";
-import { UserContext } from "../context/User/userContext";
-import { DataContext } from "../context/Data/dataContext";
+import { UserContext } from "@context/User/userContext";
+import { DataContext } from "@context/Data/dataContext";
 import { getStorage, removeAllStorage } from "@utils/storage.helper";
 import { setupPushNotifications } from "@utils/notification.helper";
 

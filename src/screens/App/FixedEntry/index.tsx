@@ -30,7 +30,7 @@ import Icon from "@components/Icon";
 import TextInput from "@components/TextInput";
 import { CLASSIFICATION, ENTRY_SEGMENT } from "@components/Picker/options";
 import { insertNewEntry, lastIdFromEntry } from "./querys";
-import { DataContext } from "../../../context/Data/dataContext";
+import { DataContext } from "@context/Data/dataContext";
 import { Schema } from "../NewEntry/styles";
 import { updateCurrentBalance } from "@utils/query.helper";
 

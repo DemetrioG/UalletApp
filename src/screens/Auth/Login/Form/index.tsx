@@ -15,8 +15,8 @@ import { ChevronLeft } from "lucide-react-native";
 import TextInput from "@components/TextInput";
 import TextInputPassword from "@components/TextInputPassword";
 import When from "@components/When";
-import { DataContext } from "../../../../context/Data/dataContext";
-import { UserContext } from "../../../../context/User/userContext";
+import { DataContext } from "@context/Data/dataContext";
+import { UserContext } from "@context/User/userContext";
 import { usePromise } from "../../../../hooks/usePromise";
 import { setStorage } from "@utils/storage.helper";
 import {
