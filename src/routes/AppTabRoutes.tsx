@@ -134,7 +134,7 @@ const AppRoutes = () => {
     >
       <BackgroundContainer>
         <ConfirmDialog />
-        <Header />
+        {/* <Header /> */}
       </BackgroundContainer>
       <StyledTabNavigation initialRouteName="HomeTab">
         <Tab.Screen

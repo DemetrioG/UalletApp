@@ -11,7 +11,7 @@ export interface IData {
 }
 
 export const initialDataState: IData = {
-  balance: "R$ 0,00",
+  balance: "R$0,00",
   equity: 0,
   isNetworkConnected: null,
   month: 0,

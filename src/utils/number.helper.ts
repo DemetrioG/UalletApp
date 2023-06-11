@@ -65,7 +65,7 @@ export function numberToReal(number: number, withoutSign?: boolean) {
     newValue = newValue.replace(/\s/g, "");
   }
 
-  return newValue;
+  return newValue.replace(/\s/g, "");
 }
 
 /**

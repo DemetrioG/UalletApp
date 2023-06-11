@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import Menu from "../Menu";
+import { Menu } from "../Menu";
 import DatePicker from "../DatePicker";
 import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";

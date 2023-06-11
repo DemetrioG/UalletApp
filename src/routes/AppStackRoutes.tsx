@@ -12,7 +12,7 @@ import DeleteAccountScreen from "../screens/Configurations/Security/DeleteAccoun
 import Entry from "../screens/Entry";
 import Filter from "../screens/Entry/Filter";
 import FixedEntry from "../screens/FixedEntry";
-import Home from "../screens/Home";
+import { Home } from "../screens/Home";
 import Investments from "../screens/Investments";
 import AssetInfoScreen from "../screens/Investments/AssetInfo";
 import AssetMovement from "../screens/Investments/AssetMovement";

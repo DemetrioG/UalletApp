@@ -8,9 +8,7 @@ import {
   BackgroundContainer as DefaultBackgroundContainer,
 } from "../../styles/general";
 
-export const BackgroundContainer = styled(DefaultBackgroundContainer)`
-  padding-top: 0px;
-`;
+export const BackgroundContainer = styled(DefaultBackgroundContainer)``;
 
 export const CardHeaderView = styled(View)<{ balance?: boolean }>`
   flex-direction: row;

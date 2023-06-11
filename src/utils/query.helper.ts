@@ -16,7 +16,7 @@ type TBalance = { month: number; year: number; modality: string };
 export const getBalance = async ({ month, year, modality }: TBalance) => {
   const user = await currentUser();
 
-  if (!user) return "R$ 0,00";
+  if (!user) return "R$0,00";
 
   const data = await firebase
     .firestore()
@@ -28,7 +28,7 @@ export const getBalance = async ({ month, year, modality }: TBalance) => {
 
   const response = data.data();
 
-  return response?.balance ? numberToReal(response?.balance || 0) : "R$ 0,00";
+  return response?.balance ? numberToReal(response?.balance || 0) : "R$0,00";
 };
 
 type UpdateCurrentBalanceProps = {

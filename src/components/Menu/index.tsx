@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Pressable, Text } from "native-base";
-import { useTheme } from "styled-components";
+import { Image, VStack, Pressable } from "native-base";
+import { IVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 import Modal from "react-native-modal";
 
 import Icon from "../Icon";
@@ -13,7 +13,6 @@ import {
 } from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
 import {
-  Avatar,
   AvatarMenu,
   AvatarMenuText,
   Container,
@@ -25,23 +24,17 @@ import {
   Name,
   ProfileContainer,
 } from "./styles";
-import { IThemeProvider } from "../../styles/baseTheme";
 import { useNavigation } from "@react-navigation/native";
 import { refreshAuthDevice } from "./query";
 
-const Menu = () => {
+export const Menu = ({ StackProps }: { StackProps: IVStackProps }) => {
   const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
-  const {
-    loader: { homeVisible },
-    setLoader,
-  } = React.useContext(LoaderContext);
+  const { setLoader } = React.useContext(LoaderContext);
   const { setConfirm } = React.useContext(ConfirmContext);
   const { user, setUser } = React.useContext(UserContext);
 
   const [visible, setVisible] = React.useState(false);
-
-  const { theme }: IThemeProvider = useTheme();
 
   function changeModality() {
     return setData((dataState) => ({
@@ -79,13 +72,9 @@ const Menu = () => {
   }
 
   return (
-    <>
+    <VStack {...StackProps}>
       <Pressable onPress={() => setVisible(!visible)}>
-        <Avatar backgroundColor={theme?.secondary}>
-          <Text fontSize={"sm"} fontWeight={700}>
-            {homeVisible ? "-" : user.name[0]}
-          </Text>
-        </Avatar>
+        <Image source={LOGO_SMALL} width="25px" h="30px" />
       </Pressable>
       <Modal
         isVisible={visible}
@@ -123,8 +112,8 @@ const Menu = () => {
           </MenuContainer>
         </Container>
       </Modal>
-    </>
+    </VStack>
   );
 };
 
-export default Menu;
+const LOGO_SMALL = require("../../../assets/images/logoSmall.png");
