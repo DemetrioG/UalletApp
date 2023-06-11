@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Picker from "../../../components/Picker";
-import Calendar from "../../../components/Calendar";
+import Picker from "@components/Picker";
+import Calendar from "@components/Calendar";
 import {
   dateValidation,
   convertDate,
@@ -26,12 +26,9 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "@styles/general";
-import Icon from "../../../components/Icon";
-import TextInput from "../../../components/TextInput";
-import {
-  CLASSIFICATION,
-  ENTRY_SEGMENT,
-} from "../../../components/Picker/options";
+import Icon from "@components/Icon";
+import TextInput from "@components/TextInput";
+import { CLASSIFICATION, ENTRY_SEGMENT } from "@components/Picker/options";
 import { insertNewEntry, lastIdFromEntry } from "./querys";
 import { DataContext } from "../../../context/Data/dataContext";
 import { Schema } from "../NewEntry/styles";

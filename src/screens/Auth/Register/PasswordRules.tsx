@@ -4,7 +4,7 @@ import { ProgressBar } from "./styles";
 import { Info } from "lucide-react-native";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "@styles/baseTheme";
-import Tooltip from "../../../components/Tooltip";
+import Tooltip from "@components/Tooltip";
 
 /**
  * https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a

@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Picker from "../../../components/Picker";
-import TextInput from "../../../components/TextInput";
+import Picker from "@components/Picker";
+import TextInput from "@components/TextInput";
 import { UserContext } from "../../../context/User/userContext";
 import { dateValidation } from "@utils/date.helper";
 import {
@@ -21,7 +21,7 @@ import {
   LogoHeader,
   StyledKeyboardAvoidingView,
 } from "@styles/general";
-import { GENDER, PROFILE } from "../../../components/Picker/options";
+import { GENDER, PROFILE } from "@components/Picker/options";
 import { updateUserData } from "./querys";
 
 interface IForm {

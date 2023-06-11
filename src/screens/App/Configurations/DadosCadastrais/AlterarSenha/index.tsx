@@ -8,8 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import * as yup from "yup";
 
-import Icon from "../../../../../components/Icon";
-import TextInputPassword from "../../../../../components/TextInputPassword";
+import Icon from "@components/Icon";
+import TextInputPassword from "@components/TextInputPassword";
 import {
   BackgroundContainer,
   ButtonText,

@@ -6,8 +6,8 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import TextInput from "../../../../components/TextInput";
-import TextInputPassword from "../../../../components/TextInputPassword";
+import TextInput from "@components/TextInput";
+import TextInputPassword from "@components/TextInputPassword";
 import {
   BackgroundContainer,
   BackgroundEffect,

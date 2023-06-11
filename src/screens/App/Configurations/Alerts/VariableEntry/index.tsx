@@ -3,7 +3,7 @@ import { Button, Center, HStack, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
-import Icon from "../../../../../components/Icon";
+import Icon from "@components/Icon";
 import {
   BackgroundContainer,
   ButtonText,

@@ -2,8 +2,8 @@ import * as React from "react";
 import { Button, HStack, ScrollView, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
-import Icon from "../../../../components/Icon";
-import { ItemContent } from "../../../../components/Positions/styles";
+import Icon from "@components/Icon";
+import { ItemContent } from "@components/Positions/styles";
 import {
   BackgroundContainer,
   ButtonText,
@@ -12,7 +12,7 @@ import {
 } from "@styles/general";
 import { ItemText } from "./styles";
 import { numberToReal } from "@utils/number.helper";
-import { IPosition } from "../../../../components/Positions";
+import { IPosition } from "@components/Positions";
 
 const AssetInfoScreen = ({
   route: { params },

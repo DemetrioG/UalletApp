@@ -7,7 +7,7 @@ import {
 import { Button, Text, VStack } from "native-base";
 
 import Toast from "react-native-toast-message";
-import TextInput from "../../../../components/TextInput";
+import TextInput from "@components/TextInput";
 import {
   BackgroundContainer,
   BackgroundEffect,

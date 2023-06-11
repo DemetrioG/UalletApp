@@ -6,10 +6,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import firebase from "@services/firebase";
 import { IEntryList } from "../Entry";
-import InvestSummary from "../../../components/InvestSummary";
-import Consolidate from "../../../components/Consolidate";
-import LineChart from "../../../components/LineChart";
-import Icon from "../../../components/Icon";
+import InvestSummary from "@components/InvestSummary";
+import Consolidate from "@components/Consolidate";
+import LineChart from "@components/LineChart";
+import Icon from "@components/Icon";
 import { UserContext } from "../../../context/User/userContext";
 import { LoaderContext } from "../../../context/Loader/loaderContext";
 import { DataContext } from "../../../context/Data/dataContext";
@@ -44,7 +44,7 @@ import EntrySegmentChart from "./EntrySegmentChart";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "@styles/baseTheme";
 import { Path, Svg, SvgFromUri, SvgUri } from "react-native-svg";
-import { Menu } from "../../../components/Menu";
+import { Menu } from "@components/Menu";
 
 const LOGO_SMALL = require("../../../../assets/images/logoSmall.png");
 

@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, HStack, ScrollView, Text, VStack } from "native-base";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import Positions from "../../../components/Positions";
+import Positions from "@components/Positions";
 import { numberToReal } from "@utils/number.helper";
 import {
   BackgroundContainer,
@@ -12,7 +12,7 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "@styles/general";
-import { metrics } from "../../../styles";
+import { metrics } from "@styles/index";
 import { LoaderContext } from "../../../context/Loader/loaderContext";
 import { DataContext } from "../../../context/Data/dataContext";
 import AssetSegmentChart from "./AssetSegmentChart";

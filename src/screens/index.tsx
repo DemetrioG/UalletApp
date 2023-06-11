@@ -2,7 +2,7 @@ import * as React from "react";
 import { Platform, StatusBar, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { SafeAreaView } from "react-navigation";
-import { toastConfig } from "../components/Toast/config";
+import { toastConfig } from "@components/Toast/config";
 
 import Routes from "../routes";
 import styled from "styled-components";

@@ -4,13 +4,13 @@ import {
   Skeleton,
   TextHeaderScreen,
   ViewTab,
-} from "../../../../../styles/general";
+} from "@styles/general";
 import { UserContext } from "../../../../../context/User/userContext";
 import { getUser } from "./query";
 import { HStack, ScrollView, VStack } from "native-base";
-import { ItemText } from "../../../../../components/Menu/styles";
-import { convertDateFromDatabase } from "../../../../../utils/date.helper";
-import Icon from "../../../../../components/Icon";
+import { ItemText } from "@components/Menu/styles";
+import { convertDateFromDatabase } from "@utils/date.helper";
+import Icon from "@components/Icon";
 import { useNavigation } from "@react-navigation/native";
 
 type UserInfo = {
