@@ -1,25 +1,25 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Complete from "../screens/Complete";
-import ConfiguracoesScreen from "../screens/Configurations";
-import AlertsScreen from "../screens/Configurations/Alerts";
-import VariableEntryScreen from "../screens/Configurations/Alerts/VariableEntry";
-import DadosCadastraisScreen from "../screens/Configurations/DadosCadastrais";
-import AlterarSenhaScreen from "../screens/Configurations/DadosCadastrais/AlterarSenha";
-import InformacoesPessoaisScreen from "../screens/Configurations/DadosCadastrais/InformacoesPessoais";
-import SecurityScreen from "../screens/Configurations/Security";
-import DeleteAccountScreen from "../screens/Configurations/Security/DeleteAccount";
-import Entry from "../screens/Entry";
-import Filter from "../screens/Entry/Filter";
-import FixedEntry from "../screens/FixedEntry";
-import { Home } from "../screens/Home";
-import Investments from "../screens/Investments";
-import AssetInfoScreen from "../screens/Investments/AssetInfo";
-import AssetMovement from "../screens/Investments/AssetMovement";
-import NewAsset from "../screens/NewAsset";
-import NewFixAsset from "../screens/NewAsset/NewFixAsset";
-import NewVariableAsset from "../screens/NewAsset/NewVariableAsset";
-import NewEntry from "../screens/NewEntry";
+import Complete from "../screens/App/Complete";
+import ConfiguracoesScreen from "../screens/App/Configurations";
+import AlertsScreen from "../screens/App/Configurations/Alerts";
+import VariableEntryScreen from "../screens/App/Configurations/Alerts/VariableEntry";
+import DadosCadastraisScreen from "../screens/App/Configurations/DadosCadastrais";
+import AlterarSenhaScreen from "../screens/App/Configurations/DadosCadastrais/AlterarSenha";
+import InformacoesPessoaisScreen from "../screens/App/Configurations/DadosCadastrais/InformacoesPessoais";
+import SecurityScreen from "../screens/App/Configurations/Security";
+import DeleteAccountScreen from "../screens/App/Configurations/Security/DeleteAccount";
+import Entry from "../screens/App/Entry";
+import Filter from "../screens/App/Entry/Filter";
+import FixedEntry from "../screens/App/FixedEntry";
+import { Home } from "../screens/App/Home";
+import Investments from "../screens/App/Investments";
+import AssetInfoScreen from "../screens/App/Investments/AssetInfo";
+import AssetMovement from "../screens/App/Investments/AssetMovement";
+import NewAsset from "../screens/App/NewAsset";
+import NewFixAsset from "../screens/App/NewAsset/NewFixAsset";
+import NewVariableAsset from "../screens/App/NewAsset/NewVariableAsset";
+import NewEntry from "../screens/App/NewEntry";
 
 const { Navigator: StackNavigator, Screen: StackScreen } =
   createNativeStackNavigator();

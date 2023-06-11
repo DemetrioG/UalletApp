@@ -3,7 +3,7 @@ import { LogBox } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
-import AppContent from "./src/screens/App";
+import { App as AppContent } from "./src/screens";
 import { UserContextProvider } from "./src/context/User/userContext";
 import { ConfirmContextProvider } from "./src/context/ConfirmDialog/confirmContext";
 import { LoaderContextProvider } from "./src/context/Loader/loaderContext";
