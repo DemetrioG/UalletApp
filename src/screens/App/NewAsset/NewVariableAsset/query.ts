@@ -1,12 +1,9 @@
 import { IForm } from ".";
 import firebase from "@services/firebase";
 import { IVariableIncome } from "../../../../types/assets";
-import { convertDateToDatabase } from "../../../../utils/date.helper";
-import {
-  averageBetweenNumbers,
-  realToNumber,
-} from "../../../../utils/number.helper";
-import { createCollection, currentUser } from "../../../../utils/query.helper";
+import { convertDateToDatabase } from "@utils/date.helper";
+import { averageBetweenNumbers, realToNumber } from "@utils/number.helper";
+import { createCollection, currentUser } from "@utils/query.helper";
 
 async function _registerAsset(props: IForm) {
   const { entrydate, segment, broker, asset, amount, price, total } = props;

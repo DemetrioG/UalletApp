@@ -6,7 +6,7 @@ import Toast from "react-native-toast-message";
 import firebase from "@services/firebase";
 import { IEntryList } from "../../screens/Entry";
 import Icon from "../Icon";
-import { numberToReal } from "../../utils/number.helper";
+import { numberToReal } from "@utils/number.helper";
 import {
   Label,
   ModalContainer,

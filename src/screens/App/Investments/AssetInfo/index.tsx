@@ -11,7 +11,7 @@ import {
   ViewTab,
 } from "../../../../styles/general";
 import { ItemText } from "./styles";
-import { numberToReal } from "../../../../utils/number.helper";
+import { numberToReal } from "@utils/number.helper";
 import { IPosition } from "../../../../components/Positions";
 
 const AssetInfoScreen = ({

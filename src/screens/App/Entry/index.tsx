@@ -11,9 +11,9 @@ import {
   convertDateToDatabase,
   dateMonthNumber,
   ITimestamp,
-} from "../../../utils/date.helper";
-import { numberToReal } from "../../../utils/number.helper";
-import { sortObjectByKey } from "../../../utils/array.helper";
+} from "@utils/date.helper";
+import { numberToReal } from "@utils/number.helper";
+import { sortObjectByKey } from "@utils/array.helper";
 import { defaultFilter, IActiveFilter } from "./Filter/helper";
 import {
   MoreContainer,
@@ -44,7 +44,7 @@ import {
 } from "../../../styles/general";
 import Icon from "../../../components/Icon";
 import { getEntryList } from "./querys";
-import { getBalance } from "../../../utils/query.helper";
+import { getBalance } from "@utils/query.helper";
 import { Text, VStack } from "native-base";
 import { metrics } from "../../../styles";
 import { TEntryType } from "../../..//types/types";

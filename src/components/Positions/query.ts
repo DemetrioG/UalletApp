@@ -1,13 +1,9 @@
 import firebase from "@services/firebase";
 import { IVariableIncome } from "../../types/assets";
 import { AssetSegment } from "../../types/types";
-import { getAtualDate } from "../../utils/date.helper";
-import {
-  getRent,
-  getRentPercentual,
-  realToNumber,
-} from "../../utils/number.helper";
-import { currentUser } from "../../utils/query.helper";
+import { getAtualDate } from "@utils/date.helper";
+import { getRent, getRentPercentual, realToNumber } from "@utils/number.helper";
+import { currentUser } from "@utils/query.helper";
 interface IPrices {
   atualPrice: number;
   dy: number;

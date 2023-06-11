@@ -13,7 +13,7 @@ import Icon from "../../../components/Icon";
 import { UserContext } from "../../../context/User/userContext";
 import { LoaderContext } from "../../../context/Loader/loaderContext";
 import { DataContext } from "../../../context/Data/dataContext";
-import { numberToReal } from "../../../utils/number.helper";
+import { numberToReal } from "@utils/number.helper";
 import {
   CardHeaderView,
   CardTextView,
@@ -39,7 +39,7 @@ import {
   completeUser,
   getLastEntry,
 } from "./querys";
-import { getBalance } from "../../../utils/query.helper";
+import { getBalance } from "@utils/query.helper";
 import EntrySegmentChart from "./EntrySegmentChart";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";

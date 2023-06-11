@@ -1,6 +1,6 @@
 import firebase from "@services/firebase";
-import { getFinalDateMonth } from "../../../utils/date.helper";
-import { currentUser } from "../../../utils/query.helper";
+import { getFinalDateMonth } from "@utils/date.helper";
+import { currentUser } from "@utils/query.helper";
 
 type TEntryList = { month: number; year: number; modality: string };
 export const getEntryList = async ({ month, year, modality }: TEntryList) => {

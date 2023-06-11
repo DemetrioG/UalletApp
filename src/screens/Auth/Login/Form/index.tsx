@@ -18,7 +18,7 @@ import When from "../../../../components/When";
 import { DataContext } from "../../../../context/Data/dataContext";
 import { UserContext } from "../../../../context/User/userContext";
 import { usePromise } from "../../../../hooks/usePromise";
-import { setStorage } from "../../../../utils/storage.helper";
+import { setStorage } from "@utils/storage.helper";
 import {
   AppleLogo,
   FacebookLogo,

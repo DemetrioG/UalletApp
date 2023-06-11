@@ -1,6 +1,6 @@
 import firebase from "@services/firebase";
 import { IChartData } from "../../../../components/SegmentChart";
-import { currentUser } from "../../../../utils/query.helper";
+import { currentUser } from "@utils/query.helper";
 import { getPrice, IAsset } from "../../../../components/Positions/query";
 import { AssetSegment } from "../../../../types/types";
 

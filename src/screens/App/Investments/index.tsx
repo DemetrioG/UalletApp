@@ -4,7 +4,7 @@ import { Button, HStack, ScrollView, Text, VStack } from "native-base";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import Positions from "../../../components/Positions";
-import { numberToReal } from "../../../utils/number.helper";
+import { numberToReal } from "@utils/number.helper";
 import {
   BackgroundContainer,
   Balance,

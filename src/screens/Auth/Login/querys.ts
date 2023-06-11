@@ -1,5 +1,5 @@
 import firebase from "@services/firebase";
-import { convertDate, convertDateToDatabase } from "../../../utils/date.helper";
+import { convertDate, convertDateToDatabase } from "@utils/date.helper";
 import * as Device from "expo-device";
 import { TLoggedSucceed, TLoginByEmailAndPassword } from "./types";
 //import * as AuthSession from "expo-auth-session";

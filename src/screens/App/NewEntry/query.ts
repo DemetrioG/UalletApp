@@ -3,13 +3,13 @@ import {
   createCollection,
   currentUser,
   updateCurrentBalance,
-} from "../../../utils/query.helper";
+} from "@utils/query.helper";
 import { IEntryList } from "../Entry";
 import {
   convertDateFromDatabase,
   convertDateToDatabase,
-} from "../../../utils/date.helper";
-import { realToNumber } from "../../../utils/number.helper";
+} from "@utils/date.helper";
+import { realToNumber } from "@utils/number.helper";
 import { TEntryType } from "../../../types/types";
 
 export interface INewEntry {

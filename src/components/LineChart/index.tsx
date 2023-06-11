@@ -4,7 +4,7 @@ import { Text } from "native-base";
 import EmptyChart from "../EmptyChart";
 import { DataContext } from "../../context/Data/dataContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
-import { dateMonthNumber } from "../../utils/date.helper";
+import { dateMonthNumber } from "@utils/date.helper";
 import {
   ChartContainer,
   ChartView,

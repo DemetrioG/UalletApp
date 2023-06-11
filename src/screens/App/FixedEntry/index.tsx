@@ -15,8 +15,8 @@ import {
   convertDate,
   convertDateToDatabase,
   futureDate,
-} from "../../../utils/date.helper";
-import { realToNumber } from "../../../utils/number.helper";
+} from "@utils/date.helper";
+import { realToNumber } from "@utils/number.helper";
 import { TypeText, TypeView } from "./styles";
 import {
   BackgroundContainer,
@@ -35,7 +35,7 @@ import {
 import { insertNewEntry, lastIdFromEntry } from "./querys";
 import { DataContext } from "../../../context/Data/dataContext";
 import { Schema } from "../NewEntry/styles";
-import { updateCurrentBalance } from "../../../utils/query.helper";
+import { updateCurrentBalance } from "@utils/query.helper";
 
 interface IForm {
   entrydate: string;

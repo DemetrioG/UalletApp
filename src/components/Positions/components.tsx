@@ -2,7 +2,7 @@ import { HStack, ScrollView, VStack } from "native-base";
 import React from "react";
 import { View } from "react-native";
 import { IPosition } from ".";
-import { numberToReal } from "../../utils/number.helper";
+import { numberToReal } from "@utils/number.helper";
 import Icon from "../Icon";
 import {
   ItemContainer,
