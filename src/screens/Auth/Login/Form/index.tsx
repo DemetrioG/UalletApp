@@ -74,7 +74,7 @@ export const LoginForm = () => {
   return (
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <BackgroundContainer>
+        <BackgroundContainer p="20px">
           <BackgroundEffect />
           <VStack space={5}>
             <TouchableOpacity onPress={() => navigate("Index")}>
