@@ -4,7 +4,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
 
-import firebase from "@services/firebase";
+import firebase from "../../../services/firebase";
 import { UserContext } from "../../../context/User/userContext";
 import { DataContext } from "../../../context/Data/dataContext";
 import {

@@ -4,7 +4,7 @@ import { Collapse, HStack, Image, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import firebase from "@services/firebase";
+import firebase from "../../../services/firebase";
 import { IEntryList } from "../Entry";
 import InvestSummary from "../../../components/InvestSummary";
 import Consolidate from "../../../components/Consolidate";

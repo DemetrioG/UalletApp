@@ -1,5 +1,5 @@
 import { IForm } from ".";
-import firebase from "@services/firebase";
+import firebase from "../../../../services/firebase";
 import { IVariableIncome } from "../../../../types/assets";
 import { convertDateToDatabase } from "../../../../utils/date.helper";
 import {

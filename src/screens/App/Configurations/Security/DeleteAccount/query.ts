@@ -1,4 +1,4 @@
-import firebase from "@services/firebase";
+import firebase from "../../../../../services/firebase";
 import { currentUser } from "../../../../../utils/query.helper";
 
 async function _deleteAccount(password: string) {

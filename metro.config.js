@@ -4,8 +4,6 @@
  * @format
  */
 
-const path = require("path");
-
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
@@ -14,10 +12,5 @@ module.exports = {
         inlineRequires: true,
       },
     }),
-  },
-  resolver: {
-    alias: {
-      "@services": path.resolve(__dirname, "src", "services"),
-    },
   },
 };

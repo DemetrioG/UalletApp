@@ -1,4 +1,4 @@
-import firebase from "@services/firebase";
+import firebase from "../../services/firebase";
 import { IVariableIncome } from "../../types/assets";
 import { AssetSegment } from "../../types/types";
 import { getAtualDate } from "../../utils/date.helper";

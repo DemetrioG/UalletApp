@@ -1,4 +1,4 @@
-import firebase from "@services/firebase";
+import firebase from "../../../../../services/firebase";
 
 export const getUser = async <T>(userUid: string) => {
   const query = await firebase

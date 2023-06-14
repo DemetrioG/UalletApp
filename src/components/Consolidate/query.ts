@@ -1,4 +1,4 @@
-import firebase from "@services/firebase";
+import firebase from "../../services/firebase";
 import { IEntryList } from "../../screens/Entry";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import { currentUser, updateCurrentBalance } from "../../utils/query.helper";
