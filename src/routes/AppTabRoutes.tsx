@@ -6,16 +6,16 @@ import {
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import Icon from "@components/Icon";
+import Icon from "../components/Icon";
 import {
   ActiveMenuIcon,
   BackgroundContainer,
   HomeIconContainer,
   StyledTabNavigation,
 } from "./styles";
-import { colors } from "@styles/index";
-import ConfirmDialog from "@components/ConfirmDialog";
-import Header from "@components/Header";
+import { colors } from "../styles";
+import ConfirmDialog from "../components/ConfirmDialog";
+import Header from "../components/Header";
 import { AppStackRoutes } from "./AppStackRoutes";
 
 const Tab = createBottomTabNavigator();

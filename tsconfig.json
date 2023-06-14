@@ -14,8 +14,7 @@
     "paths": {
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"],
-      "@styles/*": ["src/styles/*"],
-      "@components/*": ["src/components/*"]
+      "@styles/*": ["src/styles/*"]
     }
   },
   "exclude": [

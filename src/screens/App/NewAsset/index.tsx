@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Icon from "@components/Icon";
-import Picker from "@components/Picker";
+import Icon from "../../../components/Icon";
+import Picker from "../../../components/Picker";
 import {
   BackgroundContainer,
   ButtonText,
@@ -15,7 +15,7 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "@styles/general";
-import { TYPE_OF_INVEST } from "@components/Picker/options";
+import { TYPE_OF_INVEST } from "../../../components/Picker/options";
 
 const NewAsset = () => {
   const { navigate, goBack } = useNavigation();

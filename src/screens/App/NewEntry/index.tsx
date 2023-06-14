@@ -13,11 +13,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { IEntryList } from "../Entry";
-import Picker from "@components/Picker";
-import Calendar from "@components/Calendar";
-import Icon from "@components/Icon";
-import TextInput from "@components/TextInput";
-import { CLASSIFICATION, ENTRY_SEGMENT } from "@components/Picker/options";
+import Picker from "../../../components/Picker";
+import Calendar from "../../../components/Calendar";
+import Icon from "../../../components/Icon";
+import TextInput from "../../../components/TextInput";
+import {
+  CLASSIFICATION,
+  ENTRY_SEGMENT,
+} from "../../../components/Picker/options";
 import { ConfirmContext } from "../../../context/ConfirmDialog/confirmContext";
 import {
   dateValidation,
@@ -37,7 +40,7 @@ import {
 } from "@styles/general";
 import { deleteEntry, INewEntry, registerNewEntry, updateEntry } from "./query";
 import { DataContext } from "../../../context/Data/dataContext";
-import TabView, { IRoutes } from "@components/TabView";
+import TabView, { IRoutes } from "../../../components/TabView";
 import { TEntryType } from "../../../types/types";
 interface IForm {
   entrydate: string;

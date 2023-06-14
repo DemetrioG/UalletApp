@@ -14,11 +14,11 @@ import * as yup from "yup";
 
 import { getTreasure, registerAsset } from "./query";
 import { UserContext } from "../../../../context/User/userContext";
-import Picker from "@components/Picker";
-import Icon from "@components/Icon";
-import TextInput from "@components/TextInput";
-import Calendar from "@components/Calendar";
-import { BROKER } from "@components/Picker/options";
+import Picker from "../../../../components/Picker";
+import Icon from "../../../../components/Icon";
+import TextInput from "../../../../components/TextInput";
+import Calendar from "../../../../components/Calendar";
+import { BROKER } from "../../../../components/Picker/options";
 import { convertDate, dateValidation } from "@utils/date.helper";
 import { sortObjectByKey } from "@utils/array.helper";
 import {

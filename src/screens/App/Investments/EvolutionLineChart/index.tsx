@@ -3,9 +3,9 @@ import { LineChart } from "react-native-svg-charts";
 import { Line } from "react-native-svg";
 import { CompleteWrapper, Income, Wrapper } from "./styles";
 import { HStack, Text, VStack } from "native-base";
-import Icon from "@components/Icon";
+import Icon from "../../../../components/Icon";
 import { TouchableOpacity } from "react-native";
-import { fonts } from "@styles/index";
+import { fonts } from "../../../../styles";
 
 const data = [50, 10, 40, 95, -4, -24];
 

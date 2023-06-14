@@ -20,7 +20,6 @@ module.exports = {
       "@services": path.resolve(__dirname, "src", "services"),
       "@utils": path.resolve(__dirname, "src", "utils"),
       "@styles": path.resolve(__dirname, "src", "styles"),
-      "@components": path.resolve(__dirname, "src", "components"),
     },
   },
 };

@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { HStack } from "native-base";
 import { TouchableOpacity } from "react-native";
-import Icon from "@components/Icon";
-import { ItemContainer, ItemText } from "@components/Menu/styles";
+import Icon from "../../../../components/Icon";
+import { ItemContainer, ItemText } from "../../../../components/Menu/styles";
 import {
   BackgroundContainer,
   TextHeaderScreen,

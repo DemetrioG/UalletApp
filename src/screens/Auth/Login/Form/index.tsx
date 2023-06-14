@@ -12,9 +12,9 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFormContext } from "react-hook-form";
 import { ChevronLeft } from "lucide-react-native";
 
-import TextInput from "@components/TextInput";
-import TextInputPassword from "@components/TextInputPassword";
-import When from "@components/When";
+import TextInput from "../../../../components/TextInput";
+import TextInputPassword from "../../../../components/TextInputPassword";
+import When from "../../../../components/When";
 import { DataContext } from "../../../../context/Data/dataContext";
 import { UserContext } from "../../../../context/User/userContext";
 import { usePromise } from "../../../../hooks/usePromise";

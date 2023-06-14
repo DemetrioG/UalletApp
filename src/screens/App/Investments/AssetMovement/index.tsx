@@ -7,8 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Toast from "react-native-toast-message";
 
-import Icon from "@components/Icon";
-import TabView from "@components/TabView";
+import Icon from "../../../../components/Icon";
+import TabView from "../../../../components/TabView";
 import {
   BackgroundContainer,
   ButtonText,
@@ -18,9 +18,9 @@ import {
   ViewTab,
 } from "@styles/general";
 import { convertDate, dateValidation } from "@utils/date.helper";
-import TextInput from "@components/TextInput";
-import Calendar from "@components/Calendar";
-import { IPosition } from "@components/Positions";
+import TextInput from "../../../../components/TextInput";
+import Calendar from "../../../../components/Calendar";
+import { IPosition } from "../../../../components/Positions";
 import { deleteAsset } from "./query";
 import { registerAsset } from "../../NewAsset/NewVariableAsset/query";
 

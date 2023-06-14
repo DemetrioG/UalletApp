@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Picker from "@components/Picker";
-import TextInput from "@components/TextInput";
-import Icon from "@components/Icon";
+import Picker from "../../../../components/Picker";
+import TextInput from "../../../../components/TextInput";
+import Icon from "../../../../components/Icon";
 import { dateValidation } from "@utils/date.helper";
 import { numberToReal, realToNumber } from "@utils/number.helper";
 import { defaultFilter, IActiveFilter } from "./helper";
@@ -20,12 +20,12 @@ import {
   ModalView,
 } from "@styles/general";
 import { ButtonContainer, SpaceContainer } from "./styles";
-import { metrics } from "@styles/index";
+import { metrics } from "../../../../styles";
 import {
   ENTRY_SEGMENT,
   ENTRY_TYPE,
   MODALITY,
-} from "@components/Picker/options";
+} from "../../../../components/Picker/options";
 
 interface IForm {
   initialdate: string;

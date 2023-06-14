@@ -1,7 +1,7 @@
 import firebase from "@services/firebase";
-import { IChartData } from "@components/SegmentChart";
+import { IChartData } from "../../../../components/SegmentChart";
 import { currentUser } from "@utils/query.helper";
-import { getPrice, IAsset } from "@components/Positions/query";
+import { getPrice, IAsset } from "../../../../components/Positions/query";
 import { AssetSegment } from "../../../../types/types";
 
 async function _getData(defaultData: IChartData[]) {

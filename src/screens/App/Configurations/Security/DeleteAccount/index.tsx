@@ -7,8 +7,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Toast from "react-native-toast-message";
 
-import Icon from "@components/Icon";
-import TextInputPassword from "@components/TextInputPassword";
+import Icon from "../../../../../components/Icon";
+import TextInputPassword from "../../../../../components/TextInputPassword";
 import { ConfirmContext } from "../../../../../context/ConfirmDialog/confirmContext";
 import {
   initialUserState,
