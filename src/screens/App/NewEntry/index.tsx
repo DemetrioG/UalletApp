@@ -26,8 +26,8 @@ import {
   dateValidation,
   convertDate,
   convertDateFromDatabase,
-} from "@utils/date.helper";
-import { numberToReal } from "@utils/number.helper";
+} from "../../../utils/date.helper";
+import { numberToReal } from "../../../utils/number.helper";
 import { FixEntryText, Schema } from "./styles";
 import {
   ButtonText,

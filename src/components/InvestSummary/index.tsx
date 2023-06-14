@@ -5,9 +5,9 @@ import firebase from "@services/firebase";
 import { TotalOpen } from "../Positions/components";
 import { DataContext } from "../../context/Data/dataContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
-import { numberToReal } from "@utils/number.helper";
+import { numberToReal } from "../../utils/number.helper";
 import { ITotal, refreshAssetData } from "../Positions/query";
-import { currentUser } from "@utils/query.helper";
+import { currentUser } from "../../utils/query.helper";
 
 const InvestSummary = () => {
   const { setData } = React.useContext(DataContext);

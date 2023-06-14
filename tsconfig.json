@@ -12,8 +12,7 @@
     "target": "esnext",
     "baseUrl": "./",
     "paths": {
-      "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"]
+      "@services/*": ["src/services/*"]
     }
   },
   "exclude": [

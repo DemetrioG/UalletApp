@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getStorage, setStorage } from "@utils/storage.helper";
+import { getStorage, setStorage } from "../../utils/storage.helper";
 
 interface IUser {
   signed: boolean;

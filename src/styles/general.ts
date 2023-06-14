@@ -22,7 +22,7 @@ import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
 import { SafeAreaView } from "react-navigation";
-import { IPHONE_BOTTOM_TAB } from "@utils/device.helper";
+import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
 import { TEntryType } from "../types/types";
 
 export const SafeAreaContainer = styled(SafeAreaView)`

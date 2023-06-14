@@ -1,7 +1,7 @@
 import firebase from "@services/firebase";
 import { IEntryList } from "../../screens/Entry";
-import { convertDateFromDatabase, getAtualDate } from "@utils/date.helper";
-import { currentUser, updateCurrentBalance } from "@utils/query.helper";
+import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
+import { currentUser, updateCurrentBalance } from "../../utils/query.helper";
 
 type IConsolidate = Array<
   (IEntryList & { checked?: boolean }) | firebase.firestore.DocumentData

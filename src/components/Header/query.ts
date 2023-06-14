@@ -1,5 +1,5 @@
 import firebase from "@services/firebase";
-import { currentUser } from "@utils/query.helper";
+import { currentUser } from "../../utils/query.helper";
 
 async function _getData() {
   const user = await currentUser();

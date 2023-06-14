@@ -1,5 +1,5 @@
 import firebase from "@services/firebase";
-import { currentUser } from "@utils/query.helper";
+import { currentUser } from "../../../utils/query.helper";
 
 type LastIdFromEntryProps = { modality: string };
 export const lastIdFromEntry = async ({ modality }: LastIdFromEntryProps) => {

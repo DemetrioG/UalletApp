@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { currentUser } from "@utils/query.helper";
+import { currentUser } from "../../../../../utils/query.helper";
 
 async function _registerAlert(value: number) {
   const user = await currentUser();

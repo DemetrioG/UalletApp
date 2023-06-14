@@ -1,7 +1,7 @@
 import firebase from "@services/firebase";
-import { sortObjectByKey } from "@utils/array.helper";
-import { getAtualDate, getFinalDateMonth } from "@utils/date.helper";
-import { currentUser } from "@utils/query.helper";
+import { sortObjectByKey } from "../../../utils/array.helper";
+import { getAtualDate, getFinalDateMonth } from "../../../utils/date.helper";
+import { currentUser } from "../../../utils/query.helper";
 
 type GetLastEntryProps = { month: number; year: number; modality: string };
 /**

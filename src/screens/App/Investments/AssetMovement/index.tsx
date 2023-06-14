@@ -17,7 +17,7 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "../../../../styles/general";
-import { convertDate, dateValidation } from "@utils/date.helper";
+import { convertDate, dateValidation } from "../../../../utils/date.helper";
 import TextInput from "../../../../components/TextInput";
 import Calendar from "../../../../components/Calendar";
 import { IPosition } from "../../../../components/Positions";

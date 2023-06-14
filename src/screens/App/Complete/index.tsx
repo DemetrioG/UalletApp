@@ -11,7 +11,7 @@ import * as yup from "yup";
 import Picker from "../../../components/Picker";
 import TextInput from "../../../components/TextInput";
 import { UserContext } from "../../../context/User/userContext";
-import { dateValidation } from "@utils/date.helper";
+import { dateValidation } from "../../../utils/date.helper";
 import {
   BackgroundContainer,
   ButtonText,

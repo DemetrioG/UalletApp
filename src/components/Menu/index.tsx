@@ -11,7 +11,7 @@ import {
   initialLoaderState,
   LoaderContext,
 } from "../../context/Loader/loaderContext";
-import { removeAllStorage } from "@utils/storage.helper";
+import { removeAllStorage } from "../../utils/storage.helper";
 import {
   AvatarMenu,
   AvatarMenuText,

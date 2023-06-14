@@ -12,10 +12,10 @@ import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { Container, EmptyText, Header, ItemContainer } from "./styles";
 import { colors, metrics } from "../../styles";
-import { numberToReal } from "@utils/number.helper";
+import { numberToReal } from "../../utils/number.helper";
 import { Skeleton } from "../../styles/general";
 import { DataContext } from "../../context/Data/dataContext";
-import { currentUser } from "@utils/query.helper";
+import { currentUser } from "../../utils/query.helper";
 import { ItemList, ITEMS_WIDTH, TotalClose, TotalOpen } from "./components";
 import { IVariableIncome } from "../../types/assets";
 
