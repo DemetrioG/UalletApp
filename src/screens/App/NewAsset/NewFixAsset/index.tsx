@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { getTreasure, registerAsset } from "./query";
-import { UserContext } from "@context/User/userContext";
+import { UserContext } from "../../../../context/User/userContext";
 import Picker from "@components/Picker";
 import Icon from "@components/Icon";
 import TextInput from "@components/TextInput";

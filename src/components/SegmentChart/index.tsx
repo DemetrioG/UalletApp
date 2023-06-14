@@ -2,7 +2,7 @@ import * as React from "react";
 import { Text, View, VStack } from "native-base";
 
 import EmptyChart from "../EmptyChart";
-import { LoaderContext } from "@context/Loader/loaderContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 import {
   StyledPieChart,
   PieChartLabel,
@@ -13,7 +13,7 @@ import {
   ChartContainer,
   PieCenter,
 } from "./styles";
-import { fonts, metrics } from "@styles/index";
+import { fonts, metrics } from "../../styles";
 import { Skeleton } from "@styles/general";
 
 interface ISlices {

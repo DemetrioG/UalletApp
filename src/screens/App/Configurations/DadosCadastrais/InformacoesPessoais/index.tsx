@@ -5,7 +5,7 @@ import {
   TextHeaderScreen,
   ViewTab,
 } from "@styles/general";
-import { UserContext } from "@context/User/userContext";
+import { UserContext } from "../../../../../context/User/userContext";
 import { getUser } from "./query";
 import { HStack, ScrollView, VStack } from "native-base";
 import { ItemText } from "@components/Menu/styles";

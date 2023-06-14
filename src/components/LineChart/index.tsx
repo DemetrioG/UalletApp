@@ -2,8 +2,8 @@ import * as React from "react";
 import { Text } from "native-base";
 
 import EmptyChart from "../EmptyChart";
-import { DataContext } from "@context/Data/dataContext";
-import { LoaderContext } from "@context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
 import { dateMonthNumber } from "@utils/date.helper";
 import {
   ChartContainer,
@@ -16,7 +16,7 @@ import {
   StyledLineChart,
 } from "./styles";
 import { getData } from "./query";
-import { fonts } from "@styles/index";
+import { fonts } from "../../styles";
 
 const LineChart = () => {
   const { data: dataContext } = React.useContext(DataContext);

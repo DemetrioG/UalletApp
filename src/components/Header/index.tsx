@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { Menu } from "../Menu";
 import DatePicker from "../DatePicker";
-import { UserContext } from "@context/User/userContext";
-import { LoaderContext } from "@context/Loader/loaderContext";
-import { DataContext } from "@context/Data/dataContext";
+import { UserContext } from "../../context/User/userContext";
+import { LoaderContext } from "../../context/Loader/loaderContext";
+import { DataContext } from "../../context/Data/dataContext";
 import { HeaderIconView, HeaderView, NetworkCard } from "./styles";
 import { Skeleton } from "@styles/general";
 import Icon from "../Icon";

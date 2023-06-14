@@ -5,8 +5,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LottieView from "lottie-react-native";
 
 import firebase from "@services/firebase";
-import { UserContext } from "@context/User/userContext";
-import { DataContext } from "@context/Data/dataContext";
+import { UserContext } from "../../../context/User/userContext";
+import { DataContext } from "../../../context/Data/dataContext";
 import {
   convertDateToDatabase,
   dateMonthNumber,

@@ -1,5 +1,5 @@
 import firebase from "@services/firebase";
-import { IData } from "@context/Data/dataContext";
+import { IData } from "../../context/Data/dataContext";
 import { getFinalDateMonth } from "@utils/date.helper";
 import { currentUser } from "@utils/query.helper";
 import { IChartData } from ".";

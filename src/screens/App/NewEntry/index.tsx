@@ -18,7 +18,7 @@ import Calendar from "@components/Calendar";
 import Icon from "@components/Icon";
 import TextInput from "@components/TextInput";
 import { CLASSIFICATION, ENTRY_SEGMENT } from "@components/Picker/options";
-import { ConfirmContext } from "@context/ConfirmDialog/confirmContext";
+import { ConfirmContext } from "../../../context/ConfirmDialog/confirmContext";
 import {
   dateValidation,
   convertDate,
@@ -36,7 +36,7 @@ import {
   ViewTab,
 } from "@styles/general";
 import { deleteEntry, INewEntry, registerNewEntry, updateEntry } from "./query";
-import { DataContext } from "@context/Data/dataContext";
+import { DataContext } from "../../../context/Data/dataContext";
 import TabView, { IRoutes } from "@components/TabView";
 import { TEntryType } from "../../../types/types";
 interface IForm {

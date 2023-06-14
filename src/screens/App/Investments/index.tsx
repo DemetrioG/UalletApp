@@ -13,8 +13,8 @@ import {
   ViewTab,
 } from "@styles/general";
 import { metrics } from "@styles/index";
-import { LoaderContext } from "@context/Loader/loaderContext";
-import { DataContext } from "@context/Data/dataContext";
+import { LoaderContext } from "../../../context/Loader/loaderContext";
+import { DataContext } from "../../../context/Data/dataContext";
 import AssetSegmentChart from "./AssetSegmentChart";
 import EvolutionLineChart from "./EvolutionLineChart";
 

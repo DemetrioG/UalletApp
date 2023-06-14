@@ -1,7 +1,7 @@
 import * as React from "react";
 import Modal from "react-native-modal";
 
-import { ConfirmContext } from "@context/ConfirmDialog/confirmContext";
+import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import {
   ButtonContainer,
   StyledButtonConfirm,

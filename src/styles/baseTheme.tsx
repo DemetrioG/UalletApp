@@ -2,7 +2,7 @@ import * as React from "react";
 import { ThemeProvider } from "styled-components";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import { colors, metrics } from ".";
-import { ThemeContext } from "@context/Theme/themeContext";
+import { ThemeContext } from "../context/Theme/themeContext";
 import { DARK, LIGHT } from "./theme";
 
 export interface IThemeProvider {
