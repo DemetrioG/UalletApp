@@ -41,13 +41,13 @@ import {
   ButtonSmall,
   ViewTab,
   BackgroundContainer,
-} from "@styles/general";
+} from "../../../styles/general";
 import Icon from "../../../components/Icon";
 import { getEntryList } from "./querys";
 import { getBalance } from "@utils/query.helper";
 import { Text, VStack } from "native-base";
 import { metrics } from "../../../styles";
-import { TEntryType } from "../../../types/types";
+import { TEntryType } from "../../..//types/types";
 
 export interface IEntryList {
   date: ITimestamp;

@@ -4,7 +4,10 @@ import { Center, HStack, Text } from "native-base";
 import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { colors, fonts, metrics } from "../../styles";
-import { ButtonSmall, ButtonText as GeneralButtonText } from "@styles/general";
+import {
+  ButtonSmall,
+  ButtonText as GeneralButtonText,
+} from "../../styles/general";
 import { TEntryType } from "../../types/types";
 
 export const HeaderContainer = styled(Center)`

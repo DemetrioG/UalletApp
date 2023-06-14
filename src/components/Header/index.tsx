@@ -6,7 +6,7 @@ import { UserContext } from "../../context/User/userContext";
 import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { HeaderIconView, HeaderView, NetworkCard } from "./styles";
-import { Skeleton } from "@styles/general";
+import { Skeleton } from "../../styles/general";
 import Icon from "../Icon";
 import { getData } from "./query";
 import { Text } from "native-base";

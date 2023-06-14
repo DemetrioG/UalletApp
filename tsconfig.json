@@ -13,8 +13,7 @@
     "baseUrl": "./",
     "paths": {
       "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"],
-      "@styles/*": ["src/styles/*"]
+      "@utils/*": ["src/utils/*"]
     }
   },
   "exclude": [

@@ -9,7 +9,7 @@ import {
   BackgroundContainer,
   TextHeaderScreen,
   ViewTab,
-} from "@styles/general";
+} from "../../../../styles/general";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const actions = [

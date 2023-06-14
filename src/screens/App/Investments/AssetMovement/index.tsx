@@ -16,7 +16,7 @@ import {
   FormContainer,
   TextHeaderScreen,
   ViewTab,
-} from "@styles/general";
+} from "../../../../styles/general";
 import { convertDate, dateValidation } from "@utils/date.helper";
 import TextInput from "../../../../components/TextInput";
 import Calendar from "../../../../components/Calendar";

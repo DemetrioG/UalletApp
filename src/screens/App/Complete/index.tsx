@@ -20,7 +20,7 @@ import {
   HeaderTitleContainer,
   LogoHeader,
   StyledKeyboardAvoidingView,
-} from "@styles/general";
+} from "../../../styles/general";
 import { GENDER, PROFILE } from "../../../components/Picker/options";
 import { updateUserData } from "./querys";
 

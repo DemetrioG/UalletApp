@@ -9,7 +9,7 @@ import {
   ButtonText,
   TextHeaderScreen,
   ViewTab,
-} from "@styles/general";
+} from "../../../../styles/general";
 import { ItemText } from "./styles";
 import { numberToReal } from "@utils/number.helper";
 import { IPosition } from "../../../../components/Positions";

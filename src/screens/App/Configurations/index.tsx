@@ -7,7 +7,7 @@ import {
   BackgroundContainer,
   TextHeaderScreen,
   ViewTab,
-} from "@styles/general";
+} from "../../../styles/general";
 
 const actions = [
   {

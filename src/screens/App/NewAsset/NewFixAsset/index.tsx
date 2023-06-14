@@ -29,7 +29,7 @@ import {
   HalfContainer,
   TextHeaderScreen,
   ViewTab,
-} from "@styles/general";
+} from "../../../../styles/general";
 import { IFixedIncome } from "../../../../types/assets";
 
 interface IForm {

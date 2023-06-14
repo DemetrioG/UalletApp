@@ -10,7 +10,7 @@ import {
   ModalView,
   Container,
 } from "./styles";
-import { ButtonText } from "@styles/general";
+import { ButtonText } from "../../styles/general";
 
 const ConfirmDialog = () => {
   const { confirm, setConfirm } = React.useContext(ConfirmContext);

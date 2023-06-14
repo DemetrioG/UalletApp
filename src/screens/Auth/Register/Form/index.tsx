@@ -13,7 +13,7 @@ import {
   BackgroundEffect,
   ButtonText,
   ContainerCenter,
-} from "@styles/general";
+} from "../../../../styles/general";
 import PasswordRules from "../PasswordRules";
 import { registerUser } from "../query";
 import { TouchableOpacity } from "react-native";

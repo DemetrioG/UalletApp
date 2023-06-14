@@ -3,7 +3,7 @@ import { HStack, Text, VStack } from "native-base";
 import { ProgressBar } from "./styles";
 import { Info } from "lucide-react-native";
 import { useTheme } from "styled-components";
-import { IThemeProvider } from "@styles/baseTheme";
+import { IThemeProvider } from "../../../styles/baseTheme";
 import Tooltip from "../../../components/Tooltip";
 
 /**
