@@ -45,6 +45,8 @@ import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { Path, Svg, SvgFromUri, SvgUri } from "react-native-svg";
 import { Menu } from "../../../components/Menu";
+import { Header } from "../../../components/Header";
+import { Edit3, LucideIcon, MoreHorizontal, Plug, Rocket } from "lucide-react-native";
 
 const LOGO_SMALL = require("../../../../assets/images/logoSmall.png");
 
@@ -174,80 +176,13 @@ export const Home = () => {
     <BackgroundContainer>
       <Consolidate visible={consolidate} setVisible={setConsolidate} />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
-        <VStack position="relative">
-          <VStack
-            position="absolute"
-            width="100%"
-            zIndex={2}
-            backgroundColor={theme?.secondary}
-            borderBottomLeftRadius="40px"
-            borderBottomRightRadius="40px"
-            paddingX="15px"
-            paddingBottom="40px"
-          >
-            <HStack position="relative" paddingY="20px" justifyContent="center">
-              <Text>Saldo atual</Text>
-              <Menu StackProps={{ position: "absolute", top: 3, right: 0 }} />
-            </HStack>
-            <HStack justifyContent="center" paddingY="5px">
-              <Text fontWeight={700} fontSize="4xl">
-                {balanceInteger}
-                <Text fontWeight={700} opacity={0.3} fontSize="4xl">
-                  ,{balanceCents}
-                </Text>
-              </Text>
-            </HStack>
-          </VStack>
-          <HStack
-            position="absolute"
-            alignItems="flex-end"
-            justifyContent="space-between"
-            width="100%"
-            zIndex={1}
-            backgroundColor={theme?.tertiary}
-            borderBottomLeftRadius="40px"
-            borderBottomRightRadius="40px"
-            height="235px"
-            paddingX="15px"
-            paddingY="15px"
-          >
-            <Svg width="88" height="37" viewBox="0 0 88 37" fill="none">
-              <Path
-                d="M2 13.0842C2 13.0842 17.3846 46.3131 22.7692 30.9385C28.1538 15.564 38.5385 -14.1933 45.4615 13.0842C52.3846 40.3617 65.4861 16.987 87 3.16513"
-                stroke={theme?.blue}
-                strokeWidth="3"
-              />
-            </Svg>
-            <VStack>
-              <Text>Receita Mensal</Text>
-              <Text color={theme?.blue} fontWeight={600}>
-                +10%
-              </Text>
-            </VStack>
-            <Pressable
-              backgroundColor={theme?.isOnDarkTheme ? "white" : "black"}
-              paddingX="14px"
-              paddingY="10px"
-              borderRadius={30}
-            >
-              <Text
-                color={theme?.isOnDarkTheme ? "black" : "white"}
-                fontWeight={600}
-              >
-                Ver mais
-              </Text>
-            </Pressable>
-          </HStack>
-        </VStack>
-        {/* <TouchableOpacity onPress={() => setFinanceShow(!financeShow)}>
-          <Section>
-            <SectionText>Finanças</SectionText>
-            <Icon
-              name={financeShow ? "chevron-down" : "chevron-right"}
-              colorVariant="tertiary"
-            />
-          </Section>
-        </TouchableOpacity> */}
+        <Header />
+        <HStack justifyContent='space-evenly'>
+          <Action text="Lançamentos" Icon={Edit3} />
+          <Action text="Integrações" Icon={Plug} />
+          <Action text="Upgrades" Icon={Rocket} />
+          <Action text="Mais" Icon={MoreHorizontal} />
+        </HStack>
         {/* <Collapse isOpen={financeShow}>
           <Card>
             <Skeleton isLoaded={!homeVisible} width={"full"} h={69}>
@@ -313,5 +248,24 @@ export const Home = () => {
         </Collapse> */}
       </ScrollViewTab>
     </BackgroundContainer>
+  );
+};
+
+export const Action = ({ text, Icon }: { text: string; Icon: LucideIcon }) => {
+  const { theme }: IThemeProvider = useTheme();
+
+  return (
+    <VStack alignItems="center" space={1}>
+      <VStack
+        style={{
+          backgroundColor: theme?.secondary,
+          borderRadius: 50,
+          padding: 20,
+        }}
+      >
+        <Icon color={theme?.text} />
+      </VStack>
+      <Text fontSize="12px">{text}</Text>
+    </VStack>
   );
 };

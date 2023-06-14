@@ -27,7 +27,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { refreshAuthDevice } from "./query";
 
-export const Menu = ({ StackProps }: { StackProps: IVStackProps }) => {
+export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
   const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
   const { setLoader } = React.useContext(LoaderContext);

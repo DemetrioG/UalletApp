@@ -11,13 +11,13 @@ interface IDatePicker {
   options: string[] | number[];
   type: "Mês" | "Ano";
   visibility: boolean;
-  next?: React.Dispatch<React.SetStateAction<boolean>>;
-  setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  next?: () => void;
+  handleClose: () => void;
 }
 
-const DatePicker = ({
+export const DatePicker = ({
   options,
-  setVisibility,
+  handleClose,
   type,
   visibility,
   next,
@@ -25,9 +25,9 @@ const DatePicker = ({
   const { data, setData } = React.useContext(DataContext);
 
   const handleSubmitItem = (item: string | number, index: number) => {
-    setVisibility(false);
+    handleClose();
     setStorage(type, type == "Mês" ? index + 1 : item);
-    next ? next(true) : null;
+    next && next();
   };
 
   const ITEM = options.map((item, index) => {
@@ -74,7 +74,7 @@ const DatePicker = ({
       transparent={true}
       animationType="fade"
       visible={visibility}
-      onRequestClose={() => setVisibility(false)}
+      onRequestClose={handleClose}
     >
       <ModalContainer>
         <ModalView>
@@ -86,7 +86,7 @@ const DatePicker = ({
               name="x"
               size={20}
               colorVariant="red"
-              onPress={() => setVisibility(false)}
+              onPress={handleClose}
             />
           </HeaderView>
           <ScrollView showsVerticalScrollIndicator={false}>{ITEM}</ScrollView>
@@ -95,5 +95,3 @@ const DatePicker = ({
     </Modal>
   );
 };
-
-export default DatePicker;
