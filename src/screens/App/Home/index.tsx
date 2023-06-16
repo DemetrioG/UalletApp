@@ -46,7 +46,14 @@ import { IThemeProvider } from "../../../styles/baseTheme";
 import { Path, Svg, SvgFromUri, SvgUri } from "react-native-svg";
 import { Menu } from "../../../components/Menu";
 import { Header } from "../../../components/Header";
-import { Edit3, LucideIcon, MoreHorizontal, Plug, Rocket } from "lucide-react-native";
+import {
+  Edit3,
+  LucideIcon,
+  MoreHorizontal,
+  Plug,
+  Rocket,
+} from "lucide-react-native";
+import { useGetBalance } from "../../../hooks/useBalance";
 
 const LOGO_SMALL = require("../../../../assets/images/logoSmall.png");
 
@@ -91,12 +98,12 @@ export const Home = () => {
   } = React.useContext(LoaderContext);
   const { data, setData } = React.useContext(DataContext);
   const [consolidate, setConsolidate] = React.useState(false);
-  const [financeShow, setFinanceShow] = React.useState(true);
-  const [investShow, setInvestShow] = React.useState(true);
   const [lastEntry, setLastEntry] = React.useState<
     Array<IEntryList | firebase.firestore.DocumentData>
   >([]);
   const [balanceInteger, balanceCents] = data.balance.split(",");
+
+  const { handleGetBalance } = useGetBalance();
 
   React.useEffect(() => {
     checkFutureDebitsToConsolidate().then((v) => {
@@ -121,26 +128,7 @@ export const Home = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!data.year) return;
-
-    getBalance({
-      month: data.month,
-      year: data.year,
-      modality: data.modality,
-    })
-      .then((balance) => {
-        setData((dataState) => ({
-          ...dataState,
-          balance,
-        }));
-      })
-      .finally(() => {
-        !balance &&
-          setLoader((loaderState) => ({
-            ...loaderState,
-            balance: true,
-          }));
-      });
+    handleGetBalance();
   }, [data.modality, data.month, data.year, consolidate]);
 
   React.useEffect(() => {
@@ -177,7 +165,7 @@ export const Home = () => {
       <Consolidate visible={consolidate} setVisible={setConsolidate} />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
         <Header />
-        <HStack justifyContent='space-evenly'>
+        <HStack justifyContent="space-evenly">
           <Action text="Lançamentos" Icon={Edit3} />
           <Action text="Integrações" Icon={Plug} />
           <Action text="Upgrades" Icon={Rocket} />

@@ -74,7 +74,7 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
   return (
     <VStack {...StackProps}>
       <Pressable onPress={() => setVisible(!visible)}>
-        <Image source={LOGO_SMALL} width="25px" h="30px" />
+        <Image source={LOGO_SMALL} width="25px" h="30px" alt="Logo Uallet" />
       </Pressable>
       <Modal
         isVisible={visible}

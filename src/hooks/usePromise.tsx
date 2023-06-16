@@ -1,16 +1,19 @@
 import { useState } from "react";
 
-export const usePromise = (promiseFn: (...args: any) => Promise<any>) => {
+export const usePromise = <T extends any>(
+  promiseFn: (...args: any) => Promise<T>
+) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const execute = async (...args: any) => {
+  const execute = async (...args: any): Promise<T> => {
     setIsLoading(true);
     try {
-      await promiseFn(...args);
-    } catch (error) {
-      console.error(error);
-    } finally {
+      const result = await promiseFn(...args);
       setIsLoading(false);
+      return result;
+    } catch (error) {
+      setIsLoading(false);
+      throw new Error(error as string);
     }
   };
 
