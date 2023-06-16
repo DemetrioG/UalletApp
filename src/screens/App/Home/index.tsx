@@ -1,6 +1,14 @@
 import * as React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { Collapse, HStack, Image, Pressable, Text, VStack } from "native-base";
+import {
+  Collapse,
+  HStack,
+  Image,
+  Pressable,
+  Text,
+  VStack,
+  useDisclose,
+} from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -54,8 +62,11 @@ import {
   Rocket,
 } from "lucide-react-native";
 import { useGetBalance } from "../../../hooks/useBalance";
-
-const LOGO_SMALL = require("../../../../assets/images/logoSmall.png");
+import {
+  useCheckConsolidation,
+  useGetLastEntries,
+  useIsUserWithCompleteData,
+} from "./hooks/useHome";
 
 function ItemList({
   item,
@@ -84,85 +95,43 @@ function ItemList({
 export const Home = () => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { user, setUser } = React.useContext(UserContext);
-  const {
-    loader: {
-      name,
-      balance,
-      entrySegmentChart,
-      lineChart,
-      homeVisible,
-      equity,
-    },
-    setLoader,
-  } = React.useContext(LoaderContext);
-  const { data, setData } = React.useContext(DataContext);
-  const [consolidate, setConsolidate] = React.useState(false);
-  const [lastEntry, setLastEntry] = React.useState<
-    Array<IEntryList | firebase.firestore.DocumentData>
-  >([]);
-  const [balanceInteger, balanceCents] = data.balance.split(",");
+  const { data } = React.useContext(DataContext);
 
+  const consolidation = useDisclose();
   const { handleGetBalance } = useGetBalance();
-
-  React.useEffect(() => {
-    checkFutureDebitsToConsolidate().then((v) => {
-      v.forEach((result) => {
-        result.data() && setConsolidate(true);
-      });
-    });
-
-    /**
-     * Verifica se tem todas as informações de usuário preenchidas no banco, se não, builda a tela de preenchimento
-     */
-    if (user.complete) return;
-    completeUser().then((v) => {
-      setUser((userState) => ({
-        ...userState,
-        complete: true,
-      }));
-      if (!v.data()?.birthDate) {
-        navigate("Home/Complete");
-      }
-    });
-  }, []);
+  const { handleGetLastEntries, lastEntries } = useGetLastEntries();
+  const {} = useCheckConsolidation(consolidation);
+  const {} = useIsUserWithCompleteData();
 
   React.useEffect(() => {
     handleGetBalance();
-  }, [data.modality, data.month, data.year, consolidate]);
+  }, [data.modality, data.month, data.year, consolidation.isOpen]);
 
   React.useEffect(() => {
-    if (!data.year) return;
+    handleGetLastEntries();
+  }, [
+    data.modality,
+    data.month,
+    data.year,
+    consolidation.isOpen,
+    data.balance,
+  ]);
 
-    getLastEntry({
-      modality: data.modality,
-      month: data.month,
-      year: data.year,
-    })
-      .then((_lastEntry) => {
-        setLastEntry(_lastEntry);
-      })
-      .finally(() => {
-        !lastEntry &&
-          setLoader((loaderState) => ({
-            ...loaderState,
-            lastEntry: true,
-          }));
-      });
-  }, [data.modality, data.month, data.year, consolidate, data.balance]);
-
-  React.useEffect(() => {
-    if (name && balance && lineChart && entrySegmentChart && homeVisible) {
-      setLoader((loaderState) => ({
-        ...loaderState,
-        homeVisible: false,
-      }));
-    }
-  }, [balance, lineChart, entrySegmentChart, name, equity]);
+  // React.useEffect(() => {
+  //   if (name && balance && lineChart && entrySegmentChart && homeVisible) {
+  //     setLoader((loaderState) => ({
+  //       ...loaderState,
+  //       homeVisible: false,
+  //     }));
+  //   }
+  // }, [balance, lineChart, entrySegmentChart, name, equity]);
 
   return (
     <BackgroundContainer>
-      <Consolidate visible={consolidate} setVisible={setConsolidate} />
+      <Consolidate
+        visible={consolidation.isOpen}
+        onClose={consolidation.onClose}
+      />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
         <Header />
         <HStack justifyContent="space-evenly">
@@ -173,22 +142,6 @@ export const Home = () => {
         </HStack>
         {/* <Collapse isOpen={financeShow}>
           <Card>
-            <Skeleton isLoaded={!homeVisible} width={"full"} h={69}>
-              <CardHeaderView balance>
-                <CardTextView>
-                  <Text fontSize={"md"}>Saldo atual</Text>
-                </CardTextView>
-                <View>
-                  <LogoCard source={LOGO_SMALL} width={1} />
-                </View>
-              </CardHeaderView>
-              <Balance negative={data.balance?.includes("-")}>
-                {!user.hideNumbers ? data.balance : "** ** ** ** **"}
-              </Balance>
-            </Skeleton>
-          </Card>
-          <Card>
-            <Skeleton isLoaded={!homeVisible} h={156} width={"full"}>
               {lastEntry.length > 0 ? (
                 <>
                   <CardHeaderView>
@@ -211,7 +164,6 @@ export const Home = () => {
                   Não há lançamentos para visualizar
                 </EmptyEntryText>
               )}
-            </Skeleton>
           </Card>
           <Card>
             <Skeleton isLoaded={!homeVisible} h={152} width={"full"}>

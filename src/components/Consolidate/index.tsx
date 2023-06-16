@@ -4,7 +4,7 @@ import { Text } from "native-base";
 import Toast from "react-native-toast-message";
 
 import firebase from "../../services/firebase";
-import { IEntryList } from "../../screens/Entry";
+import { IEntryList } from "../../screens/App/Entry";
 import Icon from "../Icon";
 import { numberToReal } from "../../utils/number.helper";
 import {
@@ -46,10 +46,10 @@ const WRITE = require("../../../assets/icons/write.json");
 
 interface IConsolidate {
   visible: boolean;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
 }
 
-const Consolidate = ({ visible, setVisible }: IConsolidate) => {
+const Consolidate = ({ visible, onClose }: IConsolidate) => {
   const [page, setPage] = React.useState(1);
   const [isLoading, setIsLoading] = React.useState(false);
   const [entryList, setEntryList] = React.useState<
@@ -88,7 +88,7 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
     consolidateData(entryList)
       .then(() => {
         setIsLoading(false);
-        setVisible(false);
+        onClose();
         return Toast.show({
           type: "success",
           text1: "Dados consolidados com sucesso",
@@ -96,7 +96,7 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
       })
       .catch(() => {
         setIsLoading(false);
-        setVisible(false);
+        onClose();
         return Toast.show({
           type: "error",
           text1: "Erro ao consolidar os dados",
@@ -164,7 +164,7 @@ const Consolidate = ({ visible, setVisible }: IConsolidate) => {
             <TextHeaderScreen noMarginBottom>
               Consolidação de Lançamentos
             </TextHeaderScreen>
-            <Icon name="x" onPress={() => setVisible(false)} />
+            <Icon name="x" onPress={onClose} />
           </HeaderContainer>
           {page === 1 && (
             <View>
