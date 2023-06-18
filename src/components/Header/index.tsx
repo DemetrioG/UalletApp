@@ -115,7 +115,7 @@ export const Header = () => {
           backgroundColor={theme?.tertiary}
           borderBottomLeftRadius="40px"
           borderBottomRightRadius="40px"
-          height="235px"
+          height="240px"
           paddingX="15px"
           paddingY="15px"
         >

@@ -1,5 +1,13 @@
 import * as React from "react";
-import { Image, VStack, Pressable } from "native-base";
+import {
+  Image,
+  VStack,
+  Pressable,
+  useDisclose,
+  Avatar,
+  Text,
+  HStack,
+} from "native-base";
 import { IVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 import Modal from "react-native-modal";
 
@@ -26,15 +34,20 @@ import {
 } from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { refreshAuthDevice } from "./query";
+import { IThemeProvider } from "../../styles/baseTheme";
+import { useTheme } from "styled-components";
+import { TouchableOpacity } from "react-native";
+import { LogOut, Repeat, Settings } from "lucide-react-native";
 
 export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
+  const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation();
   const { data, setData } = React.useContext(DataContext);
   const { setLoader } = React.useContext(LoaderContext);
   const { setConfirm } = React.useContext(ConfirmContext);
   const { user, setUser } = React.useContext(UserContext);
 
-  const [visible, setVisible] = React.useState(false);
+  const modal = useDisclose();
 
   function changeModality() {
     return setData((dataState) => ({
@@ -55,7 +68,7 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
   }
 
   function handleLogout() {
-    setVisible(false);
+    modal.onClose();
     setTimeout(() => {
       setConfirm({
         title: "Deseja realmente sair do app?",
@@ -66,51 +79,72 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
   }
 
   function goToConfiguracoesScreen() {
-    setVisible(false);
+    modal.onClose();
     //#TODO: adicionar tipagem de navegação
     return setTimeout(() => navigate("Configuracoes" as any), 150);
   }
 
   return (
     <VStack {...StackProps}>
-      <Pressable onPress={() => setVisible(!visible)}>
+      <Pressable onPress={modal.onToggle}>
         <Image source={LOGO_SMALL} width="25px" h="30px" alt="Logo Uallet" />
       </Pressable>
       <Modal
-        isVisible={visible}
+        isVisible={modal.isOpen}
+        onSwipeComplete={modal.onClose}
+        onBackdropPress={modal.onClose}
         swipeDirection={"down"}
-        onSwipeComplete={() => setVisible(false)}
-        onBackdropPress={() => setVisible(false)}
       >
-        <Container>
-          <ProfileContainer>
-            <AvatarMenu>
-              <AvatarMenuText>{user.name[0]}</AvatarMenuText>
-            </AvatarMenu>
-            <Name>{user.completeName}</Name>
-            <Email>{user.email}</Email>
-          </ProfileContainer>
-          <MenuContainer>
-            <ItemContainer>
-              <ItemContent onPress={changeModality}>
-                <ItemText>{data.modality}</ItemText>
-                <Icon name="repeat" size={16} />
-              </ItemContent>
-            </ItemContainer>
-            <ItemContainer>
-              <ItemContent onPress={goToConfiguracoesScreen}>
-                <ItemText>Configurações</ItemText>
-                <Icon name="settings" size={18} />
-              </ItemContent>
-            </ItemContainer>
-            <ItemContainer>
-              <ItemContent onPress={handleLogout}>
-                <ItemText logout>Logout</ItemText>
-                <Icon name="power" size={18} colorVariant="red" />
-              </ItemContent>
-            </ItemContainer>
-          </MenuContainer>
-        </Container>
+        <VStack
+          h="90%"
+          w="100%"
+          position="absolute"
+          bottom={-20}
+          background={theme?.tertiary}
+          borderTopRadius="40px"
+          space={8}
+        >
+          <VStack alignItems="center" mt={8} space={2}>
+            <Avatar size={90} backgroundColor={theme?.blue}>
+              <Text fontWeight={800} fontSize={34}>
+                {user.name[0]}
+              </Text>
+            </Avatar>
+            <Text fontWeight={700}>{user.completeName}</Text>
+            <Text fontSize="14px">{user.email}</Text>
+          </VStack>
+          <VStack
+            h="100%"
+            backgroundColor={theme?.secondary}
+            p={5}
+            borderTopRadius="40px"
+          >
+            <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
+              <TouchableOpacity onPress={changeModality}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <ItemText>{data.modality}</ItemText>
+                  <Repeat color={theme?.text} size={20} />
+                </HStack>
+              </TouchableOpacity>
+            </VStack>
+            <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
+              <TouchableOpacity onPress={goToConfiguracoesScreen}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <ItemText>Configurações</ItemText>
+                  <Settings color={theme?.text} size={20} />
+                </HStack>
+              </TouchableOpacity>
+            </VStack>
+            <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
+              <TouchableOpacity onPress={handleLogout}>
+                <HStack alignItems="center" justifyContent="space-between">
+                  <ItemText>Logout</ItemText>
+                  <LogOut color={theme?.text} size={20} />
+                </HStack>
+              </TouchableOpacity>
+            </VStack>
+          </VStack>
+        </VStack>
       </Modal>
     </VStack>
   );
