@@ -14,7 +14,6 @@ export const useData = () => {
     return handleExecute(dataContext, defaultData)
       .then((data) => {
         setEmpty(false);
-        console.log(data);
         if (data) setData(data);
       })
       .catch((e) => {
