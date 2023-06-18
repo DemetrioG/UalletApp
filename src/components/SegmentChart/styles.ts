@@ -5,7 +5,7 @@ import { colors, metrics } from "../../styles";
 import { Center, Text } from "native-base";
 import React from "react";
 
-type TPieChart = { data: number[] };
+type TPieChart = { data: number[]; children: Element[] | Element };
 export const StyledPieChart: React.FC<TPieChart> = styled(
   PieChart
 ).attrs<TPieChart>(({ theme: { theme }, data }) => ({
@@ -37,7 +37,7 @@ export const StyledPieChart: React.FC<TPieChart> = styled(
     },
   ],
 }))<TPieChart>`
-  height: 130px;
+  height: 110px;
 `;
 
 export const ChartContainer = styled(Center)`

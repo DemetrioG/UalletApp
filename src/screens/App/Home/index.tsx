@@ -15,7 +15,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import firebase from "../../../services/firebase";
 import { IEntryList } from "../Entry";
-import InvestSummary from "../../../components/InvestSummary";
 import Consolidate from "../../../components/Consolidate";
 import LineChart from "../../../components/LineChart";
 import Icon from "../../../components/Icon";
@@ -43,17 +42,10 @@ import {
   ValueText,
   BackgroundContainer,
 } from "../../../styles/general";
-import {
-  checkFutureDebitsToConsolidate,
-  completeUser,
-  getLastEntry,
-} from "./querys";
 import { getBalance } from "../../../utils/query.helper";
-import EntrySegmentChart from "./EntrySegmentChart";
+import { EntriesSegmentChart } from "./EntriesSegmentChart";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";
-import { Path, Svg, SvgFromUri, SvgUri } from "react-native-svg";
-import { Menu } from "../../../components/Menu";
 import { Header } from "../../../components/Header";
 import {
   Edit3,
@@ -143,32 +135,9 @@ export const Home = () => {
           </HStack>
           <Entries lastEntries={lastEntries.slice(0, 3)} />
           <Planning />
+          <EntriesSegmentChart />
         </Stack>
         {/* <Collapse isOpen={financeShow}>
-          <Card>
-              {lastEntry.length > 0 ? (
-                <>
-                  <CardHeaderView>
-                    <CardTextView>
-                      <Text fontSize={"md"}>Últimos lançamentos</Text>
-                    </CardTextView>
-                    <Icon
-                      name="edit-3"
-                      onPress={() => navigate("Lancamentos")}
-                    />
-                  </CardHeaderView>
-                  <>
-                    {lastEntry.map((item, index) => {
-                      return <ItemList item={item} key={index} />;
-                    })}
-                  </>
-                </>
-              ) : (
-                <EmptyEntryText>
-                  Não há lançamentos para visualizar
-                </EmptyEntryText>
-              )}
-          </Card>
           <Card>
             <Skeleton isLoaded={!homeVisible} h={152} width={"full"}>
               <CardHeaderView>

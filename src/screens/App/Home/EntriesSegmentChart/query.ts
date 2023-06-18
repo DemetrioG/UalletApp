@@ -2,9 +2,9 @@ import firebase from "../../../../services/firebase";
 import { IData } from "../../../../context/Data/dataContext";
 import { getFinalDateMonth } from "../../../../utils/date.helper";
 import { currentUser } from "../../../../utils/query.helper";
-import { IChartData } from "../../../../components/SegmentChart";
+import { IChartData } from "../../../../components/SegmentChart/types";
 
-async function _getData(context: IData, defaultData: IChartData[]) {
+export async function getData(context: IData, defaultData: IChartData[]) {
   const user = await currentUser();
   const { month, year, modality } = context;
 
@@ -90,13 +90,5 @@ async function _getData(context: IData, defaultData: IChartData[]) {
     finalData[4].value = needs;
 
     return Promise.resolve(finalData);
-  }
-}
-
-export function getData(context: IData, defaultData: IChartData[]) {
-  try {
-    return _getData(context, defaultData);
-  } catch (error) {
-    throw new Error(error as string);
   }
 }

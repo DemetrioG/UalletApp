@@ -1,8 +1,6 @@
-import * as React from "react";
-import { Text, View, VStack } from "native-base";
+import { Center, HStack, Text, View, VStack } from "native-base";
 
 import EmptyChart from "../EmptyChart";
-import { LoaderContext } from "../../context/Loader/loaderContext";
 import {
   StyledPieChart,
   PieChartLabel,
@@ -10,32 +8,14 @@ import {
   SegmentLabelView,
   ContentLabel,
   DotView,
-  ChartContainer,
   PieCenter,
 } from "./styles";
 import { fonts, metrics } from "../../styles";
-import { Skeleton } from "../../styles/general";
+import { IChartData, ISlices } from "./types";
+import When from "../When";
+import { IThemeProvider } from "../../styles/baseTheme";
+import { useTheme } from "styled-components";
 
-interface ISlices {
-  slices?: [
-    slice: {
-      pieCentroid: number[];
-      data: {
-        key: number;
-        svg: object;
-      };
-      value: number;
-    }
-  ];
-  data: number[];
-}
-
-export interface IChartData {
-  label: string;
-  value: number;
-}
-
-// Criação de labels para o Pie Chart
 export const Label = ({ slices, data }: ISlices) => {
   return (
     <>
@@ -46,7 +26,7 @@ export const Label = ({ slices, data }: ISlices) => {
             {value !== 0 && (
               <PieChartLabel
                 x={pieCentroid[0] + (metrics.screenWidth / 100) * 17.5}
-                y={pieCentroid[1] + 57}
+                y={pieCentroid[1] + 43}
               >
                 {Math.round(value)}%
               </PieChartLabel>
@@ -69,51 +49,47 @@ const SegmentChart = ({
   emptyText: string;
   screen: "home" | "invest";
 }) => {
-  const {
-    loader: { homeVisible, investVisible },
-  } = React.useContext(LoaderContext);
-
-  const loader = screen === "home" ? homeVisible : investVisible;
+  const { theme }: IThemeProvider = useTheme();
   const chartValues = data.map(({ value }) => value);
 
   return (
     <>
-      {!loader ? (
-        <ChartContainer>
-          {empty ? (
-            <EmptyChart
-              emphasisText={emptyText}
-              iconName="pie-chart"
-              helperText="Realize seu primeiro lançamento!"
-            />
-          ) : (
-            <>
-              <SegmentChartView>
-                <StyledPieChart data={chartValues}>
-                  <Label data={chartValues} />
-                  <PieCenter />
-                </StyledPieChart>
-              </SegmentChartView>
-              <SegmentLabelView>
-                {data.map(({ label, value }, index) => {
-                  return (
-                    <VStack key={index}>
-                      {value ? (
-                        <ContentLabel>
-                          <DotView index={index} />
-                          <Text fontSize={fonts.regular}>{label}</Text>
-                        </ContentLabel>
-                      ) : null}
-                    </VStack>
-                  );
-                })}
-              </SegmentLabelView>
-            </>
-          )}
-        </ChartContainer>
-      ) : (
-        <Skeleton isLoaded={!loader} h={130} width={"full"} />
-      )}
+      <Center>
+        <When is={empty}>
+          <EmptyChart actionText="Realize seu primeiro lançamento" />
+        </When>
+        <When is={!empty}>
+          <HStack>
+            <SegmentChartView>
+              <StyledPieChart data={chartValues}>
+                <Label data={chartValues} />
+              </StyledPieChart>
+            </SegmentChartView>
+            <SegmentLabelView>
+              {data.map(({ label, value }, index) => {
+                return (
+                  <VStack key={index}>
+                    <When is={!!value}>
+                      <HStack alignItems="center" space={2}>
+                        <VStack
+                          w="10px"
+                          h="10px"
+                          borderRadius="100%"
+                          backgroundColor={theme?.colorPieChart[index]}
+                        />
+                        <Text fontSize="14px" fontWeight={700}>
+                          {value}%
+                        </Text>
+                        <Text fontSize="14px">{label}</Text>
+                      </HStack>
+                    </When>
+                  </VStack>
+                );
+              })}
+            </SegmentLabelView>
+          </HStack>
+        </When>
+      </Center>
     </>
   );
 };
