@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 import { Text } from "native-base";
 import Toast from "react-native-toast-message";
@@ -41,21 +41,15 @@ import {
 } from "./styles";
 import { colors } from "../../styles";
 import { consolidateData, getData } from "./query";
+import { IEntries, ReturnUseDisclosure } from "../../types/types";
 
 const WRITE = require("../../../assets/icons/write.json");
 
-interface IConsolidate {
-  visible: boolean;
-  onClose: () => void;
-}
-
-const Consolidate = ({ visible, onClose }: IConsolidate) => {
-  const [page, setPage] = React.useState(1);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [entryList, setEntryList] = React.useState<
-    Array<
-      (IEntryList & { checked?: boolean }) | firebase.firestore.DocumentData
-    >
+const Consolidate = ({ isOpen, onClose }: ReturnUseDisclosure) => {
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [entryList, setEntryList] = useState<
+    Array<(IEntries & { checked?: boolean }) | firebase.firestore.DocumentData>
   >([]);
 
   const anySelectedEntry =
@@ -150,14 +144,14 @@ const Consolidate = ({ visible, onClose }: IConsolidate) => {
     );
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getData().then((data) => {
       setEntryList(data);
     });
   }, []);
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal visible={isOpen} transparent animationType="fade">
       <ModalContainer>
         <ModalView>
           <HeaderContainer>

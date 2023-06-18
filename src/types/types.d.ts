@@ -1,3 +1,5 @@
+import { ITimestamp } from "../utils/date.helper";
+
 export type AssetSegment =
   | "Ações"
   | "FIIs"
@@ -13,4 +15,15 @@ export interface ReturnUseDisclosure {
   onOpen: () => void;
   onClose: () => void;
   onToggle: () => void;
-};
+}
+
+export interface IEntries {
+  id: number;
+  classification: string | null;
+  date: ITimestamp;
+  description: string;
+  modality: string;
+  segment: string | null;
+  type: TEntryType;
+  value: number;
+}

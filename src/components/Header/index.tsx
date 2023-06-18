@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext, useEffect } from "react";
 
 import { Menu } from "../Menu";
 import { DatePicker } from "../DatePicker";
@@ -15,9 +15,9 @@ import { TouchableOpacity } from "react-native";
 
 export const Header = () => {
   const { theme }: IThemeProvider = useTheme();
-  const { data } = React.useContext(DataContext);
-  const { user, setUser } = React.useContext(UserContext);
-  const { setLoader } = React.useContext(LoaderContext);
+  const { data } = useContext(DataContext);
+  const { user, setUser } = useContext(UserContext);
+  const { setLoader } = useContext(LoaderContext);
 
   const {
     isOpen: isOpenMonth,
@@ -32,7 +32,7 @@ export const Header = () => {
 
   const [balanceInteger, balanceCents] = data.balance.split(",");
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user.name) {
       getData()
         .then((data) => {
@@ -82,7 +82,7 @@ export const Header = () => {
           backgroundColor={theme?.secondary}
           borderBottomLeftRadius="40px"
           borderBottomRightRadius="40px"
-          paddingX="15px"
+          paddingX={4}
           paddingBottom="40px"
         >
           <HStack
@@ -170,4 +170,3 @@ const optionsYear: number[] = [];
 for (let index = 0; index < 5; index++) {
   optionsYear.push(new Date().getFullYear() + index);
 }
-

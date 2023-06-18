@@ -68,7 +68,6 @@ export const ModalView = styled(View)<{ center?: boolean }>`
 `;
 
 export const ScrollViewTab: React.FC<ScrollViewProps> = styled(ScrollView)`
-  border: 1px solid red;
   margin-bottom: ${metrics.doubleBaseMargin * 2.5}px;
   border-bottom-left-radius: ${metrics.baseRadius}px;
   border-bottom-right-radius: ${metrics.baseRadius}px;

@@ -1,10 +1,11 @@
-import * as React from "react";
+import { useEffect, useContext } from "react";
 import { TouchableOpacity, View } from "react-native";
 import {
   Collapse,
   HStack,
   Image,
   Pressable,
+  Stack,
   Text,
   VStack,
   useDisclose,
@@ -67,6 +68,8 @@ import {
   useGetLastEntries,
   useIsUserWithCompleteData,
 } from "./hooks/useHome";
+import { Entries } from "./Entries";
+import { Planning } from "./Planning";
 
 function ItemList({
   item,
@@ -95,7 +98,7 @@ function ItemList({
 export const Home = () => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { data } = React.useContext(DataContext);
+  const { data } = useContext(DataContext);
 
   const consolidation = useDisclose();
   const { handleGetBalance } = useGetBalance();
@@ -103,11 +106,11 @@ export const Home = () => {
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleGetBalance();
   }, [data.modality, data.month, data.year, consolidation.isOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleGetLastEntries();
   }, [
     data.modality,
@@ -128,18 +131,19 @@ export const Home = () => {
 
   return (
     <BackgroundContainer>
-      <Consolidate
-        visible={consolidation.isOpen}
-        onClose={consolidation.onClose}
-      />
+      <Consolidate {...consolidation} />
       <ScrollViewTab showsVerticalScrollIndicator={false}>
         <Header />
-        <HStack justifyContent="space-evenly">
-          <Action text="Lançamentos" Icon={Edit3} />
-          <Action text="Integrações" Icon={Plug} />
-          <Action text="Upgrades" Icon={Rocket} />
-          <Action text="Mais" Icon={MoreHorizontal} />
-        </HStack>
+        <Stack space={5}>
+          <HStack justifyContent="space-evenly">
+            <Action text="Lançamentos" Icon={Edit3} />
+            <Action text="Integrações" Icon={Plug} />
+            <Action text="Upgrades" Icon={Rocket} />
+            <Action text="Mais" Icon={MoreHorizontal} />
+          </HStack>
+          <Entries lastEntries={lastEntries.slice(0, 3)} />
+          <Planning />
+        </Stack>
         {/* <Collapse isOpen={financeShow}>
           <Card>
               {lastEntry.length > 0 ? (
@@ -196,13 +200,7 @@ export const Action = ({ text, Icon }: { text: string; Icon: LucideIcon }) => {
 
   return (
     <VStack alignItems="center" space={1}>
-      <VStack
-        style={{
-          backgroundColor: theme?.secondary,
-          borderRadius: 50,
-          padding: 20,
-        }}
-      >
+      <VStack background={theme?.secondary} borderRadius={50} p="20px">
         <Icon color={theme?.text} />
       </VStack>
       <Text fontSize="12px">{text}</Text>
