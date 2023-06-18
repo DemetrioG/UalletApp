@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { LoaderContext } from "../../../../context/Loader/loaderContext";
 import { DataContext } from "../../../../context/Data/dataContext";
-import SegmentChart from "../../../../components/SegmentChart";
+import { SegmentChart } from "../../../../components/SegmentChart";
 import { getData } from "./query";
 import { useIsFocused } from "@react-navigation/native";
 

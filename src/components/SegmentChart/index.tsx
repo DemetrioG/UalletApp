@@ -1,36 +1,27 @@
 import { Center, HStack, Text, View, VStack } from "native-base";
 
 import EmptyChart from "../EmptyChart";
-import {
-  StyledPieChart,
-  PieChartLabel,
-  SegmentChartView,
-  SegmentLabelView,
-  ContentLabel,
-  DotView,
-  PieCenter,
-} from "./styles";
-import { fonts, metrics } from "../../styles";
+import { StyledPieChart } from "./styles";
+import { metrics } from "../../styles";
 import { IChartData, ISlices } from "./types";
 import When from "../When";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 
-export const Label = ({ slices, data }: ISlices) => {
+const Label = ({ slices }: ISlices) => {
   return (
     <>
       {slices?.map((slice, index) => {
         const { pieCentroid, value } = slice;
+        const x = pieCentroid[0] + (metrics.screenWidth / 100) * 17.5;
+        const y = pieCentroid[1] + 43;
         return (
           <View key={index}>
-            {value !== 0 && (
-              <PieChartLabel
-                x={pieCentroid[0] + (metrics.screenWidth / 100) * 17.5}
-                y={pieCentroid[1] + 43}
-              >
+            <When is={value !== 0}>
+              <Text position="absolute" top={y} left={x}>
                 {Math.round(value)}%
-              </PieChartLabel>
-            )}
+              </Text>
+            </When>
           </View>
         );
       })}
@@ -38,16 +29,12 @@ export const Label = ({ slices, data }: ISlices) => {
   );
 };
 
-const SegmentChart = ({
+export const SegmentChart = ({
   data,
   empty,
-  emptyText,
-  screen,
 }: {
   data: IChartData[];
   empty: boolean;
-  emptyText: string;
-  screen: "home" | "invest";
 }) => {
   const { theme }: IThemeProvider = useTheme();
   const chartValues = data.map(({ value }) => value);
@@ -60,12 +47,12 @@ const SegmentChart = ({
         </When>
         <When is={!empty}>
           <HStack>
-            <SegmentChartView>
+            <VStack w="50%">
               <StyledPieChart data={chartValues}>
                 <Label data={chartValues} />
               </StyledPieChart>
-            </SegmentChartView>
-            <SegmentLabelView>
+            </VStack>
+            <VStack w="50%">
               {data.map(({ label, value }, index) => {
                 return (
                   <VStack key={index}>
@@ -86,12 +73,10 @@ const SegmentChart = ({
                   </VStack>
                 );
               })}
-            </SegmentLabelView>
+            </VStack>
           </HStack>
         </When>
       </Center>
     </>
   );
 };
-
-export default SegmentChart;

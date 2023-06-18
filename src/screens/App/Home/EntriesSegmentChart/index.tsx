@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 
 import { DataContext } from "../../../../context/Data/dataContext";
-import SegmentChart from "../../../../components/SegmentChart";
+import { SegmentChart } from "../../../../components/SegmentChart";
 import { useData } from "./hooks/useData";
 import { HStack, Pressable, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../../../styles/baseTheme";
@@ -35,12 +35,7 @@ export const EntriesSegmentChart = () => {
           </Tooltip>
         </Pressable>
       </HStack>
-      <SegmentChart
-        data={data}
-        empty={empty}
-        emptyText="Parece que você não cadastrou nenhuma despesa para o período"
-        screen="home"
-      />
+      <SegmentChart data={data} empty={empty} />
     </VStack>
   );
 };
