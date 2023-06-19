@@ -1,9 +1,6 @@
-import { View } from "react-native";
+import React from "react";
 import styled from "styled-components";
 import { PieChart } from "react-native-svg-charts";
-import { colors, metrics } from "../../styles";
-import { Center, Text } from "native-base";
-import React from "react";
 
 type TPieChart = { data: number[]; children: Element[] | Element };
 export const StyledPieChart: React.FC<TPieChart> = styled(

@@ -14,8 +14,7 @@ export const LIGHT = {
   transparency: "rgba(227, 222, 222, 0.95)",
   statusBar: "dark-content",
   yellow: "#FFB100",
-  colorPieChart: ["#252333", "#8F47AD", "#AA6EC4", "#FF2F45", "#FF4C5F"],
-  randomColor: "#266DD3",
+  colorPieChart: ["rgba(38, 109, 211, 1)", "rgba(38, 109, 211, 0.8)", "rgba(38, 109, 211, 0.6)", "rgba(38, 109, 211, 0.4)", "rgba(38, 109, 211, 0.2)"],
 };
 
 export const DARK = {
@@ -30,6 +29,5 @@ export const DARK = {
   transparency: "rgba(49, 47, 66, 0.95)",
   statusBar: "light-content",
   yellow: "#FFFD82",
-  colorPieChart: ["#252333", "#FF2F45", "#FF4C5F", "#6499E3", "#98BBEC"],
-  randomColor: "#266DD3",
+  colorPieChart: ["rgba(38, 109, 211, 1)", "rgba(38, 109, 211, 0.8)", "rgba(38, 109, 211, 0.6)", "rgba(38, 109, 211, 0.4)", "rgba(38, 109, 211, 0.2)"],
 };

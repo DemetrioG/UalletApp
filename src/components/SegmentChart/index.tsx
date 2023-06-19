@@ -55,8 +55,8 @@ export const SegmentChart = ({
             <VStack w="50%">
               {data.map(({ label, value }, index) => {
                 return (
-                  <VStack key={index}>
-                    <When is={!!value}>
+                  <When is={!!value}>
+                    <VStack key={index} justifyContent="center" flex={1}>
                       <HStack alignItems="center" space={2}>
                         <VStack
                           w="10px"
@@ -69,8 +69,8 @@ export const SegmentChart = ({
                         </Text>
                         <Text fontSize="14px">{label}</Text>
                       </HStack>
-                    </When>
-                  </VStack>
+                    </VStack>
+                  </When>
                 );
               })}
             </VStack>
