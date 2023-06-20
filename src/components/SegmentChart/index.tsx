@@ -49,7 +49,7 @@ export const SegmentChart = ({
           <HStack>
             <VStack w="50%">
               <StyledPieChart data={chartValues}>
-                <Label data={chartValues} />
+                {/* <Label data={chartValues} /> */}
               </StyledPieChart>
             </VStack>
             <VStack w="50%">

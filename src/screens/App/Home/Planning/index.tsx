@@ -20,7 +20,7 @@ export const Planning = () => {
       <VStack>
         {progressTypes.map((item, index) => {
           return (
-            <VStack paddingY={3}>
+            <VStack paddingY={3} key={index}>
               <HStack
                 key={index}
                 justifyContent="space-between"
