@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   useDisclose,
+  ScrollView,
 } from "native-base";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
@@ -33,8 +34,7 @@ import {
   useIsUserWithCompleteData,
 } from "./hooks/useHome";
 import { IThemeProvider } from "../../../styles/baseTheme";
-import { ScrollViewTab, BackgroundContainer } from "../../../styles/general";
-import { TouchableOpacity } from "react-native";
+import { BackgroundContainer } from "../../../styles/general";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -70,30 +70,27 @@ export const Home = () => {
   // }, [balance, lineChart, entrySegmentChart, name, equity]);
 
   return (
-    <VStack flex={1} borderWidth={1} backgroundColor="red">
-      <Text>Opa</Text>
-    </VStack>
-    // <BackgroundContainer>
-    //   <Consolidate {...consolidation} />
-    //   <ScrollViewTab showsVerticalScrollIndicator={false}>
-    //     <Header />
-    //     <Stack space={5}>
-    //       <HStack justifyContent="space-evenly">
-    //         <Action
-    //           text="Lançamentos"
-    //           Icon={Edit3}
-    //           onPress={() => navigate("Lancamentos")}
-    //         />
-    //         <Action text="Integrações" Icon={Plug} />
-    //         <Action text="Upgrades" Icon={Rocket} />
-    //         <Action text="Mais" Icon={MoreHorizontal} />
-    //       </HStack>
-    //       <Entries lastEntries={lastEntries.slice(0, 3)} />
-    //       <Planning />
-    //       <EntriesSegmentChart />
-    //     </Stack>
-    //   </ScrollViewTab>
-    // </BackgroundContainer>
+    <BackgroundContainer>
+      <Consolidate {...consolidation} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Header />
+        <Stack space={5}>
+          <HStack justifyContent="space-evenly">
+            <Action
+              text="Lançamentos"
+              Icon={Edit3}
+              onPress={() => navigate("Lancamentos")}
+            />
+            <Action text="Integrações" Icon={Plug} />
+            <Action text="Upgrades" Icon={Rocket} />
+            <Action text="Mais" Icon={MoreHorizontal} />
+          </HStack>
+          <Entries lastEntries={lastEntries.slice(0, 3)} />
+          <Planning />
+          <EntriesSegmentChart />
+        </Stack>
+      </ScrollView>
+    </BackgroundContainer>
   );
 };
 

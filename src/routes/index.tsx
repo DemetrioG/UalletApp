@@ -7,6 +7,7 @@ import { UserContext } from "../context/User/userContext";
 import { DataContext } from "../context/Data/dataContext";
 import { getStorage, removeAllStorage } from "../utils/storage.helper";
 import { setupPushNotifications } from "../utils/notification.helper";
+import { AppStackRoutes } from "./AppStackRoutes";
 
 const Routes = () => {
   const { setData } = React.useContext(DataContext);
@@ -51,7 +52,7 @@ const Routes = () => {
     });
   }, []);
 
-  return user.signed ? <AppRoutes /> : <AuthRoutes />;
+  return user.signed ? <AppStackRoutes /> : <AuthRoutes />;
 };
 
 export default Routes;

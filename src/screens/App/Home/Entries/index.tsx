@@ -6,14 +6,17 @@ import { Path, Svg } from "react-native-svg";
 import { numberToReal } from "../../../../utils/number.helper";
 import { convertDateFromDatabase } from "../../../../utils/date.helper";
 import When from "../../../../components/When";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export const Entries = ({ lastEntries }: { lastEntries: IEntries[] }) => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
   return (
     <VStack backgroundColor={theme?.secondary} borderRadius="30px" p={4} pt={5}>
       <HStack justifyContent="space-between" alignItems="center" mb={2}>
         <Text fontWeight={600}>Lançamentos</Text>
-        <Pressable>
+        <Pressable onPress={() => navigate("Lancamentos")}>
           <Text fontSize="14px" color={theme?.blue}>
             Ver todos
           </Text>
