@@ -1,23 +1,23 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import { Menu } from "../Menu";
 import { DatePicker } from "../DatePicker";
-import { UserContext } from "../../context/User/userContext";
-import { LoaderContext } from "../../context/Loader/loaderContext";
 import { DataContext } from "../../context/Data/dataContext";
-import { getData } from "./query";
 import { HStack, Pressable, Text, VStack, useDisclose } from "native-base";
 import { Path, Svg } from "react-native-svg";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { CalendarRange } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useGetData } from "./hooks/useData";
 
 export const Header = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
   const { data } = useContext(DataContext);
-  const { user, setUser } = useContext(UserContext);
-  const { setLoader } = useContext(LoaderContext);
+  const {} = useGetData();
 
   const {
     isOpen: isOpenMonth,
@@ -31,33 +31,6 @@ export const Header = () => {
   } = useDisclose();
 
   const [balanceInteger, balanceCents] = data.balance.split(",");
-
-  useEffect(() => {
-    if (!user.name) {
-      getData()
-        .then((data) => {
-          setUser((state) => ({
-            ...state,
-            name: data.name,
-            completeName: data.completeName,
-            email: data.email,
-          }));
-        })
-        .catch(() => {
-          setUser((state) => ({
-            ...state,
-            name: "",
-          }));
-        });
-    }
-
-    if (user.name.length) {
-      setLoader((loaderState) => ({
-        ...loaderState,
-        name: true,
-      }));
-    }
-  }, [user]);
 
   return (
     <>
@@ -137,6 +110,7 @@ export const Header = () => {
             paddingX="14px"
             paddingY="10px"
             borderRadius={30}
+            onPress={() => navigate("Lancamentos")}
           >
             <Text
               color={theme?.isOnDarkTheme ? "black" : "white"}
