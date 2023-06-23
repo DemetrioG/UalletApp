@@ -11,7 +11,6 @@ import {
 import { IVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 import Modal from "react-native-modal";
 
-import Icon from "../Icon";
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
 import { DataContext } from "../../context/Data/dataContext";
 import { initialUserState, UserContext } from "../../context/User/userContext";
@@ -20,18 +19,6 @@ import {
   LoaderContext,
 } from "../../context/Loader/loaderContext";
 import { removeAllStorage } from "../../utils/storage.helper";
-import {
-  AvatarMenu,
-  AvatarMenuText,
-  Container,
-  Email,
-  ItemContainer,
-  ItemContent,
-  ItemText,
-  MenuContainer,
-  Name,
-  ProfileContainer,
-} from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { refreshAuthDevice } from "./query";
 import { IThemeProvider } from "../../styles/baseTheme";
@@ -58,13 +45,10 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
 
   function logout() {
     refreshAuthDevice(data.expoPushToken!);
-    removeAllStorage()
-      .then(() => {})
-      .catch(() => {})
-      .finally(() => {
-        setUser(initialUserState);
-        setLoader(initialLoaderState);
-      });
+    removeAllStorage().finally(() => {
+      setUser(initialUserState);
+      setLoader(initialLoaderState);
+    });
   }
 
   function handleLogout() {
@@ -94,6 +78,8 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
         onSwipeComplete={modal.onClose}
         onBackdropPress={modal.onClose}
         swipeDirection={"down"}
+        // style={{ width: "100%", left: 0 }}
+        coverScreen
       >
         <VStack
           h="90%"
@@ -122,7 +108,7 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
             <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
               <TouchableOpacity onPress={changeModality}>
                 <HStack alignItems="center" justifyContent="space-between">
-                  <ItemText>{data.modality}</ItemText>
+                  <Text>{data.modality}</Text>
                   <Repeat color={theme?.text} size={20} />
                 </HStack>
               </TouchableOpacity>
@@ -130,7 +116,7 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
             <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
               <TouchableOpacity onPress={goToConfiguracoesScreen}>
                 <HStack alignItems="center" justifyContent="space-between">
-                  <ItemText>Configurações</ItemText>
+                  <Text>Configurações</Text>
                   <Settings color={theme?.text} size={20} />
                 </HStack>
               </TouchableOpacity>
@@ -138,7 +124,7 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
             <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
               <TouchableOpacity onPress={handleLogout}>
                 <HStack alignItems="center" justifyContent="space-between">
-                  <ItemText>Logout</ItemText>
+                  <Text>Logout</Text>
                   <LogOut color={theme?.text} size={20} />
                 </HStack>
               </TouchableOpacity>

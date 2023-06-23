@@ -1,13 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
-import { HStack } from "native-base";
-import { TouchableOpacity } from "react-native";
-import Icon from "../../../../components/Icon";
-import { ItemContainer, ItemText } from "../../../../components/Menu/styles";
-import {
-  BackgroundContainer,
-  TextHeaderScreen,
-  ViewTab,
-} from "../../../../styles/general";
+import { HStack, Pressable, Text, VStack } from "native-base";
+import { BackgroundContainer } from "../../../../styles/general";
+import { IThemeProvider } from "../../../../styles/baseTheme";
+import { useTheme } from "styled-components";
+import { ChevronLeft } from "lucide-react-native";
+import { ChevronRight } from "lucide-react-native";
 
 const actions = [
   {
@@ -21,6 +18,7 @@ const actions = [
 ];
 
 const DadosCadastraisScreen = () => {
+  const { theme }: IThemeProvider = useTheme();
   const { goBack, navigate } = useNavigation();
 
   function goTo(url: string) {
@@ -30,26 +28,32 @@ const DadosCadastraisScreen = () => {
 
   return (
     <BackgroundContainer>
-      <ViewTab>
+      <VStack
+        backgroundColor={theme?.secondary}
+        flex={1}
+        p={5}
+        borderTopLeftRadius="30px"
+        borderTopRightRadius="30px"
+      >
         <HStack alignItems="center" space={3} mb={10}>
-          <Icon name="chevron-left" size={24} onPress={goBack} />
-          <TextHeaderScreen noMarginBottom>Dados Cadastrais</TextHeaderScreen>
+          <Pressable onPress={goBack}>
+            <ChevronLeft color={theme?.text} />
+          </Pressable>
+          <Text fontWeight={700}>Dados Cadastrais</Text>
         </HStack>
         {actions.map((action, index) => (
-          <TouchableOpacity key={index} onPress={() => goTo(action.url)}>
-            <ItemContainer>
-              <HStack
-                justifyContent="space-between"
-                flex={1}
-                alignItems={"center"}
-              >
-                <ItemText>{action.label}</ItemText>
-                <Icon name="chevron-right" size={18} />
+          <Pressable key={index} onPress={() => goTo(action.url)}>
+            <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
+              <HStack justifyContent="space-between" alignItems={"center"}>
+                <HStack alignItems="center" space={3}>
+                  <Text>{action.label}</Text>
+                </HStack>
+                <ChevronRight color={theme?.text} />
               </HStack>
-            </ItemContainer>
-          </TouchableOpacity>
+            </VStack>
+          </Pressable>
         ))}
-      </ViewTab>
+      </VStack>
     </BackgroundContainer>
   );
 };
