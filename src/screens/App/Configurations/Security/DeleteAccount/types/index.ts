@@ -1,0 +1,3 @@
+interface DeleteAccountDTO {
+  password: string;
+}

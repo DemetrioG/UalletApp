@@ -60,15 +60,6 @@ export const Home = () => {
     data.balance,
   ]);
 
-  // React.useEffect(() => {
-  //   if (name && balance && lineChart && entrySegmentChart && homeVisible) {
-  //     setLoader((loaderState) => ({
-  //       ...loaderState,
-  //       homeVisible: false,
-  //     }));
-  //   }
-  // }, [balance, lineChart, entrySegmentChart, name, equity]);
-
   return (
     <BackgroundContainer>
       <Consolidate {...consolidation} />

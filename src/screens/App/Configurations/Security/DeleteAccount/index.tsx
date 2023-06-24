@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Center, HStack, Text, VStack } from "native-base";
+import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -23,6 +23,9 @@ import {
   ViewTab,
 } from "../../../../../styles/general";
 import { deleteAccount } from "./query";
+import { IThemeProvider } from "../../../../../styles/baseTheme";
+import { useTheme } from "styled-components";
+import { ChevronLeft } from "lucide-react-native";
 
 interface IForm {
   password: string;
@@ -36,6 +39,7 @@ const schema = yup
 
 const DeleteAccountScreen = () => {
   const { goBack } = useNavigation();
+  const { theme }: IThemeProvider = useTheme();
   const { setConfirm } = React.useContext(ConfirmContext);
   const { setUser } = React.useContext(UserContext);
   const [loading, setLoading] = React.useState(false);
@@ -78,10 +82,18 @@ const DeleteAccountScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BackgroundContainer>
-        <ViewTab>
+        <VStack
+          backgroundColor={theme?.secondary}
+          flex={1}
+          p={5}
+          borderTopLeftRadius="30px"
+          borderTopRightRadius="30px"
+        >
           <HStack alignItems="center" space={3} mb={10}>
-            <Icon name="chevron-left" size={24} onPress={goBack} />
-            <TextHeaderScreen noMarginBottom>Excluir conta</TextHeaderScreen>
+            <Pressable onPress={goBack}>
+              <ChevronLeft color={theme?.text} />
+            </Pressable>
+            <Text fontWeight={700}>Excluir Conta</Text>
           </HStack>
           <VStack paddingX={2}>
             <Text fontSize={"md"}>
@@ -89,24 +101,24 @@ const DeleteAccountScreen = () => {
             </Text>
           </VStack>
           <Center flex={1}>
-            <FormContainer insideApp>
-              <TextInputPassword
-                control={control}
-                name="password"
-                placeholder="Senha"
-                returnKeyType="done"
-                errors={errors.password}
-                helperText="Informe sua senha"
-              />
-              <ButtonDelete
-                onPress={handleSubmit(handleDelete)}
-                isLoading={loading}
-              >
-                <ButtonText>EXCLUIR CONTA</ButtonText>
-              </ButtonDelete>
-            </FormContainer>
+            <TextInputPassword
+              variant="filled"
+              control={control}
+              name="password"
+              placeholder="Senha"
+              returnKeyType="done"
+              errors={errors.password}
+              helperText="Informe sua senha"
+            />
           </Center>
-        </ViewTab>
+          <Button
+            variant="outline"
+            onPress={handleSubmit(handleDelete)}
+            isLoading={loading}
+          >
+            <ButtonText>Excluir conta</ButtonText>
+          </Button>
+        </VStack>
       </BackgroundContainer>
     </TouchableWithoutFeedback>
   );

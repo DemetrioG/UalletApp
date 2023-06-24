@@ -45,6 +45,7 @@ const UTextInput = (
     withIcon?: boolean;
     options?: TextInputMaskOptionProp;
     setCalendar?: React.Dispatch<React.SetStateAction<boolean>>;
+    customTextInputProps?: object;
   }
 ) => {
   const [isInvalid, setIsInvalid] = React.useState(false);

@@ -35,8 +35,11 @@ const PasswordStrengthLabel: { [key: number]: string } = {
 
 function PasswordRules({
   content = "",
+  primary,
   ...props
-}: { content: string } & React.ComponentProps<typeof VStack>) {
+}: { content: string; primary?: boolean } & React.ComponentProps<
+  typeof VStack
+>) {
   const { theme }: IThemeProvider = useTheme();
   const [passwordStrength, setPasswordStrenght] = React.useState(0);
   const hasLength = content.length;
@@ -64,6 +67,7 @@ function PasswordRules({
             </HStack>
           </Tooltip>
           <ProgressBar
+            primary={primary}
             value={passwordStrength}
             strength={passwordStrength}
             size="md"

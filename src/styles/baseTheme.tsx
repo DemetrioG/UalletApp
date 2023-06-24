@@ -46,9 +46,17 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           minH: "12",
           shadow: "4",
           borderRadius: "13",
-          bgColor: theme.blue,
           marginBottom: metrics.baseMargin,
           width: "full",
+        },
+        variants: {
+          solid: {
+            bgColor: theme.blue,
+          },
+          outline: {
+            bgColor: "transparent",
+            borderColor: theme.blue,
+          },
         },
       },
       Text: {
@@ -65,7 +73,6 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
             borderColor: colors.strongBlue,
           },
           placeholderTextColor: theme.text,
-          backgroundColor: theme.secondary,
           selectionColor: colors.lightBlue,
           color: theme.text,
           borderColor: "transparent",
@@ -75,6 +82,14 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           borderRadius: "13",
           minH: "12",
           width: "full",
+        },
+        variants: {
+          outline: {
+            backgroundColor: theme.secondary,
+          },
+          filled: {
+            backgroundColor: theme.primary,
+          },
         },
       },
       Skeleton: {

@@ -1,11 +1,11 @@
 import { Progress } from "native-base";
 import styled from "styled-components";
 
-export const ProgressBar = styled(Progress).attrs<{ strength: number }>(
-  ({ theme: { theme } }) => ({
+export const ProgressBar = styled(Progress).attrs<{ primary?: boolean }>(
+  ({ primary, theme: { theme } }) => ({
     _filledTrack: {
       bg: theme.blue,
     },
-    bg: theme.secondary,
+    bg: primary ? theme.primary : theme.secondary,
   })
-)<{ strength: number }>``;
+)<{ primary?: boolean }>``;
