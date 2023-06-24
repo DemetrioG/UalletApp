@@ -9,7 +9,7 @@ import DadosCadastraisScreen from "../screens/App/Configurations/DadosCadastrais
 import { AlterarSenhaScreen } from "../screens/App/Configurations/DadosCadastrais/AlterarSenha";
 import InformacoesPessoaisScreen from "../screens/App/Configurations/DadosCadastrais/InformacoesPessoais";
 import { SecurityScreen } from "../screens/App/Configurations/Security";
-import DeleteAccountScreen from "../screens/App/Configurations/Security/DeleteAccount";
+import { DeleteAccountScreen } from "../screens/App/Configurations/Security/DeleteAccount";
 import Entry from "../screens/App/Entry";
 import Filter from "../screens/App/Entry/Filter";
 import FixedEntry from "../screens/App/FixedEntry";
