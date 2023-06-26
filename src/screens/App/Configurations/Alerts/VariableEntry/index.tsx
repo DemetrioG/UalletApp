@@ -1,61 +1,51 @@
-import * as React from "react";
-import { Button, Center, HStack, Text, VStack } from "native-base";
+import { useState } from "react";
+import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import Toast from "react-native-toast-message";
-
-import Icon from "../../../../../components/Icon";
 import {
   BackgroundContainer,
   ButtonText,
   Slider,
-  TextHeaderScreen,
-  ViewTab,
 } from "../../../../../styles/general";
-import { registerAlert } from "./query";
-import { InfoNumber } from "./styles";
+import { useTheme } from "styled-components";
+import { IThemeProvider } from "../../../../../styles/baseTheme";
+import { ChevronLeft } from "lucide-react-native";
+import { useSubmit } from "./hooks/useVariableEntry";
 
-const VariableEntryScreen = ({
+export const VariableEntryScreen = ({
   route: { params },
 }: {
   route: { params: number };
 }) => {
-  const { goBack, navigate } = useNavigation();
-  const [value, setValue] = React.useState(params || 50);
-  const [loading, setLoading] = React.useState(false);
+  const { theme }: IThemeProvider = useTheme();
+  const { goBack } = useNavigation();
+  const { isLoading, handleSubmit } = useSubmit();
 
-  function submit() {
-    setLoading(true);
-    registerAlert(value)
-      .then(() => {
-        navigate("Configuracoes/Alertas" as never);
-        Toast.show({
-          type: "success",
-          text1: "Alerta definido com sucesso",
-        });
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao definir alerta",
-        });
-      })
-      .finally(() => setLoading(false));
-  }
+  const [value, setValue] = useState(params ?? 50);
 
   return (
     <BackgroundContainer>
-      <ViewTab>
+      <VStack
+        backgroundColor={theme?.secondary}
+        flex={1}
+        p={5}
+        borderTopLeftRadius="30px"
+        borderTopRightRadius="30px"
+      >
         <HStack alignItems="center" space={3} mb={10}>
-          <Icon name="chevron-left" size={24} onPress={goBack} />
-          <TextHeaderScreen noMarginBottom>Alertas</TextHeaderScreen>
+          <Pressable onPress={goBack}>
+            <ChevronLeft color={theme?.text} />
+          </Pressable>
+          <Text fontWeight={700}>Alertas</Text>
         </HStack>
-        <VStack paddingX={2}>
-          <Text fontSize={"md"}>
-            Quando suas despesas variáveis ultrapassarem{" "}
-            <InfoNumber>{value}%</InfoNumber> de sua receita mensal enviaremos
-            um alerta para você!
+        <HStack paddingX={2} justifyContent="space-around">
+          <Text w="70%">
+            Quando suas despesas variáveis ultrapassarem{"\n"}de sua receita
+            mensal enviaremos um alerta para você!
           </Text>
-        </VStack>
+          <Text fontWeight={700} fontSize={40} color={theme?.blue}>
+            {value}%
+          </Text>
+        </HStack>
         <Center flex={1}>
           <VStack w={"full"}>
             <Slider
@@ -65,16 +55,17 @@ const VariableEntryScreen = ({
               onSlidingComplete={(value) => setValue(Number(value.toFixed(0)))}
               tapToSeek
               step={5}
-              colorVariant="red"
             />
-            <Button mt={65} isLoading={loading} onPress={submit}>
-              <ButtonText>CONFIRMAR</ButtonText>
-            </Button>
           </VStack>
         </Center>
-      </ViewTab>
+        <Button
+          mt={65}
+          isLoading={isLoading}
+          onPress={() => handleSubmit(value)}
+        >
+          <ButtonText>CONFIRMAR</ButtonText>
+        </Button>
+      </VStack>
     </BackgroundContainer>
   );
 };
-
-export default VariableEntryScreen;

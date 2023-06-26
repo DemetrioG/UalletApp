@@ -17,13 +17,12 @@ const actions = [
   },
 ];
 
-const DadosCadastraisScreen = () => {
+export const DadosCadastraisScreen = () => {
   const { theme }: IThemeProvider = useTheme();
   const { goBack, navigate } = useNavigation();
 
   function goTo(url: string) {
-    //TODO: tipagem de rota
-    navigate(url as any);
+    navigate(url as never);
   }
 
   return (
@@ -57,5 +56,3 @@ const DadosCadastraisScreen = () => {
     </BackgroundContainer>
   );
 };
-
-export default DadosCadastraisScreen;

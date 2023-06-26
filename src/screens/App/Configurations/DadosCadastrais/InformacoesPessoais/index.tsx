@@ -8,7 +8,7 @@ import { useTheme } from "styled-components";
 import { ChevronLeft } from "lucide-react-native";
 import { useGetUser } from "./hooks/useUser";
 
-const InformacoesPessoaisScreen = () => {
+export const InformacoesPessoaisScreen = () => {
   const { theme }: IThemeProvider = useTheme();
   const { goBack } = useNavigation();
   const { data } = useGetUser();
@@ -59,5 +59,3 @@ const InformacoesPessoaisScreen = () => {
     </BackgroundContainer>
   );
 };
-
-export default InformacoesPessoaisScreen;

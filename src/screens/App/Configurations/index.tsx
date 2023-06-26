@@ -32,13 +32,13 @@ const actions = [
   },
 ];
 
-const ConfiguracoesScreen = () => {
+export const ConfiguracoesScreen = () => {
   const { theme }: IThemeProvider = useTheme();
   const { goBack, navigate } = useNavigation();
 
   function goTo(url: string) {
     //TODO: tipagem de rota
-    navigate(url as any);
+    navigate(url as never);
   }
 
   return (
@@ -73,5 +73,3 @@ const ConfiguracoesScreen = () => {
     </BackgroundContainer>
   );
 };
-
-export default ConfiguracoesScreen;

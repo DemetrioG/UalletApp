@@ -2,12 +2,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 import Complete from "../screens/App/Complete";
-import ConfiguracoesScreen from "../screens/App/Configurations";
-import AlertsScreen from "../screens/App/Configurations/Alerts";
-import VariableEntryScreen from "../screens/App/Configurations/Alerts/VariableEntry";
-import DadosCadastraisScreen from "../screens/App/Configurations/DadosCadastrais";
+import { ConfiguracoesScreen } from "../screens/App/Configurations";
+import { AlertsScreen } from "../screens/App/Configurations/Alerts";
+import { VariableEntryScreen } from "../screens/App/Configurations/Alerts/VariableEntry";
+import { DadosCadastraisScreen } from "../screens/App/Configurations/DadosCadastrais";
 import { AlterarSenhaScreen } from "../screens/App/Configurations/DadosCadastrais/AlterarSenha";
-import InformacoesPessoaisScreen from "../screens/App/Configurations/DadosCadastrais/InformacoesPessoais";
+import { InformacoesPessoaisScreen } from "../screens/App/Configurations/DadosCadastrais/InformacoesPessoais";
 import { SecurityScreen } from "../screens/App/Configurations/Security";
 import { DeleteAccountScreen } from "../screens/App/Configurations/Security/DeleteAccount";
 import Entry from "../screens/App/Entry";
@@ -21,6 +21,7 @@ import NewAsset from "../screens/App/NewAsset";
 import NewFixAsset from "../screens/App/NewAsset/NewFixAsset";
 import NewVariableAsset from "../screens/App/NewAsset/NewVariableAsset";
 import NewEntry from "../screens/App/NewEntry";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 
 const { Navigator: StackNavigator, Screen: StackScreen } =
   createNativeStackNavigator();
@@ -28,6 +29,7 @@ const { Navigator: StackNavigator, Screen: StackScreen } =
 export const AppStackRoutes = () => {
   return (
     <NavigationContainer>
+      <ConfirmDialog />
       <StackNavigator initialRouteName="Home">
         {/* Home */}
         <StackScreen

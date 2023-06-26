@@ -1,20 +1,16 @@
-import * as React from "react";
+import { useContext, useRef, useEffect } from "react";
 import Modal from "react-native-modal";
 
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
-import {
-  ButtonContainer,
-  StyledButtonConfirm,
-  StyledButtonDelete,
-  TextAlert,
-  ModalView,
-  Container,
-} from "./styles";
 import { ButtonText } from "../../styles/general";
+import { Button, Center, HStack, Text, VStack } from "native-base";
+import { IThemeProvider } from "../../styles/baseTheme";
+import { useTheme } from "styled-components";
 
-const ConfirmDialog = () => {
-  const { confirm, setConfirm } = React.useContext(ConfirmContext);
-  const notInitialRender = React.useRef(false);
+export const ConfirmDialog = () => {
+  const { theme }: IThemeProvider = useTheme();
+  const { confirm, setConfirm } = useContext(ConfirmContext);
+  const notInitialRender = useRef(false);
 
   function handleCancel() {
     return setConfirm((confirmState) => ({
@@ -32,7 +28,7 @@ const ConfirmDialog = () => {
     }));
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (notInitialRender.current) {
       if (confirm.callback) {
         confirm.callbackFunction?.();
@@ -53,21 +49,35 @@ const ConfirmDialog = () => {
       onSwipeComplete={() => handleCancel()}
       onBackdropPress={() => handleCancel()}
     >
-      <Container>
-        <ModalView center>
-          <TextAlert>{confirm.title}</TextAlert>
-          <ButtonContainer>
-            <StyledButtonDelete onPress={handleCancel}>
-              <ButtonText>CANCELAR</ButtonText>
-            </StyledButtonDelete>
-            <StyledButtonConfirm onPress={handleConfirm}>
-              <ButtonText>OK</ButtonText>
-            </StyledButtonConfirm>
-          </ButtonContainer>
-        </ModalView>
-      </Container>
+      <Center
+        position="absolute"
+        top={0}
+        bottom={0}
+        marginBottom="auto"
+        marginTop="auto"
+        w="100%"
+      >
+        <VStack
+          backgroundColor={theme?.secondary}
+          p={5}
+          space={10}
+          borderRadius="20px"
+          borderLeftWidth={6}
+          borderLeftColor={theme?.red}
+        >
+          <Text textAlign="center" fontWeight={500}>
+            {confirm.title}
+          </Text>
+          <VStack>
+            <Button variant="outline" onPress={handleConfirm}>
+              <ButtonText>Ok</ButtonText>
+            </Button>
+            <Button onPress={handleCancel}>
+              <ButtonText>Cancelar</ButtonText>
+            </Button>
+          </VStack>
+        </VStack>
+      </Center>
     </Modal>
   );
 };
-
-export default ConfirmDialog;

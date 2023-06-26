@@ -1,31 +1,21 @@
-import * as React from "react";
+import { useEffect } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { HStack, VStack } from "native-base";
-import { TouchableOpacity } from "react-native";
-import Toast from "react-native-toast-message";
+import { HStack, Pressable, Text, VStack } from "native-base";
 
-import firebase from "../../../../services/firebase";
-import Icon from "../../../../components/Icon";
-import { ItemContainer, ItemText } from "../../../../components/Menu/styles";
-import {
-  BackgroundContainer,
-  ButtonIcon,
-  TextHeaderScreen,
-  ViewTab,
-} from "../../../../styles/general";
-import { deleteData, getData } from "./query";
+import { BackgroundContainer, ButtonIcon } from "../../../../styles/general";
+import { useTheme } from "styled-components";
+import { IThemeProvider } from "../../../../styles/baseTheme";
+import { ChevronLeft, Edit3, PlusCircle, Trash } from "lucide-react-native";
+import When from "../../../../components/When";
+import { useDelete, useGetData } from "./hooks/useAlerts";
 
-interface IData {
-  variableExpense: number;
-}
-
-const AlertsScreen = () => {
+export const AlertsScreen = () => {
+  const { theme }: IThemeProvider = useTheme();
   const { goBack, navigate } = useNavigation();
   const isFocused = useIsFocused();
-  const [data, setData] = React.useState<
-    IData | firebase.firestore.DocumentData
-  >();
-  const [loading, setLoading] = React.useState(false);
+
+  const { data, handleGetData } = useGetData();
+  const { isLoading, handleDelete } = useDelete();
 
   const actions = [
     {
@@ -33,7 +23,7 @@ const AlertsScreen = () => {
       url: "Configuracoes/Alertas/DespesasVariaveis",
       data: {
         index: "variableExpense",
-        value: data?.variableExpense || 0,
+        value: data?.variableExpense ?? 0,
       },
     },
   ];
@@ -42,91 +32,67 @@ const AlertsScreen = () => {
     navigate(url as never, params as never);
   }
 
-  function returnData() {
-    getData().then((data) => {
-      setData(data);
-    });
-  }
-
-  function handleDelete(index: string) {
-    setLoading(true);
-    deleteData(index)
-      .then(() => {
-        returnData();
-        Toast.show({
-          type: "success",
-          text1: "Alerta excluído com sucesso",
-        });
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao excluir alerta",
-        });
-      })
-      .finally(() => setLoading(false));
-  }
-
-  React.useEffect(() => {
-    isFocused && returnData();
+  useEffect(() => {
+    isFocused && handleGetData();
   }, [isFocused]);
 
   return (
     <BackgroundContainer>
-      <ViewTab>
+      <VStack
+        backgroundColor={theme?.secondary}
+        flex={1}
+        p={5}
+        borderTopLeftRadius="30px"
+        borderTopRightRadius="30px"
+      >
         <HStack alignItems="center" space={3} mb={10}>
-          <Icon name="chevron-left" size={24} onPress={goBack} />
-          <TextHeaderScreen noMarginBottom>Alertas</TextHeaderScreen>
+          <Pressable onPress={goBack}>
+            <ChevronLeft color={theme?.text} />
+          </Pressable>
+          <Text fontWeight={700}>Alertas</Text>
         </HStack>
         {actions.map((action, index) => (
           <VStack key={index}>
-            {!action.data.value ? (
-              <TouchableOpacity onPress={() => goTo(action.url)}>
-                <ItemContainer>
-                  <HStack
-                    justifyContent="space-between"
-                    flex={1}
-                    alignItems={"center"}
-                  >
-                    <ItemText>{action.label}</ItemText>
-                    <Icon name="plus-circle" size={20} />
-                  </HStack>
-                </ItemContainer>
-              </TouchableOpacity>
-            ) : (
-              <ItemContainer>
-                <HStack
-                  justifyContent="space-between"
-                  flex={1}
-                  alignItems={"center"}
+            <When is={!action.data.value}>
+              <Pressable onPress={() => goTo(action.url)}>
+                <VStack
+                  borderBottomWidth={1}
+                  borderColor={theme?.primary}
+                  p={4}
                 >
-                  <ItemText>{action.label}</ItemText>
+                  <HStack justifyContent="space-between" alignItems={"center"}>
+                    <Text>{action.label}</Text>
+                    <PlusCircle color={theme?.text} />
+                  </HStack>
+                </VStack>
+              </Pressable>
+            </When>
+            <When is={action.data.value}>
+              <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
+                <HStack justifyContent="space-between" alignItems={"center"}>
+                  <Text>{action.label}</Text>
                   <HStack>
-                    <VStack>
-                      <Icon
-                        name="edit-3"
-                        size={20}
-                        onPress={() => goTo(action.url, action.data.value)}
-                      />
-                    </VStack>
+                    <Pressable
+                      onPress={() => goTo(action.url, action.data.value)}
+                    >
+                      <Edit3 color={theme?.text} />
+                    </Pressable>
                     <VStack>
                       <ButtonIcon
-                        isLoading={loading}
-                        icon={
-                          <Icon name="trash" size={20} colorVariant="red" />
+                        isLoading={isLoading}
+                        icon={<Trash color={theme?.text} />}
+                        onPress={() =>
+                          handleDelete(action.data.index, handleGetData)
                         }
-                        onPress={() => handleDelete(action.data.index)}
                       />
                     </VStack>
                   </HStack>
                 </HStack>
-              </ItemContainer>
-            )}
+              </VStack>
+            </When>
           </VStack>
         ))}
-      </ViewTab>
+      </VStack>
     </BackgroundContainer>
   );
 };
-
-export default AlertsScreen;

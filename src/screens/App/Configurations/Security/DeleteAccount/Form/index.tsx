@@ -44,10 +44,10 @@ export const DeleteAccountForm = () => {
           <Center flex={1}>
             <TextInputPassword
               variant="filled"
-              control={formMethods.control}
               name="password"
               placeholder="Senha"
               returnKeyType="done"
+              control={formMethods.control}
               errors={formMethods.formState.errors.password}
               helperText="Informe sua senha"
             />
