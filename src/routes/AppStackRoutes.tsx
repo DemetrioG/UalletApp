@@ -10,8 +10,8 @@ import { AlterarSenhaScreen } from "../screens/App/Configurations/DadosCadastrai
 import { InformacoesPessoaisScreen } from "../screens/App/Configurations/DadosCadastrais/InformacoesPessoais";
 import { SecurityScreen } from "../screens/App/Configurations/Security";
 import { DeleteAccountScreen } from "../screens/App/Configurations/Security/DeleteAccount";
-import Entry from "../screens/App/Entry";
-import Filter from "../screens/App/Entry/Filter";
+import { Entries } from "../screens/App/Entries";
+import Filter from "../screens/App/Entries/Filter";
 import FixedEntry from "../screens/App/FixedEntry";
 import { Home } from "../screens/App/Home";
 import Investments from "../screens/App/Investments";
@@ -22,9 +22,14 @@ import NewFixAsset from "../screens/App/NewAsset/NewFixAsset";
 import NewVariableAsset from "../screens/App/NewAsset/NewVariableAsset";
 import NewEntry from "../screens/App/NewEntry";
 import { ConfirmDialog } from "../components/ConfirmDialog";
+import { HeaderSummary } from "../components/Header";
+import { View } from "native-base";
 
-const { Navigator: StackNavigator, Screen: StackScreen } =
-  createNativeStackNavigator();
+const {
+  Navigator: StackNavigator,
+  Screen: StackScreen,
+  Group: StackGroup,
+} = createNativeStackNavigator();
 
 export const AppStackRoutes = () => {
   return (
@@ -43,32 +48,6 @@ export const AppStackRoutes = () => {
           options={{ headerShown: false }}
         />
         {/* !Home */}
-
-        {/* Lançamentos */}
-        <StackScreen
-          name="Lancamentos"
-          component={Entry}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Lancamentos/NovoLancamento"
-          component={NewEntry}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Lancamentos/LancamentoFixo"
-          component={FixedEntry}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Lancamentos/Filtros"
-          component={Filter}
-          options={{
-            headerShown: false,
-            presentation: "containedTransparentModal",
-          }}
-        />
-        {/* !Lançamentos */}
 
         {/* Investimentos */}
         <StackScreen
@@ -103,50 +82,63 @@ export const AppStackRoutes = () => {
         />
         {/* !Investimentos */}
 
-        {/* Configuracoes */}
-        <StackScreen
-          name="Configuracoes"
-          component={ConfiguracoesScreen}
-          options={{
-            headerShown: false,
+        <StackGroup
+          screenOptions={{
+            header(props) {
+              return (
+                <View mb={3}>
+                  <HeaderSummary />
+                </View>
+              );
+            },
           }}
-        />
-        <StackScreen
-          name="Configuracoes/DadosCadastrais"
-          component={DadosCadastraisScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
-          component={InformacoesPessoaisScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Configuracoes/DadosCadastrais/AlterarSenha"
-          component={AlterarSenhaScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Configuracoes/Seguranca"
-          component={SecurityScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Configuracoes/Seguranca/ExcluirConta"
-          component={DeleteAccountScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Configuracoes/Alertas"
-          component={AlertsScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Configuracoes/Alertas/DespesasVariaveis"
-          component={VariableEntryScreen}
-          options={{ headerShown: false }}
-        />
-        {/* !Configuracoes */}
+        >
+          {/* Lançamentos */}
+          <StackScreen name="Lancamentos" component={Entries} />
+          <StackScreen name="Lancamentos/NovoLancamento" component={NewEntry} />
+          <StackScreen
+            name="Lancamentos/LancamentoFixo"
+            component={FixedEntry}
+          />
+          <StackScreen
+            name="Lancamentos/Filtros"
+            component={Filter}
+            options={{
+              headerShown: false,
+              presentation: "containedTransparentModal",
+            }}
+          />
+          {/* !Lançamentos */}
+
+          {/* Configuracoes */}
+          <StackScreen name="Configuracoes" component={ConfiguracoesScreen} />
+          <StackScreen
+            name="Configuracoes/DadosCadastrais"
+            component={DadosCadastraisScreen}
+          />
+          <StackScreen
+            name="Configuracoes/DadosCadastrais/InformacoesCadastrais"
+            component={InformacoesPessoaisScreen}
+          />
+          <StackScreen
+            name="Configuracoes/DadosCadastrais/AlterarSenha"
+            component={AlterarSenhaScreen}
+          />
+          <StackScreen
+            name="Configuracoes/Seguranca"
+            component={SecurityScreen}
+          />
+          <StackScreen
+            name="Configuracoes/Seguranca/ExcluirConta"
+            component={DeleteAccountScreen}
+          />
+          <StackScreen name="Configuracoes/Alertas" component={AlertsScreen} />
+          <StackScreen
+            name="Configuracoes/Alertas/DespesasVariaveis"
+            component={VariableEntryScreen}
+          />
+          {/* !Configuracoes */}
+        </StackGroup>
       </StackNavigator>
     </NavigationContainer>
   );

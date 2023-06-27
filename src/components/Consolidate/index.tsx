@@ -4,7 +4,7 @@ import { Text } from "native-base";
 import Toast from "react-native-toast-message";
 
 import firebase from "../../services/firebase";
-import { IEntryList } from "../../screens/App/Entry";
+import { ListEntries } from "../../screens/App/Entries/types";
 import Icon from "../Icon";
 import { numberToReal } from "../../utils/number.helper";
 import {
@@ -102,7 +102,7 @@ const Consolidate = ({ isOpen, onClose }: ReturnUseDisclosure) => {
     item: { description, type, value, checked, id },
   }: {
     item:
-      | (IEntryList & { checked?: boolean })
+      | (ListEntries & { checked?: boolean })
       | firebase.firestore.DocumentData;
   }) => {
     return (

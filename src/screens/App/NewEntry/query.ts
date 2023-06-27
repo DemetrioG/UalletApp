@@ -4,13 +4,13 @@ import {
   currentUser,
   updateCurrentBalance,
 } from "../../../utils/query.helper";
-import { IEntryList } from "../Entry";
+import { ListEntries } from "../Entries/types";
 import {
   convertDateFromDatabase,
   convertDateToDatabase,
 } from "../../../utils/date.helper";
 import { realToNumber } from "../../../utils/number.helper";
-import { TEntryType } from "../../../types/types";
+import { TEntrieType } from "../../../types/types";
 
 export interface INewEntry {
   description: string;
@@ -18,7 +18,7 @@ export interface INewEntry {
   value: string;
   classification: string;
   modality: "Real" | "Projetado";
-  type: TEntryType;
+  type: TEntrieType;
   segment: string;
 }
 
@@ -55,7 +55,7 @@ async function _registerNewEntry(props: INewEntry) {
       });
     });
 
-  const items: IEntryList & {
+  const items: ListEntries & {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
   } = {
     id: id,
@@ -107,7 +107,7 @@ async function _registerNewEntry(props: INewEntry) {
 async function _updateEntry(
   props: INewEntry,
   idRegister: number,
-  routeParams: IEntryList
+  routeParams: ListEntries
 ) {
   const user = await currentUser();
 
@@ -123,7 +123,7 @@ async function _updateEntry(
     classification,
   } = props;
 
-  const items: IEntryList & {
+  const items: ListEntries & {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
   } = {
     id: idRegister,
@@ -172,7 +172,7 @@ async function _updateEntry(
   return Promise.resolve();
 }
 
-async function _deleteEntry(routeParams: IEntryList) {
+async function _deleteEntry(routeParams: ListEntries) {
   const { date, id, modality, type, value } = routeParams;
   const user = await currentUser();
 
@@ -211,7 +211,7 @@ export function registerNewEntry(props: INewEntry) {
 export function updateEntry(
   props: INewEntry,
   idRegister: number,
-  routeParams: IEntryList
+  routeParams: ListEntries
 ) {
   try {
     return _updateEntry(props, idRegister, routeParams);
@@ -221,7 +221,7 @@ export function updateEntry(
   }
 }
 
-export function deleteEntry(routeParams: IEntryList) {
+export function deleteEntry(routeParams: ListEntries) {
   try {
     return _deleteEntry(routeParams);
   } catch (error) {

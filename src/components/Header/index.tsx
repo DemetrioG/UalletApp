@@ -125,6 +125,38 @@ export const Header = () => {
   );
 };
 
+export const HeaderSummary = () => {
+  const { theme }: IThemeProvider = useTheme();
+  const { data } = useContext(DataContext);
+  const {} = useGetData();
+
+  const [balanceInteger, balanceCents] = data.balance.split(",");
+
+  return (
+    <VStack
+      backgroundColor={theme?.secondary}
+      borderBottomLeftRadius="40px"
+      borderBottomRightRadius="40px"
+      paddingX={6}
+    >
+      <HStack paddingY={4} justifyContent="space-between" alignItems="center">
+        <HStack alignItems="center" space={3}>
+          <Text>Saldo:</Text>
+          <HStack>
+            <Text fontWeight={700} fontSize="18px">
+              {balanceInteger}
+              <Text fontWeight={700} opacity={0.3} fontSize="18px">
+                ,{balanceCents}
+              </Text>
+            </Text>
+          </HStack>
+        </HStack>
+        <Menu />
+      </HStack>
+    </VStack>
+  );
+};
+
 const optionsMonth = [
   "Janeiro",
   "Fevereiro",

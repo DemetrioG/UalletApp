@@ -44,7 +44,6 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
         defaultProps: {
           minW: "56",
           minH: "12",
-          shadow: "4",
           borderRadius: "13",
           marginBottom: metrics.baseMargin,
           width: "full",

@@ -23,7 +23,7 @@ import metrics from "./metrics";
 import fonts from "./fonts";
 import { SafeAreaView } from "react-navigation";
 import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
-import { TEntryType } from "../types/types";
+import { TEntrieType } from "../types/types";
 
 export const SafeAreaContainer = styled(SafeAreaView)`
   flex: 1;
@@ -226,7 +226,7 @@ export const ValueContainer = styled(View)`
 
 export const ValueText = styled(Text).attrs(() => ({
   fontFamily: "mono",
-}))<{ type: TEntryType }>`
+}))<{ type: TEntrieType }>`
   font-size: 13px;
   color: ${({ theme, type }) =>
     type === "Receita" ? theme.theme.green : theme.theme.red};

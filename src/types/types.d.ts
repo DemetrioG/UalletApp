@@ -8,7 +8,7 @@ export type AssetSegment =
   | "BDR's"
   | "ETF's";
 
-export type TEntryType = "Receita" | "Despesa";
+export type TEntrieType = "Receita" | "Despesa";
 
 export interface ReturnUseDisclosure {
   isOpen: boolean;
@@ -24,6 +24,6 @@ export interface IEntries {
   description: string;
   modality: string;
   segment: string | null;
-  type: TEntryType;
+  type: TEntrieType;
   value: number;
 }

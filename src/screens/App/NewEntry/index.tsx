@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { IEntryList } from "../Entry";
+import { ListEntries } from "../Entries/types";
 import Picker from "../../../components/Picker";
 import Calendar from "../../../components/Calendar";
 import Icon from "../../../components/Icon";
@@ -55,7 +55,7 @@ const Form = ({
   route: { key: type },
   isEditing,
 }: {
-  params: IEntryList;
+  params: ListEntries;
   route: { key: string };
   isEditing: boolean;
 }) => {
@@ -304,7 +304,11 @@ const Form = ({
   );
 };
 
-const NewEntry = ({ route: { params } }: { route: { params: IEntryList } }) => {
+const NewEntry = ({
+  route: { params },
+}: {
+  route: { params: ListEntries };
+}) => {
   const { goBack } = useNavigation();
   const {
     data: { modality },
