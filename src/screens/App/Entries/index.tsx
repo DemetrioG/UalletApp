@@ -1,19 +1,26 @@
-import * as React from "react";
+import { useEffect, useState, useContext } from "react";
+import { useTheme } from "styled-components";
+import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
+import { ChevronLeft, Filter, FilterX, InfoIcon } from "lucide-react-native";
 import { FlatList } from "react-native";
+import LottieView from "lottie-react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import LottieView from "lottie-react-native";
 
-import firebase from "../../../services/firebase";
-import { UserContext } from "../../../context/User/userContext";
-import { DataContext } from "../../../context/Data/dataContext";
-import { convertDateToDatabase } from "../../../utils/date.helper";
-import { numberToReal } from "../../../utils/number.helper";
-import { sortObjectByKey } from "../../../utils/array.helper";
+import Icon from "../../../components/Icon";
+import Tooltip from "../../../components/Tooltip";
+import When from "../../../components/When";
+import { CardDownIcon, CardUpIcon } from "../../../components/CustomIcons";
 import { defaultFilter, IActiveFilter } from "./Filter/helper";
+import firebase from "../../../services/firebase";
+import { DataContext } from "../../../context/Data/dataContext";
+import { useGetBalance } from "../../../hooks/useBalance";
+import { useGetEntries } from "./hooks/useEntries";
+import { numberToReal } from "../../../utils/number.helper";
+import { ListEntries } from "./types";
+
 import { MoreContainer } from "./styles";
 import {
-  ContainerCenter,
   DescriptionContainer,
   DescriptionText,
   ItemContainer,
@@ -21,22 +28,11 @@ import {
   ValueText,
   BackgroundContainer,
 } from "../../../styles/general";
-import Icon from "../../../components/Icon";
-import { getEntries } from "./querys";
-import { Button, HStack, Pressable, Text, VStack } from "native-base";
 import { metrics } from "../../../styles";
 import { IThemeProvider } from "../../../styles/baseTheme";
-import { useTheme } from "styled-components";
-import { ChevronLeft, Filter, FilterX } from "lucide-react-native";
-import Tooltip from "../../../components/Tooltip";
-import { InfoIcon } from "lucide-react-native";
-import When from "../../../components/When";
-import { CardDownIcon, CardUpIcon } from "../../../components/CustomIcons";
-import { ListEntries } from "./types";
-import { useGetBalance } from "../../../hooks/useBalance";
 
-const EMPTY = require("../../../../assets/icons/emptyData.json");
-const LOADING = require("../../../../assets/icons/blueLoading.json");
+import EmptyAnimation from "../../../../assets/icons/emptyData.json";
+import LoadingAnimation from "../../../../assets/icons/blueLoading.json";
 
 export const Entries = ({
   route: { params },
@@ -44,155 +40,37 @@ export const Entries = ({
   route: { params: IActiveFilter };
 }) => {
   const { theme }: IThemeProvider = useTheme();
-  const { user } = React.useContext(UserContext);
-  const { data } = React.useContext(DataContext);
+  const { data } = useContext(DataContext);
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
 
-  const { handleGetBalance } = useGetBalance();
+  const [filter, setFilter] = useState(defaultFilter);
 
-  const [entryList, setEntryList] = React.useState<
-    Array<ListEntries | firebase.firestore.DocumentData>
-  >([]);
-  const [entryTotal, setEntryTotal] = React.useState("R$0,00");
-  const [emptyData, setEmptyData] = React.useState<boolean>(false);
-  const [filter, setFilter] = React.useState(defaultFilter);
+  const { handleGetBalance } = useGetBalance();
+  const {
+    isLoading,
+    isEmpty,
+    data: list,
+    handleGetData,
+  } = useGetEntries({
+    server: { filters: filter },
+  });
+
+  const credits = list.filter((item) => item.type === "Receita");
+  const debits = list.filter((item) => item.type === "Despesa");
+  const totalCredits = credits.reduce((total, item) => total + item.value, 0);
+  const totalDebits = debits.reduce((total, item) => total + item.value, 0);
 
   const isFocused = useIsFocused();
 
-  function handleRemoveFilter() {
-    setFilter(() => ({
-      ...defaultFilter,
-    }));
-  }
-
-  function ItemList({
-    item,
-  }: {
-    item: ListEntries | firebase.firestore.DocumentData;
-  }) {
-    return (
-      <ItemContainer>
-        <DescriptionContainer>
-          <DescriptionText>
-            {item.description.length > 17
-              ? `${item.description.slice(0, 17)}...`
-              : item.description}
-          </DescriptionText>
-        </DescriptionContainer>
-        <ValueContainer>
-          <ValueText type={item.type}>
-            {item.type == "Receita" ? "+R$" : "-R$"}
-          </ValueText>
-          <ValueText type={item.type}>
-            {numberToReal(item.value, true)}
-          </ValueText>
-        </ValueContainer>
-        <MoreContainer>
-          <Icon
-            name="more-horizontal"
-            size={16}
-            onPress={() => navigate("Lancamentos/NovoLancamento", item)}
-          />
-        </MoreContainer>
-      </ItemContainer>
-    );
-  }
-
-  async function getEntry(props: IActiveFilter) {
-    const {
-      description,
-      finalDate,
-      finalValue,
-      initialDate,
-      initialValue,
-      isFiltered,
-      modality,
-      segment,
-      typeEntry,
-    } = props;
-    setEntryList([]);
-    setEmptyData(false);
-    if (!isFiltered) {
-      const snapshot = await getEntries({ ...data });
-      if (!snapshot.docs.length) {
-        setEmptyData(true);
-        return;
-      }
-      const list = snapshot.docs.map((doc) => doc.data());
-      setEntryList(() => sortObjectByKey(list, "id", "desc"));
-      return;
-    }
-    let baseQuery: firebase.firestore.Query = firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(modality!);
-    if (description) {
-      baseQuery = baseQuery.where("description", "==", description);
-    }
-    if (segment) {
-      baseQuery = baseQuery.where("segment", "==", segment);
-    }
-    if (typeEntry) {
-      baseQuery = baseQuery.where("type", "==", typeEntry);
-    }
-    if (initialDate) {
-      baseQuery = baseQuery.where(
-        "date",
-        ">=",
-        convertDateToDatabase(initialDate)
-      );
-    }
-    if (finalDate) {
-      baseQuery = baseQuery.where(
-        "date",
-        "<=",
-        convertDateToDatabase(finalDate)
-      );
-    }
-    if (initialValue > 0 && !initialDate) {
-      baseQuery = baseQuery.where("value", ">=", initialValue);
-    }
-    if (finalValue > 0 && !finalDate) {
-      baseQuery = baseQuery.where("value", "<=", finalValue);
-    }
-    const snapshot = await baseQuery.get();
-    if (snapshot.docs.length === 0) {
-      setEmptyData(true);
-      return;
-    }
-    const list = snapshot.docs.map((doc) => doc.data());
-    if (initialValue > 0 || finalValue > 0 || initialDate || finalDate) {
-      const filteredList = list.filter((entry) => {
-        const entryValue = entry.value || 0;
-        const entryDate = entry.date || new Date(0).toISOString();
-        const inValueRange =
-          (!initialValue || entryValue >= initialValue) &&
-          (!finalValue || entryValue <= finalValue);
-        const inDateRange =
-          (!initialDate || entryDate >= initialDate) &&
-          (!finalDate || entryDate <= finalDate);
-        return inValueRange && inDateRange;
-      });
-      if (filteredList.length === 0) {
-        setEmptyData(true);
-        return;
-      }
-      setEntryList(() => sortObjectByKey(filteredList, "id", "desc"));
-    } else {
-      setEntryList(() => sortObjectByKey(list, "id", "desc"));
-    }
-  }
-
-  React.useEffect(() => {
-    getEntry(filter);
+  useEffect(() => {
+    handleGetData();
   }, [data.modality, data.month, data.year, filter, isFocused]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleGetBalance();
   }, [data.modality, data.month]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     params && setFilter(params);
   }, [isFocused]);
 
@@ -245,31 +123,35 @@ export const Entries = ({
             </Text>
           </Button>
         </HStack>
-        {entryList.length > 0 ? (
+        <When is={!!list.length}>
           <FlatList
-            data={entryList}
+            data={list}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <ItemList item={item} />}
-          />
-        ) : (
-          <ContainerCenter>
-            {!emptyData ? (
-              <LottieView
-                source={LOADING}
-                autoPlay={true}
-                loop={true}
-                style={{ width: 50 }}
-              />
-            ) : (
-              <LottieView
-                source={EMPTY}
-                autoPlay={true}
-                loop={false}
-                style={{ width: 230 }}
-              />
+            renderItem={({ item }) => (
+              <ItemList item={item} navigate={navigate as () => void} />
             )}
-          </ContainerCenter>
-        )}
+          />
+        </When>
+        <When is={isLoading}>
+          <Center flex={1}>
+            <LottieView
+              source={LoadingAnimation}
+              autoPlay={true}
+              loop={true}
+              style={{ width: 50 }}
+            />
+          </Center>
+        </When>
+        <When is={isEmpty}>
+          <Center flex={1}>
+            <LottieView
+              source={EmptyAnimation}
+              autoPlay={true}
+              loop={false}
+              style={{ width: 230 }}
+            />
+          </Center>
+        </When>
         <HStack
           zIndex={1}
           backgroundColor={theme?.tertiary}
@@ -287,7 +169,7 @@ export const Entries = ({
           <HStack alignItems="center" justifyContent="space-between" w="100%">
             <HStack space={2}>
               <Text>Total débito:</Text>
-              <Text>R$2.750,00</Text>
+              <Text>{numberToReal(totalDebits)}</Text>
             </HStack>
             <VStack
               backgroundColor={theme?.primary}
@@ -319,7 +201,7 @@ export const Entries = ({
         >
           <HStack space={2}>
             <Text>Total crédito:</Text>
-            <Text>R$3.500,00</Text>
+            <Text>{numberToReal(totalCredits)}</Text>
           </HStack>
           <VStack
             backgroundColor={theme?.tertiary}
@@ -338,3 +220,36 @@ export const Entries = ({
     </BackgroundContainer>
   );
 };
+
+function ItemList({
+  item,
+  navigate,
+}: {
+  item: ListEntries | firebase.firestore.DocumentData;
+  navigate: (url: string, params?: any) => void;
+}) {
+  return (
+    <ItemContainer>
+      <DescriptionContainer>
+        <DescriptionText>
+          {item.description.length > 17
+            ? `${item.description.slice(0, 17)}...`
+            : item.description}
+        </DescriptionText>
+      </DescriptionContainer>
+      <ValueContainer>
+        <ValueText type={item.type}>
+          {item.type == "Receita" ? "+R$" : "-R$"}
+        </ValueText>
+        <ValueText type={item.type}>{numberToReal(item.value, true)}</ValueText>
+      </ValueContainer>
+      <MoreContainer>
+        <Icon
+          name="more-horizontal"
+          size={16}
+          onPress={() => navigate("Lancamentos/NovoLancamento", item)}
+        />
+      </MoreContainer>
+    </ItemContainer>
+  );
+}
