@@ -33,6 +33,8 @@ import { IThemeProvider } from "../../../styles/baseTheme";
 
 import EmptyAnimation from "../../../../assets/icons/emptyData.json";
 import LoadingAnimation from "../../../../assets/icons/blueLoading.json";
+import { DataGrid } from "../../../components/DataGrid";
+import { DataGridColumnRef } from "../../../components/DataGrid/types";
 
 export const Entries = ({
   route: { params },
@@ -124,13 +126,14 @@ export const Entries = ({
           </Button>
         </HStack>
         <When is={!!list.length}>
-          <FlatList
+          {/* <FlatList
             data={list}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <ItemList item={item} navigate={navigate as () => void} />
+              // <ItemList item={item} navigate={navigate as () => void} />
             )}
-          />
+          /> */}
+          <DataGrid columns={columns} data={list} height={300} />
         </When>
         <When is={isLoading}>
           <Center flex={1}>
@@ -220,6 +223,27 @@ export const Entries = ({
     </BackgroundContainer>
   );
 };
+
+const columns: DataGridColumnRef[] = [
+  {
+    name: "description",
+    label: "Descrição",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    name: "date",
+    label: "Data",
+    flex: 1,
+    headerAlign: "center",
+  },
+  {
+    name: "value",
+    label: "Valor",
+    flex: 1,
+    headerAlign: "center",
+  },
+];
 
 function ItemList({
   item,
