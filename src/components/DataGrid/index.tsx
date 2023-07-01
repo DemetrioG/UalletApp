@@ -1,6 +1,7 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { DataGridProps } from "./types";
 import { Text } from "native-base";
+import { FlatList } from "react-native";
 
 export const DataGrid = (props: DataGridProps) => {
   return (
@@ -9,7 +10,6 @@ export const DataGrid = (props: DataGridProps) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          borderWidth: 1,
         }}
       >
         {props.columns.map((column, index) => {
@@ -17,40 +17,58 @@ export const DataGrid = (props: DataGridProps) => {
             <View
               key={index}
               style={{
+                padding: 3,
                 flex: column.flex,
                 alignItems: column.headerAlign,
                 width: column.width,
                 justifyContent: "center",
                 minHeight: 20,
+                ...(column.HeaderProps?.styles as object),
               }}
             >
-              <Text fontSize="14px">{column.label}</Text>
+              <Text fontSize="14px" fontWeight={500}>
+                {column.label}
+              </Text>
             </View>
           );
         })}
       </View>
-      <View style={{ display: "flex", flexDirection: "row", borderWidth: 1 }}>
-        {props.columns.map((column, index) => {
-          return (
+      <View style={{ display: "flex" }}>
+        <FlatList
+          data={props.data}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item: row }) => (
             <View
               style={{
                 display: "flex",
-                flex: column.flex,
-                width: column.width,
-                alignItems: column.align,
+                flexDirection: "row",
               }}
-              key={index}
             >
-              {props.data.map((row, index) => {
-                return (
-                  <View key={index}>
-                    <Text>{row[column.name]}</Text>
-                  </View>
-                );
-              })}
+              {props.columns.map((column, index) => (
+                <View
+                  key={index}
+                  style={{
+                    padding: 8,
+                    flex: column.flex,
+                    width: column.width,
+                    alignItems: column.align,
+                    borderBottomWidth: 1,
+                    ...(column.RowProps?.styles as object),
+                  }}
+                >
+                  <Text numberOfLines={1}>
+                    {column.valueFormatter
+                      ? column.valueFormatter({
+                          row: row,
+                          value: row[column.name],
+                        })
+                      : row[column.name]}
+                  </Text>
+                </View>
+              ))}
             </View>
-          );
-        })}
+          )}
+        />
       </View>
     </View>
   );
