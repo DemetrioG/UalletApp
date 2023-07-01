@@ -70,10 +70,12 @@ export const ConfirmDialog = () => {
           </Text>
           <VStack>
             <Button variant="outline" onPress={handleConfirm}>
-              <ButtonText>Ok</ButtonText>
+              <Text fontWeight="bold" color={theme?.blue}>
+                Ok
+              </Text>
             </Button>
             <Button onPress={handleCancel}>
-              <ButtonText>Cancelar</ButtonText>
+              <Text fontWeight="bold">Cancelar</Text>
             </Button>
           </VStack>
         </VStack>

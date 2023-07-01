@@ -4,6 +4,12 @@ import * as yup from "yup";
 import { NewEntrieDTO } from "../types";
 import { dateValidation } from "../../../../utils/date.helper";
 import { usePromise } from "../../../../hooks/usePromise";
+import { deleteEntry } from "../query";
+import { ListEntries } from "../../Entries/types";
+import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
+import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
+import { useContext } from "react";
 
 const schema = yup
   .object({
@@ -33,8 +39,47 @@ export const useFormEntries = () => {
   };
 };
 
-export const useDeleteEntrie = () => {
-  const { isLoading, handleExecute } = usePromise(deleteAccount);
+export const useHandleConfirmDeleteEntrie = () => {
+  const { isLoading, handleDelete } = useDeleteEntrie();
+  const { setConfirm } = useContext(ConfirmContext);
 
-  return {};
+  function execute(params: ListEntries) {
+    setConfirm(() => ({
+      title: "Deseja excluir este lançamento?",
+      visibility: true,
+      callbackFunction: () => handleDelete(params),
+    }));
+  }
+
+  return {
+    isLoading,
+    handleDelete: execute,
+  };
+};
+
+const useDeleteEntrie = () => {
+  const { navigate } = useNavigation();
+  const { isLoading, handleExecute } = usePromise(deleteEntry);
+
+  async function execute(params: ListEntries) {
+    handleExecute(params)
+      .then(() => {
+        Toast.show({
+          type: "success",
+          text1: "Lançamento excluído com  sucesso",
+        });
+        navigate("Lancamentos" as never);
+      })
+      .catch(() => {
+        Toast.show({
+          type: "error",
+          text1: "Erro ao excluir o lançamento",
+        });
+      });
+  }
+
+  return {
+    isLoading,
+    handleDelete: execute,
+  };
 };

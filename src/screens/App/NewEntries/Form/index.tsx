@@ -3,7 +3,6 @@ import { ListEntries } from "../../Entries/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
 import { useContext, useEffect, useState } from "react";
-import { DataContext } from "../../../../context/Data/dataContext";
 import {
   convertDate,
   convertDateFromDatabase,
@@ -11,22 +10,20 @@ import {
 import { Keyboard } from "react-native";
 import { NewEntrieDTO } from "../types";
 import { TEntrieType } from "../../../../types/types";
-import { deleteEntry, registerNewEntry, updateEntry } from "../query";
+import { registerNewEntry, updateEntry } from "../query";
 import Toast from "react-native-toast-message";
 import { numberToReal } from "../../../../utils/number.helper";
 import { TouchableWithoutFeedback } from "react-native";
-import {
-  ButtonDelete,
-  ButtonText,
-  ContainerCenter,
-  FormContainer,
-} from "../../../../styles/general";
 import TextInput from "../../../../components/TextInput";
-import Picker from "../../../../components/Picker";
-import { Button, Text } from "native-base";
+import { Button, Center, Text } from "native-base";
 import Calendar from "../../../../components/Calendar";
 import { useFormContext } from "react-hook-form";
 import When from "../../../../components/When";
+import { SelectInput } from "../../../../components/SelectInput";
+import { DataContext } from "../../../../context/Data/dataContext";
+import { useHandleConfirmDeleteEntrie } from "../hooks/useEntries";
+import { IThemeProvider } from "../../../../styles/baseTheme";
+import { useTheme } from "styled-components";
 
 export const NewEntrieForm = ({
   params,
@@ -37,18 +34,15 @@ export const NewEntrieForm = ({
 }) => {
   const id = params?.id;
   const formMethods = useFormContext();
+  const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { setConfirm } = useContext(ConfirmContext);
-  const {
-    data: { modality },
-  } = useContext(DataContext);
+  const { data } = useContext(DataContext);
+
+  const { isLoading: isLoadingDelete, handleDelete } =
+    useHandleConfirmDeleteEntrie();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [classification, setClassification] = useState<string | null>(null);
-  const [classificationVisible, setClassificationVisible] = useState(false);
-  const [segment, setSegment] = useState<string | null>(null);
-  const [segmentVisible, setSegmentVisible] = useState(false);
   const [calendar, setCalendar] = useState(false);
 
   function setDateToInput(date: Date) {
@@ -66,9 +60,6 @@ export const NewEntrieForm = ({
       description: description,
       entrydate: entrydate,
       value: value,
-      modality: modality,
-      classification: classification!,
-      segment: segment!,
       type: type as TEntrieType,
     };
 
@@ -107,40 +98,11 @@ export const NewEntrieForm = ({
     }
   }
 
-  function handleDelete() {
-    return setConfirm(() => ({
-      title: "Deseja excluir este lançamento?",
-      visibility: true,
-      callbackFunction: submitDelete,
-    }));
-  }
-
-  async function submitDelete() {
-    setIsDelete(true);
-    deleteEntry(params)
-      .then(() => {
-        Toast.show({
-          type: "success",
-          text1: "Lançamento excluído com  sucesso",
-        });
-        navigate("Lancamentos");
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao excluir o lançamento",
-        });
-      })
-      .finally(() => setIsDelete(false));
-  }
-
   useEffect(() => {
     /**
      * Verifica se é Edição e preenche os dados nos campos
      */
     if (params) {
-      setClassification(params.classification);
-      setSegment(params.segment || null);
       formMethods.setValue("entrydate", convertDateFromDatabase(params.date));
       formMethods.setValue("description", params.description);
       formMethods.setValue("value", numberToReal(params.value));
@@ -150,7 +112,7 @@ export const NewEntrieForm = ({
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <>
-        <ContainerCenter>
+        <Center flex={1}>
           <TextInput
             variant="filled"
             name="entrydate"
@@ -171,28 +133,19 @@ export const NewEntrieForm = ({
             errors={formMethods.formState.errors.description}
             maxLength={40}
           />
-          {/* {type == "Despesa" && (
-            <>
-              <Picker
-                options={CLASSIFICATION}
-                selectedValue={setClassification}
-                value={!classification ? "Classificação" : classification}
-                type="Classificação"
-                visibility={classificationVisible}
-                setVisibility={setClassificationVisible}
-                errors={errors.classification}
-              />
-              <Picker
-                options={ENTRY_SEGMENT}
-                selectedValue={setSegment}
-                value={!segment ? "Segmento" : segment}
-                type="Segmento"
-                visibility={segmentVisible}
-                setVisibility={setSegmentVisible}
-                errors={errors.segment}
-              />
-            </>
-          )} */}
+          <SelectInput
+            options={schemaOptions}
+            variant="filled"
+            placeholder="Modalidade"
+            defaultValue={data.modality}
+          />
+          <When is={type === "Despesa"}>
+            <SelectInput
+              options={segmentOptions}
+              variant="filled"
+              placeholder="Segmento"
+            />
+          </When>
           <TextInput
             variant="filled"
             name="value"
@@ -202,13 +155,13 @@ export const NewEntrieForm = ({
             masked="money"
             helperText="Informe todos os campos"
           />
-        </ContainerCenter>
+        </Center>
         <When is={!id}>
           <Button
             isLoading={isLoading}
             onPress={formMethods.handleSubmit((e) => submitRegister(e))}
           >
-            <ButtonText>Cadastrar</ButtonText>
+            <Text fontWeight="bold">Cadastrar</Text>
           </Button>
         </When>
         <When is={!!id}>
@@ -220,15 +173,17 @@ export const NewEntrieForm = ({
                 submitRegister(e, params.id)
               )}
             >
-              <ButtonText>Atualizar</ButtonText>
+              <Text fontWeight="bold">Atualizar</Text>
             </Button>
             <Button
               variant="outline"
               isLoading={isDelete}
-              isDisabled={isLoading}
-              onPress={handleDelete}
+              isDisabled={isLoadingDelete}
+              onPress={() => handleDelete(params)}
             >
-              <ButtonText>Excluir</ButtonText>
+              <Text fontWeight="bold" color={theme?.blue}>
+                Excluir
+              </Text>
             </Button>
           </>
         </When>
@@ -251,3 +206,16 @@ export const NewEntrieForm = ({
     </TouchableWithoutFeedback>
   );
 };
+
+const schemaOptions = [
+  { value: "Real", label: "Real" },
+  { value: "Projetado", label: "Projetado" },
+];
+
+const segmentOptions = [
+  { value: "Lazer", label: "Lazer" },
+  { value: "Educação", label: "Educação" },
+  { value: "Investimentos", label: "Investimentos" },
+  { value: "Necessidades", label: "Necessidades" },
+  { value: "Curto e médio prazo", label: "Curto e médio prazo" },
+];

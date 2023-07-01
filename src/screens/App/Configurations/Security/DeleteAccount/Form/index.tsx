@@ -57,7 +57,9 @@ export const DeleteAccountForm = () => {
             onPress={formMethods.handleSubmit(handleDelete)}
             isLoading={isLoading}
           >
-            <ButtonText>Excluir conta</ButtonText>
+            <Text fontWeight="bold" color={theme?.blue}>
+              Excluir conta
+            </Text>
           </Button>
         </VStack>
       </BackgroundContainer>

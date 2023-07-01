@@ -116,7 +116,7 @@ export const LoginForm = () => {
               isLoading={isLoading}
               onPress={formMethods.handleSubmit(handleExecute)}
             >
-              <ButtonText>Entrar</ButtonText>
+              <Text fontWeight="bold">Entrar</Text>
             </Button>
             <TouchableOpacity onPress={() => setSheetOpen(true)}>
               <Text>Prefere entrar com as redes sociais?</Text>

@@ -91,6 +91,30 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           },
         },
       },
+      Select: {
+        baseStyle: {
+          placeholderTextColor: theme.text,
+          selectionColor: colors.lightBlue,
+          color: theme.text,
+          borderColor: "transparent",
+          fontFamily: "body",
+          fontWeight: 400,
+          fontSize: 14,
+          borderRadius: "13",
+          minH: "12",
+          width: "full",
+        },
+        defaultProps: {
+          variants: {
+            outline: {
+              backgroundColor: theme.secondary,
+            },
+            filled: {
+              backgroundColor: theme.primary,
+            },
+          },
+        },
+      },
       Skeleton: {
         defaultProps: {
           rounded: "md",
