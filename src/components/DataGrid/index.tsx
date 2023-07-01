@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { DataGridProps } from "./types";
 import { Text } from "native-base";
 import { FlatList } from "react-native";
@@ -51,11 +51,12 @@ export const DataGrid = (props: DataGridProps) => {
               data={props.data}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item: row }) => (
-                <View
+                <TouchableOpacity
                   style={{
                     display: "flex",
                     flexDirection: "row",
                   }}
+                  onPress={(e) => props.onRowPress && props.onRowPress(e, row)}
                 >
                   {props.columns.map((column, index) => (
                     <View
@@ -79,7 +80,7 @@ export const DataGrid = (props: DataGridProps) => {
                       </Text>
                     </View>
                   ))}
-                </View>
+                </TouchableOpacity>
               )}
             />
           </View>

@@ -26,4 +26,5 @@ export interface DataGridProps {
   columns: DataGridColumnRef<T>[];
   data: Array<T>;
   height?: number | string;
+  onRowPress?: (event: GestureResponderEvent, row: T) => void;
 }

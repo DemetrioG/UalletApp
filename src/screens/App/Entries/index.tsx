@@ -166,7 +166,12 @@ export const Entries = ({
           </Button>
         </HStack>
         <When is={!!list.length}>
-          <DataGrid columns={columns} data={list} height="60%" />
+          <DataGrid
+            columns={columns}
+            data={list}
+            height="60%"
+            onRowPress={(_, row) => navigate("Lancamentos/NovoLancamento", row)}
+          />
         </When>
         <When is={isLoading}>
           <Center flex={1}>
