@@ -34,7 +34,7 @@ import {
 } from "../../../components/Picker/options";
 import { insertNewEntry, lastIdFromEntry } from "./querys";
 import { DataContext } from "../../../context/Data/dataContext";
-import { Schema } from "../NewEntry/styles";
+import { Schema } from "../NewEntries/styles";
 import { updateCurrentBalance } from "../../../utils/query.helper";
 
 interface IForm {

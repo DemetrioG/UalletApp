@@ -20,7 +20,7 @@ import AssetMovement from "../screens/App/Investments/AssetMovement";
 import NewAsset from "../screens/App/NewAsset";
 import NewFixAsset from "../screens/App/NewAsset/NewFixAsset";
 import NewVariableAsset from "../screens/App/NewAsset/NewVariableAsset";
-import NewEntry from "../screens/App/NewEntry";
+import { NewEntries } from "../screens/App/NewEntries";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HeaderSummary } from "../components/Header";
 import { View } from "native-base";
@@ -95,7 +95,10 @@ export const AppStackRoutes = () => {
         >
           {/* Lançamentos */}
           <StackScreen name="Lancamentos" component={Entries} />
-          <StackScreen name="Lancamentos/NovoLancamento" component={NewEntry} />
+          <StackScreen
+            name="Lancamentos/NovoLancamento"
+            component={NewEntries}
+          />
           <StackScreen
             name="Lancamentos/LancamentoFixo"
             component={FixedEntry}

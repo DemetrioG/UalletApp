@@ -27,7 +27,7 @@ export const useGetEntries = (props: ListEntriesProps) => {
   return {
     isLoading,
     isEmpty: empty,
-    data: list,
+    data: list ?? [],
     handleGetData: execute,
   };
 };

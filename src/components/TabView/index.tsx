@@ -1,4 +1,4 @@
-import { HStack, Text } from "native-base";
+import { HStack, Pressable, Text } from "native-base";
 import * as React from "react";
 import {
   TabView as NativeTabView,
@@ -6,6 +6,9 @@ import {
   NavigationState,
 } from "react-native-tab-view";
 import { Touchable } from "./styles";
+import { TouchableOpacity } from "react-native";
+import { IThemeProvider } from "../../styles/baseTheme";
+import { useTheme } from "styled-components";
 
 type TRenderScene = (
   props: SceneRendererProps & {
@@ -29,6 +32,7 @@ const TabView = ({
   renderScene: TRenderScene;
   tabRoutes: IRoutes[];
 }) => {
+  const { theme }: IThemeProvider = useTheme();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState(tabRoutes);
   const [hasSelectedRoute, setHasSelectedRoute] = React.useState(false);
@@ -49,14 +53,16 @@ const TabView = ({
         {props.navigationState.routes.map((route, i) => {
           const isActive = index === i;
           return (
-            <Touchable
+            <Pressable
               key={i}
-              title={route.title}
-              active={isActive}
+              paddingX={10}
+              paddingY={3}
+              borderBottomWidth={isActive ? 2 : 0}
+              borderBottomColor={theme?.blue}
               onPress={() => !hasSelectedRoute && setIndex(i)}
             >
               <Text>{route.title}</Text>
-            </Touchable>
+            </Pressable>
           );
         })}
       </HStack>

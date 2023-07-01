@@ -20,7 +20,6 @@ import { BackgroundContainer } from "../../../styles/general";
 import { metrics } from "../../../styles";
 import { IThemeProvider } from "../../../styles/baseTheme";
 
-import EmptyAnimation from "../../../../assets/icons/emptyData.json";
 import LoadingAnimation from "../../../../assets/icons/blueLoading.json";
 import { DataGrid } from "../../../components/DataGrid";
 import { DataGridColumnRef } from "../../../components/DataGrid/types";
@@ -43,7 +42,6 @@ export const Entries = ({
   const { handleGetBalance } = useGetBalance();
   const {
     isLoading,
-    isEmpty,
     data: list,
     handleGetData,
   } = useGetEntries({
@@ -165,7 +163,7 @@ export const Entries = ({
             </Text>
           </Button>
         </HStack>
-        <When is={!!list.length}>
+        <When is={!isLoading}>
           <DataGrid
             columns={columns}
             data={list}
@@ -180,16 +178,6 @@ export const Entries = ({
               autoPlay={true}
               loop={true}
               style={{ width: 50 }}
-            />
-          </Center>
-        </When>
-        <When is={isEmpty}>
-          <Center flex={1}>
-            <LottieView
-              source={EmptyAnimation}
-              autoPlay={true}
-              loop={false}
-              style={{ width: 230 }}
             />
           </Center>
         </When>
