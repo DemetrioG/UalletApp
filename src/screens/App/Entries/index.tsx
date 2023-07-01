@@ -230,18 +230,20 @@ const columns: DataGridColumnRef[] = [
     label: "Descrição",
     flex: 1,
     headerAlign: "center",
+    align: "center",
   },
-  {
-    name: "date",
-    label: "Data",
-    flex: 1,
-    headerAlign: "center",
-  },
+  // {
+  //   name: "date",
+  //   label: "Data",
+  //   flex: 1,
+  //   headerAlign: "center",
+  // },
   {
     name: "value",
     label: "Valor",
     flex: 1,
     headerAlign: "center",
+    align: "center",
   },
 ];
 
