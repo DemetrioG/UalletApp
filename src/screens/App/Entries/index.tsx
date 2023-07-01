@@ -2,32 +2,21 @@ import { useEffect, useState, useContext } from "react";
 import { useTheme } from "styled-components";
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { ChevronLeft, Filter, FilterX, InfoIcon } from "lucide-react-native";
-import { FlatList } from "react-native";
 import LottieView from "lottie-react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import Icon from "../../../components/Icon";
 import Tooltip from "../../../components/Tooltip";
 import When from "../../../components/When";
 import { CardDownIcon, CardUpIcon } from "../../../components/CustomIcons";
 import { defaultFilter, IActiveFilter } from "./Filter/helper";
-import firebase from "../../../services/firebase";
 import { DataContext } from "../../../context/Data/dataContext";
 import { useGetBalance } from "../../../hooks/useBalance";
 import { useGetEntries } from "./hooks/useEntries";
 import { numberToReal } from "../../../utils/number.helper";
 import { ListEntries } from "./types";
 
-import { MoreContainer } from "./styles";
-import {
-  DescriptionContainer,
-  DescriptionText,
-  ItemContainer,
-  ValueContainer,
-  ValueText,
-  BackgroundContainer,
-} from "../../../styles/general";
+import { BackgroundContainer } from "../../../styles/general";
 import { metrics } from "../../../styles";
 import { IThemeProvider } from "../../../styles/baseTheme";
 
@@ -177,14 +166,7 @@ export const Entries = ({
           </Button>
         </HStack>
         <When is={!!list.length}>
-          {/* <FlatList
-            data={list}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              // <ItemList item={item} navigate={navigate as () => void} />
-            )}
-          /> */}
-          <DataGrid columns={columns} data={list} height={300} />
+          <DataGrid columns={columns} data={list} height="60%" />
         </When>
         <When is={isLoading}>
           <Center flex={1}>
@@ -274,36 +256,3 @@ export const Entries = ({
     </BackgroundContainer>
   );
 };
-
-function ItemList({
-  item,
-  navigate,
-}: {
-  item: ListEntries | firebase.firestore.DocumentData;
-  navigate: (url: string, params?: any) => void;
-}) {
-  return (
-    <ItemContainer>
-      <DescriptionContainer>
-        <DescriptionText>
-          {item.description.length > 17
-            ? `${item.description.slice(0, 17)}...`
-            : item.description}
-        </DescriptionText>
-      </DescriptionContainer>
-      <ValueContainer>
-        <ValueText type={item.type}>
-          {item.type == "Receita" ? "+R$" : "-R$"}
-        </ValueText>
-        <ValueText type={item.type}>{numberToReal(item.value, true)}</ValueText>
-      </ValueContainer>
-      <MoreContainer>
-        <Icon
-          name="more-horizontal"
-          size={16}
-          onPress={() => navigate("Lancamentos/NovoLancamento", item)}
-        />
-      </MoreContainer>
-    </ItemContainer>
-  );
-}
