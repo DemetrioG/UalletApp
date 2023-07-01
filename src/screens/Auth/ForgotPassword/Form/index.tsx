@@ -76,7 +76,9 @@ export const ForgotPasswordForm = () => {
             isLoading={isLoading}
             onPress={formMethods.handleSubmit(handleExecute)}
           >
-            <Text fontWeight="bold">Enviar</Text>
+            <Text fontWeight="bold" color="white">
+              Enviar
+            </Text>
           </Button>
         </BackgroundContainer>
       </TouchableWithoutFeedback>

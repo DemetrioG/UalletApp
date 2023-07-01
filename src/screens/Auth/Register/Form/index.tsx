@@ -103,7 +103,9 @@ export const RegisterForm = () => {
           isLoading={isLoading}
           onPress={formMethods.handleSubmit(handleExecute)}
         >
-          <Text fontWeight="bold">Criar conta</Text>
+          <Text fontWeight="bold" color="white">
+            Criar conta
+          </Text>
         </Button>
       </BackgroundContainer>
     </TouchableWithoutFeedback>

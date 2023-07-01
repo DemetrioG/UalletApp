@@ -69,7 +69,9 @@ export const AlterarSenhaForm = () => {
             isLoading={isLoading}
             onPress={formMethods.handleSubmit(handleExecute)}
           >
-            <Text fontWeight="bold">Alterar senha</Text>
+            <Text fontWeight="bold" color="white">
+              Alterar senha
+            </Text>
           </Button>
         </VStack>
       </BackgroundContainer>

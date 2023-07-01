@@ -1,8 +1,12 @@
+import { TEntrieType } from "../../../../types/types";
+
 export interface NewEntrieDTO {
-  type: "Receita" | "Despesa";
-  entrydate: string;
+  date: string;
   description: string;
+  id?: number;
+  modality: "Real" | "Projetado";
   schema: string;
   segment: string;
+  type: TEntrieType;
   value: string;
 }

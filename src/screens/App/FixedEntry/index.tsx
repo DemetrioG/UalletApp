@@ -34,7 +34,7 @@ import {
 } from "../../../components/Picker/options";
 import { insertNewEntry, lastIdFromEntry } from "./querys";
 import { DataContext } from "../../../context/Data/dataContext";
-import { Schema } from "../NewEntries/styles";
+// import { Schema } from "../NewEntries/styles";
 import { updateCurrentBalance } from "../../../utils/query.helper";
 
 interface IForm {
@@ -159,7 +159,7 @@ const FixedEntry = () => {
             <HStack alignItems="center" space={3} mb={1}>
               <Icon name="chevron-left" size={24} onPress={goBack} />
               <TextHeaderScreen noMarginBottom>
-                Novo lançamento <Schema>{modality}</Schema>
+                {/* Novo lançamento <Schema>{modality}</Schema> */}
               </TextHeaderScreen>
             </HStack>
             <TypeView>

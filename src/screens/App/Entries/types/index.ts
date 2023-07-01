@@ -7,7 +7,7 @@ export interface ListEntries {
   description: string;
   id: number;
   modality: "Real" | "Projetado";
-  classification: string | null;
+  classification?: string;
   segment: string | null;
   type: TEntrieType;
   value: number;

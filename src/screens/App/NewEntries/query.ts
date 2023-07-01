@@ -10,32 +10,14 @@ import {
   convertDateToDatabase,
 } from "../../../utils/date.helper";
 import { realToNumber } from "../../../utils/number.helper";
-import { TEntrieType } from "../../../types/types";
+import { NewEntrieDTO } from "./types";
 
-export interface INewEntry {
-  description: string;
-  entrydate: string;
-  value: string;
-  classification: string;
-  modality: "Real" | "Projetado";
-  type: TEntrieType;
-  segment: string;
-}
-
-async function _registerNewEntry(props: INewEntry) {
+async function _registerNewEntry(props: NewEntrieDTO) {
   const user = await currentUser();
 
   if (!user) return Promise.reject();
 
-  const {
-    description,
-    entrydate,
-    value,
-    modality,
-    segment,
-    type,
-    classification,
-  } = props;
+  const { description, date, value, modality, segment, type } = props;
   let id = 1;
 
   /**
@@ -59,11 +41,10 @@ async function _registerNewEntry(props: INewEntry) {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
   } = {
     id: id,
-    date: convertDateToDatabase(entrydate),
+    date: convertDateToDatabase(date),
     type: type,
     description: description,
     modality: modality!,
-    classification: classification,
     segment: segment,
     value: realToNumber(value),
   };
@@ -90,10 +71,7 @@ async function _registerNewEntry(props: INewEntry) {
 
   await createCollection("balance");
 
-  const docRef = `${Number(entrydate.slice(3, 5)).toString()}_${entrydate.slice(
-    6,
-    10
-  )}`;
+  const docRef = `${Number(date.slice(3, 5)).toString()}_${date.slice(6, 10)}`;
   await updateCurrentBalance({
     modality: modality,
     sumBalance: type === "Receita",
@@ -105,7 +83,7 @@ async function _registerNewEntry(props: INewEntry) {
 }
 
 async function _updateEntry(
-  props: INewEntry,
+  props: NewEntrieDTO,
   idRegister: number,
   routeParams: ListEntries
 ) {
@@ -113,25 +91,16 @@ async function _updateEntry(
 
   if (!user) return Promise.reject();
 
-  const {
-    description,
-    entrydate,
-    value,
-    modality,
-    segment,
-    type,
-    classification,
-  } = props;
+  const { description, date, value, modality, segment, type } = props;
 
   const items: ListEntries & {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
   } = {
     id: idRegister,
-    date: convertDateToDatabase(entrydate),
+    date: convertDateToDatabase(date),
     type: type,
     description: description,
-    modality: modality!,
-    classification: classification,
+    modality: modality,
     segment: segment,
     value: realToNumber(value),
   };
@@ -158,10 +127,7 @@ async function _updateEntry(
 
   await createCollection("balance");
 
-  const docRef = `${Number(entrydate.slice(3, 5)).toString()}_${entrydate.slice(
-    6,
-    10
-  )}`;
+  const docRef = `${Number(date.slice(3, 5)).toString()}_${date.slice(6, 10)}`;
   await updateCurrentBalance({
     modality: modality,
     sumBalance: type === "Receita",
@@ -199,7 +165,7 @@ async function _deleteEntry(routeParams: ListEntries) {
   return Promise.resolve();
 }
 
-export function registerNewEntry(props: INewEntry) {
+export function registerNewEntry(props: NewEntrieDTO) {
   try {
     return _registerNewEntry(props);
   } catch (error) {
@@ -209,7 +175,7 @@ export function registerNewEntry(props: INewEntry) {
 }
 
 export function updateEntry(
-  props: INewEntry,
+  props: NewEntrieDTO,
   idRegister: number,
   routeParams: ListEntries
 ) {

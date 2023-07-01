@@ -75,7 +75,9 @@ export const ConfirmDialog = () => {
               </Text>
             </Button>
             <Button onPress={handleCancel}>
-              <Text fontWeight="bold">Cancelar</Text>
+              <Text fontWeight="bold" color="white">
+                Cancelar
+              </Text>
             </Button>
           </VStack>
         </VStack>

@@ -63,7 +63,9 @@ export const VariableEntryScreen = ({
           isLoading={isLoading}
           onPress={() => handleSubmit(value)}
         >
-          <ButtonText>CONFIRMAR</ButtonText>
+          <Text fontWeight="bold" color="white">
+            Confirmar
+          </Text>
         </Button>
       </VStack>
     </BackgroundContainer>
