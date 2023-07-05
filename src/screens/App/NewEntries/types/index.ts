@@ -5,7 +5,7 @@ export interface NewEntrieDTO {
   description: string | null;
   id?: number;
   modality: "Real" | "Projetado" | null;
-  segment: string | null;
+  segment?: string | null;
   type: TEntrieType | null;
   value: string | null;
 }

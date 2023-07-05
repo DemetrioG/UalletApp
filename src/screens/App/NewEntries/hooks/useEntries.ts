@@ -19,7 +19,6 @@ const defaultValues: NewEntrieDTO = {
   date: null,
   description: null,
   modality: null,
-  segment: null,
   type: null,
   value: null,
 };
@@ -34,11 +33,9 @@ const schema = yup
         dateValidation(value!)
       ),
     description: yup.string().required(),
-    classification: yup
-      .string()
-      .test("classification", "Informe a classificação", () => true),
-    segment: yup.string().test("segment", "Informe o segmento", () => true),
-    value: yup.string().required(),
+    modality: yup.string().required("Informe a modalidade"),
+    segment: yup.string().nullable(),
+    value: yup.string().required("Informe o valor"),
   })
   .required();
 
