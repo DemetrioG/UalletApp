@@ -28,16 +28,7 @@ export const NewEntries = ({
     route,
   }: {
     route: { key: string; title: string };
-  }) => {
-    switch (route.key) {
-      case "Receita":
-        return <NewEntrieForm route={route} params={params} />;
-      case "Despesa":
-        return <NewEntrieForm route={route} params={params} />;
-      default:
-        return null;
-    }
-  };
+  }) => <NewEntrieForm route={route} params={params} />;
 
   return (
     <BackgroundContainer>

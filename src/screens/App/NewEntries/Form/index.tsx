@@ -1,18 +1,14 @@
 import { ListEntries } from "../../Entries/types";
-import { useContext, useEffect, useState } from "react";
-import {
-  convertDate,
-  convertDateFromDatabase,
-} from "../../../../utils/date.helper";
+import { useContext, useState } from "react";
+import { convertDate } from "../../../../utils/date.helper";
 import { Keyboard } from "react-native";
-import { numberToReal } from "../../../../utils/number.helper";
 import { TouchableWithoutFeedback } from "react-native";
 import TextInput from "../../../../components/TextInput";
 import { Button, Center, Text } from "native-base";
 import Calendar from "../../../../components/Calendar";
-import { FormProvider, useFormContext } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import When from "../../../../components/When";
-import { SelectInput } from "../../../../components/SelectInput";
+import { FormSelectInput } from "../../../../components/SelectInput";
 import { DataContext } from "../../../../context/Data/dataContext";
 import {
   useFormEntries,
@@ -29,8 +25,13 @@ export const NewEntrieForm = ({
   route: { key: string };
 }) => {
   const id = params?.id;
-  const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
-    useFormEntries(params, id);
+  const {
+    formMethods,
+    isLoadingCreate,
+    isLoadingUpdate,
+    handleCreate,
+    handleUpdate,
+  } = useFormEntries(params, id);
   const { theme }: IThemeProvider = useTheme();
   const { data } = useContext(DataContext);
 
@@ -40,36 +41,26 @@ export const NewEntrieForm = ({
   const [calendar, setCalendar] = useState(false);
 
   function setDateToInput(date: Date) {
-    formMethods.setValue("entrydate", convertDate(date));
+    formMethods.setValue("date", convertDate(date));
   }
-
-  useEffect(() => {
-    /**
-     * Verifica se é Edição e preenche os dados nos campos
-     */
-    if (params) {
-      formMethods.setValue("entrydate", convertDateFromDatabase(params.date));
-      formMethods.setValue("description", params.description);
-      formMethods.setValue("value", numberToReal(params.value));
-    }
-  }, []);
 
   return (
     <FormProvider {...formMethods}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <>
           <Center flex={1}>
             <TextInput
               variant="filled"
-              name="entrydate"
+              name="date"
               placeholder="Data lançamento"
               control={formMethods.control}
-              errors={formMethods.formState.errors.entrydate}
+              errors={formMethods.formState.errors.date}
               masked="datetime"
               maxLength={10}
               setCalendar={setCalendar}
               withIcon
               helperText="Verifique a data informada"
+              isRequired
             />
             <TextInput
               variant="filled"
@@ -78,18 +69,27 @@ export const NewEntrieForm = ({
               control={formMethods.control}
               errors={formMethods.formState.errors.description}
               maxLength={40}
+              isRequired
             />
-            <SelectInput
+            <FormSelectInput
+              name="modality"
+              control={formMethods.control}
               options={schemaOptions}
               variant="filled"
               placeholder="Modalidade"
               defaultValue={data.modality}
+              errors={formMethods.formState.errors.modality}
+              isRequired
             />
             <When is={type === "Despesa"}>
-              <SelectInput
+              <FormSelectInput
+                name="segment"
+                control={formMethods.control}
                 options={segmentOptions}
                 variant="filled"
                 placeholder="Segmento"
+                errors={formMethods.formState.errors.segment}
+                isRequired
               />
             </When>
             <TextInput
@@ -100,37 +100,41 @@ export const NewEntrieForm = ({
               errors={formMethods.formState.errors}
               masked="money"
               helperText="Informe todos os campos"
+              isRequired
             />
           </Center>
           <When is={!id}>
-            <Button isLoading={isLoadingCreate} onPress={() => handleSubmit()}>
+            <Button
+              isLoading={isLoadingCreate}
+              onPress={formMethods.handleSubmit(handleCreate)}
+            >
               <Text fontWeight="bold" color="white">
                 Cadastrar
               </Text>
             </Button>
           </When>
+          <When is={!!id && formMethods.formState.isDirty}>
+            <Button
+              isLoading={isLoadingUpdate}
+              isDisabled={isLoadingDelete}
+              onPress={formMethods.handleSubmit(handleUpdate)}
+            >
+              <Text fontWeight="bold" color="white">
+                Atualizar
+              </Text>
+            </Button>
+          </When>
           <When is={!!id}>
-            <>
-              <Button
-                isLoading={isLoadingUpdate}
-                isDisabled={isLoadingDelete}
-                onPress={() => handleSubmit()}
-              >
-                <Text fontWeight="bold" color="white">
-                  Atualizar
-                </Text>
-              </Button>
-              <Button
-                variant="outline"
-                isLoading={isLoadingDelete}
-                isDisabled={isLoadingUpdate}
-                onPress={() => handleDelete(params)}
-              >
-                <Text fontWeight="bold" color={theme?.blue}>
-                  Excluir
-                </Text>
-              </Button>
-            </>
+            <Button
+              variant="outline"
+              isLoading={isLoadingDelete}
+              isDisabled={isLoadingUpdate}
+              onPress={() => handleDelete(params)}
+            >
+              <Text fontWeight="bold" color={theme?.blue}>
+                Excluir
+              </Text>
+            </Button>
           </When>
           {/* {type === "Despesa" && !isEditing && (
           <VStack alignItems="center" pb={5}>

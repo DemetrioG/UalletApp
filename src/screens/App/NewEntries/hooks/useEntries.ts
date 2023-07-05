@@ -2,17 +2,27 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { NewEntrieDTO } from "../types";
-import { dateValidation } from "../../../../utils/date.helper";
+import {
+  convertDateFromDatabase,
+  dateValidation,
+} from "../../../../utils/date.helper";
 import { usePromise } from "../../../../hooks/usePromise";
 import { deleteEntry, registerNewEntry, updateEntry } from "../query";
 import { ListEntries } from "../../Entries/types";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
-import { useContext } from "react";
-import { Keyboard } from "react-native";
+import { useContext, useEffect } from "react";
+import { numberToReal } from "../../../../utils/number.helper";
 
-const defaultValues: NewEntrieDTO = {};
+const defaultValues: NewEntrieDTO = {
+  date: null,
+  description: null,
+  modality: null,
+  segment: null,
+  type: null,
+  value: null,
+};
 
 const schema = yup
   .object({
@@ -32,29 +42,40 @@ const schema = yup
   })
   .required();
 
+const formatFormData = (formData: ListEntries) => {
+  const formatted: NewEntrieDTO = {
+    date: convertDateFromDatabase(formData.date),
+    description: formData.description,
+    modality: formData.modality,
+    segment: formData.segment,
+    type: formData.type,
+    value: numberToReal(formData.value),
+    id: formData.id,
+  };
+  return formatted;
+};
+
 export const useFormEntries = (params: ListEntries, id?: number) => {
   const formMethods = useForm<NewEntrieDTO>({
+    defaultValues,
     resolver: yupResolver(schema),
   });
 
   const { isLoading: isLoadingCreate, handleExecute: handleCreate } =
     useCreateEntrie();
   const { isLoading: isLoadingUpdate, handleExecute: handleUpdate } =
-    useUpdateEntrie();
+    useUpdateEntrie(params, id);
 
-  const handleSubmit = () => {
-    Keyboard.dismiss();
-    if (!id) return formMethods.handleSubmit(handleCreate);
-    return formMethods.handleSubmit((formData) =>
-      handleUpdate(formData, id, params)
-    );
-  };
+  useEffect(() => {
+    params && formMethods.reset(formatFormData(params));
+  }, [params]);
 
   return {
     formMethods,
     isLoadingCreate,
     isLoadingUpdate,
-    handleSubmit,
+    handleCreate,
+    handleUpdate,
   };
 };
 
@@ -85,15 +106,13 @@ export const useCreateEntrie = () => {
   };
 };
 
-export const useUpdateEntrie = () => {
+export const useUpdateEntrie = (params: ListEntries, id?: number) => {
   const { navigate } = useNavigation();
   const { isLoading, handleExecute } = usePromise(updateEntry);
 
-  async function execute(
-    formData: NewEntrieDTO,
-    id: number,
-    params: ListEntries
-  ) {
+  async function execute(formData: NewEntrieDTO) {
+    if (!id) throw new Error("Identificador não encontrado");
+    console.log(formData);
     handleExecute(formData, id, params)
       .then(() => {
         Toast.show({

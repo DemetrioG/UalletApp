@@ -3,6 +3,7 @@ import { IInputProps, Input, WarningOutlineIcon } from "native-base";
 import {
   TextInputMask,
   TextInputMaskOptionProp,
+  TextInputMaskTypeProp,
 } from "react-native-masked-text";
 import { Controller } from "react-hook-form";
 import { FormControl as NativeFormControl } from "native-base";
@@ -39,7 +40,7 @@ const CalendarIcon = ({
 
 const UTextInput = (
   props: IInputProps & {
-    masked?: "datetime" | "money";
+    masked?: TextInputMaskTypeProp;
     errors?: object | undefined;
     helperText?: string | undefined;
     withIcon?: boolean;
