@@ -1,5 +1,5 @@
 import { ListEntries } from "../../Entries/types";
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import { convertDate } from "../../../../utils/date.helper";
 import { Keyboard } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
@@ -15,6 +15,7 @@ import {
 } from "../hooks/useEntries";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
+import { TEntrieType } from "../../../../types/types";
 
 export const NewEntrieForm = ({
   params,
@@ -36,6 +37,10 @@ export const NewEntrieForm = ({
   function setDateToInput(date: Date) {
     formMethods.setValue("date", convertDate(date));
   }
+
+  useEffect(() => {
+    formMethods.setValue("type", type as TEntrieType);
+  }, [type]);
 
   return (
     <FormProvider {...formMethods}>
