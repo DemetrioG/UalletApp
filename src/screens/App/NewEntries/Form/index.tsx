@@ -9,7 +9,6 @@ import Calendar from "../../../../components/Calendar";
 import { FormProvider } from "react-hook-form";
 import When from "../../../../components/When";
 import { FormSelectInput } from "../../../../components/SelectInput";
-import { DataContext } from "../../../../context/Data/dataContext";
 import {
   useFormEntries,
   useHandleConfirmDeleteEntrie,
@@ -25,15 +24,9 @@ export const NewEntrieForm = ({
   route: { key: string };
 }) => {
   const id = params?.id;
-  const {
-    formMethods,
-    isLoadingCreate,
-    isLoadingUpdate,
-    handleCreate,
-    handleUpdate,
-  } = useFormEntries(params, id);
+  const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
+    useFormEntries(params, id);
   const { theme }: IThemeProvider = useTheme();
-  const { data } = useContext(DataContext);
 
   const { isLoading: isLoadingDelete, handleDelete } =
     useHandleConfirmDeleteEntrie();
@@ -77,7 +70,6 @@ export const NewEntrieForm = ({
               options={schemaOptions}
               variant="filled"
               placeholder="Modalidade"
-              defaultValue={data.modality}
               errors={formMethods.formState.errors.modality}
               isRequired
             />
@@ -89,7 +81,6 @@ export const NewEntrieForm = ({
                 variant="filled"
                 placeholder="Segmento"
                 errors={formMethods.formState.errors.segment}
-                isRequired
               />
             </When>
             <TextInput
@@ -104,10 +95,7 @@ export const NewEntrieForm = ({
             />
           </Center>
           <When is={!id}>
-            <Button
-              isLoading={isLoadingCreate}
-              onPress={formMethods.handleSubmit(handleCreate)}
-            >
+            <Button isLoading={isLoadingCreate} onPress={handleSubmit}>
               <Text fontWeight="bold" color="white">
                 Cadastrar
               </Text>
@@ -117,7 +105,7 @@ export const NewEntrieForm = ({
             <Button
               isLoading={isLoadingUpdate}
               isDisabled={isLoadingDelete}
-              onPress={formMethods.handleSubmit(handleUpdate)}
+              onPress={handleSubmit}
             >
               <Text fontWeight="bold" color="white">
                 Atualizar

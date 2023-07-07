@@ -5,10 +5,9 @@ import {
   TextInputMaskOptionProp,
   TextInputMaskTypeProp,
 } from "react-native-masked-text";
-import { Controller } from "react-hook-form";
-import { FormControl as NativeFormControl } from "native-base";
+import { Controller, FieldError, FieldErrors } from "react-hook-form";
+import { FormControl } from "native-base";
 
-import { metrics } from "../../styles";
 import NativeIcon from "../Icon";
 import styled from "styled-components";
 import When from "../When";
@@ -18,10 +17,6 @@ const Icon = styled(NativeIcon)`
   top: -38px;
   right: 8px;
   padding: 8px;
-`;
-
-const FormControl = styled(NativeFormControl)`
-  margin-bottom: ${metrics.baseMargin}px;
 `;
 
 const CalendarIcon = ({
@@ -41,7 +36,7 @@ const CalendarIcon = ({
 const UTextInput = (
   props: IInputProps & {
     masked?: TextInputMaskTypeProp;
-    errors?: object | undefined;
+    errors?: FieldErrors | FieldError;
     helperText?: string | undefined;
     withIcon?: boolean;
     options?: TextInputMaskOptionProp;
@@ -62,42 +57,35 @@ const UTextInput = (
   } = props;
 
   React.useEffect(() => {
-    if (errors && Object.keys(errors).length > 0) {
-      setIsInvalid(true);
-    } else {
-      setIsInvalid(false);
-    }
+    const hasError = !!Object.keys(errors ?? {}).length;
+    setIsInvalid(hasError);
   }, [errors]);
 
   return (
-    <>
-      <FormControl isInvalid={isInvalid}>
-        <>
-          <When is={!!masked}>
-            <TextInputMask
-              {...restProps}
-              customTextInput={Input}
-              type={masked}
-              placeholder={isRequired ? `${placeholder} *` : placeholder}
-            />
-          </When>
-          <When is={!masked}>
-            <Input
-              {...restProps}
-              placeholder={isRequired ? `${placeholder} *` : placeholder}
-            />
-          </When>
-          <When is={masked === "datetime" && !!withIcon}>
-            <CalendarIcon setCalendar={setCalendar!} />
-          </When>
-        </>
-        {helperText && (
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {helperText}
-          </FormControl.ErrorMessage>
-        )}
-      </FormControl>
-    </>
+    <FormControl mb={15} isInvalid={isInvalid}>
+      <When is={!!masked}>
+        <TextInputMask
+          {...restProps}
+          customTextInput={Input}
+          type={masked}
+          placeholder={isRequired ? `${placeholder} *` : placeholder}
+        />
+      </When>
+      <When is={!masked}>
+        <Input
+          {...restProps}
+          placeholder={isRequired ? `${placeholder} *` : placeholder}
+        />
+      </When>
+      <When is={masked === "datetime" && !!withIcon}>
+        <CalendarIcon setCalendar={setCalendar!} />
+      </When>
+      <When is={!!helperText}>
+        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+          {helperText}
+        </FormControl.ErrorMessage>
+      </When>
+    </FormControl>
   );
 };
 

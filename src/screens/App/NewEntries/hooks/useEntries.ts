@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
 import { useContext, useEffect } from "react";
 import { numberToReal } from "../../../../utils/number.helper";
+import { DataContext } from "../../../../context/Data/dataContext";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
@@ -53,15 +54,26 @@ const formatFormData = (formData: ListEntries) => {
 };
 
 export const useFormEntries = (params: ListEntries, id?: number) => {
+  const { data } = useContext(DataContext);
   const formMethods = useForm<NewEntrieDTO>({
-    defaultValues,
+    defaultValues: { ...defaultValues, modality: data?.modality },
     resolver: yupResolver(schema),
   });
 
   const { isLoading: isLoadingCreate, handleExecute: handleCreate } =
     useCreateEntrie();
   const { isLoading: isLoadingUpdate, handleExecute: handleUpdate } =
-    useUpdateEntrie(params, id);
+    useUpdateEntrie();
+
+  const onSubmit = (formData: NewEntrieDTO) => {
+    if (id) {
+      return handleUpdate(formData, params, id);
+    } else {
+      return handleCreate(formData);
+    }
+  };
+
+  const handleSubmit = formMethods.handleSubmit(onSubmit);
 
   useEffect(() => {
     params && formMethods.reset(formatFormData(params));
@@ -71,8 +83,7 @@ export const useFormEntries = (params: ListEntries, id?: number) => {
     formMethods,
     isLoadingCreate,
     isLoadingUpdate,
-    handleCreate,
-    handleUpdate,
+    handleSubmit,
   };
 };
 
@@ -103,11 +114,15 @@ export const useCreateEntrie = () => {
   };
 };
 
-export const useUpdateEntrie = (params: ListEntries, id?: number) => {
+export const useUpdateEntrie = () => {
   const { navigate } = useNavigation();
   const { isLoading, handleExecute } = usePromise(updateEntry);
 
-  async function execute(formData: NewEntrieDTO) {
+  async function execute(
+    formData: NewEntrieDTO,
+    params: ListEntries,
+    id?: number
+  ) {
     if (!id) throw new Error("Identificador não encontrado");
     console.log(formData);
     handleExecute(formData, id, params)
