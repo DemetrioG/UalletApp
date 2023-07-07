@@ -16,7 +16,7 @@ import { getTreasure, registerAsset } from "./query";
 import { UserContext } from "../../../../context/User/userContext";
 import Picker from "../../../../components/Picker";
 import Icon from "../../../../components/Icon";
-import TextInput from "../../../../components/TextInput";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import Calendar from "../../../../components/Calendar";
 import { BROKER } from "../../../../components/Picker/options";
 import { convertDate, dateValidation } from "../../../../utils/date.helper";
@@ -204,7 +204,7 @@ const NewFixAsset = () => {
             </HStack>
             <ContainerCenter>
               <FormContainer insideApp>
-                <TextInput
+                <FormTextInput
                   name="entrydate"
                   placeholder="Data lançamento"
                   control={control}
@@ -225,7 +225,7 @@ const NewFixAsset = () => {
                   errors={errors.title}
                 />
                 {CDBIsSetted && (
-                  <TextInput
+                  <FormTextInput
                     name="cdbname"
                     placeholder="Nome do CDB"
                     control={control}
@@ -249,7 +249,7 @@ const NewFixAsset = () => {
                 </TouchableOpacity>
                 <HStack justifyContent={"space-between"}>
                   <HalfContainer>
-                    <TextInput
+                    <FormTextInput
                       name="rent"
                       placeholder="Rentabilidade"
                       control={control}
@@ -261,7 +261,7 @@ const NewFixAsset = () => {
                     />
                   </HalfContainer>
                   <HalfContainer>
-                    <TextInput
+                    <FormTextInput
                       name="duedate"
                       placeholder="Vencimento"
                       masked="datetime"
@@ -271,7 +271,7 @@ const NewFixAsset = () => {
                     />
                   </HalfContainer>
                 </HStack>
-                <TextInput
+                <FormTextInput
                   name="price"
                   placeholder="Preço"
                   masked="money"

@@ -12,8 +12,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFormContext } from "react-hook-form";
 import { ChevronLeft } from "lucide-react-native";
 
-import TextInput from "../../../../components/TextInput";
-import TextInputPassword from "../../../../components/TextInputPassword";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
+import { FormTextInputPassword } from "../../../../components/Inputs/TextInputPassword";
 import When from "../../../../components/When";
 import { DataContext } from "../../../../context/Data/dataContext";
 import { UserContext } from "../../../../context/User/userContext";
@@ -85,7 +85,7 @@ export const LoginForm = () => {
             </Text>
           </VStack>
           <ContainerCenter>
-            <TextInput
+            <FormTextInput
               placeholder="E-mail"
               keyboardType="email-address"
               autoCorrect={false}
@@ -95,7 +95,7 @@ export const LoginForm = () => {
               errors={formMethods.formState.errors.email}
               isRequired
             />
-            <TextInputPassword
+            <FormTextInputPassword
               placeholder="Senha"
               onSubmitEditing={formMethods.handleSubmit(handleExecute)}
               returnKeyType="done"

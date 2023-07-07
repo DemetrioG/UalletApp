@@ -4,7 +4,7 @@ import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useFormContext } from "react-hook-form";
 
-import TextInputPassword from "../../../../../../components/TextInputPassword";
+import { FormTextInputPassword } from "../../../../../../components/Inputs/TextInputPassword";
 import {
   BackgroundContainer,
   ButtonText,
@@ -42,7 +42,7 @@ export const DeleteAccountForm = () => {
             </Text>
           </VStack>
           <Center flex={1}>
-            <TextInputPassword
+            <FormTextInputPassword
               variant="filled"
               name="password"
               placeholder="Senha"

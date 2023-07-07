@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import Picker from "../../../components/Picker";
-import TextInput from "../../../components/TextInput";
+import { FormTextInput } from "../../../components/Inputs/TextInput";
 import { UserContext } from "../../../context/User/userContext";
 import { dateValidation } from "../../../utils/date.helper";
 import {
@@ -135,7 +135,7 @@ const Complete = () => {
                 setVisibility={setProfileVisible}
                 errors={errors.profile}
               />
-              <TextInput
+              <FormTextInput
                 placeholder="Data de nascimento"
                 name="birthdate"
                 control={control}
@@ -144,7 +144,7 @@ const Complete = () => {
                 errors={errors.birthdate}
                 helperText="Verifique a data informada"
               />
-              <TextInput
+              <FormTextInput
                 placeholder="Renda média"
                 name="income"
                 control={control}

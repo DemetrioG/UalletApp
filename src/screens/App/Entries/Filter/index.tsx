@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import Picker from "../../../../components/Picker";
-import TextInput from "../../../../components/TextInput";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import Icon from "../../../../components/Icon";
 import { dateValidation } from "../../../../utils/date.helper";
 import { numberToReal, realToNumber } from "../../../../utils/number.helper";
@@ -147,7 +147,7 @@ const Filter = ({
           >
             <SpaceContainer>
               <HalfContainer>
-                <TextInput
+                <FormTextInput
                   name="initialdate"
                   placeholder="Data Inicial"
                   control={control}
@@ -157,7 +157,7 @@ const Filter = ({
                 />
               </HalfContainer>
               <HalfContainer>
-                <TextInput
+                <FormTextInput
                   name="finaldate"
                   placeholder="Data Final"
                   control={control}
@@ -167,7 +167,7 @@ const Filter = ({
                 />
               </HalfContainer>
             </SpaceContainer>
-            <TextInput
+            <FormTextInput
               name="description"
               placeholder="Descrição"
               control={control}
@@ -203,7 +203,7 @@ const Filter = ({
             )}
             <SpaceContainer>
               <HalfContainer>
-                <TextInput
+                <FormTextInput
                   name="initialvalue"
                   placeholder="Valor inicial"
                   control={control}
@@ -211,7 +211,7 @@ const Filter = ({
                 />
               </HalfContainer>
               <HalfContainer>
-                <TextInput
+                <FormTextInput
                   name="finalvalue"
                   placeholder="Valor final"
                   control={control}

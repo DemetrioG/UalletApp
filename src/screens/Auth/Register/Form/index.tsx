@@ -6,8 +6,8 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import TextInput from "../../../../components/TextInput";
-import TextInputPassword from "../../../../components/TextInputPassword";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
+import { FormTextInputPassword } from "../../../../components/Inputs/TextInputPassword";
 import {
   BackgroundContainer,
   BackgroundEffect,
@@ -60,7 +60,7 @@ export const RegisterForm = () => {
           </Text>
         </VStack>
         <ContainerCenter>
-          <TextInput
+          <FormTextInput
             placeholder="Nome completo"
             maxLength={40}
             name="name"
@@ -68,7 +68,7 @@ export const RegisterForm = () => {
             errors={formMethods.formState.errors.name}
             isRequired
           />
-          <TextInput
+          <FormTextInput
             placeholder="E-mail"
             keyboardType="email-address"
             autoCorrect={false}
@@ -78,14 +78,14 @@ export const RegisterForm = () => {
             errors={formMethods.formState.errors.email}
             isRequired
           />
-          <TextInputPassword
+          <FormTextInputPassword
             placeholder="Senha"
             name="password"
             control={formMethods.control}
             errors={formMethods.formState.errors.password}
             isRequired
           />
-          <TextInputPassword
+          <FormTextInputPassword
             placeholder="Confirme sua senha"
             onSubmitEditing={formMethods.handleSubmit(handleExecute)}
             returnKeyType="done"

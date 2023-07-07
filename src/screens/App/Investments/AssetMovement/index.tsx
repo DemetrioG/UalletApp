@@ -18,7 +18,7 @@ import {
   ViewTab,
 } from "../../../../styles/general";
 import { convertDate, dateValidation } from "../../../../utils/date.helper";
-import TextInput from "../../../../components/TextInput";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import Calendar from "../../../../components/Calendar";
 import { IPosition } from "../../../../components/Positions";
 import { deleteAsset } from "./query";
@@ -111,7 +111,7 @@ const Form = ({ title, asset }: IPosition & { title: string }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ContainerCenter>
         <FormContainer insideApp>
-          <TextInput
+          <FormTextInput
             name="entrydate"
             placeholder="Data lançamento"
             control={control}
@@ -122,20 +122,20 @@ const Form = ({ title, asset }: IPosition & { title: string }) => {
             withIcon
             helperText="Verifique a data informada"
           />
-          <TextInput
+          <FormTextInput
             name="asset"
             placeholder="Ativo"
             control={control}
             isDisabled
           />
-          <TextInput
+          <FormTextInput
             name="amount"
             placeholder="Quantidade"
             keyboardType="decimal-pad"
             control={control}
             errors={errors.amount}
           />
-          <TextInput
+          <FormTextInput
             name="price"
             placeholder="Preço"
             masked="money"

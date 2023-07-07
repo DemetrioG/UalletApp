@@ -7,7 +7,7 @@ import {
 import { Button, Text, VStack } from "native-base";
 
 import Toast from "react-native-toast-message";
-import TextInput from "../../../../components/TextInput";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import {
   BackgroundContainer,
   BackgroundEffect,
@@ -60,7 +60,7 @@ export const ForgotPasswordForm = () => {
             <Text color="white">Verifique sua caixa de spam!</Text>
           </VStack>
           <ContainerCenter>
-            <TextInput
+            <FormTextInput
               placeholder="E-mail cadastrado"
               keyboardType="email-address"
               autoCorrect={false}

@@ -1,10 +1,10 @@
 import { ListEntries } from "../../Entries/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { convertDate } from "../../../../utils/date.helper";
 import { Keyboard } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
-import TextInput from "../../../../components/TextInput";
-import { Button, Center, Text } from "native-base";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
+import { Button, Center, Text, useDisclose } from "native-base";
 import Calendar from "../../../../components/Calendar";
 import { FormProvider } from "react-hook-form";
 import When from "../../../../components/When";
@@ -25,14 +25,13 @@ export const NewEntrieForm = ({
   route: { key: string };
 }) => {
   const id = params?.id;
+  const calendar = useDisclose();
   const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
     useFormEntries(params, id);
   const { theme }: IThemeProvider = useTheme();
 
   const { isLoading: isLoadingDelete, handleDelete } =
     useHandleConfirmDeleteEntrie();
-
-  const [calendar, setCalendar] = useState(false);
 
   function setDateToInput(date: Date) {
     formMethods.setValue("date", convertDate(date));
@@ -47,7 +46,7 @@ export const NewEntrieForm = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <>
           <Center flex={1}>
-            <TextInput
+            <FormTextInput
               variant="filled"
               name="date"
               placeholder="Data lançamento"
@@ -55,12 +54,12 @@ export const NewEntrieForm = ({
               errors={formMethods.formState.errors.date}
               masked="datetime"
               maxLength={10}
-              setCalendar={setCalendar}
+              setCalendar={calendar.onToggle}
               withIcon
               helperText="Verifique a data informada"
               isRequired
             />
-            <TextInput
+            <FormTextInput
               variant="filled"
               name="description"
               placeholder="Descrição"
@@ -88,7 +87,7 @@ export const NewEntrieForm = ({
                 errors={formMethods.formState.errors.segment}
               />
             </When>
-            <TextInput
+            <FormTextInput
               variant="filled"
               name="value"
               placeholder="Valor"
@@ -129,21 +128,7 @@ export const NewEntrieForm = ({
               </Text>
             </Button>
           </When>
-          {/* {type === "Despesa" && !isEditing && (
-          <VStack alignItems="center" pb={5}>
-            <TouchableOpacity
-              onPress={() => navigate("Lancamentos/LancamentoFixo")}
-            >
-              <FixEntryText>CADASTRAR DESPESAS FIXAS</FixEntryText>
-            </TouchableOpacity>
-          </VStack>
-        )} */}
-          <Calendar
-            date={new Date()}
-            setDateToInput={setDateToInput}
-            calendarIsShow={calendar}
-            edit={!!id}
-          />
+          <Calendar setDateToInput={setDateToInput} edit={!!id} {...calendar} />
         </>
       </TouchableWithoutFeedback>
     </FormProvider>

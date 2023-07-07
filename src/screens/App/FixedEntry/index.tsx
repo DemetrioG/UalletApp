@@ -27,7 +27,7 @@ import {
   ViewTab,
 } from "../../../styles/general";
 import Icon from "../../../components/Icon";
-import TextInput from "../../../components/TextInput";
+import { FormTextInput } from "../../../components/Inputs/TextInput";
 import {
   CLASSIFICATION,
   ENTRY_SEGMENT,
@@ -167,7 +167,7 @@ const FixedEntry = () => {
             </TypeView>
             <ContainerCenter>
               <FormContainer insideApp>
-                <TextInput
+                <FormTextInput
                   name="entrydate"
                   placeholder="Data lançamento"
                   control={control}
@@ -178,7 +178,7 @@ const FixedEntry = () => {
                   withIcon
                   helperText="Verifique a data informada"
                 />
-                <TextInput
+                <FormTextInput
                   name="description"
                   placeholder="Descrição"
                   control={control}
@@ -203,7 +203,7 @@ const FixedEntry = () => {
                   setVisibility={setExpenseAmountVisible}
                   errors={errors.expense_amount}
                 />
-                <TextInput
+                <FormTextInput
                   name="value"
                   placeholder="Valor"
                   control={control}

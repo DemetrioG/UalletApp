@@ -11,7 +11,7 @@ import * as yup from "yup";
 import { registerAsset } from "./query";
 import Picker from "../../../../components/Picker";
 import Icon from "../../../../components/Icon";
-import TextInput from "../../../../components/TextInput";
+import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import Calendar from "../../../../components/Calendar";
 import { ASSET_SEGMENT, BROKER } from "../../../../components/Picker/options";
 import { convertDate, dateValidation } from "../../../../utils/date.helper";
@@ -146,7 +146,7 @@ const NewVariableAsset = () => {
             </HStack>
             <ContainerCenter>
               <FormContainer insideApp>
-                <TextInput
+                <FormTextInput
                   name="entrydate"
                   placeholder="Data lançamento"
                   control={control}
@@ -177,7 +177,7 @@ const NewVariableAsset = () => {
                 />
                 <HStack justifyContent={"space-between"}>
                   <HalfContainer>
-                    <TextInput
+                    <FormTextInput
                       name="asset"
                       placeholder="Ativo"
                       control={control}
@@ -187,7 +187,7 @@ const NewVariableAsset = () => {
                     />
                   </HalfContainer>
                   <HalfContainer>
-                    <TextInput
+                    <FormTextInput
                       name="amount"
                       placeholder="Quantidade"
                       keyboardType="decimal-pad"
@@ -197,7 +197,7 @@ const NewVariableAsset = () => {
                     />
                   </HalfContainer>
                 </HStack>
-                <TextInput
+                <FormTextInput
                   name="price"
                   placeholder="Preço"
                   masked="money"

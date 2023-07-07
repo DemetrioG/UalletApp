@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import TextInputPassword from "../../../../../../components/TextInputPassword";
+import { FormTextInputPassword } from "../../../../../../components/Inputs/TextInputPassword";
 import {
   BackgroundContainer,
   ButtonText,
@@ -44,7 +44,7 @@ export const AlterarSenhaForm = () => {
             <Text fontWeight={700}>Alterar Senha</Text>
           </HStack>
           <Center flex={1}>
-            <TextInputPassword
+            <FormTextInputPassword
               variant="filled"
               placeholder="Senha atual"
               name="oldPassword"
@@ -52,7 +52,7 @@ export const AlterarSenhaForm = () => {
               control={formMethods.control}
               errors={formMethods.formState.errors.oldPassword}
             />
-            <TextInputPassword
+            <FormTextInputPassword
               variant="filled"
               placeholder="Nova senha"
               returnKeyType="done"

@@ -1,87 +1,53 @@
 import * as React from "react";
 import { Platform, TouchableOpacity, Animated } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import When from "../When";
+import { ReturnUseDisclosure } from "../../types/types";
+import { Text, VStack } from "native-base";
+import { IThemeProvider } from "../../styles/baseTheme";
+import { useTheme } from "styled-components";
 
-import { DateHeader, DateText, StyledDatePicker } from "./styles";
-
-interface ICalendar {
-  calendarIsShow: boolean;
-  date: Date;
+interface ICalendar extends ReturnUseDisclosure {
   setDateToInput: Function;
   edit?: boolean;
 }
 
-const Calendar = ({
-  calendarIsShow,
-  date,
-  setDateToInput,
-  edit,
-}: ICalendar) => {
-  const [isShow, setIsShow] = React.useState(false);
-  const opacity = React.useRef(new Animated.Value(0)).current;
-  const notInitialRender = React.useRef(false);
-
-  function calendarVisibility() {
-    if (!isShow) {
-      setIsShow(true);
-      !edit && setDateToInput(date);
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(opacity, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start(() => {
-        setIsShow(false);
-      });
-    }
-  }
-
-  React.useEffect(() => {
-    if (notInitialRender.current) {
-      calendarVisibility();
-    } else {
-      notInitialRender.current = true;
-    }
-  }, [calendarIsShow]);
-
+const Calendar = ({ setDateToInput, edit, isOpen, onClose }: ICalendar) => {
+  const { theme }: IThemeProvider = useTheme();
   return (
-    <>
-      {isShow && (
-        <Animated.View
-          style={{
-            position: "absolute",
-            justifyContent: "flex-end",
-            width: "100%",
-            bottom: 0,
-            opacity,
+    <When is={isOpen}>
+      <VStack position="absolute" w="100%" bottom={0} borderRadius={10}>
+        <DateTimePicker
+          style={{ backgroundColor: theme?.tertiary }}
+          value={new Date()}
+          mode="date"
+          display="spinner"
+          onChange={({ type }: any, date: any) => {
+            if (type === "dismissed") return onClose();
+            setDateToInput(date);
+            Platform.OS === "android" && onClose();
           }}
-        >
-          {Platform.OS === "ios" && (
-            <DateHeader>
-              <TouchableOpacity onPress={() => calendarVisibility()}>
-                <DateText>FECHAR</DateText>
-              </TouchableOpacity>
-            </DateHeader>
-          )}
-          <StyledDatePicker
-            value={date}
-            mode="date"
-            display="spinner"
-            onChange={({ type }: any, date: any) => {
-              if (type === "dismissed") {
-                return calendarVisibility();
-              }
-              setDateToInput(date);
-              Platform.OS === "android" && calendarVisibility();
-            }}
-          />
-        </Animated.View>
-      )}
-    </>
+        />
+        <When is={Platform.OS === "ios"}>
+          <VStack
+            w="100%"
+            justifyContent="center"
+            alignItems="flex-end"
+            p={4}
+            backgroundColor={theme?.tertiary}
+            borderBottomLeftRadius="30px"
+            borderBottomRightRadius="30px"
+            borderTopWidth="1px"
+          >
+            <TouchableOpacity onPress={onClose}>
+              <Text fontSize="14px" fontWeight={600}>
+                FECHAR
+              </Text>
+            </TouchableOpacity>
+          </VStack>
+        </When>
+      </VStack>
+    </When>
   );
 };
 
