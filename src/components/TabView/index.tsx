@@ -5,8 +5,6 @@ import {
   SceneRendererProps,
   NavigationState,
 } from "react-native-tab-view";
-import { Touchable } from "./styles";
-import { TouchableOpacity } from "react-native";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 

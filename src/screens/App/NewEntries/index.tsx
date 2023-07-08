@@ -1,5 +1,5 @@
 import * as React from "react";
-import { HStack, Pressable, Text, VStack } from "native-base";
+import { Button, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
 import { ListEntries } from "../Entries/types";
@@ -9,6 +9,12 @@ import { IThemeProvider } from "../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { ChevronLeft } from "lucide-react-native";
 import { NewEntrieForm } from "./Form";
+import {
+  useFormEntries,
+  useHandleConfirmDeleteEntrie,
+} from "./hooks/useEntries";
+import { FormProvider } from "react-hook-form";
+import When from "../../../components/When";
 
 export const NewEntries = ({
   route: { params },
@@ -19,6 +25,12 @@ export const NewEntries = ({
   const { theme }: IThemeProvider = useTheme();
   const { goBack } = useNavigation();
 
+  const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
+    useFormEntries(params, id);
+
+  const { isLoading: isLoadingDelete, handleDelete } =
+    useHandleConfirmDeleteEntrie();
+
   const routes: IRoutes[] = [
     { key: "Receita", title: "Receita", selected: params?.type === "Receita" },
     { key: "Despesa", title: "Despesa", selected: params?.type === "Despesa" },
@@ -28,7 +40,9 @@ export const NewEntries = ({
     route,
   }: {
     route: { key: string; title: string };
-  }) => <NewEntrieForm route={route} params={params} />;
+  }) => {
+    return <NewEntrieForm route={route} params={params} />;
+  };
 
   return (
     <BackgroundContainer>
@@ -47,7 +61,39 @@ export const NewEntries = ({
             {id ? "Editar lançamento" : "Novo lançamento"}
           </Text>
         </HStack>
-        <TabView renderScene={renderScene} tabRoutes={routes} />
+        <FormProvider {...formMethods}>
+          <TabView renderScene={renderScene} tabRoutes={routes} />
+          <When is={!id}>
+            <Button isLoading={isLoadingCreate} onPress={handleSubmit}>
+              <Text fontWeight="bold" color="white">
+                Cadastrar
+              </Text>
+            </Button>
+          </When>
+          <When is={!!id && formMethods.formState.isDirty}>
+            <Button
+              isLoading={isLoadingUpdate}
+              isDisabled={isLoadingDelete}
+              onPress={handleSubmit}
+            >
+              <Text fontWeight="bold" color="white">
+                Atualizar
+              </Text>
+            </Button>
+          </When>
+          <When is={!!id}>
+            <Button
+              variant="outline"
+              isLoading={isLoadingDelete}
+              isDisabled={isLoadingUpdate}
+              onPress={() => handleDelete(params)}
+            >
+              <Text fontWeight="bold" color={theme?.blue}>
+                Excluir
+              </Text>
+            </Button>
+          </When>
+        </FormProvider>
       </VStack>
     </BackgroundContainer>
   );
