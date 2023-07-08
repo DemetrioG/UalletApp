@@ -1,6 +1,14 @@
 import { useEffect, useState, useContext } from "react";
 import { useTheme } from "styled-components";
-import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
+import {
+  Button,
+  Center,
+  HStack,
+  Pressable,
+  Text,
+  VStack,
+  useDisclose,
+} from "native-base";
 import { ChevronLeft, Filter, FilterX, InfoIcon } from "lucide-react-native";
 import LottieView from "lottie-react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
@@ -27,6 +35,7 @@ import {
   ITimestamp,
   convertDateFromDatabase,
 } from "../../../utils/date.helper";
+import { ModalFilter } from "./ModalFilter";
 
 export const Entries = ({
   route: { params },
@@ -37,6 +46,7 @@ export const Entries = ({
   const { data } = useContext(DataContext);
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
 
+  const filterModal = useDisclose();
   const [filter, setFilter] = useState(defaultFilter);
 
   const { handleGetBalance } = useGetBalance();
@@ -139,7 +149,7 @@ export const Entries = ({
             minW="0px"
             minH="0px"
             w="50px"
-            onPress={() => navigate("Lancamentos/Filtros", filter)}
+            onPress={filterModal.onToggle}
           >
             <When is={!filter.isFiltered}>
               <Filter color={theme?.blue} size={16} />
@@ -243,6 +253,7 @@ export const Entries = ({
           </VStack>
         </HStack>
       </VStack>
+      <ModalFilter {...filterModal} />
     </BackgroundContainer>
   );
 };

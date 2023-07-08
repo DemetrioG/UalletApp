@@ -78,11 +78,11 @@ export const Menu = ({ StackProps }: { StackProps?: IVStackProps }) => {
         onSwipeComplete={modal.onClose}
         onBackdropPress={modal.onClose}
         swipeDirection={"down"}
-        // style={{ width: "100%", left: 0 }}
+        style={{ width: "100%", left: -20 }}
         coverScreen
       >
         <VStack
-          h="90%"
+          h="91%"
           w="100%"
           position="absolute"
           bottom={-20}
