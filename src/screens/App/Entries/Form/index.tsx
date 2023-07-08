@@ -2,21 +2,21 @@ import * as React from "react";
 import { Button, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
-import { ListEntries } from "../Entries/types";
-import { BackgroundContainer } from "../../../styles/general";
-import TabView, { IRoutes } from "../../../components/TabView";
-import { IThemeProvider } from "../../../styles/baseTheme";
+import { ListEntries } from "../../Entries/types";
+import { BackgroundContainer } from "../../../../styles/general";
+import TabView, { IRoutes } from "../../../../components/TabView";
+import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { ChevronLeft } from "lucide-react-native";
-import { NewEntrieForm } from "./Form";
+import { FormEntriesTab } from "./Tabs";
 import {
   useFormEntries,
   useHandleConfirmDeleteEntrie,
-} from "./hooks/useEntries";
+} from "../hooks/useEntries";
 import { FormProvider } from "react-hook-form";
-import When from "../../../components/When";
+import When from "../../../../components/When";
 
-export const NewEntries = ({
+export const FormEntries = ({
   route: { params },
 }: {
   route: { params: ListEntries };
@@ -35,14 +35,6 @@ export const NewEntries = ({
     { key: "Receita", title: "Receita", selected: params?.type === "Receita" },
     { key: "Despesa", title: "Despesa", selected: params?.type === "Despesa" },
   ];
-
-  const renderScene = ({
-    route,
-  }: {
-    route: { key: string; title: string };
-  }) => {
-    return <NewEntrieForm route={route} params={params} />;
-  };
 
   return (
     <BackgroundContainer>
@@ -97,4 +89,8 @@ export const NewEntries = ({
       </VStack>
     </BackgroundContainer>
   );
+};
+
+const renderScene = ({ route }: { route: IRoutes }, activeTab: IRoutes) => {
+  return <FormEntriesTab route={route} activeTab={activeTab} />;
 };

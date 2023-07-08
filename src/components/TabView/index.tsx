@@ -8,15 +8,6 @@ import {
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 
-type TRenderScene = (
-  props: SceneRendererProps & {
-    route: {
-      key: string;
-      title: string;
-    };
-  }
-) => React.ReactNode;
-
 export interface IRoutes {
   key: string;
   title: string;
@@ -27,7 +18,12 @@ const TabView = ({
   renderScene,
   tabRoutes,
 }: {
-  renderScene: TRenderScene;
+  renderScene: (
+    props: SceneRendererProps & {
+      route: IRoutes;
+    },
+    activeTab: IRoutes
+  ) => React.ReactNode;
   tabRoutes: IRoutes[];
 }) => {
   const { theme }: IThemeProvider = useTheme();
@@ -70,7 +66,7 @@ const TabView = ({
   return (
     <NativeTabView
       navigationState={{ index, routes }}
-      renderScene={renderScene}
+      renderScene={(props) => renderScene(props, routes[index])}
       onIndexChange={setIndex}
       renderTabBar={TabHeader}
       swipeEnabled={!hasSelectedRoute}

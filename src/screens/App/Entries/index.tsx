@@ -57,11 +57,8 @@ export const Entries = ({
 
   useEffect(() => {
     handleGetData();
-  }, [data.modality, data.month, data.year, filter, isFocused]);
-
-  useEffect(() => {
     handleGetBalance();
-  }, [data.modality, data.month]);
+  }, [data.modality, data.month, data.year, filter, isFocused]);
 
   useEffect(() => {
     params && setFilter(params);
@@ -156,7 +153,7 @@ export const Entries = ({
             minH="0px"
             w="110px"
             p={0}
-            onPress={() => navigate("Lancamentos/NovoLancamento")}
+            onPress={() => navigate("Lancamentos/Form")}
           >
             <Text fontSize="14px" color="#FFF">
               Novo
@@ -168,7 +165,7 @@ export const Entries = ({
             columns={columns}
             data={list}
             height="60%"
-            onRowPress={(_, row) => navigate("Lancamentos/NovoLancamento", row)}
+            onRowPress={(_, row) => navigate("Lancamentos/Form", row)}
           />
         </When>
         <When is={isLoading}>

@@ -1,26 +1,28 @@
-import { ListEntries } from "../../Entries/types";
 import { useEffect } from "react";
 import { Keyboard } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
-import { FormTextInput } from "../../../../components/Inputs/TextInput";
+import { FormTextInput } from "../../../../../components/Inputs/TextInput";
 import { Center } from "native-base";
 import { useFormContext } from "react-hook-form";
-import When from "../../../../components/When";
-import { FormSelectInput } from "../../../../components/SelectInput";
-import { TEntrieType } from "../../../../types/types";
-import { FormTextInputCalendar } from "../../../../components/Inputs/TextInputCalendar";
-import { NewEntrieDTO } from "../types";
+import When from "../../../../../components/When";
+import { FormSelectInput } from "../../../../../components/SelectInput";
+import { TEntrieType } from "../../../../../types/types";
+import { FormTextInputCalendar } from "../../../../../components/Inputs/TextInputCalendar";
+import { NewEntrieDTO } from "../../types";
+import { IRoutes } from "../../../../../components/TabView";
 
-export const NewEntrieForm = ({
-  route: { key: type },
+export const FormEntriesTab = ({
+  route,
+  activeTab,
 }: {
-  route: { key: string };
+  route: IRoutes;
+  activeTab: IRoutes;
 }) => {
   const formMethods = useFormContext<NewEntrieDTO>();
 
   useEffect(() => {
-    formMethods.setValue("type", type as TEntrieType);
-  }, [type]);
+    formMethods.setValue("type", activeTab.key as TEntrieType);
+  }, [activeTab.key]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -52,7 +54,7 @@ export const NewEntrieForm = ({
           errors={formMethods.formState.errors.modality}
           isRequired
         />
-        <When is={type === "Despesa"}>
+        <When is={route.key === "Despesa"}>
           <FormSelectInput
             name="segment"
             control={formMethods.control}

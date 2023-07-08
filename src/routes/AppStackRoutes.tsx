@@ -14,13 +14,7 @@ import { Entries } from "../screens/App/Entries";
 import Filter from "../screens/App/Entries/Filter";
 import FixedEntry from "../screens/App/FixedEntry";
 import { Home } from "../screens/App/Home";
-import Investments from "../screens/App/Investments";
-import AssetInfoScreen from "../screens/App/Investments/AssetInfo";
-import AssetMovement from "../screens/App/Investments/AssetMovement";
-import NewAsset from "../screens/App/NewAsset";
-import NewFixAsset from "../screens/App/NewAsset/NewFixAsset";
-import NewVariableAsset from "../screens/App/NewAsset/NewVariableAsset";
-import { NewEntries } from "../screens/App/NewEntries";
+import { FormEntries } from "../screens/App/Entries/Form";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HeaderSummary } from "../components/Header";
 import { View } from "native-base";
@@ -49,39 +43,6 @@ export const AppStackRoutes = () => {
         />
         {/* !Home */}
 
-        {/* Investimentos */}
-        <StackScreen
-          name="Investimentos"
-          component={Investments}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Investimentos/NovoAtivo"
-          component={NewAsset}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Investimentos/NovoAtivoFixo"
-          component={NewFixAsset}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Investimentos/NovoAtivoVariavel"
-          component={NewVariableAsset}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Investimentos/AtivoInfo"
-          component={AssetInfoScreen}
-          options={{ headerShown: false }}
-        />
-        <StackScreen
-          name="Investimentos/AtivoInfo/Movimentacoes"
-          component={AssetMovement}
-          options={{ headerShown: false }}
-        />
-        {/* !Investimentos */}
-
         <StackGroup
           screenOptions={{
             header(props) {
@@ -95,10 +56,7 @@ export const AppStackRoutes = () => {
         >
           {/* Lançamentos */}
           <StackScreen name="Lancamentos" component={Entries} />
-          <StackScreen
-            name="Lancamentos/NovoLancamento"
-            component={NewEntries}
-          />
+          <StackScreen name="Lancamentos/Form" component={FormEntries} />
           <StackScreen
             name="Lancamentos/LancamentoFixo"
             component={FixedEntry}
