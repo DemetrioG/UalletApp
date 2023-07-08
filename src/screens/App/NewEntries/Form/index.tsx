@@ -1,11 +1,9 @@
 import { ListEntries } from "../../Entries/types";
 import { useEffect } from "react";
-import { convertDate } from "../../../../utils/date.helper";
 import { Keyboard } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import { FormTextInput } from "../../../../components/Inputs/TextInput";
-import { Button, Center, Text, useDisclose } from "native-base";
-import Calendar from "../../../../components/Calendar";
+import { Button, Center, Text } from "native-base";
 import { FormProvider } from "react-hook-form";
 import When from "../../../../components/When";
 import { FormSelectInput } from "../../../../components/SelectInput";
@@ -16,6 +14,7 @@ import {
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { TEntrieType } from "../../../../types/types";
+import { FormTextInputCalendar } from "../../../../components/Inputs/TextInputCalendar";
 
 export const NewEntrieForm = ({
   params,
@@ -25,17 +24,12 @@ export const NewEntrieForm = ({
   route: { key: string };
 }) => {
   const id = params?.id;
-  const calendar = useDisclose();
   const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
     useFormEntries(params, id);
   const { theme }: IThemeProvider = useTheme();
 
   const { isLoading: isLoadingDelete, handleDelete } =
     useHandleConfirmDeleteEntrie();
-
-  function setDateToInput(date: Date) {
-    formMethods.setValue("date", convertDate(date));
-  }
 
   useEffect(() => {
     formMethods.setValue("type", type as TEntrieType);
@@ -46,17 +40,13 @@ export const NewEntrieForm = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <>
           <Center flex={1}>
-            <FormTextInput
+            <FormTextInputCalendar
               variant="filled"
               name="date"
               placeholder="Data lançamento"
+              formMethods={formMethods}
               control={formMethods.control}
               errors={formMethods.formState.errors.date}
-              masked="datetime"
-              maxLength={10}
-              setCalendar={calendar.onToggle}
-              withIcon
-              helperText="Verifique a data informada"
               isRequired
             />
             <FormTextInput
@@ -128,7 +118,6 @@ export const NewEntrieForm = ({
               </Text>
             </Button>
           </When>
-          <Calendar setDateToInput={setDateToInput} edit={!!id} {...calendar} />
         </>
       </TouchableWithoutFeedback>
     </FormProvider>
