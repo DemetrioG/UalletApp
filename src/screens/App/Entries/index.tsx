@@ -36,6 +36,7 @@ import {
   convertDateFromDatabase,
 } from "../../../utils/date.helper";
 import { ModalFilter } from "./ModalFilter";
+import { useFilters } from "../../../hooks/useFilters";
 
 export const Entries = ({
   route: { params },
@@ -47,6 +48,7 @@ export const Entries = ({
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
 
   const filterModal = useDisclose();
+  const { filterMethods, filtered } = useFilters();
   const [filter, setFilter] = useState(defaultFilter);
 
   const { handleGetBalance } = useGetBalance();
@@ -55,7 +57,7 @@ export const Entries = ({
     data: list,
     handleGetData,
   } = useGetEntries({
-    server: { filters: filter },
+    server: { filters: filtered },
   });
 
   const credits = list.filter((item) => item.type === "Receita");
@@ -253,7 +255,11 @@ export const Entries = ({
           </VStack>
         </HStack>
       </VStack>
-      <ModalFilter {...filterModal} />
+      <ModalFilter
+        filterMethods={filterMethods}
+        {...filterModal}
+        onSubmit={handleGetData}
+      />
     </BackgroundContainer>
   );
 };

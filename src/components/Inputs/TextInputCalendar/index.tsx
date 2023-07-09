@@ -15,13 +15,13 @@ export const FormTextInputCalendar = (props: FormTextInputCalendarProps) => {
   return (
     <VStack position="relative" zIndex={2} alignItems="center">
       <FormTextInput
-        {...restProps}
         name={name}
         masked="datetime"
         maxLength={10}
         withIcon
         helperText="Verifique a data informada"
         setCalendar={calendar.onToggle}
+        {...restProps}
       />
       <Calendar setDateToInput={setDateToInput} {...calendar} />
     </VStack>

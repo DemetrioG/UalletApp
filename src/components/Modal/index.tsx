@@ -18,7 +18,6 @@ export const Modal = ({
       onBackdropPress={onClose}
       swipeDirection={"down"}
       style={{ width: "100%", left: -20 }}
-      coverScreen
     >
       <VStack
         p={5}

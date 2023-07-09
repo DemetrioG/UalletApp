@@ -6,10 +6,11 @@ import {
 } from "native-base";
 import { FormSelectInputProps, SelectInputProps } from "./types";
 import { useEffect, useState } from "react";
-import { IThemeProvider } from "../../styles/baseTheme";
+import { IThemeProvider } from "../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { Controller } from "react-hook-form";
-import When from "../When";
+import When from "../../When";
+import { Platform } from "react-native";
 
 export const SelectInput = (props: SelectInputProps) => {
   const { theme }: IThemeProvider = useTheme();
@@ -31,6 +32,9 @@ export const SelectInput = (props: SelectInputProps) => {
         onValueChange={(value) => setValue(value)}
         _selectedItem={{
           endIcon: <CheckIcon size="5" color={theme?.blue} />,
+        }}
+        _actionSheet={{
+          useRNModal: Platform.OS === "ios",
         }}
         {...restProps}
         placeholder={

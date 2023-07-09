@@ -5,11 +5,13 @@ import { FormTextInput } from "../../../../../components/Inputs/TextInput";
 import { Center } from "native-base";
 import { useFormContext } from "react-hook-form";
 import When from "../../../../../components/When";
-import { FormSelectInput } from "../../../../../components/SelectInput";
+import { FormSelectInput } from "../../../../../components/Inputs/SelectInput";
 import { TEntrieType } from "../../../../../types/types";
 import { FormTextInputCalendar } from "../../../../../components/Inputs/TextInputCalendar";
 import { NewEntrieDTO } from "../../types";
 import { IRoutes } from "../../../../../components/TabView";
+import { FormSelectInputModality } from "../../../../../components/Inputs/SelectInputModality";
+import { FormSelectInputSegment } from "../../../../../components/Inputs/SelectInputSegment";
 
 export const FormEntriesTab = ({
   route,
@@ -45,22 +47,18 @@ export const FormEntriesTab = ({
           maxLength={40}
           isRequired
         />
-        <FormSelectInput
+        <FormSelectInputModality
           name="modality"
           control={formMethods.control}
-          options={schemaOptions}
           variant="filled"
-          placeholder="Modalidade"
           errors={formMethods.formState.errors.modality}
           isRequired
         />
         <When is={route.key === "Despesa"}>
-          <FormSelectInput
+          <FormSelectInputSegment
             name="segment"
             control={formMethods.control}
-            options={segmentOptions}
             variant="filled"
-            placeholder="Segmento"
             errors={formMethods.formState.errors.segment}
           />
         </When>
@@ -78,16 +76,3 @@ export const FormEntriesTab = ({
     </TouchableWithoutFeedback>
   );
 };
-
-const schemaOptions = [
-  { value: "Real", label: "Real" },
-  { value: "Projetado", label: "Projetado" },
-];
-
-const segmentOptions = [
-  { value: "Lazer", label: "Lazer" },
-  { value: "Educação", label: "Educação" },
-  { value: "Investimentos", label: "Investimentos" },
-  { value: "Necessidades", label: "Necessidades" },
-  { value: "Curto e médio prazo", label: "Curto e médio prazo" },
-];
