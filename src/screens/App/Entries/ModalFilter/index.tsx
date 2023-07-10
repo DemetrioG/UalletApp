@@ -10,6 +10,7 @@ import { FormSelectInputSegment } from "../../../../components/Inputs/SelectInpu
 import { TouchableWithoutFeedback } from "react-native";
 import { Keyboard } from "react-native";
 import { ModalFilterProps } from "./types";
+import { FormSelectInputType } from "../../../../components/Inputs/SelectInputType";
 
 export const ModalFilter = (props: ModalFilterProps) => {
   const { filterMethods } = props;
@@ -31,7 +32,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             <VStack w="48%">
               <FormTextInputCalendar
                 placeholder="Data inicial"
-                name="initial_date"
+                name="server.initial_date"
                 control={filterMethods.control}
                 formMethods={filterMethods}
                 withIcon={false}
@@ -40,7 +41,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             <VStack w="48%">
               <FormTextInputCalendar
                 placeholder="Data final"
-                name="final_date"
+                name="server.final_date"
                 control={filterMethods.control}
                 formMethods={filterMethods}
                 withIcon={false}
@@ -49,22 +50,26 @@ export const ModalFilter = (props: ModalFilterProps) => {
           </HStack>
           <FormTextInput
             placeholder="Descrição"
-            name="description"
+            name="client.description"
+            control={filterMethods.control}
+          />
+          <FormSelectInputType
+            name="server.type"
             control={filterMethods.control}
           />
           <FormSelectInputModality
-            name="modality"
+            name="server.modality"
             control={filterMethods.control}
           />
           <FormSelectInputSegment
-            name="segment"
+            name="server.segment"
             control={filterMethods.control}
           />
           <HStack w="100%" justifyContent="space-between">
             <VStack w="48%">
               <FormTextInput
                 placeholder="Valor inicial"
-                name="initial_value"
+                name="server.initial_value"
                 masked="money"
                 control={filterMethods.control}
                 withIcon={false}
@@ -73,7 +78,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             <VStack w="48%">
               <FormTextInput
                 placeholder="Valor final"
-                name="final_value"
+                name="server.final_value"
                 masked="money"
                 control={filterMethods.control}
                 withIcon={false}

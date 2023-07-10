@@ -1,6 +1,6 @@
 import { TEntrieType } from "../../../../types/types";
 import { ITimestamp } from "../../../../utils/date.helper";
-import { IActiveFilter } from "../Filter/helper";
+import { FilterFields, ServerFilterFields } from "../ModalFilter/types";
 
 export interface ListEntries {
   date: ITimestamp;
@@ -15,7 +15,7 @@ export interface ListEntries {
 
 export interface ListEntriesProps {
   server?: {
-    filters: IActiveFilter;
+    filters: ServerFilterFields;
   };
 }
 

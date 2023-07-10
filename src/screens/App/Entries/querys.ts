@@ -10,15 +10,16 @@ import {
   currentUser,
   updateCurrentBalance,
 } from "../../../utils/query.helper";
-import { IActiveFilter } from "./Filter/helper";
+import { ServerFilterFields } from "./ModalFilter/types";
 import { ListEntries, NewEntrieDTO } from "./types";
 
 type TEntriesList = {
   month: number;
   year: number;
   modality: string;
-  filters: IActiveFilter;
+  filters?: ServerFilterFields;
 };
+
 export const getEntries = async ({
   month,
   year,
@@ -39,30 +40,26 @@ export const getEntries = async ({
     .doc(user.uid)
     .collection(modality);
 
-  if (filters.description)
-    baseQuery = baseQuery.where("description", "==", filters.description);
+  if (filters?.segment)
+    baseQuery = baseQuery.where("segment", "==", filters?.segment);
 
-  if (filters.segment)
-    baseQuery = baseQuery.where("segment", "==", filters.segment);
+  if (filters?.type) baseQuery = baseQuery.where("type", "==", filters?.type);
 
-  if (filters.typeEntry)
-    baseQuery = baseQuery.where("type", "==", filters.typeEntry);
-
-  if (filters.initialDate) {
+  if (filters?.initial_date) {
     baseQuery = baseQuery.where(
       "date",
       ">=",
-      convertDateToDatabase(filters.initialDate)
+      convertDateToDatabase(filters?.initial_date)
     );
   } else {
     baseQuery = baseQuery.where("date", ">=", initialDate);
   }
 
-  if (filters.finalDate) {
+  if (filters?.final_date) {
     baseQuery = baseQuery.where(
       "date",
       "<=",
-      convertDateToDatabase(filters.finalDate)
+      convertDateToDatabase(filters?.final_date)
     );
   } else {
     baseQuery = baseQuery.where("date", "<=", finalDate);

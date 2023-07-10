@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { useTheme } from "styled-components";
 import {
   Button,
@@ -9,7 +9,7 @@ import {
   VStack,
   useDisclose,
 } from "native-base";
-import { ChevronLeft, Filter, FilterX, InfoIcon } from "lucide-react-native";
+import { ChevronLeft, Filter, InfoIcon } from "lucide-react-native";
 import LottieView from "lottie-react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -17,7 +17,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Tooltip from "../../../components/Tooltip";
 import When from "../../../components/When";
 import { CardDownIcon, CardUpIcon } from "../../../components/CustomIcons";
-import { defaultFilter, IActiveFilter } from "./Filter/helper";
 import { DataContext } from "../../../context/Data/dataContext";
 import { useGetBalance } from "../../../hooks/useBalance";
 import { useGetEntries } from "./hooks/useEntries";
@@ -37,19 +36,17 @@ import {
 } from "../../../utils/date.helper";
 import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
+import { FilterFields, ServerFilterFields } from "./ModalFilter/types";
 
-export const Entries = ({
-  route: { params },
-}: {
-  route: { params: IActiveFilter };
-}) => {
+export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
   const { data } = useContext(DataContext);
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
 
+  const isFocused = useIsFocused();
   const filterModal = useDisclose();
-  const { filterMethods, filtered } = useFilters();
-  const [filter, setFilter] = useState(defaultFilter);
+  const { filterMethods, clientFilters, serverFilters } =
+    useFilters<FilterFields>();
 
   const { handleGetBalance } = useGetBalance();
   const {
@@ -57,24 +54,20 @@ export const Entries = ({
     data: list,
     handleGetData,
   } = useGetEntries({
-    server: { filters: filtered },
+    server: { filters: serverFilters as ServerFilterFields },
   });
+
+  console.log(clientFilters);
 
   const credits = list.filter((item) => item.type === "Receita");
   const debits = list.filter((item) => item.type === "Despesa");
   const totalCredits = credits.reduce((total, item) => total + item.value, 0);
   const totalDebits = debits.reduce((total, item) => total + item.value, 0);
 
-  const isFocused = useIsFocused();
-
   useEffect(() => {
     handleGetData();
     handleGetBalance();
-  }, [data.modality, data.month, data.year, filter, isFocused]);
-
-  useEffect(() => {
-    params && setFilter(params);
-  }, [isFocused]);
+  }, [data.modality, data.month, data.year, isFocused]);
 
   const columns: DataGridColumnRef<ListEntries>[] = [
     {
@@ -153,12 +146,7 @@ export const Entries = ({
             w="50px"
             onPress={filterModal.onToggle}
           >
-            <When is={!filter.isFiltered}>
-              <Filter color={theme?.blue} size={16} />
-            </When>
-            <When is={filter.isFiltered}>
-              <FilterX color={theme?.blue} size={16} />
-            </When>
+            <Filter color={theme?.blue} size={16} />
           </Button>
           <Button
             minW="0px"
@@ -167,7 +155,7 @@ export const Entries = ({
             p={0}
             onPress={() => navigate("Lancamentos/Form")}
           >
-            <Text fontSize="14px" color="#FFF">
+            <Text fontSize="14px" color="white">
               Novo
             </Text>
           </Button>
@@ -257,8 +245,8 @@ export const Entries = ({
       </VStack>
       <ModalFilter
         filterMethods={filterMethods}
-        {...filterModal}
         onSubmit={handleGetData}
+        {...filterModal}
       />
     </BackgroundContainer>
   );
