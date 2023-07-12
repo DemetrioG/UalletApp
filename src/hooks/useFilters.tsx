@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { realToNumber } from "../utils/number.helper";
 
 export function useFilters<T>() {
   const filterMethods = useForm();
@@ -22,9 +23,19 @@ export function useFilters<T>() {
     const keys = Object.keys(filters);
 
     return keys.every((key) => {
-      const currentFilter = removeAccents(filters[key]);
-      const currentValue = removeAccents(row[key as keyof T] as string);
-      return currentValue.includes(currentFilter);
+      const currentFilter = filters[key];
+      const currentValue = row[key as keyof T] as string;
+      if (!currentFilter) return true;
+
+      if (key.includes("initial_value")) {
+        return Number(row["value" as keyof T]) >= realToNumber(currentFilter);
+      }
+
+      if (key.includes("final_value")) {
+        return Number(row["value" as keyof T]) <= realToNumber(currentFilter);
+      }
+
+      return removeAccents(currentValue).includes(removeAccents(currentFilter));
     });
   }
 

@@ -13,9 +13,26 @@ import { ModalFilterProps } from "./types";
 import { FormSelectInputType } from "../../../../components/Inputs/SelectInputType";
 import When from "../../../../components/When";
 
+const defaultValues = {
+  client: {
+    description: null,
+    initial_value: null,
+    final_value: null,
+  },
+  server: {
+    initial_date: null,
+    final_date: null,
+    type: null,
+    modality: null,
+    segment: null,
+  },
+};
+
 export const ModalFilter = (props: ModalFilterProps) => {
   const { filterMethods, hasFilter } = props;
   const { theme }: IThemeProvider = useTheme();
+
+  console.log(filterMethods.getValues("client.initial_value"));
 
   return (
     <Modal {...props}>
@@ -28,7 +45,10 @@ export const ModalFilter = (props: ModalFilterProps) => {
         </HStack>
         <VStack>
           <When is={hasFilter}>
-            <Pressable onPress={() => filterMethods.reset({})} borderWidth={1}>
+            <Pressable
+              onPress={() => filterMethods.reset(defaultValues)}
+              borderWidth={1}
+            >
               <FilterX color={theme?.blue} />
             </Pressable>
           </When>
@@ -80,7 +100,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             <VStack w="48%">
               <FormTextInput
                 placeholder="Valor inicial"
-                name="server.initial_value"
+                name="client.initial_value"
                 masked="money"
                 control={filterMethods.control}
                 withIcon={false}
@@ -89,7 +109,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             <VStack w="48%">
               <FormTextInput
                 placeholder="Valor final"
-                name="server.final_value"
+                name="client.final_value"
                 masked="money"
                 control={filterMethods.control}
                 withIcon={false}
