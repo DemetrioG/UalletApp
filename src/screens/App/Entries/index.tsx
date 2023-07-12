@@ -36,7 +36,7 @@ import {
 } from "../../../utils/date.helper";
 import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
-import { FilterFields, ServerFilterFields } from "./ModalFilter/types";
+import { ServerFilterFields } from "./ModalFilter/types";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -45,8 +45,8 @@ export const Entries = () => {
 
   const isFocused = useIsFocused();
   const filterModal = useDisclose();
-  const { filterMethods, clientFilters, serverFilters } =
-    useFilters<FilterFields>();
+  const { filterMethods, clientFilters, serverFilters, hasFilter } =
+    useFilters<ListEntries>();
 
   const { handleGetBalance } = useGetBalance();
   const {
@@ -57,17 +57,17 @@ export const Entries = () => {
     server: { filters: serverFilters as ServerFilterFields },
   });
 
-  console.log(clientFilters);
-
-  const credits = list.filter((item) => item.type === "Receita");
-  const debits = list.filter((item) => item.type === "Despesa");
-  const totalCredits = credits.reduce((total, item) => total + item.value, 0);
-  const totalDebits = debits.reduce((total, item) => total + item.value, 0);
-
   useEffect(() => {
     handleGetData();
     handleGetBalance();
   }, [data.modality, data.month, data.year, isFocused]);
+
+  const filtered = list.filter(clientFilters);
+
+  const credits = filtered.filter((item) => item.type === "Receita");
+  const debits = filtered.filter((item) => item.type === "Despesa");
+  const totalCredits = credits.reduce((total, item) => total + item.value, 0);
+  const totalDebits = debits.reduce((total, item) => total + item.value, 0);
 
   const columns: DataGridColumnRef<ListEntries>[] = [
     {
@@ -163,7 +163,7 @@ export const Entries = () => {
         <When is={!isLoading}>
           <DataGrid
             columns={columns}
-            data={list}
+            data={filtered}
             height="60%"
             onRowPress={(_, row) => navigate("Lancamentos/Form", row)}
           />
@@ -245,6 +245,7 @@ export const Entries = () => {
       </VStack>
       <ModalFilter
         filterMethods={filterMethods}
+        hasFilter={hasFilter}
         onSubmit={handleGetData}
         {...filterModal}
       />

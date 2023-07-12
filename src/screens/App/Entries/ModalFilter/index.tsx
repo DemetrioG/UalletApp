@@ -1,6 +1,6 @@
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { Modal } from "../../../../components/Modal";
-import { ChevronLeft, Filter } from "lucide-react-native";
+import { ChevronLeft, Filter, FilterX } from "lucide-react-native";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { FormTextInputCalendar } from "../../../../components/Inputs/TextInputCalendar";
@@ -11,10 +11,12 @@ import { TouchableWithoutFeedback } from "react-native";
 import { Keyboard } from "react-native";
 import { ModalFilterProps } from "./types";
 import { FormSelectInputType } from "../../../../components/Inputs/SelectInputType";
+import When from "../../../../components/When";
 
 export const ModalFilter = (props: ModalFilterProps) => {
-  const { filterMethods } = props;
+  const { filterMethods, hasFilter } = props;
   const { theme }: IThemeProvider = useTheme();
+
   return (
     <Modal {...props}>
       <HStack justifyContent="space-between">
@@ -24,7 +26,16 @@ export const ModalFilter = (props: ModalFilterProps) => {
           </Pressable>
           <Text fontWeight={700}>Filtros</Text>
         </HStack>
-        <Filter color={theme?.text} />
+        <VStack>
+          <When is={hasFilter}>
+            <Pressable onPress={() => filterMethods.reset({})} borderWidth={1}>
+              <FilterX color={theme?.blue} />
+            </Pressable>
+          </When>
+          <When is={!hasFilter}>
+            <Filter color={theme?.text} />
+          </When>
+        </VStack>
       </HStack>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Center flex={1}>

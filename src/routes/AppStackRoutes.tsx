@@ -11,7 +11,6 @@ import { InformacoesPessoaisScreen } from "../screens/App/Configurations/DadosCa
 import { SecurityScreen } from "../screens/App/Configurations/Security";
 import { DeleteAccountScreen } from "../screens/App/Configurations/Security/DeleteAccount";
 import { Entries } from "../screens/App/Entries";
-import Filter from "../screens/App/Entries/Filter";
 import FixedEntry from "../screens/App/FixedEntry";
 import { Home } from "../screens/App/Home";
 import { FormEntries } from "../screens/App/Entries/Form";
@@ -60,14 +59,6 @@ export const AppStackRoutes = () => {
           <StackScreen
             name="Lancamentos/LancamentoFixo"
             component={FixedEntry}
-          />
-          <StackScreen
-            name="Lancamentos/Filtros"
-            component={Filter}
-            options={{
-              headerShown: false,
-              presentation: "containedTransparentModal",
-            }}
           />
           {/* !Lançamentos */}
 

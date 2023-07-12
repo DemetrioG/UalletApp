@@ -3,6 +3,7 @@ import { ReturnUseDisclosure, TEntrieType } from "../../../../types/types";
 
 export interface ModalFilterProps extends ReturnUseDisclosure {
   filterMethods: UseFormReturn;
+  hasFilter: boolean;
   onSubmit?: () => Promise<void>;
 }
 
