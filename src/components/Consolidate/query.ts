@@ -1,42 +1,46 @@
-import firebase from "../../services/firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  orderBy,
+  limit,
+  setDoc,
+  DocumentData,
+} from "firebase/firestore";
 import { ListEntries } from "../../screens/App/Entries/types";
 import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
 import { currentUser, updateCurrentBalance } from "../../utils/query.helper";
+import { db } from "../../services/firebase";
 
-type IConsolidate = Array<
-  (ListEntries & { checked?: boolean }) | firebase.firestore.DocumentData
->;
+type IConsolidate = Array<(ListEntries & { checked?: boolean }) | DocumentData>;
 
-async function _consolidateData(data: IConsolidate) {
+export async function consolidateData(data: IConsolidate) {
   const user = await currentUser();
 
   if (!user) return Promise.reject(false);
 
-  let newId = 1;
-  // Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection("Real")
-    .orderBy("id", "desc")
-    .limit(1)
-    .get()
-    .then((v) => {
-      v.forEach((result) => {
-        newId += result.data().id;
-      });
+  try {
+    const entryRef = collection(db, "entry");
+    const userDocRef = doc(entryRef, user.uid);
+    const realCollectionRef = collection(userDocRef, "Real");
+    const projetadoCollectionRef = collection(userDocRef, "Projetado");
+
+    let newId = 1;
+    const querySnapshot = await getDocs(
+      query(realCollectionRef, orderBy("id", "desc"), limit(1))
+    );
+
+    querySnapshot.forEach((doc) => {
+      newId += doc.data().id;
     });
 
-  for (const item of data) {
-    const { date, description, segment, type, value, id, checked } = item;
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection("Projetado")
-      .doc(id.toString())
-      .set(
+    for (const item of data) {
+      const { date, description, segment, type, value, id, checked } = item;
+
+      await setDoc(
+        doc(projetadoCollectionRef, id.toString()),
         {
           consolidated: {
             consolidated: checked,
@@ -44,19 +48,10 @@ async function _consolidateData(data: IConsolidate) {
           },
         },
         { merge: true }
-      )
-      .catch(() => {
-        return Promise.reject("Erro");
-      });
+      );
 
-    if (checked) {
-      await firebase
-        .firestore()
-        .collection("entry")
-        .doc(user.uid)
-        .collection("Real")
-        .doc(newId.toString())
-        .set({
+      if (checked) {
+        await setDoc(doc(realCollectionRef, newId.toString()), {
           id: newId,
           date: date,
           type: type,
@@ -64,66 +59,48 @@ async function _consolidateData(data: IConsolidate) {
           modality: "Real",
           segment: segment,
           value: value,
-        })
-        .catch(() => {
-          return Promise.reject("Erro ao consolidar as informações");
         });
 
-      const docRef = `${Number(
-        convertDateFromDatabase(date).slice(3, 5)
-      ).toString()}_${convertDateFromDatabase(date).slice(6, 10)}`;
-      await updateCurrentBalance({
-        modality: "Real",
-        sumBalance: type === "Receita",
-        docDate: docRef,
-        value: value,
-      });
+        const docRef = `${Number(
+          convertDateFromDatabase(date).slice(3, 5)
+        ).toString()}_${convertDateFromDatabase(date).slice(6, 10)}`;
 
-      return Promise.resolve("Dados consolidados com sucesso");
+        await updateCurrentBalance({
+          modality: "Real",
+          sumBalance: type === "Receita",
+          docDate: docRef,
+          value: value,
+        });
+
+        return Promise.resolve("Dados consolidados com sucesso");
+      }
     }
+  } catch (error) {
+    return Promise.reject("Erro ao consolidar as informações");
   }
 }
 
-async function _getData() {
+export async function getData() {
   const user = await currentUser();
 
   if (!user) return Promise.reject(false);
 
   const [, initialDate, finalDate] = getAtualDate();
 
-  return await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection("Projetado")
-    .where("date", ">=", initialDate)
-    .where("date", "<=", finalDate)
-    .where("consolidated.wasActionShown", "==", false)
-    .get()
-    .then((v) => {
-      const data: IConsolidate = [];
-      v.forEach((result) => {
-        data.push(result.data());
-      });
-      return data;
-    })
-    .catch(() => Promise.reject("Erro ao buscar os dados"));
-}
+  const projetadoRef = collection(db, "entry", user.uid, "Projetado");
+  const q = query(
+    projetadoRef,
+    where("date", ">=", initialDate),
+    where("date", "<=", finalDate),
+    where("consolidated.wasActionShown", "==", false)
+  );
 
-export function consolidateData(data: IConsolidate) {
   try {
-    return _consolidateData(data);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro");
-  }
-}
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => doc.data());
 
-export function getData() {
-  try {
-    return _getData();
+    return data as IConsolidate[];
   } catch (error) {
-    console.log(error);
-    throw new Error("Erro");
+    return Promise.reject("Erro ao buscar os dados");
   }
 }
