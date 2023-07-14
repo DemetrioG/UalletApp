@@ -1,48 +1,39 @@
-import firebase from "../../services/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { currentUser } from "../../utils/query.helper";
+import { db } from "../../services/firebase";
 
-async function _refreshAuthDevice(expoPushToken: string) {
+export async function refreshAuthDevice(expoPushToken: string) {
   const user = await currentUser();
 
   if (!user) return Promise.reject();
 
-  await firebase
-    .firestore()
-    .collection("users")
-    .doc(user.uid)
-    .get()
-    .then((v) => {
-      const data = v.data()?.devices || [];
+  const userRef = doc(db, "users", user.uid);
 
-      const [anotherDevices] = data.filter(
-        ({ token }: { token: string }) => token !== expoPushToken
-      );
-      const [currentDevice] = data.filter(
-        ({ token }: { token: string }) => token === expoPushToken
-      );
-
-      if (currentDevice) {
-        currentDevice["logged"] = false;
-      }
-
-      const updatedData = anotherDevices
-        ? [anotherDevices, currentDevice]
-        : [currentDevice];
-
-      firebase.firestore().collection("users").doc(user?.uid).set(
-        {
-          devices: updatedData,
-        },
-        { merge: true }
-      );
-    });
-}
-
-export function refreshAuthDevice(expoPushToken: string) {
   try {
-    return _refreshAuthDevice(expoPushToken);
+    const userSnapshot = await getDoc(userRef);
+    const data = userSnapshot.data()?.devices || [];
+
+    const [anotherDevices] = data.filter(
+      ({ token }: { token: string }) => token !== expoPushToken
+    );
+    const [currentDevice] = data.filter(
+      ({ token }: { token: string }) => token === expoPushToken
+    );
+
+    if (currentDevice) {
+      currentDevice.logged = false;
+    }
+
+    const updatedData = anotherDevices.length
+      ? [anotherDevices, currentDevice]
+      : [currentDevice];
+
+    await updateDoc(userRef, {
+      devices: updatedData,
+    });
   } catch (error) {
-    console.log(error);
-    throw new Error("Erro");
+    return Promise.reject(error);
   }
+
+  return Promise.resolve();
 }

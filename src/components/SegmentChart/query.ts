@@ -1,12 +1,13 @@
-import firebase from "../../services/firebase";
+import { db } from "../../services/firebase";
 import { IData } from "../../context/Data/dataContext";
 import { getFinalDateMonth } from "../../utils/date.helper";
 import { currentUser } from "../../utils/query.helper";
 import { ChartProps } from "./types";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
-async function _getData(context: IData, defaultData: ChartProps[]) {
-  const user = await currentUser();
+export async function getData(context: IData, defaultData: ChartProps[]) {
   const { month, year, modality } = context;
+  const user = await currentUser();
 
   if (!user) return Promise.reject(false);
 
@@ -22,82 +23,66 @@ async function _getData(context: IData, defaultData: ChartProps[]) {
     let education = 0;
     let shortAndMediumTime = 0;
 
-    // Busca no banco os dados referente ao Mês atual
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(modality)
-      .get()
-      .then(async () => {
-        await firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(modality)
-          .where("type", "==", "Despesa")
-          .where("date", ">=", initialDate)
-          .where("date", "<=", finalDate)
-          .get()
-          .then((v) => {
-            let total = 0;
-            if (v.empty) {
-              return Promise.reject("empty");
-            } else {
-              v.forEach((result) => {
-                const segmentData = [result.data()];
-                segmentData.forEach(({ segment }) => {
-                  switch (segment) {
-                    case "Necessidades":
-                      needs++;
-                      break;
+    const entryCollectionRef = collection(db, "entry", user.uid, modality);
 
-                    case "Investimentos":
-                      invest++;
-                      break;
+    try {
+      const expensesQuery = query(
+        entryCollectionRef,
+        where("type", "==", "Despesa"),
+        where("date", ">=", initialDate),
+        where("date", "<=", finalDate)
+      );
 
-                    case "Lazer":
-                      leisure++;
-                      break;
+      const expensesSnapshot = await getDocs(expensesQuery);
 
-                    case "Educação":
-                      education++;
-                      break;
+      if (expensesSnapshot.size === 0) {
+        return Promise.reject("empty");
+      }
 
-                    case "Curto e médio prazo":
-                      shortAndMediumTime++;
-                      break;
-                  }
+      let total = 0;
+      expensesSnapshot.forEach((expense) => {
+        const { segment } = expense.data();
+        switch (segment) {
+          case "Necessidades":
+            needs++;
+            break;
 
-                  total++;
-                });
-              });
-            }
+          case "Investimentos":
+            invest++;
+            break;
 
-            needs = (needs / total) * 100;
-            invest = (invest / total) * 100;
-            leisure = (leisure / total) * 100;
-            education = (education / total) * 100;
-            shortAndMediumTime = (shortAndMediumTime / total) * 100;
-          });
-      })
-      .catch((e) => Promise.reject(e));
+          case "Lazer":
+            leisure++;
+            break;
 
-    const finalData = defaultData;
-    finalData[0].value = leisure;
-    finalData[1].value = invest;
-    finalData[2].value = education;
-    finalData[3].value = shortAndMediumTime;
-    finalData[4].value = needs;
+          case "Educação":
+            education++;
+            break;
 
-    return Promise.resolve(finalData);
-  }
-}
+          case "Curto e médio prazo":
+            shortAndMediumTime++;
+            break;
+        }
 
-export function getData(context: IData, defaultData: ChartProps[]) {
-  try {
-    return _getData(context, defaultData);
-  } catch (error) {
-    throw new Error(error as string);
+        total++;
+      });
+
+      needs = (needs / total) * 100;
+      invest = (invest / total) * 100;
+      leisure = (leisure / total) * 100;
+      education = (education / total) * 100;
+      shortAndMediumTime = (shortAndMediumTime / total) * 100;
+
+      const finalData = defaultData;
+      finalData[0].value = leisure;
+      finalData[1].value = invest;
+      finalData[2].value = education;
+      finalData[3].value = shortAndMediumTime;
+      finalData[4].value = needs;
+
+      return Promise.resolve(finalData);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
