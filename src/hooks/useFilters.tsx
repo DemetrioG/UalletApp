@@ -9,12 +9,13 @@ export function useFilters<T>() {
 
   const hasFilter =
     ((clientFilters &&
-      Object.values(clientFilters).some((value) => {
-        console.log(value);
-        return value !== undefined;
-      })) ||
+      Object.values(clientFilters).some(
+        (value) => !!value && value !== undefined
+      )) ||
       (serverFilters &&
-        Object.values(serverFilters).some((value) => value !== undefined))) ??
+        Object.values(serverFilters).some(
+          (value) => !!value && value !== undefined
+        ))) ??
     false;
 
   function clientFn(row: T) {

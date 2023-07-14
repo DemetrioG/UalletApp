@@ -32,8 +32,6 @@ export const ModalFilter = (props: ModalFilterProps) => {
   const { filterMethods, hasFilter } = props;
   const { theme }: IThemeProvider = useTheme();
 
-  console.log(filterMethods.getValues("client.initial_value"));
-
   return (
     <Modal {...props}>
       <HStack justifyContent="space-between">
