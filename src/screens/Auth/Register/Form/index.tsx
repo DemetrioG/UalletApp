@@ -14,7 +14,7 @@ import {
   ButtonText,
   ContainerCenter,
 } from "../../../../styles/general";
-import PasswordRules from "../PasswordRules";
+import { PasswordRules } from "../PasswordRules";
 import { registerUser } from "../query";
 import { TouchableOpacity } from "react-native";
 import { ChevronLeft } from "lucide-react-native";

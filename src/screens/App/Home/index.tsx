@@ -35,11 +35,14 @@ import {
 } from "./hooks/useHome";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
+import { Menu } from "../../../components/Menu";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { data } = useContext(DataContext);
 
+  const menu = useDisclose();
   const consolidation = useDisclose();
   const { handleGetBalance } = useGetBalance();
   const { handleGetLastEntries, lastEntries } = useGetLastEntries();
@@ -74,13 +77,14 @@ export const Home = () => {
             />
             <Action text="Integrações" Icon={Plug} />
             <Action text="Upgrades" Icon={Rocket} />
-            <Action text="Mais" Icon={MoreHorizontal} />
+            <Action text="Mais" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
           <Entries lastEntries={lastEntries.slice(0, 3)} />
           <Planning />
           <EntriesSegmentChart />
         </Stack>
       </ScrollView>
+      <Menu {...menu} />
     </BackgroundContainer>
   );
 };

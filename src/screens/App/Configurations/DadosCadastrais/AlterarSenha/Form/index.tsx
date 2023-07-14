@@ -10,7 +10,7 @@ import {
   BackgroundContainer,
   ButtonText,
 } from "../../../../../../styles/general";
-import PasswordRules from "../../../../../Auth/Register/PasswordRules";
+import { PasswordRules } from "../../../../../Auth/Register/PasswordRules";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../../../styles/baseTheme";
 import { ChevronLeft } from "lucide-react-native";

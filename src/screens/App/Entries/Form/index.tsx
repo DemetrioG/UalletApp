@@ -2,9 +2,9 @@ import * as React from "react";
 import { Button, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
-import { ListEntries } from "../../Entries/types";
+import { ListEntries } from "../types";
 import { BackgroundContainer } from "../../../../styles/general";
-import TabView, { IRoutes } from "../../../../components/TabView";
+import { TabView } from "../../../../components/TabView";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { ChevronLeft } from "lucide-react-native";
@@ -15,6 +15,7 @@ import {
 } from "../hooks/useEntries";
 import { FormProvider } from "react-hook-form";
 import When from "../../../../components/When";
+import { RouteProps } from "../../../../components/TabView/types";
 
 export const FormEntries = ({
   route: { params },
@@ -31,7 +32,7 @@ export const FormEntries = ({
   const { isLoading: isLoadingDelete, handleDelete } =
     useHandleConfirmDeleteEntrie();
 
-  const routes: IRoutes[] = [
+  const routes: RouteProps[] = [
     { key: "Receita", title: "Receita", selected: params?.type === "Receita" },
     { key: "Despesa", title: "Despesa", selected: params?.type === "Despesa" },
   ];
@@ -91,6 +92,9 @@ export const FormEntries = ({
   );
 };
 
-const renderScene = ({ route }: { route: IRoutes }, activeTab: IRoutes) => {
+const renderScene = (
+  { route }: { route: RouteProps },
+  activeTab: RouteProps
+) => {
   return <FormEntriesTab route={route} activeTab={activeTab} />;
 };

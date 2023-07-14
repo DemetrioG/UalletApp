@@ -1,3 +1,0 @@
-interface DeleteAccountDTO {
-  password: string;
-}

@@ -5,20 +5,19 @@ import { FormTextInput } from "../../../../../components/Inputs/TextInput";
 import { Center } from "native-base";
 import { useFormContext } from "react-hook-form";
 import When from "../../../../../components/When";
-import { FormSelectInput } from "../../../../../components/Inputs/SelectInput";
 import { TEntrieType } from "../../../../../types/types";
 import { FormTextInputCalendar } from "../../../../../components/Inputs/TextInputCalendar";
 import { NewEntrieDTO } from "../../types";
-import { IRoutes } from "../../../../../components/TabView";
 import { FormSelectInputModality } from "../../../../../components/Inputs/SelectInputModality";
 import { FormSelectInputSegment } from "../../../../../components/Inputs/SelectInputSegment";
+import { RouteProps } from "../../../../../components/TabView/types";
 
 export const FormEntriesTab = ({
   route,
   activeTab,
 }: {
-  route: IRoutes;
-  activeTab: IRoutes;
+  route: RouteProps;
+  activeTab: RouteProps;
 }) => {
   const formMethods = useFormContext<NewEntrieDTO>();
 

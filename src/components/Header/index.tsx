@@ -3,7 +3,14 @@ import { useContext } from "react";
 import { Menu } from "../Menu";
 import { DatePicker } from "../DatePicker";
 import { DataContext } from "../../context/Data/dataContext";
-import { HStack, Pressable, Text, VStack, useDisclose } from "native-base";
+import {
+  HStack,
+  Image,
+  Pressable,
+  Text,
+  VStack,
+  useDisclose,
+} from "native-base";
 import { Path, Svg } from "react-native-svg";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
@@ -12,6 +19,8 @@ import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useGetData } from "./hooks/useData";
+
+import LOGO_SMALL from "../../../assets/images/logoSmall.png";
 
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -68,7 +77,7 @@ export const Header = () => {
               <CalendarRange color={theme?.text} />
             </TouchableOpacity>
             <Text>Saldo atual</Text>
-            <Menu />
+            <HomeMenu />
           </HStack>
           <HStack justifyContent="center" paddingY="5px">
             <Text fontWeight={700} fontSize="4xl">
@@ -151,8 +160,20 @@ export const HeaderSummary = () => {
             </Text>
           </HStack>
         </HStack>
-        <Menu />
+        <HomeMenu />
       </HStack>
+    </VStack>
+  );
+};
+
+const HomeMenu = () => {
+  const menu = useDisclose();
+  return (
+    <VStack>
+      <Pressable onPress={menu.onToggle}>
+        <Image source={LOGO_SMALL} width="25px" h="30px" alt="Logo Uallet" />
+      </Pressable>
+      <Menu {...menu} />
     </VStack>
   );
 };

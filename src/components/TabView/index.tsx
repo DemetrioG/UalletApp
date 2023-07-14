@@ -1,5 +1,5 @@
 import { HStack, Pressable, Text } from "native-base";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import {
   TabView as NativeTabView,
   SceneRendererProps,
@@ -7,31 +7,15 @@ import {
 } from "react-native-tab-view";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
+import { RouteProps, TabViewProps } from "./types";
 
-export interface IRoutes {
-  key: string;
-  title: string;
-  selected?: boolean;
-}
-
-const TabView = ({
-  renderScene,
-  tabRoutes,
-}: {
-  renderScene: (
-    props: SceneRendererProps & {
-      route: IRoutes;
-    },
-    activeTab: IRoutes
-  ) => React.ReactNode;
-  tabRoutes: IRoutes[];
-}) => {
+export const TabView = ({ renderScene, tabRoutes }: TabViewProps) => {
   const { theme }: IThemeProvider = useTheme();
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState(tabRoutes);
-  const [hasSelectedRoute, setHasSelectedRoute] = React.useState(false);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState(tabRoutes);
+  const [hasSelectedRoute, setHasSelectedRoute] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const selectedRoute = tabRoutes.findIndex((e) => e.selected);
     if (selectedRoute !== -1) {
       setIndex(selectedRoute);
@@ -40,7 +24,7 @@ const TabView = ({
   }, []);
 
   const TabHeader = (
-    props: SceneRendererProps & { navigationState: NavigationState<IRoutes> }
+    props: SceneRendererProps & { navigationState: NavigationState<RouteProps> }
   ) => {
     return (
       <HStack justifyContent="center">
@@ -73,5 +57,3 @@ const TabView = ({
     />
   );
 };
-
-export default TabView;

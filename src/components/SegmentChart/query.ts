@@ -2,9 +2,9 @@ import firebase from "../../services/firebase";
 import { IData } from "../../context/Data/dataContext";
 import { getFinalDateMonth } from "../../utils/date.helper";
 import { currentUser } from "../../utils/query.helper";
-import { IChartData } from ".";
+import { ChartProps } from "./types";
 
-async function _getData(context: IData, defaultData: IChartData[]) {
+async function _getData(context: IData, defaultData: ChartProps[]) {
   const user = await currentUser();
   const { month, year, modality } = context;
 
@@ -94,7 +94,7 @@ async function _getData(context: IData, defaultData: IChartData[]) {
   }
 }
 
-export function getData(context: IData, defaultData: IChartData[]) {
+export function getData(context: IData, defaultData: ChartProps[]) {
   try {
     return _getData(context, defaultData);
   } catch (error) {

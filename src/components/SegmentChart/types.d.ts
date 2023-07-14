@@ -1,18 +1,4 @@
-export interface ISlices {
-  slices?: [
-    slice: {
-      pieCentroid: number[];
-      data: {
-        key: number;
-        svg: object;
-      };
-      value: number;
-    }
-  ];
-  data: number[];
-}
-
-export interface IChartData {
+export interface ChartProps {
   label: string;
   value: number;
 }

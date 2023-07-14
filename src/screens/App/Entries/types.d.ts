@@ -1,6 +1,6 @@
-import { TEntrieType } from "../../../../types/types";
-import { ITimestamp } from "../../../../utils/date.helper";
-import { FilterFields, ServerFilterFields } from "../ModalFilter/types";
+import { TEntrieType } from "../../../types/types";
+import { ITimestamp } from "../../../utils/date.helper";
+import { ServerFilterFields } from "./ModalFilter/types";
 
 export interface ListEntries {
   date: ITimestamp;

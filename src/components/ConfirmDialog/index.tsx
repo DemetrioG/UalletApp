@@ -2,8 +2,7 @@ import { useContext, useRef, useEffect } from "react";
 import Modal from "react-native-modal";
 
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
-import { ButtonText } from "../../styles/general";
-import { Button, Center, HStack, Text, VStack } from "native-base";
+import { Button, Center, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 
@@ -46,8 +45,8 @@ export const ConfirmDialog = () => {
     <Modal
       isVisible={confirm.visibility}
       swipeDirection={"down"}
-      onSwipeComplete={() => handleCancel()}
-      onBackdropPress={() => handleCancel()}
+      onSwipeComplete={handleCancel}
+      onBackdropPress={handleCancel}
     >
       <Center
         position="absolute"

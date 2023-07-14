@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { PieChart } from "react-native-svg-charts";
 
-type TPieChart = { data: number[]; children: Element[] | Element };
+type TPieChart = { data: number[]; children?: Element[] | Element };
 export const StyledPieChart: React.FC<TPieChart> = styled(
   PieChart
 ).attrs<TPieChart>(({ theme: { theme }, data }) => ({

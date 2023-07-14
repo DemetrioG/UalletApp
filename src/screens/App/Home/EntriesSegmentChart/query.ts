@@ -2,9 +2,9 @@ import firebase from "../../../../services/firebase";
 import { IData } from "../../../../context/Data/dataContext";
 import { getFinalDateMonth } from "../../../../utils/date.helper";
 import { currentUser } from "../../../../utils/query.helper";
-import { IChartData } from "../../../../components/SegmentChart/types";
+import { ChartProps } from "../../../../components/SegmentChart/types";
 
-export async function getData(context: IData, defaultData: IChartData[]) {
+export async function getData(context: IData, defaultData: ChartProps[]) {
   const user = await currentUser();
   const { month, year, modality } = context;
 

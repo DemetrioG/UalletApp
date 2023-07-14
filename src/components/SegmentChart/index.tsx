@@ -1,39 +1,17 @@
-import { Center, HStack, Text, View, VStack } from "native-base";
+import { Center, HStack, Text, VStack } from "native-base";
 
 import EmptyChart from "../EmptyChart";
 import { StyledPieChart } from "./styles";
-import { metrics } from "../../styles";
-import { IChartData, ISlices } from "./types";
+import { ChartProps } from "./types";
 import When from "../When";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
-
-const Label = ({ slices }: ISlices) => {
-  return (
-    <>
-      {slices?.map((slice, index) => {
-        const { pieCentroid, value } = slice;
-        const x = pieCentroid[0] + (metrics.screenWidth / 100) * 17.5;
-        const y = pieCentroid[1] + 43;
-        return (
-          <View key={index}>
-            <When is={value !== 0}>
-              <Text position="absolute" top={y} left={x}>
-                {Math.round(value)}%
-              </Text>
-            </When>
-          </View>
-        );
-      })}
-    </>
-  );
-};
 
 export const SegmentChart = ({
   data,
   empty,
 }: {
-  data: IChartData[];
+  data: ChartProps[];
   empty: boolean;
 }) => {
   const { theme }: IThemeProvider = useTheme();
@@ -48,9 +26,7 @@ export const SegmentChart = ({
         <When is={!empty}>
           <HStack>
             <VStack w="50%">
-              <StyledPieChart data={chartValues}>
-                {/* <Label data={chartValues} /> */}
-              </StyledPieChart>
+              <StyledPieChart data={chartValues} />
             </VStack>
             <VStack w="50%">
               {data.map(({ label, value }, index) => {

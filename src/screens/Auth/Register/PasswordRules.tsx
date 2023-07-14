@@ -33,7 +33,7 @@ const PasswordStrengthLabel: { [key: number]: string } = {
   100: "Forte",
 };
 
-function PasswordRules({
+export function PasswordRules({
   content = "",
   primary,
   ...props
@@ -66,16 +66,9 @@ function PasswordRules({
               </Text>
             </HStack>
           </Tooltip>
-          <ProgressBar
-            primary={primary}
-            value={passwordStrength}
-            strength={passwordStrength}
-            size="md"
-          />
+          <ProgressBar primary={primary} value={passwordStrength} size="md" />
         </>
       )}
     </VStack>
   );
 }
-
-export default PasswordRules;
