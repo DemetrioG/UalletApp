@@ -35,9 +35,7 @@ import {
 } from "../../../../styles/general";
 import { colors } from "../../../../styles";
 import {
-  loginByEmailAndPassword,
-  loginByFacebook,
-  loginByGoogle,
+  loginByEmailAndPassword
 } from "../querys";
 import { LoginDTO } from "../types";
 
@@ -136,13 +134,13 @@ export const LoginForm = () => {
             </When>
             <SocialContainer
               backgroundColor={colors.white}
-              onPress={() => loginByGoogle()}
+              onPress={() => {}}
             >
               <GoogleLogo source={ICONS.google} />
             </SocialContainer>
             <SocialContainer
               backgroundColor={colors.facebookBlue}
-              onPress={() => loginByFacebook()}
+              onPress={() => {}}
             >
               <FacebookLogo source={ICONS.facebook} />
             </SocialContainer>

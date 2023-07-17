@@ -1,4 +1,5 @@
-import firebase from "../../../services/firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../../../services/firebase";
 import { currentUser } from "../../../utils/query.helper";
 
 type TUpdateUserData = {
@@ -15,11 +16,9 @@ export const updateUserData = async (
     const user = await currentUser();
     if (!user) throw new Error("Úsuario não encontrado");
 
-    await firebase
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .set(userData, { merge: true });
+    await setDoc(doc(collection(db, "users"), user.uid), userData, {
+      merge: true,
+    });
 
     return Promise.resolve("Dados cadastrados com sucesso");
   } catch {

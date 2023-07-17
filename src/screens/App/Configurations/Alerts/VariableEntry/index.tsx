@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import {
-  BackgroundContainer,
-  ButtonText,
-  Slider,
-} from "../../../../../styles/general";
+import { BackgroundContainer, Slider } from "../../../../../styles/general";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../../styles/baseTheme";
 import { ChevronLeft } from "lucide-react-native";

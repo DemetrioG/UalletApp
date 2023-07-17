@@ -1,44 +1,37 @@
-import firebase from "../../../services/firebase";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { db } from "../../../services/firebase";
 import { RegisterDTO } from "./types";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
-async function _registerUser(props: RegisterDTO) {
+export async function registerUser(props: RegisterDTO) {
   const { name, email, password, confirm } = props;
 
   if (password !== confirm) {
     return Promise.reject("As senhas informadas são diferentes");
   }
 
-  await firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then((v) => {
-      firebase.firestore().collection("users").doc(v.user?.uid).set({
-        name: name,
-        email: email,
-        typeUser: "default",
-        dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
-        schema: "free",
-      });
-      return Promise.resolve();
-    })
-    .catch((error) => {
-      switch (error.code) {
-        case "auth/weak-password":
-          return Promise.reject("Sua senha deve ter no mínimo 6 caracteres");
-        case "auth/invalid-email":
-          return Promise.reject("O e-mail informado é inválido");
-        case "auth/email-already-in-use":
-          return Promise.reject("Usuário já cadastrado");
-        default:
-          return Promise.reject("Erro ao cadastrar usuário");
-      }
+  const auth = getAuth();
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((v) => {
+    setDoc(doc(collection(db, "users"), v.user?.uid), {
+      name: name,
+      email: email,
+      typeUser: "default",
+      dateRegister: serverTimestamp(),
+      schema: "free",
     });
-}
-
-export function registerUser(props: RegisterDTO) {
-  try {
-    return _registerUser(props);
-  } catch (error) {
-    throw new Error(error as string);
-  }
+    return Promise.resolve();
+  })
+  .catch((error) => {
+    switch (error.code) {
+      case "auth/weak-password":
+        return Promise.reject("Sua senha deve ter no mínimo 6 caracteres");
+      case "auth/invalid-email":
+        return Promise.reject("O e-mail informado é inválido");
+      case "auth/email-already-in-use":
+        return Promise.reject("Usuário já cadastrado");
+      default:
+        return Promise.reject("Erro ao cadastrar usuário");
+    }
+  });
 }

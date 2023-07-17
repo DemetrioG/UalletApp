@@ -1,4 +1,15 @@
-import firebase from "../../../services/firebase";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../services/firebase";
 import {
   convertDateFromDatabase,
   convertDateToDatabase,
@@ -11,7 +22,7 @@ import {
   updateCurrentBalance,
 } from "../../../utils/query.helper";
 import { ServerFilterFields } from "./ModalFilter/types";
-import { ListEntries, NewEntrieDTO } from "./types";
+import { ListEntries, ValidatedNewEntrieDTO } from "./types";
 
 type TEntriesList = {
   month: number;
@@ -34,64 +45,58 @@ export const getEntries = async ({
     `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
   );
 
-  let baseQuery: firebase.firestore.Query = firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection(modality);
+  let baseQuery = query(collection(db, "entry", user.uid, modality as string));
 
   if (filters?.segment)
-    baseQuery = baseQuery.where("segment", "==", filters?.segment);
+    baseQuery = query(baseQuery, where("segment", "==", filters?.segment));
 
-  if (filters?.type) baseQuery = baseQuery.where("type", "==", filters?.type);
+  if (filters?.type)
+    baseQuery = baseQuery = query(
+      baseQuery,
+      where("type", "==", filters?.type)
+    );
 
   if (filters?.initial_date) {
-    baseQuery = baseQuery.where(
-      "date",
-      ">=",
-      convertDateToDatabase(filters?.initial_date)
+    baseQuery = query(
+      baseQuery,
+      where("date", ">=", convertDateToDatabase(filters?.initial_date))
     );
   } else {
-    baseQuery = baseQuery.where("date", ">=", initialDate);
+    baseQuery = query(baseQuery, where("date", ">=", initialDate));
   }
 
   if (filters?.final_date) {
-    baseQuery = baseQuery.where(
-      "date",
-      "<=",
-      convertDateToDatabase(filters?.final_date)
+    baseQuery = query(
+      baseQuery,
+      where("date", "<=", convertDateToDatabase(filters?.final_date))
     );
   } else {
-    baseQuery = baseQuery.where("date", "<=", finalDate);
+    baseQuery = query(baseQuery, where("date", "<=", finalDate));
   }
 
-  return baseQuery.orderBy("date", "desc").get();
+  const orderedQuery = query(baseQuery, orderBy("date", "desc"));
+
+  return getDocs(orderedQuery);
 };
 
-async function _registerNewEntry(props: NewEntrieDTO) {
+export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
+  const { description, date, value, modality, segment, type } = props;
   const user = await currentUser();
-
   if (!user) return Promise.reject();
 
-  const { description, date, value, modality, segment, type } = props;
   let id = 1;
 
   /**
    * Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
    */
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection(modality)
-    .orderBy("id", "desc")
-    .limit(1)
-    .get()
-    .then((v) => {
-      v.forEach((result) => {
-        id += result.data().id;
-      });
-    });
+  const collectionRef = collection(db, "entry", user.uid, modality as string);
+  const querySnapshot = await getDocs(
+    query(collectionRef, orderBy("id", "desc"), limit(1))
+  );
+
+  querySnapshot.forEach((result) => {
+    id += result.data().id;
+  });
 
   const items: ListEntries & {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
@@ -120,13 +125,10 @@ async function _registerNewEntry(props: NewEntrieDTO) {
   /**
    *  Registra o novo lançamento no banco
    */
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection(modality!)
-    .doc(id.toString())
-    .set(items);
+  await setDoc(
+    doc(collection(db, "entry", user.uid, modality as string), id.toString()),
+    items
+  );
 
   await createCollection("balance");
 
@@ -141,16 +143,14 @@ async function _registerNewEntry(props: NewEntrieDTO) {
   return Promise.resolve();
 }
 
-async function _updateEntry(
-  props: NewEntrieDTO,
+export async function updateEntry(
+  props: ValidatedNewEntrieDTO,
   idRegister: number,
   routeParams: ListEntries
 ) {
-  const user = await currentUser();
-
-  if (!user) return Promise.reject();
-
   const { description, date, value, modality, segment, type } = props;
+  const user = await currentUser();
+  if (!user) return Promise.reject();
 
   const items: ListEntries & {
     consolidated?: { consolidated: boolean; wasActionShown: boolean };
@@ -179,13 +179,10 @@ async function _updateEntry(
   /**
    * Registra o novo lançamento no banco
    */
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection(modality!)
-    .doc(idRegister.toString())
-    .set(items);
+  await setDoc(
+    doc(db, "entry", user.uid, modality!, idRegister.toString()),
+    items
+  );
 
   await createCollection("balance");
 
@@ -200,19 +197,16 @@ async function _updateEntry(
   return Promise.resolve();
 }
 
-async function _deleteEntry(routeParams: ListEntries) {
+export async function deleteEntry(routeParams: ListEntries) {
   const { date, id, modality, type, value } = routeParams;
   const user = await currentUser();
-
   if (!user) return Promise.reject();
 
-  await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection(modality)
-    .doc(id.toString())
-    .delete();
+  const entryDocRef = doc(
+    collection(db, "entry", user.uid, modality),
+    id.toString()
+  );
+  await deleteDoc(entryDocRef);
 
   const docRef = `${Number(
     convertDateFromDatabase(date).slice(3, 5)
@@ -225,35 +219,4 @@ async function _deleteEntry(routeParams: ListEntries) {
   });
 
   return Promise.resolve();
-}
-
-export function registerNewEntry(props: NewEntrieDTO) {
-  try {
-    return _registerNewEntry(props);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro ao cadastrar lançamento");
-  }
-}
-
-export function updateEntry(
-  props: NewEntrieDTO,
-  idRegister: number,
-  routeParams: ListEntries
-) {
-  try {
-    return _updateEntry(props, idRegister, routeParams);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro ao atualizar lançamento");
-  }
-}
-
-export function deleteEntry(routeParams: ListEntries) {
-  try {
-    return _deleteEntry(routeParams);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro ao excluir o lançamento");
-  }
 }

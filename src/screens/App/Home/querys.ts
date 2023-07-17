@@ -1,5 +1,14 @@
-import firebase from "../../../services/firebase";
-import { sortObjectByKey } from "../../../utils/array.helper";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../services/firebase";
 import { getAtualDate, getFinalDateMonth } from "../../../utils/date.helper";
 import { currentUser } from "../../../utils/query.helper";
 
@@ -13,7 +22,6 @@ export const getLastEntry = async ({
   modality,
 }: GetLastEntryProps) => {
   const user = await currentUser();
-
   if (!user) return Promise.reject(false);
 
   // Pega o mês de referência do App para realizar a busca dos registros
@@ -22,28 +30,19 @@ export const getLastEntry = async ({
     `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
   );
 
-  // Busca os registros dentro do período de referência
   await new Promise((resolve) => setInterval(resolve, 100));
-  const snapshot = await firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection(modality)
-    .where("date", ">=", initialDate)
-    .where("date", "<=", finalDate)
-    .orderBy("date", "desc")
-    .limit(4)
-    .get();
+  const snapshot = await getDocs(
+    query(
+      collection(doc(collection(db, "entry"), user.uid), modality),
+      where("date", ">=", initialDate),
+      where("date", "<=", finalDate),
+      orderBy("date", "desc"),
+      orderBy("id", "desc"),
+      limit(4)
+    )
+  );
 
-  if (snapshot.docs.length > 0) {
-    const list: any = [];
-    snapshot.forEach((result) => {
-      list.push(result.data());
-    });
-    return sortObjectByKey(list, "id", "desc");
-  }
-
-  return [];
+  return snapshot.docs.map((result) => result.data()) ?? [];
 };
 
 /**
@@ -52,24 +51,21 @@ export const getLastEntry = async ({
 export const checkFutureDebitsToConsolidate = async () => {
   const [, initialDate, finalDate] = getAtualDate();
   const user = await currentUser();
-
   if (!user) return Promise.reject(false);
 
-  return firebase
-    .firestore()
-    .collection("entry")
-    .doc(user.uid)
-    .collection("Projetado")
-    .where("date", ">=", initialDate)
-    .where("date", "<=", finalDate)
-    .where("consolidated.wasActionShown", "==", false)
-    .get();
+  return getDocs(
+    query(
+      collection(doc(collection(db, "entry"), user.uid), "Projetado"),
+      where("date", ">=", initialDate),
+      where("date", "<=", finalDate),
+      where("consolidated.wasActionShown", "==", false)
+    )
+  );
 };
 
 export const completeUser = async () => {
   const user = await currentUser();
-
   if (!user) return Promise.reject(false);
 
-  return firebase.firestore().collection("users").doc(user.uid).get();
+  return getDoc(doc(collection(db, "users"), user.uid));
 };

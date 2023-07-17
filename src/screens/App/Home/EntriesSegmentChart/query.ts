@@ -1,13 +1,13 @@
-import firebase from "../../../../services/firebase";
+import { db } from "../../../../services/firebase";
 import { IData } from "../../../../context/Data/dataContext";
 import { getFinalDateMonth } from "../../../../utils/date.helper";
 import { currentUser } from "../../../../utils/query.helper";
 import { ChartProps } from "../../../../components/SegmentChart/types";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export async function getData(context: IData, defaultData: ChartProps[]) {
-  const user = await currentUser();
   const { month, year, modality } = context;
-
+  const user = await currentUser();
   if (!user) return Promise.reject(false);
 
   if (year !== 0) {
@@ -16,79 +16,71 @@ export async function getData(context: IData, defaultData: ChartProps[]) {
       `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
     );
 
-    let total = 0;
     let needs = 0;
     let invest = 0;
     let leisure = 0;
     let education = 0;
     let shortAndMediumTime = 0;
 
-    // Busca no banco os dados referente ao Mês atual
-    await firebase
-      .firestore()
-      .collection("entry")
-      .doc(user.uid)
-      .collection(modality)
-      .get()
-      .then(async () => {
-        await firebase
-          .firestore()
-          .collection("entry")
-          .doc(user.uid)
-          .collection(modality)
-          .where("type", "==", "Despesa")
-          .where("date", ">=", initialDate)
-          .where("date", "<=", finalDate)
-          .get()
-          .then((v) => {
-            if (v.empty) {
-              return Promise.reject("empty");
-            } else {
-              v.forEach((result) => {
-                const segmentData = [result.data()];
-                segmentData.forEach(({ segment, value }) => {
-                  switch (segment) {
-                    case "Necessidades":
-                      needs += value;
-                      break;
+    const entryCollectionRef = collection(db, "entry", user.uid, modality);
 
-                    case "Investimentos":
-                      invest += value;
-                      break;
+    try {
+      const expensesQuery = query(
+        entryCollectionRef,
+        where("type", "==", "Despesa"),
+        where("date", ">=", initialDate),
+        where("date", "<=", finalDate)
+      );
 
-                    case "Lazer":
-                      leisure += value;
-                      break;
+      const expensesSnapshot = await getDocs(expensesQuery);
 
-                    case "Educação":
-                      education += value;
-                      break;
+      if (expensesSnapshot.size === 0) {
+        return Promise.reject("empty");
+      }
 
-                    case "Curto e médio prazo":
-                      shortAndMediumTime += value;
-                      break;
-                  }
-                  total += value;
-                });
-              });
-            }
+      let total = 0;
+      expensesSnapshot.forEach((expense) => {
+        const { segment, value } = expense.data();
+        switch (segment) {
+          case "Necessidades":
+            needs += value;
+            break;
 
-            needs = (needs / total) * 100;
-            invest = (invest / total) * 100;
-            leisure = (leisure / total) * 100;
-            education = (education / total) * 100;
-            shortAndMediumTime = (shortAndMediumTime / total) * 100;
-          });
-      })
-      .catch((e) => Promise.reject(e));
+          case "Investimentos":
+            invest += value;
+            break;
 
-    const finalData = defaultData;
-    finalData[0].value = leisure;
-    finalData[1].value = invest;
-    finalData[2].value = education;
-    finalData[3].value = shortAndMediumTime;
-    finalData[4].value = needs;
+          case "Lazer":
+            leisure += value;
+            break;
 
-    return Promise.resolve(finalData);
+          case "Educação":
+            education += value;
+            break;
+
+          case "Curto e médio prazo":
+            shortAndMediumTime += value;
+            break;
+        }
+        total += value;
+      });
+
+      needs = (needs / total) * 100;
+      invest = (invest / total) * 100;
+      leisure = (leisure / total) * 100;
+      education = (education / total) * 100;
+      shortAndMediumTime = (shortAndMediumTime / total) * 100;
+
+      const finalData = defaultData;
+      finalData[0].value = leisure;
+      finalData[1].value = invest;
+      finalData[2].value = education;
+      finalData[3].value = shortAndMediumTime;
+      finalData[4].value = needs;
+
+      return Promise.resolve(finalData);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
