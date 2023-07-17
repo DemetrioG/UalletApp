@@ -6,11 +6,13 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import Swipeable from "../../../components/Button/Swipeable";
 import { BackgroundContainerCenter } from "../../../styles/general";
-import { LoginText } from "./styles";
 
 import Cards from "../../../../assets/images/cards.png";
+import { IThemeProvider } from "../../../styles/baseTheme";
+import { useTheme } from "styled-components";
 
 export const Index = () => {
+  const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   return (
@@ -28,7 +30,9 @@ export const Index = () => {
       <HStack space={3}>
         <Text>Já tem uma conta?</Text>
         <TouchableOpacity onPress={() => navigate("Login")}>
-          <LoginText fontWeight={600}>Login</LoginText>
+          <Text fontWeight={600} color={theme?.blue}>
+            Login
+          </Text>
         </TouchableOpacity>
       </HStack>
     </BackgroundContainerCenter>

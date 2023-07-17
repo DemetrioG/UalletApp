@@ -1,6 +1,5 @@
 import * as React from "react";
-import { HStack, Text, VStack } from "native-base";
-import { ProgressBar } from "./styles";
+import { HStack, Progress, Text, VStack } from "native-base";
 import { Info } from "lucide-react-native";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";
@@ -66,7 +65,12 @@ export function PasswordRules({
               </Text>
             </HStack>
           </Tooltip>
-          <ProgressBar primary={primary} value={passwordStrength} size="md" />
+          <Progress
+            _filledTrack={{ bg: theme?.blue }}
+            bg={theme?.secondary}
+            value={passwordStrength}
+            size="md"
+          />
         </>
       )}
     </VStack>

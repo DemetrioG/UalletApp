@@ -3,7 +3,6 @@ import { FlatList, Modal, TouchableOpacity, View } from "react-native";
 import { Text } from "native-base";
 import Toast from "react-native-toast-message";
 
-import firebase from "../../services/firebase";
 import { ListEntries } from "../../screens/App/Entries/types";
 import Icon from "../Icon";
 import { numberToReal } from "../../utils/number.helper";
@@ -42,6 +41,7 @@ import {
 import { colors } from "../../styles";
 import { consolidateData, getData } from "./query";
 import { IEntries, ReturnUseDisclosure } from "../../types/types";
+import { DocumentData } from "firebase/firestore";
 
 const WRITE = require("../../../assets/icons/write.json");
 
@@ -49,7 +49,7 @@ const Consolidate = ({ isOpen, onClose }: ReturnUseDisclosure) => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [entryList, setEntryList] = useState<
-    Array<(IEntries & { checked?: boolean }) | firebase.firestore.DocumentData>
+    Array<(IEntries & { checked?: boolean }) | DocumentData>
   >([]);
 
   const anySelectedEntry =
@@ -101,9 +101,7 @@ const Consolidate = ({ isOpen, onClose }: ReturnUseDisclosure) => {
   const ItemList = ({
     item: { description, type, value, checked, id },
   }: {
-    item:
-      | (ListEntries & { checked?: boolean })
-      | firebase.firestore.DocumentData;
+    item: (ListEntries & { checked?: boolean }) | DocumentData;
   }) => {
     return (
       <ItemView>
