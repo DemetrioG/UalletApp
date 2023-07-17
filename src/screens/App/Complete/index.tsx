@@ -157,7 +157,9 @@ const Complete = () => {
                 }
               />
               <Button isLoading={loading} onPress={handleSubmit(registerData)}>
-                <ButtonText>CONFIRMAR</ButtonText>
+                <Text fontWeight={800} color="white">
+                  Confirmar
+                </Text>
               </Button>
             </FormContainer>
           </ContainerCenter>

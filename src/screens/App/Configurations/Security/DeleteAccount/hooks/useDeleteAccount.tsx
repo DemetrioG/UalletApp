@@ -10,6 +10,7 @@ import {
 } from "../../../../../../context/User/userContext";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { ConfirmContext } from "../../../../../../context/ConfirmDialog/confirmContext";
+import { DeleteAccountDTO } from "../types";
 
 const schema = yup
   .object({
