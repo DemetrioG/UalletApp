@@ -48,7 +48,7 @@ export const VariableEntryScreen = ({
               minimumValue={5}
               maximumValue={100}
               value={value}
-              onSlidingComplete={(value) => setValue(Number(value.toFixed(0)))}
+              onValueChange={(value) => setValue(Number(value.toFixed(0)))}
               tapToSeek
               step={5}
             />

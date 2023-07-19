@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Picker from "../../../components/Picker";
+// import Picker from "../../../components/Picker";
 import { FormTextInput } from "../../../components/Inputs/TextInput";
 import { UserContext } from "../../../context/User/userContext";
 import { dateValidation } from "../../../utils/date.helper";
@@ -17,11 +17,11 @@ import {
   ButtonText,
   ContainerCenter,
   FormContainer,
-  HeaderTitleContainer,
-  LogoHeader,
+  // HeaderTitleContainer,
+  // LogoHeader,
   StyledKeyboardAvoidingView,
 } from "../../../styles/general";
-import { GENDER, PROFILE } from "../../../components/Picker/options";
+// import { GENDER, PROFILE } from "../../../components/Picker/options";
 import { updateUserData } from "./querys";
 
 interface IForm {
@@ -104,7 +104,7 @@ const Complete = () => {
     <StyledKeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <BackgroundContainer>
-          <LogoHeader>
+          {/* <LogoHeader>
             <Text fontSize={"2xl"} fontWeight={800}>
               Complete seu cadastro
             </Text>
@@ -114,10 +114,10 @@ const Complete = () => {
               Seus dados serão utilizados para melhorar{"\n"}sua experiência
               dentro do app.
             </Text>
-          </HeaderTitleContainer>
+          </HeaderTitleContainer> */}
           <ContainerCenter>
             <FormContainer>
-              <Picker
+              {/* <Picker
                 options={GENDER}
                 selectedValue={setGender}
                 value={!gender ? "Sexo" : gender}
@@ -134,7 +134,7 @@ const Complete = () => {
                 visibility={profileVisible}
                 setVisibility={setProfileVisible}
                 errors={errors.profile}
-              />
+              /> */}
               <FormTextInput
                 placeholder="Data de nascimento"
                 name="birthdate"

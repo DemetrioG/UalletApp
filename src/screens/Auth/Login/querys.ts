@@ -1,8 +1,8 @@
-import { db } from "../../../services/firebase";
+import { db, auth } from "../../../services/firebase";
 import { convertDate, convertDateToDatabase } from "../../../utils/date.helper";
 import * as Device from "expo-device";
 import { TLoggedSucceed, TLoginByEmailAndPassword } from "./types";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export const loginByEmailAndPassword = async (
@@ -12,8 +12,6 @@ export const loginByEmailAndPassword = async (
 
   /* 15 Dias para expirar o token */
   const expirationAuthDate = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
-
-  const auth = getAuth();
 
   try {
     const { user } = await signInWithEmailAndPassword(auth, email, password);

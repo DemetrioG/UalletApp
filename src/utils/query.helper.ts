@@ -1,37 +1,12 @@
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { db } from "../services/firebase";
-import { numberToReal } from "./number.helper";
+import { auth, db } from "../services/firebase";
 import { getStorage } from "./storage.helper";
 
 /**
  * Retorna os dados de autenticação do usuário logado
  */
 export const currentUser = async () => {
-  const auth = getAuth();
   return auth.currentUser || (await getStorage("authUser"));
-};
-
-type TBalance = { month: number; year: number; modality: string };
-/**
- * Dada a modalidade/mês retorna o saldo atual do usuário.
- */
-export const getBalance = async ({ month, year, modality }: TBalance) => {
-  const user = await currentUser();
-
-  if (!user) return "R$0,00";
-
-  const balanceCollectionRef = collection(db, "balance", user.uid, modality);
-  const balanceDocRef = doc(balanceCollectionRef, `${month}_${year}`);
-
-  try {
-    const balanceSnapshot = await getDoc(balanceDocRef);
-    const response = balanceSnapshot.data();
-
-    return response?.balance ? numberToReal(response?.balance || 0) : "R$0,00";
-  } catch (error) {
-    return Promise.reject(error);
-  }
 };
 
 type UpdateCurrentBalanceProps = {

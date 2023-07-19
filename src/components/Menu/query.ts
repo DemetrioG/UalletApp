@@ -24,7 +24,7 @@ export async function refreshAuthDevice(expoPushToken: string) {
       currentDevice.logged = false;
     }
 
-    const updatedData = anotherDevices.length
+    const updatedData = !!anotherDevices.length
       ? [anotherDevices, currentDevice]
       : [currentDevice];
 

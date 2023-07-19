@@ -1,21 +1,6 @@
 import * as React from "react";
-import {
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  ScrollViewProps,
-  View,
-} from "react-native";
-import {
-  Button,
-  Center,
-  Flex,
-  Text,
-  Skeleton as NativeSkeleton,
-  IButtonProps,
-  HStack,
-} from "native-base";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
+import { Button, Center, Flex, Text } from "native-base";
 import NativeSlider from "@react-native-community/slider";
 import styled from "styled-components";
 import colors from "./colors";

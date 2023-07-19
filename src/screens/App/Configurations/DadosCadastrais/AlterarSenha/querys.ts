@@ -4,13 +4,13 @@ import {
   signInWithEmailAndPassword,
   updatePassword,
 } from "firebase/auth";
+import { auth } from "../../../../../services/firebase";
 
 const reautenticate = async (password: string, user: User) => {
   try {
     const { email } = user;
     if (!email) return false;
 
-    const auth = getAuth();
     return signInWithEmailAndPassword(auth, email, password);
   } catch {
     return false;
@@ -26,13 +26,13 @@ export const changePassword = async ({
   oldPassword,
   newPassword,
 }: changePasswordParams) => {
-  const auth = getAuth();
   const user = auth.currentUser;
   if (!user) return false;
 
   try {
     await reautenticate(oldPassword, user);
     await updatePassword(user, newPassword);
+    return true;
   } catch {
     return false;
   }

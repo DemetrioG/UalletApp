@@ -4,6 +4,7 @@ import { Info } from "lucide-react-native";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import Tooltip from "../../../components/Tooltip";
+import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 
 /**
  * https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
@@ -32,13 +33,16 @@ const PasswordStrengthLabel: { [key: number]: string } = {
   100: "Forte",
 };
 
+interface PasswordRulesProps extends InterfaceVStackProps {
+  content: string;
+  primary?: boolean;
+}
+
 export function PasswordRules({
   content = "",
   primary,
   ...props
-}: { content: string; primary?: boolean } & React.ComponentProps<
-  typeof VStack
->) {
+}: PasswordRulesProps) {
   const { theme }: IThemeProvider = useTheme();
   const [passwordStrength, setPasswordStrenght] = React.useState(0);
   const hasLength = content.length;
@@ -67,7 +71,7 @@ export function PasswordRules({
           </Tooltip>
           <Progress
             _filledTrack={{ bg: theme?.blue }}
-            bg={theme?.secondary}
+            bg={primary ? theme?.primary : theme?.secondary}
             value={passwordStrength}
             size="md"
           />

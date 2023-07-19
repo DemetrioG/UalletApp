@@ -22,7 +22,7 @@ import {
   IconContainer,
   InfoContainer,
   StyledLottieView,
-  StyledButton,
+  // StyledButton,
   ButtonText,
   DataContainer,
   DescriptionView,
@@ -214,7 +214,7 @@ const Consolidate = ({ isOpen, onClose }: ReturnUseDisclosure) => {
                 <Circle isActive={page === 2} />
               </TouchableOpacity>
             </CirclesContainer>
-            {page === 1 ? (
+            {/* {page === 1 ? (
               <StyledButton onPress={() => setPage(2)}>
                 <ButtonText>SEGUINTE</ButtonText>
               </StyledButton>
@@ -226,7 +226,7 @@ const Consolidate = ({ isOpen, onClose }: ReturnUseDisclosure) => {
               >
                 <ButtonText>CONFIRMAR</ButtonText>
               </StyledButton>
-            )}
+            )} */}
           </Footer>
         </ModalView>
       </ModalContainer>
