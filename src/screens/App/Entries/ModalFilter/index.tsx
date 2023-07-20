@@ -12,6 +12,7 @@ import { Keyboard } from "react-native";
 import { ModalFilterProps } from "./types";
 import { FormSelectInputType } from "../../../../components/Inputs/SelectInputType";
 import When from "../../../../components/When";
+import { sleep } from "../../../../utils/query.helper";
 
 const defaultValues = {
   client: {
@@ -32,6 +33,11 @@ export const ModalFilter = (props: ModalFilterProps) => {
   const { filterMethods, hasFilter } = props;
   const { theme }: IThemeProvider = useTheme();
 
+  function handleSubmit() {
+    props.onSubmit && props.onSubmit();
+    return props.onClose();
+  }
+
   return (
     <Modal {...props}>
       <HStack justifyContent="space-between">
@@ -44,7 +50,11 @@ export const ModalFilter = (props: ModalFilterProps) => {
         <VStack>
           <When is={hasFilter}>
             <Pressable
-              onPress={() => filterMethods.reset(defaultValues)}
+              onPress={async () => {
+                filterMethods.reset(defaultValues);
+                await sleep(500);
+                handleSubmit();
+              }}
               borderWidth={1}
             >
               <FilterX color={theme?.blue} />
@@ -116,12 +126,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
           </HStack>
         </Center>
       </TouchableWithoutFeedback>
-      <Button
-        onPress={() => {
-          props.onSubmit && props.onSubmit();
-          props.onClose();
-        }}
-      >
+      <Button onPress={handleSubmit}>
         <Text fontWeight="bold" color="white">
           Aplicar
         </Text>

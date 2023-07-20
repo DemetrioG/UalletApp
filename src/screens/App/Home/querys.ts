@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../services/firebase";
 import { getAtualDate, getFinalDateMonth } from "../../../utils/date.helper";
-import { currentUser } from "../../../utils/query.helper";
+import { currentUser, sleep } from "../../../utils/query.helper";
 
 type GetLastEntryProps = { month: number; year: number; modality: string };
 /**
@@ -30,7 +30,7 @@ export const getLastEntry = async ({
     `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
   );
 
-  await new Promise((resolve) => setInterval(resolve, 100));
+  await sleep(100);
   const snapshot = await getDocs(
     query(
       collection(doc(collection(db, "entry"), user.uid), modality),

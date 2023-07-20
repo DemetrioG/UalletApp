@@ -68,3 +68,7 @@ export async function createCollection(collectionPath: string) {
     return Promise.reject();
   }
 }
+
+export async function sleep(ms: number) {
+  return await new Promise((resolve) => setInterval(resolve, ms));
+}
