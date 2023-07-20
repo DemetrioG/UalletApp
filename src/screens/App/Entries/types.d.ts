@@ -8,7 +8,7 @@ export interface ListEntries {
   id: number;
   modality: "Real" | "Projetado";
   classification?: string;
-  segment: string | null;
+  segment?: string | null;
   type: TEntrieType;
   value: number;
 }
@@ -27,4 +27,14 @@ export interface NewEntrieDTO {
   segment?: string | null;
   type: TEntrieType | null;
   value: string | null;
+}
+
+export interface ValidatedNewEntrieDTO {
+  date: string;
+  description: string;
+  id?: number;
+  modality: "Real" | "Projetado";
+  segment?: string | null;
+  type: TEntrieType;
+  value: string;
 }

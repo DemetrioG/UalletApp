@@ -1,4 +1,9 @@
 import { useContext, useEffect, useState } from "react";
+import {
+  DocumentData,
+  DocumentSnapshot,
+  QuerySnapshot,
+} from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { DataContext } from "../../../../context/Data/dataContext";
@@ -10,7 +15,6 @@ import {
 } from "../querys";
 import { UserContext } from "../../../../context/User/userContext";
 
-import firebase from "../../../../services/firebase";
 import { ReturnUseDisclosure } from "../../../../types/types";
 
 export const useGetLastEntries = () => {
@@ -40,9 +44,7 @@ export const useIsUserWithCompleteData = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
 
   const { handleExecute } =
-    usePromise<
-      firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
-    >(completeUser);
+    usePromise<DocumentSnapshot<DocumentData>>(completeUser);
 
   async function execute() {
     return handleExecute().then((v) => {
@@ -64,9 +66,9 @@ export const useIsUserWithCompleteData = () => {
 };
 
 export const useCheckConsolidation = ({ onOpen }: ReturnUseDisclosure) => {
-  const { handleExecute } = usePromise<
-    firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
-  >(checkFutureDebitsToConsolidate);
+  const { handleExecute } = usePromise<QuerySnapshot<DocumentData>>(
+    checkFutureDebitsToConsolidate
+  );
 
   async function execute() {
     return handleExecute().then((v) => {

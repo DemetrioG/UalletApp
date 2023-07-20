@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { HStack, Pressable, Text, VStack } from "native-base";
 
-import { BackgroundContainer, ButtonIcon } from "../../../../styles/general";
+import { BackgroundContainer } from "../../../../styles/general";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { ChevronLeft, Edit3, PlusCircle, Trash } from "lucide-react-native";
@@ -71,20 +71,20 @@ export const AlertsScreen = () => {
               <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
                 <HStack justifyContent="space-between" alignItems={"center"}>
                   <Text>{action.label}</Text>
-                  <HStack>
+                  <HStack space={4}>
                     <Pressable
                       onPress={() => goTo(action.url, action.data.value)}
                     >
                       <Edit3 color={theme?.text} />
                     </Pressable>
                     <VStack>
-                      <ButtonIcon
-                        isLoading={isLoading}
-                        icon={<Trash color={theme?.text} />}
+                      <Pressable
                         onPress={() =>
                           handleDelete(action.data.index, handleGetData)
                         }
-                      />
+                      >
+                        <Trash color={theme?.blue} />
+                      </Pressable>
                     </VStack>
                   </HStack>
                 </HStack>

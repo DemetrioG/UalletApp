@@ -1,4 +1,4 @@
-import firebase from "../services/firebase";
+import { Timestamp } from "firebase/firestore";
 
 export interface ITimestamp {
   nanoseconds: number;
@@ -103,7 +103,7 @@ export function convertDateToDatabase(date: string) {
   const year = date.slice(6, 10);
   const finalDate = new Date(`${month}/${day}/${year} 00:00:01`);
 
-  return firebase.firestore.Timestamp.fromDate(finalDate);
+  return Timestamp.fromDate(finalDate);
 }
 
 /**

@@ -1,13 +1,17 @@
-import firebase from "../../../../../services/firebase";
-import { currentUser } from "../../../../../utils/query.helper";
+import {
+  User,
+  getAuth,
+  signInWithEmailAndPassword,
+  updatePassword,
+} from "firebase/auth";
+import { auth } from "../../../../../services/firebase";
 
-const reautenticate = async (password: string, user: firebase.User) => {
+const reautenticate = async (password: string, user: User) => {
   try {
     const { email } = user;
-
     if (!email) return false;
 
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+    return signInWithEmailAndPassword(auth, email, password);
   } catch {
     return false;
   }
@@ -22,15 +26,12 @@ export const changePassword = async ({
   oldPassword,
   newPassword,
 }: changePasswordParams) => {
+  const user = auth.currentUser;
+  if (!user) return false;
+
   try {
-    const user = await currentUser();
-
-    if (!user) return false;
-
-    const matchOldPassword = await reautenticate(oldPassword, user);
-    if (!matchOldPassword) return false;
-
-    user?.updatePassword(newPassword);
+    await reautenticate(oldPassword, user);
+    await updatePassword(user, newPassword);
     return true;
   } catch {
     return false;

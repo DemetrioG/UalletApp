@@ -5,7 +5,7 @@ import styled from "styled-components";
 import LottieView, { AnimatedLottieViewProps } from "lottie-react-native";
 import { colors, fonts, metrics } from "../../styles";
 import {
-  ButtonSmall,
+  // ButtonSmall,
   ButtonText as GeneralButtonText,
 } from "../../styles/general";
 import { TEntrieType } from "../../types/types";
@@ -63,10 +63,10 @@ export const DataContainer = styled(View)`
   padding: 30px 0px 10px 0px;
 `;
 
-export const StyledButton = styled(ButtonSmall)`
-  margin-bottom: 0px;
-  margin-left: ${metrics.baseMargin}px;
-`;
+// export const StyledButton = styled(ButtonSmall)`
+//   margin-bottom: 0px;
+//   margin-left: ${metrics.baseMargin}px;
+// `;
 
 export const LabelContainer = styled(HStack)`
   margin-bottom: ${metrics.baseMargin}px;

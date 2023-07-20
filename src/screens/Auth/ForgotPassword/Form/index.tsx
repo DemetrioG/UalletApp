@@ -4,15 +4,13 @@ import {
   Keyboard,
   TouchableOpacity,
 } from "react-native";
-import { Button, Text, VStack } from "native-base";
+import { Button, Center, Text, VStack } from "native-base";
 
 import Toast from "react-native-toast-message";
 import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import {
   BackgroundContainer,
   BackgroundEffect,
-  ButtonText,
-  ContainerCenter,
   StyledKeyboardAvoidingView,
 } from "../../../../styles/general";
 import { resetPassword } from "../querys";
@@ -59,7 +57,7 @@ export const ForgotPasswordForm = () => {
             </Text>
             <Text color="white">Verifique sua caixa de spam!</Text>
           </VStack>
-          <ContainerCenter>
+          <Center flex={1}>
             <FormTextInput
               placeholder="E-mail cadastrado"
               keyboardType="email-address"
@@ -71,7 +69,7 @@ export const ForgotPasswordForm = () => {
               helperText="Informe um e-mail válido"
               isRequired
             />
-          </ContainerCenter>
+          </Center>
           <Button
             isLoading={isLoading}
             onPress={formMethods.handleSubmit(handleExecute)}

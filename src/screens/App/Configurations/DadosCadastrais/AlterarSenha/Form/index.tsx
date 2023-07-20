@@ -6,10 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { FormTextInputPassword } from "../../../../../../components/Inputs/TextInputPassword";
-import {
-  BackgroundContainer,
-  ButtonText,
-} from "../../../../../../styles/general";
+import { BackgroundContainer } from "../../../../../../styles/general";
 import { PasswordRules } from "../../../../../Auth/Register/PasswordRules";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../../../styles/baseTheme";

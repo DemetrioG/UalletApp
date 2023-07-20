@@ -1,11 +1,9 @@
-import firebase from "../../../../../services/firebase";
+import { collection, doc, getDoc } from "firebase/firestore";
+import { db } from "../../../../../services/firebase";
 
 export const getUser = async <T>(userUid: string) => {
-  const query = await firebase
-    .firestore()
-    .collection("users")
-    .doc(userUid)
-    .get();
+  const docRef = doc(collection(db, "users"), userUid);
+  const querySnapshot = await getDoc(docRef);
 
-  return query.data() as T;
+  return querySnapshot.data() as T;
 };

@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { Actionsheet, Button, Text, VStack } from "native-base";
+import { Actionsheet, Button, Center, Text, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -29,16 +29,10 @@ import {
 import {
   BackgroundContainer,
   StyledKeyboardAvoidingView,
-  ContainerCenter,
-  ButtonText,
   BackgroundEffect,
 } from "../../../../styles/general";
 import { colors } from "../../../../styles";
-import {
-  loginByEmailAndPassword,
-  loginByFacebook,
-  loginByGoogle,
-} from "../querys";
+import { loginByEmailAndPassword } from "../querys";
 import { LoginDTO } from "../types";
 
 export const LoginForm = () => {
@@ -84,7 +78,7 @@ export const LoginForm = () => {
               Realize{"\n"}seu login!
             </Text>
           </VStack>
-          <ContainerCenter>
+          <Center flex={1}>
             <FormTextInput
               placeholder="E-mail"
               keyboardType="email-address"
@@ -110,7 +104,7 @@ export const LoginForm = () => {
                 <Text>Esqueceu sua senha</Text>
               </TouchableOpacity>
             </VStack>
-          </ContainerCenter>
+          </Center>
           <VStack alignItems="center" width="100%" mb={8} space={2}>
             <Button
               isLoading={isLoading}
@@ -134,15 +128,12 @@ export const LoginForm = () => {
                 <AppleLogo source={ICONS.apple} />
               </SocialContainer>
             </When>
-            <SocialContainer
-              backgroundColor={colors.white}
-              onPress={() => loginByGoogle()}
-            >
+            <SocialContainer backgroundColor={colors.white} onPress={() => {}}>
               <GoogleLogo source={ICONS.google} />
             </SocialContainer>
             <SocialContainer
               backgroundColor={colors.facebookBlue}
-              onPress={() => loginByFacebook()}
+              onPress={() => {}}
             >
               <FacebookLogo source={ICONS.facebook} />
             </SocialContainer>

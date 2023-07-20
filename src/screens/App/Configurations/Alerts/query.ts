@@ -1,49 +1,19 @@
-import firebase from "firebase";
 import { currentUser } from "../../../../utils/query.helper";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../../../../services/firebase";
 
-async function _getData() {
+export async function getData() {
   const user = await currentUser();
-
   if (!user) return Promise.reject();
 
-  return await firebase
-    .firestore()
-    .collection("alerts")
-    .doc(user.uid)
-    .get()
-    .then((v) => {
-      return v.data();
-    });
+  return getDoc(doc(collection(db, "alerts"), user.uid)).then((v) => v.data());
 }
 
-export function getData() {
-  try {
-    return _getData();
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro ao retornar os alertas");
-  }
-}
-
-async function _deleteData(index: string) {
+export async function deleteData(index: string) {
   const user = await currentUser();
-
   if (!user) return Promise.reject();
 
-  await firebase
-    .firestore()
-    .collection("alerts")
-    .doc(user.uid)
-    .set({
-      [index]: 0,
-    });
-}
-
-export function deleteData(index: string) {
-  try {
-    return _deleteData(index);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro ao excluir alerta");
-  }
+  await setDoc(doc(collection(db, "alerts"), user.uid), {
+    [index]: 0,
+  });
 }

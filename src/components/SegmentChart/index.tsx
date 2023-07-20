@@ -1,6 +1,6 @@
 import { Center, HStack, Text, VStack } from "native-base";
 
-import EmptyChart from "../EmptyChart";
+import { EmptyChart } from "../EmptyChart";
 import { StyledPieChart } from "./styles";
 import { ChartProps } from "./types";
 import When from "../When";

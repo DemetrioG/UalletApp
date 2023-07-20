@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import {
-  BackgroundContainer,
-  ButtonText,
-  Slider,
-} from "../../../../../styles/general";
+import { BackgroundContainer, Slider } from "../../../../../styles/general";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../../styles/baseTheme";
 import { ChevronLeft } from "lucide-react-native";
@@ -52,7 +48,7 @@ export const VariableEntryScreen = ({
               minimumValue={5}
               maximumValue={100}
               value={value}
-              onSlidingComplete={(value) => setValue(Number(value.toFixed(0)))}
+              onValueChange={(value) => setValue(Number(value.toFixed(0)))}
               tapToSeek
               step={5}
             />

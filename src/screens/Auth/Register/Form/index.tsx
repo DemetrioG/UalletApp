@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Button, Text, VStack } from "native-base";
+import { Button, Center, Text, VStack } from "native-base";
 import Toast from "react-native-toast-message";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -11,8 +11,6 @@ import { FormTextInputPassword } from "../../../../components/Inputs/TextInputPa
 import {
   BackgroundContainer,
   BackgroundEffect,
-  ButtonText,
-  ContainerCenter,
 } from "../../../../styles/general";
 import { PasswordRules } from "../PasswordRules";
 import { registerUser } from "../query";
@@ -59,7 +57,7 @@ export const RegisterForm = () => {
             Crie sua{"\n"}conta!
           </Text>
         </VStack>
-        <ContainerCenter>
+        <Center flex={1}>
           <FormTextInput
             placeholder="Nome completo"
             maxLength={40}
@@ -98,7 +96,7 @@ export const RegisterForm = () => {
           <VStack width="100%">
             <PasswordRules mb={5} content={passwordText} />
           </VStack>
-        </ContainerCenter>
+        </Center>
         <Button
           isLoading={isLoading}
           onPress={formMethods.handleSubmit(handleExecute)}

@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import Picker from "../../../components/Picker";
+// import Picker from "../../../components/Picker";
 import Calendar from "../../../components/Calendar";
 import {
   dateValidation,
@@ -28,10 +28,10 @@ import {
 } from "../../../styles/general";
 import Icon from "../../../components/Icon";
 import { FormTextInput } from "../../../components/Inputs/TextInput";
-import {
-  CLASSIFICATION,
-  ENTRY_SEGMENT,
-} from "../../../components/Picker/options";
+// import {
+//   CLASSIFICATION,
+//   ENTRY_SEGMENT,
+// } from "../../../components/Picker/options";
 import { insertNewEntry, lastIdFromEntry } from "./querys";
 import { DataContext } from "../../../context/Data/dataContext";
 // import { Schema } from "../NewEntries/styles";
@@ -185,7 +185,7 @@ const FixedEntry = () => {
                   errors={errors.description}
                   maxLength={40}
                 />
-                <Picker
+                {/* <Picker
                   options={ENTRY_SEGMENT}
                   selectedValue={setSegment}
                   value={!segment ? "Segmento" : segment}
@@ -202,7 +202,7 @@ const FixedEntry = () => {
                   visibility={expenseAmountVisible}
                   setVisibility={setExpenseAmountVisible}
                   errors={errors.expense_amount}
-                />
+                /> */}
                 <FormTextInput
                   name="value"
                   placeholder="Valor"

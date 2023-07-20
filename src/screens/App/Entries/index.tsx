@@ -48,7 +48,7 @@ export const Entries = () => {
   const { filterMethods, clientFilters, serverFilters, hasFilter } =
     useFilters<ListEntries>();
 
-  const { handleGetBalance } = useGetBalance();
+  const {} = useGetBalance();
   const {
     isLoading,
     data: list,
@@ -59,7 +59,6 @@ export const Entries = () => {
 
   useEffect(() => {
     handleGetData();
-    handleGetBalance();
   }, [data.modality, data.month, data.year, isFocused]);
 
   const filtered = list.filter(clientFilters);

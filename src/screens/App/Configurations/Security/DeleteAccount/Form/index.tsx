@@ -13,6 +13,7 @@ import { IThemeProvider } from "../../../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { ChevronLeft } from "lucide-react-native";
 import { useHandleConfirmDeleteAccount } from "../hooks/useDeleteAccount";
+import { DeleteAccountDTO } from "../types";
 
 export const DeleteAccountForm = () => {
   const { goBack } = useNavigation();

@@ -1,30 +1,25 @@
-import firebase from "../../../../../services/firebase";
+import {
+  EmailAuthProvider,
+  deleteUser,
+  reauthenticateWithCredential,
+} from "firebase/auth";
+import { db } from "../../../../../services/firebase";
 import { currentUser } from "../../../../../utils/query.helper";
+import { collection, deleteDoc, doc } from "firebase/firestore";
 
-async function _deleteAccount(password: string) {
+export async function deleteAccount(password: string) {
   const user = await currentUser();
-
   if (!user) return Promise.reject(false);
-  const credential = firebase.auth.EmailAuthProvider.credential(
-    user?.email,
-    password
+  const credential = EmailAuthProvider.credential(user?.email, password);
+
+  const collectionsToDelete = ["assets", "balance", "entry", "users", "alerts"];
+  const deletePromises = collectionsToDelete.map((collectionName) =>
+    deleteDoc(doc(collection(db, collectionName), user.uid))
   );
 
-  await firebase.firestore().collection("assets").doc(user.uid).delete();
-  await firebase.firestore().collection("balance").doc(user.uid).delete();
-  await firebase.firestore().collection("entry").doc(user.uid).delete();
-  await firebase.firestore().collection("users").doc(user.uid).delete();
-  await firebase.firestore().collection("alerts").doc(user.uid).delete();
-  await user?.reauthenticateWithCredential(credential);
-  user?.delete();
-  return Promise.resolve("Success");
-}
+  await Promise.all(deletePromises);
 
-export function deleteAccount(password: string) {
-  try {
-    return _deleteAccount(password);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro");
-  }
+  await reauthenticateWithCredential(user, credential);
+  await deleteUser(user);
+  return Promise.resolve("Success");
 }

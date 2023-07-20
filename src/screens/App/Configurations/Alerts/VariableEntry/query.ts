@@ -1,24 +1,16 @@
-import firebase from "firebase";
 import { currentUser } from "../../../../../utils/query.helper";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../../../../../services/firebase";
 
-async function _registerAlert(value: number) {
+export async function registerAlert(value: number) {
   const user = await currentUser();
-
   if (!user) return Promise.reject();
 
-  await firebase.firestore().collection("alerts").doc(user.uid).set(
+  await setDoc(
+    doc(collection(db, "alerts"), user.uid),
     {
       variableExpense: value,
     },
     { merge: true }
   );
-}
-
-export function registerAlert(value: number) {
-  try {
-    return _registerAlert(value);
-  } catch (error) {
-    console.log(error);
-    throw new Error("Erro ao definir alerta");
-  }
 }

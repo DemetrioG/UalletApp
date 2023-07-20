@@ -1,7 +1,8 @@
-import firebase from "../../services/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { currentUser } from "../../utils/query.helper";
+import { db } from "../../services/firebase";
 
-async function _getData() {
+export async function getData() {
   const user = await currentUser();
 
   if (!user) return Promise.reject(false);
@@ -12,29 +13,23 @@ async function _getData() {
     email: "",
   };
 
-  return await firebase
-    .firestore()
-    .collection("users")
-    .doc(user.uid)
-    .get()
-    .then((v) => {
-      const data = {
-        name: v.data()?.name.split(" ", 1).toString(),
-        completeName: v.data()?.name,
-        email: v.data()?.email,
-      };
-      return data;
-    })
-    .catch(() => {
-      return defaultData;
-    });
-}
+  const userRef = doc(db, "users", user.uid);
 
-export function getData() {
   try {
-    return _getData();
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+      const data = {
+        name: docSnap.data()?.name.split(" ", 1).toString(),
+        completeName: docSnap.data()?.name,
+        email: docSnap.data()?.email,
+      };
+
+      return data;
+    } else {
+      return defaultData;
+    }
   } catch (error) {
-    console.log(error);
-    throw new Error("Erro");
+    return defaultData;
   }
 }

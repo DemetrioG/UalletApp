@@ -36,7 +36,6 @@ import {
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -44,14 +43,10 @@ export const Home = () => {
 
   const menu = useDisclose();
   const consolidation = useDisclose();
-  const { handleGetBalance } = useGetBalance();
   const { handleGetLastEntries, lastEntries } = useGetLastEntries();
+  const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
-
-  useEffect(() => {
-    handleGetBalance();
-  }, [data.modality, data.month, data.year, consolidation.isOpen]);
 
   useEffect(() => {
     handleGetLastEntries();

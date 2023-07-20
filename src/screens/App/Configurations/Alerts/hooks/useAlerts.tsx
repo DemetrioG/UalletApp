@@ -2,14 +2,14 @@ import { useState } from "react";
 import { usePromise } from "../../../../../hooks/usePromise";
 import { deleteData, getData } from "../query";
 import { AlertDataProps } from "../types";
-import firebase from "../../../../../services/firebase";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
+import { DocumentData } from "firebase/firestore";
 
 export const useGetData = () => {
   const { isLoading, handleExecute } = usePromise(getData);
 
   const [data, setData] = useState<
-    AlertDataProps | firebase.firestore.DocumentData
+    AlertDataProps | DocumentData
   >();
 
   async function execute() {

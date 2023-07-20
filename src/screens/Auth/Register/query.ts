@@ -1,22 +1,22 @@
-import firebase from "../../../services/firebase";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { auth, db } from "../../../services/firebase";
 import { RegisterDTO } from "./types";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
-async function _registerUser(props: RegisterDTO) {
+export async function registerUser(props: RegisterDTO) {
   const { name, email, password, confirm } = props;
 
   if (password !== confirm) {
     return Promise.reject("As senhas informadas são diferentes");
   }
 
-  await firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then((v) => {
-      firebase.firestore().collection("users").doc(v.user?.uid).set({
+      setDoc(doc(collection(db, "users"), v.user?.uid), {
         name: name,
         email: email,
         typeUser: "default",
-        dateRegister: firebase.firestore.FieldValue.serverTimestamp(),
+        dateRegister: serverTimestamp(),
         schema: "free",
       });
       return Promise.resolve();
@@ -33,12 +33,4 @@ async function _registerUser(props: RegisterDTO) {
           return Promise.reject("Erro ao cadastrar usuário");
       }
     });
-}
-
-export function registerUser(props: RegisterDTO) {
-  try {
-    return _registerUser(props);
-  } catch (error) {
-    throw new Error(error as string);
-  }
 }

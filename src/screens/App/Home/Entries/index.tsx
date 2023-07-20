@@ -8,10 +8,13 @@ import When from "../../../../components/When";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CardDownIcon, CardUpIcon } from "../../../../components/CustomIcons";
+import { EmptyChart } from "../../../../components/EmptyChart";
 
 export const Entries = ({ lastEntries }: { lastEntries: IEntries[] }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
+  const isEmpty = !Boolean(lastEntries.length);
+
   return (
     <VStack backgroundColor={theme?.secondary} borderRadius="30px" p={4} pt={5}>
       <HStack justifyContent="space-between" alignItems="center" mb={2}>
@@ -23,9 +26,16 @@ export const Entries = ({ lastEntries }: { lastEntries: IEntries[] }) => {
         </Pressable>
       </HStack>
       <VStack>
-        {lastEntries.map((item, index) => {
-          return <Item item={item} key={index} index={index} />;
-        })}
+        <When is={isEmpty}>
+          <EmptyChart actionText="Realize seu primeiro lançamento" />
+        </When>
+        <When is={!isEmpty}>
+          <>
+            {lastEntries.map((item, index) => {
+              return <Item item={item} key={index} index={index} />;
+            })}
+          </>
+        </When>
       </VStack>
     </VStack>
   );
