@@ -11,9 +11,9 @@ export async function getData(context: IData, defaultData: ChartProps[]) {
   if (!user) return Promise.reject(false);
 
   if (year !== 0) {
-    const initialDate = new Date(`${month}/01/${year} 00:00:00`);
+    const initialDate = new Date(`${year}-${month}-01T00:00:00`);
     const finalDate = new Date(
-      `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
+      `${year}-${month}-${getFinalDateMonth(month, year)}T23:59:59`
     );
 
     let needs = 0;
