@@ -25,9 +25,9 @@ export const getLastEntry = async ({
   if (!user) return Promise.reject(false);
 
   // Pega o mês de referência do App para realizar a busca dos registros
-  const initialDate = new Date(`${month}/01/${year} 00:00:00`);
+  const initialDate = new Date(`${year}-${month}-01T00:00:00`);
   const finalDate = new Date(
-    `${month}/${getFinalDateMonth(month, year)}/${year} 23:59:59`
+    `${year}-${month}-${getFinalDateMonth(month, year)}T23:59:59`
   );
 
   await sleep(100);
