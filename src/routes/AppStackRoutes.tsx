@@ -17,6 +17,8 @@ import { FormEntries } from "../screens/App/Entries/Form";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HeaderSummary } from "../components/Header";
 import { View } from "native-base";
+import { IThemeProvider } from "../styles/baseTheme";
+import { useTheme } from "styled-components";
 
 const {
   Navigator: StackNavigator,
@@ -45,8 +47,9 @@ export const AppStackRoutes = () => {
         <StackGroup
           screenOptions={{
             header(props) {
+              const { theme }: IThemeProvider = useTheme();
               return (
-                <View mb={3}>
+                <View pb={3} backgroundColor={theme?.primary}>
                   <HeaderSummary />
                 </View>
               );

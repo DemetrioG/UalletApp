@@ -19,7 +19,12 @@ export const Index = () => {
     <BackgroundContainerCenter>
       <Image
         source={Cards}
-        style={{ width: "90%", height: "70%", right: -20 }}
+        style={{
+          width: "100%",
+          height: "70%",
+          right: -20,
+          resizeMode: "contain",
+        }}
       />
       <VStack width="90%" mt={5} mb={5}>
         <Swipeable

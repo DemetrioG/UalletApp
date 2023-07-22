@@ -115,6 +115,15 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           },
         },
       },
+      Switch: {
+        baseStyle: {
+          trackColor: {
+            true: theme?.blue,
+            false: theme?.blue,
+          },
+          offTrackColor: theme?.secondary,
+        },
+      },
       Skeleton: {
         defaultProps: {
           rounded: "md",

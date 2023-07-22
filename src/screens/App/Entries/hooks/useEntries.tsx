@@ -26,6 +26,8 @@ const defaultValues: NewEntrieDTO = {
   modality: null,
   type: null,
   value: null,
+  recurrent: false,
+  quantity: null,
 };
 
 const schema = yup
@@ -41,11 +43,13 @@ const schema = yup
     modality: yup.string().required("Informe a modalidade"),
     segment: yup.string().nullable(),
     value: yup.string().required("Informe o valor"),
+    recurrent: yup.boolean(),
+    quantity: yup.string().nullable(),
   })
   .required();
 
 const formatFormData = (formData: ListEntries) => {
-  const formatted: NewEntrieDTO = {
+  const formatted = {
     date: convertDateFromDatabase(formData.date),
     description: formData.description,
     modality: formData.modality,

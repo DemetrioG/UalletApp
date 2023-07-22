@@ -27,6 +27,8 @@ export interface NewEntrieDTO {
   segment?: string | null;
   type: TEntrieType | null;
   value: string | null;
+  recurrent: boolean;
+  quantity: number | null;
 }
 
 export interface ValidatedNewEntrieDTO {
