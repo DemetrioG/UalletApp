@@ -11,7 +11,6 @@ import { InformacoesPessoaisScreen } from "../screens/App/Configurations/DadosCa
 import { SecurityScreen } from "../screens/App/Configurations/Security";
 import { DeleteAccountScreen } from "../screens/App/Configurations/Security/DeleteAccount";
 import { Entries } from "../screens/App/Entries";
-import FixedEntry from "../screens/App/FixedEntry";
 import { Home } from "../screens/App/Home";
 import { FormEntries } from "../screens/App/Entries/Form";
 import { ConfirmDialog } from "../components/ConfirmDialog";
@@ -59,10 +58,6 @@ export const AppStackRoutes = () => {
           {/* Lançamentos */}
           <StackScreen name="Lancamentos" component={Entries} />
           <StackScreen name="Lancamentos/Form" component={FormEntries} />
-          <StackScreen
-            name="Lancamentos/LancamentoFixo"
-            component={FixedEntry}
-          />
           {/* !Lançamentos */}
 
           {/* Configuracoes */}
