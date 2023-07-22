@@ -73,11 +73,12 @@ export const FormEntriesTab = ({
               errors={formMethods.formState.errors.segment}
             />
           </When>
-          <When is={!!recurrent}>
+          <When is={!!recurrent && !activeTab.isEditing}>
             <FormSelectInputMonthQuantity
               variant="filled"
-              control={formMethods.control}
               name="quantity"
+              control={formMethods.control}
+              errors={formMethods.formState.errors.quantity}
             />
           </When>
           <FormTextInput
@@ -90,15 +91,17 @@ export const FormEntriesTab = ({
             helperText="Informe todos os campos"
             isRequired
           />
-          <HStack w="full" alignItems="center" space={2}>
-            <Text>Lançamento recorrente</Text>
-            <FormSwitchInput control={formMethods.control} name="recurrent" />
-            <Pressable>
-              <Tooltip label="O lançamento será replicado pela quantidade de meses escolhida">
-                <InfoIcon color={theme?.text} />
-              </Tooltip>
-            </Pressable>
-          </HStack>
+          <When is={!activeTab.isEditing}>
+            <HStack w="full" alignItems="center" space={2}>
+              <Text>Lançamento recorrente</Text>
+              <FormSwitchInput control={formMethods.control} name="recurrent" />
+              <Pressable>
+                <Tooltip label="O lançamento será replicado pela quantidade de meses escolhida">
+                  <InfoIcon color={theme?.text} />
+                </Tooltip>
+              </Pressable>
+            </HStack>
+          </When>
         </Center>
       </ScrollView>
     </TouchableWithoutFeedback>

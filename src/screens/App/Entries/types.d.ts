@@ -39,4 +39,6 @@ export interface ValidatedNewEntrieDTO {
   segment?: string | null;
   type: TEntrieType;
   value: string;
+  recurrent: boolean;
+  quantity: number | null;
 }

@@ -33,8 +33,18 @@ export const FormEntries = ({
     useHandleConfirmDeleteEntrie();
 
   const routes: RouteProps[] = [
-    { key: "Receita", title: "Receita", selected: params?.type === "Receita" },
-    { key: "Despesa", title: "Despesa", selected: params?.type === "Despesa" },
+    {
+      key: "Receita",
+      title: "Receita",
+      selected: params?.type === "Receita",
+      isEditing: !!id,
+    },
+    {
+      key: "Despesa",
+      title: "Despesa",
+      selected: params?.type === "Despesa",
+      isEditing: !!id,
+    },
   ];
 
   return (

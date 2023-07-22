@@ -4,6 +4,7 @@ export interface RouteProps {
   key: string;
   title: string;
   selected?: boolean;
+  isEditing: boolean;
 }
 
 export interface TabViewProps {

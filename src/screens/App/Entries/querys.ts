@@ -13,6 +13,7 @@ import { db } from "../../../services/firebase";
 import {
   convertDateFromDatabase,
   convertDateToDatabase,
+  futureDate,
   getFinalDateMonth,
 } from "../../../utils/date.helper";
 import { realToNumber } from "../../../utils/number.helper";
@@ -30,6 +31,23 @@ type TEntriesList = {
   modality: string;
   filters?: ServerFilterFields;
 };
+
+export async function returnLastId(modality: "Real" | "Projetado") {
+  const user = await currentUser();
+  if (!user) return Promise.reject();
+
+  let id = 1;
+  const collectionRef = collection(db, "entry", user.uid, modality as string);
+  const querySnapshot = await getDocs(
+    query(collectionRef, orderBy("id", "desc"), limit(1))
+  );
+
+  querySnapshot.forEach((result) => {
+    id += result.data().id;
+  });
+
+  return id;
+}
 
 export const getEntries = async ({
   month,
@@ -80,65 +98,58 @@ export const getEntries = async ({
 };
 
 export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
-  const { description, date, value, modality, segment, type } = props;
+  const { description, date, value, modality, segment, type, quantity } = props;
   const user = await currentUser();
   if (!user) return Promise.reject();
 
-  let id = 1;
+  const repeatQuantity = quantity ?? 1;
 
-  /**
-   * Busca o último ID de lançamentos cadastrados no banco para setar o próximo ID
-   */
-  const collectionRef = collection(db, "entry", user.uid, modality as string);
-  const querySnapshot = await getDocs(
-    query(collectionRef, orderBy("id", "desc"), limit(1))
-  );
-
-  querySnapshot.forEach((result) => {
-    id += result.data().id;
-  });
-
-  const items: ListEntries & {
-    consolidated?: { consolidated: boolean; wasActionShown: boolean };
-  } = {
-    id: id,
-    date: convertDateToDatabase(date),
-    type: type,
-    description: description,
-    modality: modality!,
-    value: realToNumber(value),
-  };
-
-  if (modality === "Projetado") {
-    items["consolidated"] = {
-      consolidated: false,
-      wasActionShown: false,
+  for (let index = 0; index < repeatQuantity; index++) {
+    const id = await returnLastId(modality);
+    const registerDate = index > 0 ? futureDate(date, index) : date;
+ 
+    const items: ListEntries & {
+      consolidated?: { consolidated: boolean; wasActionShown: boolean };
+    } = {
+      id: id,
+      date: convertDateToDatabase(registerDate),
+      type: type,
+      description: description,
+      modality: modality!,
+      value: realToNumber(value),
     };
+
+    if (modality === "Projetado") {
+      items["consolidated"] = {
+        consolidated: false,
+        wasActionShown: false,
+      };
+    }
+
+    if (segment) {
+      items["segment"] = segment;
+    }
+
+    await createCollection("entry");
+
+    /**
+     *  Registra o novo lançamento no banco
+     */
+    await setDoc(
+      doc(collection(db, "entry", user.uid, modality as string), id.toString()),
+      items
+    );
+
+    await createCollection("balance");
+
+    const docRef = `${Number(registerDate.slice(3, 5)).toString()}_${registerDate.slice(6, 10)}`;
+    await updateCurrentBalance({
+      modality: modality,
+      sumBalance: type === "Receita",
+      docDate: docRef,
+      value: realToNumber(value),
+    });
   }
-
-  if (segment) {
-    items["segment"] = segment;
-  }
-
-  await createCollection("entry");
-
-  /**
-   *  Registra o novo lançamento no banco
-   */
-  await setDoc(
-    doc(collection(db, "entry", user.uid, modality as string), id.toString()),
-    items
-  );
-
-  await createCollection("balance");
-
-  const docRef = `${Number(date.slice(3, 5)).toString()}_${date.slice(6, 10)}`;
-  await updateCurrentBalance({
-    modality: modality,
-    sumBalance: type === "Receita",
-    docDate: docRef,
-    value: realToNumber(value),
-  });
 
   return Promise.resolve();
 }

@@ -44,7 +44,11 @@ const schema = yup
     segment: yup.string().nullable(),
     value: yup.string().required("Informe o valor"),
     recurrent: yup.boolean(),
-    quantity: yup.string().nullable(),
+    quantity: yup.string().when("recurrent", {
+      is: true,
+      then: yup.string().nullable().required("Informe os meses"),
+      otherwise: yup.string().nullable(),
+    }),
   })
   .required();
 
