@@ -22,7 +22,7 @@ export const CompleteForm = () => {
         <VStack space={5}>
           <Progress
             backgroundColor={theme?.secondary}
-            _filledTrack={{ bg: theme?.blue }}
+            _filledTrack={{ bg: "#6499E3" }}
             value={70}
             mt={5}
           />

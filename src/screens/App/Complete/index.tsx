@@ -7,7 +7,8 @@ import { ChevronLeft } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import notifications from "../../../../assets/images/notifications.png";
+import notificationsDark from "../../../../assets/images/notificationsDark.png";
+import notificationsLight from "../../../../assets/images/notificationsLight.png";
 
 export const Complete = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -16,9 +17,9 @@ export const Complete = () => {
     <BackgroundContainer p="20px">
       <BackgroundEffect />
       <Image
-        source={notifications}
+        source={theme?.isOnDarkTheme ? notificationsDark : notificationsLight}
         position="absolute"
-        bottom={100}
+        bottom={2}
         right={0}
         w="70%"
         resizeMode="contain"
@@ -42,7 +43,9 @@ export const Complete = () => {
           <Text fontSize="36" fontWeight="700" color="white">
             seu cadastro
           </Text>
-          <Text mt={2}>Queremos te conhecer um {"\n"}pouco mais!</Text>
+          <Text mt={2} color="white">
+            Queremos te conhecer um {"\n"}pouco mais!
+          </Text>
         </VStack>
       </VStack>
       <VStack flex={1} justifyContent="flex-end">

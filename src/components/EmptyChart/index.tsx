@@ -9,7 +9,9 @@ export const EmptyChart = ({ actionText }: { actionText: string }) => {
 
   return (
     <Button onPress={() => navigate("Lancamentos")} width="100%" mt={5}>
-      <Text fontWeight={600}>{actionText}</Text>
+      <Text fontWeight={600} color="white">
+        {actionText}
+      </Text>
     </Button>
   );
 };
