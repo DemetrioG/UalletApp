@@ -1,172 +1,57 @@
-import * as React from "react";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Button, Text } from "native-base";
-import Toast from "react-native-toast-message";
+import React from "react";
+import { Button, Image, Pressable, Text, VStack } from "native-base";
+import { BackgroundContainer, BackgroundEffect } from "../../../styles/general";
+import { IThemeProvider } from "../../../styles/baseTheme";
+import { useTheme } from "styled-components";
+import { ChevronLeft } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
-// import Picker from "../../../components/Picker";
-import { FormTextInput } from "../../../components/Inputs/TextInput";
-import { UserContext } from "../../../context/User/userContext";
-import { dateValidation } from "../../../utils/date.helper";
-import {
-  BackgroundContainer,
-  ButtonText,
-  ContainerCenter,
-  FormContainer,
-  // HeaderTitleContainer,
-  // LogoHeader,
-  StyledKeyboardAvoidingView,
-} from "../../../styles/general";
-// import { GENDER, PROFILE } from "../../../components/Picker/options";
-import { updateUserData } from "./querys";
+import notifications from "../../../../assets/images/notifications.png";
 
-interface IForm {
-  birthdate: string;
-  gender: string;
-  profile: string;
-  income: string;
-}
-
-const Complete = () => {
-  const { user } = React.useContext(UserContext);
+export const Complete = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-
-  const [gender, setGender] = React.useState(null);
-  const [profile, setProfile] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-
-  const [genderVisible, setGenderVisible] = React.useState(false);
-  const [profileVisible, setProfileVisible] = React.useState(false);
-
-  const schema = yup
-    .object({
-      birthdate: yup
-        .string()
-        .required()
-        .min(10)
-        .test("date", "Verifique a data informada", (value) =>
-          dateValidation(value!)
-        ),
-      gender: yup.string().test("gender", "Informe seu sexo", () => gender!),
-      profile: yup
-        .string()
-        .test("profile", "Infome seu perfil", () => profile!),
-      income: yup
-        .string()
-        .required()
-        .test(
-          "income",
-          "Informe uma renda média",
-          (value) => value !== "R$0,00"
-        ),
-    })
-    .required();
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    resolver: yupResolver(schema),
-  });
-
-  function registerData({ birthdate, income }: IForm) {
-    const userData = {
-      birthDate: birthdate,
-      gender: gender,
-      income: income,
-      profile: profile,
-    };
-
-    setLoading(true);
-    updateUserData(userData)
-      .then(() => {
-        navigate("Home");
-        Toast.show({
-          type: "success",
-          text1: "Dados cadastrados com sucesso",
-        });
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Erro ao cadastrar as informações",
-        });
-      })
-      .finally(() => setLoading(false));
-  }
-
+  const { theme }: IThemeProvider = useTheme();
   return (
-    <StyledKeyboardAvoidingView>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <BackgroundContainer>
-          {/* <LogoHeader>
-            <Text fontSize={"2xl"} fontWeight={800}>
-              Complete seu cadastro
+    <BackgroundContainer p="20px">
+      <BackgroundEffect />
+      <Image
+        source={notifications}
+        position="absolute"
+        bottom={100}
+        right={0}
+        w="70%"
+        resizeMode="contain"
+      />
+      <VStack space={5}>
+        <Pressable onPress={() => navigate("Home")}>
+          <ChevronLeft color="white" />
+        </Pressable>
+        <VStack>
+          <VStack
+            paddingY={0.5}
+            paddingX={2}
+            borderRadius={15}
+            backgroundColor={theme?.blue}
+            alignSelf="flex-start"
+          >
+            <Text fontSize="36" fontWeight="700" color="white">
+              Complete
             </Text>
-          </LogoHeader>
-          <HeaderTitleContainer>
-            <Text>
-              Seus dados serão utilizados para melhorar{"\n"}sua experiência
-              dentro do app.
-            </Text>
-          </HeaderTitleContainer> */}
-          <ContainerCenter>
-            <FormContainer>
-              {/* <Picker
-                options={GENDER}
-                selectedValue={setGender}
-                value={!gender ? "Sexo" : gender}
-                type="Sexo"
-                visibility={genderVisible}
-                setVisibility={setGenderVisible}
-                errors={errors.gender}
-              />
-              <Picker
-                options={PROFILE}
-                selectedValue={setProfile}
-                value={!profile ? "Perfil" : profile}
-                type="Perfil"
-                visibility={profileVisible}
-                setVisibility={setProfileVisible}
-                errors={errors.profile}
-              /> */}
-              <FormTextInput
-                placeholder="Data de nascimento"
-                name="birthdate"
-                control={control}
-                maxLength={10}
-                masked="datetime"
-                errors={errors.birthdate}
-                helperText="Verifique a data informada"
-              />
-              <FormTextInput
-                placeholder="Renda média"
-                name="income"
-                control={control}
-                errors={errors.income}
-                masked="money"
-                helperText={
-                  errors.income?.message === "Informe uma renda média"
-                    ? errors.income.message
-                    : "Informe todos os campos"
-                }
-              />
-              <Button isLoading={loading} onPress={handleSubmit(registerData)}>
-                <Text fontWeight={800} color="white">
-                  Confirmar
-                </Text>
-              </Button>
-            </FormContainer>
-          </ContainerCenter>
-        </BackgroundContainer>
-      </TouchableWithoutFeedback>
-    </StyledKeyboardAvoidingView>
+          </VStack>
+          <Text fontSize="36" fontWeight="700" color="white">
+            seu cadastro
+          </Text>
+          <Text mt={2}>Queremos te conhecer um {"\n"}pouco mais!</Text>
+        </VStack>
+      </VStack>
+      <VStack flex={1} justifyContent="flex-end">
+        <Button onPress={() => navigate("Home/Complete/Form")}>
+          <Text fontWeight="bold" color="white">
+            Próximo
+          </Text>
+        </Button>
+      </VStack>
+    </BackgroundContainer>
   );
 };
-
-export default Complete;

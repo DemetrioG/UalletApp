@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-import Complete from "../screens/App/Complete";
+import { Complete } from "../screens/App/Complete";
 import { ConfiguracoesScreen } from "../screens/App/Configurations";
 import { AlertsScreen } from "../screens/App/Configurations/Alerts";
 import { VariableEntryScreen } from "../screens/App/Configurations/Alerts/VariableEntry";
@@ -18,6 +18,7 @@ import { HeaderSummary } from "../components/Header";
 import { View } from "native-base";
 import { IThemeProvider } from "../styles/baseTheme";
 import { useTheme } from "styled-components";
+import { CompleteForm } from "../screens/App/Complete/CompleteForm";
 
 const {
   Navigator: StackNavigator,
@@ -39,6 +40,11 @@ export const AppStackRoutes = () => {
         <StackScreen
           name="Home/Complete"
           component={Complete}
+          options={{ headerShown: false }}
+        />
+        <StackScreen
+          name="Home/Complete/Form"
+          component={CompleteForm}
           options={{ headerShown: false }}
         />
         {/* !Home */}

@@ -1,4 +1,3 @@
-import * as React from "react";
 import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Button, Center, Flex, Text } from "native-base";
 import NativeSlider from "@react-native-community/slider";
@@ -6,7 +5,6 @@ import styled from "styled-components";
 import colors from "./colors";
 import metrics from "./metrics";
 import fonts from "./fonts";
-import { IPHONE_BOTTOM_TAB } from "../utils/device.helper";
 import { TEntrieType } from "../types/types";
 
 export const BackgroundContainerCenter = styled(Center)`
@@ -18,10 +16,6 @@ export const BackgroundContainer = styled(Flex)`
   flex: 1;
   background-color: ${({ theme: { theme } }) => theme.primary};
   overflow: hidden;
-`;
-
-export const ContainerCenter = styled(Center)`
-  flex: 1;
 `;
 
 export const ModalContainer = styled(Center)`
@@ -36,20 +30,6 @@ export const ModalView = styled(View)<{ center?: boolean }>`
   align-items: ${({ center }) => (center ? "center" : "null")};
   border-radius: ${metrics.baseRadius}px;
   background-color: ${({ theme: { theme } }) => theme.primary};
-`;
-
-export const ViewTab = styled(View)`
-  flex: 1;
-  padding: ${metrics.basePadding * 1.5}px;
-  padding-bottom: 0px;
-  margin-bottom: ${IPHONE_BOTTOM_TAB ? 100 : 75}px;
-  border-radius: ${metrics.baseRadius}px;
-  background-color: ${({ theme: { theme } }) => theme.secondary};
-  min-height: 490px;
-`;
-
-export const FormContainer = styled(View)<{ insideApp?: boolean }>`
-  padding: 0px ${({ insideApp }) => (!insideApp ? 50 : 35)}px;
 `;
 
 export const ButtonIcon = styled(Button).attrs<{ icon: JSX.Element }>(
