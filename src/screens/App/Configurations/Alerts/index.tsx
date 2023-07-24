@@ -8,10 +8,11 @@ import { IThemeProvider } from "../../../../styles/baseTheme";
 import { ChevronLeft, Edit3, PlusCircle, Trash } from "lucide-react-native";
 import When from "../../../../components/When";
 import { useDelete, useGetData } from "./hooks/useAlerts";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack/lib/typescript/src/types";
 
 export const AlertsScreen = () => {
   const { theme }: IThemeProvider = useTheme();
-  const { goBack, navigate } = useNavigation();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const isFocused = useIsFocused();
 
   const { data, handleGetData } = useGetData();
@@ -27,10 +28,6 @@ export const AlertsScreen = () => {
       },
     },
   ];
-
-  function goTo(url: string, params?: any) {
-    navigate(url as never, params as never);
-  }
 
   useEffect(() => {
     isFocused && handleGetData();
@@ -54,7 +51,7 @@ export const AlertsScreen = () => {
         {actions.map((action, index) => (
           <VStack key={index}>
             <When is={!action.data.value}>
-              <Pressable onPress={() => goTo(action.url)}>
+              <Pressable onPress={() => navigate(action.url)}>
                 <VStack
                   borderBottomWidth={1}
                   borderColor={theme?.primary}
@@ -73,7 +70,7 @@ export const AlertsScreen = () => {
                   <Text>{action.label}</Text>
                   <HStack space={4}>
                     <Pressable
-                      onPress={() => goTo(action.url, action.data.value)}
+                      onPress={() => navigate(action.url, action.data.value)}
                     >
                       <Edit3 color={theme?.text} />
                     </Pressable>

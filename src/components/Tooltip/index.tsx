@@ -12,7 +12,7 @@ const Tooltip = ({
   const { isOpen, onToggle } = useDisclose();
 
   return (
-    <NativeTooltip label={label} isOpen={isOpen} maxW="85%">
+    <NativeTooltip label={label} isOpen={isOpen} maxW="330px">
       <TouchableOpacity onPress={onToggle}>{children}</TouchableOpacity>
     </NativeTooltip>
   );

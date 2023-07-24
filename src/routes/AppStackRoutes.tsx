@@ -19,6 +19,9 @@ import { View } from "native-base";
 import { IThemeProvider } from "../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { CompleteForm } from "../screens/App/Complete/CompleteForm";
+import { Records } from "../screens/App/Configurations/Records";
+import { Segment } from "../screens/App/Configurations/Records/Segment";
+import { SegmentForm } from "../screens/App/Configurations/Records/Segment/Form";
 
 const {
   Navigator: StackNavigator,
@@ -79,6 +82,15 @@ export const AppStackRoutes = () => {
           <StackScreen
             name="Configuracoes/DadosCadastrais/AlterarSenha"
             component={AlterarSenhaScreen}
+          />
+          <StackScreen name="Configuracoes/Records" component={Records} />
+          <StackScreen
+            name="Configuracoes/Records/Segment"
+            component={Segment}
+          />
+          <StackScreen
+            name="Configuracoes/Records/Segment/Form"
+            component={SegmentForm}
           />
           <StackScreen
             name="Configuracoes/Seguranca"
