@@ -6,8 +6,8 @@ import { IThemeProvider } from "../../../styles/baseTheme";
 import {
   ChevronLeft,
   ChevronRight,
-  CopyPlus,
   Flag,
+  PlusCircle,
   Shield,
   User,
 } from "lucide-react-native";
@@ -66,7 +66,7 @@ const actions = [
   {
     label: "Cadastros",
     url: "Configuracoes/Records",
-    Icon: CopyPlus,
+    Icon: PlusCircle,
     color: "blue",
   },
   {

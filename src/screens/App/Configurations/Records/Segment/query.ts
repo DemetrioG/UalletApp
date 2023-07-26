@@ -32,7 +32,7 @@ export async function updateSegment(formData: ValidatedSegmentDTO, id: string) {
   if (!user) return Promise.reject();
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
-  return await updateDoc(segmentRef, formData as object);
+  return await updateDoc(segmentRef, { description: formData.description });
 }
 
 export async function deleteSegment(id: string) {

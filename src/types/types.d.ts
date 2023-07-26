@@ -17,6 +17,11 @@ export interface ReturnUseDisclosure {
   onToggle: () => void;
 }
 
+export interface IOption {
+  label: string;
+  value: string;
+}
+
 export interface IEntries {
   id: number;
   classification: string | null;

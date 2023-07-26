@@ -41,9 +41,17 @@ export const SelectInput = (props: SelectInputProps) => {
           props.isRequired ? `${props.placeholder} * ` : props.placeholder
         }
       >
-        {options.map((option, index) => (
-          <Select.Item label={option.label} value={option.value} key={index} />
-        ))}
+        {options.length ? (
+          options.map((option, index) => (
+            <Select.Item
+              label={option.label}
+              value={option.value}
+              key={index}
+            />
+          ))
+        ) : (
+          <Select.Item label="Sem opções cadastradas" value="" isDisabled />
+        )}
       </Select>
       <When is={!!helperText}>
         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>

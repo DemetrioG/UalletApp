@@ -9,7 +9,6 @@ import { TEntrieType } from "../../../../../types/types";
 import { FormTextInputCalendar } from "../../../../../components/Inputs/TextInputCalendar";
 import { NewEntrieDTO } from "../../types";
 import { FormSelectInputModality } from "../../../../../components/Inputs/SelectInputModality";
-import { FormSelectInputSegment } from "../../../../../components/Inputs/SelectInputSegment";
 import { RouteProps } from "../../../../../components/TabView/types";
 import Tooltip from "../../../../../components/Tooltip";
 import { IThemeProvider } from "../../../../../styles/baseTheme";
@@ -17,6 +16,7 @@ import { useTheme } from "styled-components";
 import { InfoIcon } from "lucide-react-native";
 import { FormSwitchInput } from "../../../../../components/Inputs/SwitchInput";
 import { FormSelectInputMonthQuantity } from "../../../../../components/Inputs/SelectInputMonthQuantity";
+import { FormFetchableSelectInputSegment } from "../../../../../components/Inputs/FetchableSelectInputSegment";
 
 export const FormEntriesTab = ({
   route,
@@ -66,7 +66,7 @@ export const FormEntriesTab = ({
             isRequired
           />
           <When is={route.key === "Despesa"}>
-            <FormSelectInputSegment
+            <FormFetchableSelectInputSegment
               name="segment"
               control={formMethods.control}
               variant="filled"

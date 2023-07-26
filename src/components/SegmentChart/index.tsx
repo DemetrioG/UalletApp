@@ -41,7 +41,7 @@ export const SegmentChart = ({
                           backgroundColor={theme?.colorPieChart[index]}
                         />
                         <Text fontSize="14px" fontWeight={700}>
-                          {value}%
+                          {value.toFixed(0)}%
                         </Text>
                         <Text fontSize="14px">{label}</Text>
                       </HStack>
