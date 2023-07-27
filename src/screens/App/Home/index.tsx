@@ -36,6 +36,7 @@ import {
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
+import { useGetPlanning } from "./Planning/hooks/usePlanning";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -47,6 +48,7 @@ export const Home = () => {
   const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
+  const {} = useGetPlanning();
 
   useEffect(() => {
     handleGetLastEntries();
