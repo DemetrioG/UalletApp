@@ -1,5 +1,5 @@
 import { DocumentData } from "firebase/firestore";
-import { ListEntries } from "../../screens/App/Entries/types";
+import { ListEntries } from "../../Entries/types";
 
 export type ItemListType = ListEntries & { checked?: boolean };
 

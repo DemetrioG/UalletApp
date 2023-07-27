@@ -18,6 +18,7 @@ import {
 } from "../../../../utils/query.helper";
 import { db } from "../../../../services/firebase";
 import { ItemListType } from "./types";
+import { ListEntries } from "../../Entries/types";
 
 export async function consolidateData(data: ItemListType[]) {
   const user = await currentUser();
@@ -53,15 +54,20 @@ export async function consolidateData(data: ItemListType[]) {
       );
 
       if (checked) {
-        await setDoc(doc(realCollectionRef, newId.toString()), {
+        const item: ListEntries = {
           id: newId,
           date: date,
           type: type,
           description: description,
           modality: "Real",
-          segment: segment,
           value: value,
-        });
+        };
+
+        if (segment) {
+          item["segment"] = segment;
+        }
+
+        await setDoc(doc(realCollectionRef, newId.toString()), item);
 
         const docRef = `${Number(
           convertDateFromDatabase(date).slice(3, 5)

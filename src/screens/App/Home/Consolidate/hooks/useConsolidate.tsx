@@ -20,25 +20,15 @@ export const useCreateConsolidate = (
   const { isLoading, handleExecute } = usePromise(consolidateData);
 
   async function execute(formData: ConsolidateDTO, list: ItemListType[]) {
-    const filteredData = Object.entries(formData).reduce(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {} as { [key: string]: boolean }
-    );
-
     const hasCheckedFiles = list
-      .filter((obj) => filteredData.hasOwnProperty(obj.id.toString()))
+      .filter((obj) => formData.hasOwnProperty(obj.id.toString()))
       .map((obj) => {
-        return { ...obj, checked: filteredData[obj.id.toString()] };
+        return { ...obj, checked: formData[obj.id.toString()] };
       });
 
     const data = [
       ...hasCheckedFiles,
-      ...list.filter((obj) => !filteredData.hasOwnProperty(obj.id.toString())),
+      ...list.filter((obj) => !formData.hasOwnProperty(obj.id.toString())),
     ];
 
     handleExecute(data)
