@@ -21,14 +21,3 @@ export interface IOption {
   label: string;
   value: string;
 }
-
-export interface IEntries {
-  id: number;
-  classification: string | null;
-  date: ITimestamp;
-  description: string;
-  modality: string;
-  segment: string | null;
-  type: TEntrieType;
-  value: number;
-}

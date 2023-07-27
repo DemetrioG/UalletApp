@@ -7,18 +7,20 @@ import {
   orderBy,
   limit,
   setDoc,
-  DocumentData,
 } from "firebase/firestore";
-import { ListEntries } from "../../screens/App/Entries/types";
-import { convertDateFromDatabase, getAtualDate } from "../../utils/date.helper";
-import { currentUser, updateCurrentBalance } from "../../utils/query.helper";
-import { db } from "../../services/firebase";
+import {
+  convertDateFromDatabase,
+  getAtualDate,
+} from "../../../../utils/date.helper";
+import {
+  currentUser,
+  updateCurrentBalance,
+} from "../../../../utils/query.helper";
+import { db } from "../../../../services/firebase";
+import { ItemListType } from "./types";
 
-type IConsolidate = Array<(ListEntries & { checked?: boolean }) | DocumentData>;
-
-export async function consolidateData(data: IConsolidate) {
+export async function consolidateData(data: ItemListType[]) {
   const user = await currentUser();
-
   if (!user) return Promise.reject(false);
 
   try {
@@ -82,7 +84,6 @@ export async function consolidateData(data: IConsolidate) {
 
 export async function getData() {
   const user = await currentUser();
-
   if (!user) return Promise.reject(false);
 
   const [, initialDate, finalDate] = getAtualDate();
@@ -99,7 +100,7 @@ export async function getData() {
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => doc.data());
 
-    return data as IConsolidate[];
+    return data as ItemListType[];
   } catch (error) {
     return Promise.reject("Erro ao buscar os dados");
   }

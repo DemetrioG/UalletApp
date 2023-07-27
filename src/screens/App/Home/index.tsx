@@ -21,7 +21,7 @@ import {
   Rocket,
 } from "lucide-react-native";
 
-import Consolidate from "../../../components/Consolidate";
+import Consolidate from "./Consolidate";
 import { Header } from "../../../components/Header";
 import { Entries } from "./Entries";
 import { Planning } from "./Planning";

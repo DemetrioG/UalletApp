@@ -124,6 +124,16 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           offTrackColor: theme?.secondary,
         },
       },
+      Checkbox: {
+        baseStyle: {
+          borderWidth: 1,
+          borderColor: theme.blue,
+          backgroundColor: theme.primary,
+          _checked: {
+            backgroundColor: theme.blue,
+          },
+        },
+      },
       Skeleton: {
         defaultProps: {
           rounded: "md",

@@ -1,7 +1,6 @@
 import { HStack, Pressable, Text, VStack } from "native-base";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../styles/baseTheme";
-import { IEntries } from "../../../../types/types";
 import { numberToReal } from "../../../../utils/number.helper";
 import { convertDateFromDatabase } from "../../../../utils/date.helper";
 import When from "../../../../components/When";
@@ -9,8 +8,9 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CardDownIcon, CardUpIcon } from "../../../../components/CustomIcons";
 import { EmptyChart } from "../../../../components/EmptyChart";
+import { ListEntries } from "../../Entries/types";
 
-export const Entries = ({ lastEntries }: { lastEntries: IEntries[] }) => {
+export const Entries = ({ lastEntries }: { lastEntries: ListEntries[] }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
   const isEmpty = !Boolean(lastEntries.length);
@@ -41,7 +41,7 @@ export const Entries = ({ lastEntries }: { lastEntries: IEntries[] }) => {
   );
 };
 
-const Item = ({ item, index }: { item: IEntries; index: number }) => {
+const Item = ({ item, index }: { item: ListEntries; index: number }) => {
   const { theme }: IThemeProvider = useTheme();
   return (
     <HStack
