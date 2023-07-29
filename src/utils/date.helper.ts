@@ -1,4 +1,13 @@
 import { Timestamp } from "firebase/firestore";
+import {
+  endOfDay,
+  endOfMonth,
+  startOfDay,
+  setHours,
+  subHours,
+  format,
+  fromUnixTime,
+} from "date-fns";
 
 export interface ITimestamp {
   nanoseconds: number;
@@ -10,41 +19,7 @@ export interface ITimestamp {
  * @returns Data no padrão DD/MM/YYYY
  */
 export function convertDate(date: Date) {
-  const newDate = date.toString();
-  let month = newDate.slice(4, 7);
-  const day = newDate.slice(8, 10);
-  const year = newDate.slice(11, 15);
-
-  const monthNumber = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  for (
-    let index: number | string = 0;
-    index < Object.keys(monthNumber).length;
-    index++
-  ) {
-    if (monthNumber[index] == month) {
-      index += 1;
-      index = index.toString();
-      index.length < 2 ? (month = `0${index}`) : (month = index);
-      break;
-    }
-  }
-  const finalDate = `${day}/${month}/${year}`;
-
-  return finalDate;
+  return format(date, "dd/MM/yyyy");
 }
 
 /**
@@ -53,43 +28,7 @@ export function convertDate(date: Date) {
  * @returns    Data no padrão DD/MM/YYY
  */
 export function convertDateFromDatabase({ seconds }: ITimestamp) {
-  const newDate = new Date(seconds * 1000).toString();
-
-  const day = newDate.slice(8, 10);
-  let month = newDate.slice(4, 7);
-  const year = newDate.slice(11, 15);
-
-  const monthNumber = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  for (
-    let index: number | string = 0;
-    index < Object.keys(monthNumber).length;
-    index++
-  ) {
-    if (monthNumber[index] == month) {
-      index += 1;
-      index = index.toString();
-      index.length < 2 ? (month = `0${index}`) : (month = index);
-      break;
-    }
-  }
-
-  const finalDate = `${day}/${month}/${year}`;
-
-  return finalDate;
+  return format(fromUnixTime(seconds), "dd/MM/yyyy");
 }
 
 /**
@@ -104,79 +43,6 @@ export function convertDateToDatabase(date: string) {
   const finalDate = new Date(`${year}-${month}-${day}T00:00:01`);
 
   return Timestamp.fromDate(finalDate);
-}
-
-/**
- * Conversão de mês entre número e string
- * @param value Mês de referência
- */
-export function dateMonthNumber(
-  type: "toNumber" | "toMonth",
-  value: number,
-  complete?: boolean
-) {
-  let month;
-  let data: number | string;
-  let refMonth = value;
-
-  if (refMonth == -1) {
-    refMonth = 11;
-  } else if (refMonth == 0) {
-    refMonth = 12;
-  }
-
-  switch (type) {
-    case "toNumber":
-      month = {
-        Jan: 1,
-        Fev: 2,
-        Mar: 3,
-        Abr: 4,
-        Mai: 5,
-        Jun: 6,
-        Jul: 7,
-        Ago: 8,
-        Set: 9,
-        Out: 10,
-        Nov: 11,
-        Dez: 12,
-      };
-      data = month[refMonth]!;
-      return data;
-
-    case "toMonth":
-      !complete
-        ? (month = {
-            1: "Jan",
-            2: "Fev",
-            3: "Mar",
-            4: "Abr",
-            5: "Mai",
-            6: "Jun",
-            7: "Jul",
-            8: "Ago",
-            9: "Set",
-            10: "Out",
-            11: "Nov",
-            12: "Dez",
-          })
-        : (month = {
-            1: "Janeiro",
-            2: "Fevereiro",
-            3: "Março",
-            4: "Abril",
-            5: "Maio",
-            6: "Junho",
-            7: "Julho",
-            8: "Agosto",
-            9: "Setembro",
-            10: "Outubro",
-            11: "Novembro",
-            12: "Dezembro",
-          });
-      data = month[refMonth.toString()]!;
-      return data;
-  }
 }
 
 /**
@@ -235,31 +101,16 @@ export function futureDate(date: string, index: number) {
  */
 export function getAtualDate() {
   const date = new Date();
-  const dateInfo = [];
-  const atualDate = `${date.getFullYear()}-${
-    date.getMonth() + 1
-  }-${date.getDate()}`;
-  const atualDateBR = `${date.getDate()}/${
-    date.getMonth() + 1
-  }/${date.getFullYear()}`;
-  const initialDate = atualDate + "T00:00:01";
-  const finalDate = atualDate + "T23:59:59";
-
-  dateInfo.push(
-    new Date(atualDate),
-    new Date(initialDate),
-    new Date(finalDate),
-    atualDateBR
-  );
-
-  return dateInfo;
+  const initialDate = setHours(startOfDay(date), -3);
+  const finalDate = subHours(endOfDay(date), 3);
+  return [initialDate, finalDate];
 }
 
-/**
- * Converte segundos para JS Date
- */
-export function secondsToDate(seconds: number) {
-  const date = new Date();
-  date.setSeconds(seconds);
-  return date;
+export function getMonthDate(month: number, year: number) {
+  const initialDate = new Date(year, month - 1, 1);
+  initialDate.setHours(0, 0, 0, 0);
+  const finalDate = endOfMonth(new Date(year, month - 1));
+  finalDate.setHours(23, 59, 59, 999);
+
+  return [initialDate, finalDate];
 }

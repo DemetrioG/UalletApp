@@ -92,7 +92,7 @@ export async function getData() {
   const user = await currentUser();
   if (!user) return Promise.reject(false);
 
-  const [, initialDate, finalDate] = getAtualDate();
+  const [initialDate, finalDate] = getAtualDate();
 
   const projetadoRef = collection(db, "entry", user.uid, "Projetado");
   const q = query(

@@ -1,6 +1,6 @@
 import { db } from "../../../../services/firebase";
 import { IData } from "../../../../context/Data/dataContext";
-import { getFinalDateMonth } from "../../../../utils/date.helper";
+import { getMonthDate } from "../../../../utils/date.helper";
 import { currentUser } from "../../../../utils/query.helper";
 import { ChartProps } from "../../../../components/SegmentChart/types";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -11,10 +11,7 @@ export async function getData(context: IData, defaultData: ChartProps[]) {
   if (!user) return Promise.reject(false);
 
   if (year !== 0) {
-    const initialDate = new Date(`${year}-${month}-01T00:00:00`);
-    const finalDate = new Date(
-      `${year}-${month}-${getFinalDateMonth(month, year)}T23:59:59`
-    );
+    const [initialDate, finalDate] = getMonthDate(month, year);
 
     let needs = 0;
     let invest = 0;

@@ -14,7 +14,7 @@ import {
   convertDateFromDatabase,
   convertDateToDatabase,
   futureDate,
-  getFinalDateMonth,
+  getMonthDate,
 } from "../../../utils/date.helper";
 import { realToNumber } from "../../../utils/number.helper";
 import {
@@ -58,10 +58,7 @@ export const getEntries = async ({
   const user = await currentUser();
   if (!user) return Promise.reject(null);
 
-  const initialDate = new Date(`${year}-${month}-01T00:00:00`);
-  const finalDate = new Date(
-    `${year}-${month}-${getFinalDateMonth(month, year)}T23:59:59`
-  );
+  const [initialDate, finalDate] = getMonthDate(month, year);
 
   let baseQuery = query(collection(db, "entry", user.uid, modality as string));
 
@@ -107,7 +104,7 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
   for (let index = 0; index < repeatQuantity; index++) {
     const id = await returnLastId(modality);
     const registerDate = index > 0 ? futureDate(date, index) : date;
- 
+
     const items: ListEntries & {
       consolidated?: { consolidated: boolean; wasActionShown: boolean };
     } = {
@@ -142,7 +139,9 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
 
     await createCollection("balance");
 
-    const docRef = `${Number(registerDate.slice(3, 5)).toString()}_${registerDate.slice(6, 10)}`;
+    const docRef = `${Number(
+      registerDate.slice(3, 5)
+    ).toString()}_${registerDate.slice(6, 10)}`;
     await updateCurrentBalance({
       modality: modality,
       sumBalance: type === "Receita",

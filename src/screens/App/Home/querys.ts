@@ -9,7 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../../services/firebase";
-import { getAtualDate, getFinalDateMonth } from "../../../utils/date.helper";
+import { getAtualDate, getMonthDate } from "../../../utils/date.helper";
 import { currentUser, sleep } from "../../../utils/query.helper";
 
 type GetLastEntryProps = { month: number; year: number; modality: string };
@@ -24,11 +24,7 @@ export const getLastEntry = async ({
   const user = await currentUser();
   if (!user) return Promise.reject(false);
 
-  // Pega o mês de referência do App para realizar a busca dos registros
-  const initialDate = new Date(`${year}-${month}-01T00:00:00`);
-  const finalDate = new Date(
-    `${year}-${month}-${getFinalDateMonth(month, year)}T23:59:59`
-  );
+  const [initialDate, finalDate] = getMonthDate(month, year);
 
   await sleep(100);
   const snapshot = await getDocs(
@@ -49,7 +45,7 @@ export const getLastEntry = async ({
  * Verifica se há despesas projetadas para consolidar na data atual
  */
 export const checkFutureDebitsToConsolidate = async () => {
-  const [, initialDate, finalDate] = getAtualDate();
+  const [initialDate, finalDate] = getAtualDate();
   const user = await currentUser();
   if (!user) return Promise.reject(false);
 
