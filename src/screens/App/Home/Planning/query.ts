@@ -1,6 +1,6 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../../services/firebase";
-import { currentUser } from "../../../../utils/query.helper";
+import { currentUser, getRevenue } from "../../../../utils/query.helper";
 import { getMonthDate } from "../../../../utils/date.helper";
 
 interface GetPlanningProps {
@@ -52,28 +52,6 @@ export async function getPlanning(props: GetPlanningProps) {
   ];
 
   return result;
-}
-
-async function getRevenue(
-  user: any,
-  modality: "Real" | "Projetado",
-  initialDate: Date,
-  finalDate: Date
-) {
-  const queryRef = collection(db, "entry", user.uid, modality);
-  const querySnapshot = await getDocs(
-    query(
-      queryRef,
-      where("date", ">=", initialDate),
-      where("date", "<=", finalDate),
-      where("type", "==", "Receita")
-    )
-  );
-
-  return querySnapshot.docs.reduce(
-    (acc, doc) => acc + (doc.data().value || 0),
-    0
-  );
 }
 
 async function getExpense(

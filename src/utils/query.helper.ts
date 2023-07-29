@@ -1,4 +1,13 @@
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../services/firebase";
 import { getStorage } from "./storage.helper";
 
@@ -71,4 +80,26 @@ export async function createCollection(collectionPath: string) {
 
 export async function sleep(ms: number) {
   return await new Promise((resolve) => setInterval(resolve, ms));
+}
+
+export async function getRevenue(
+  user: any,
+  modality: "Real" | "Projetado",
+  initialDate: Date,
+  finalDate: Date
+) {
+  const queryRef = collection(db, "entry", user.uid, modality);
+  const querySnapshot = await getDocs(
+    query(
+      queryRef,
+      where("date", ">=", initialDate),
+      where("date", "<=", finalDate),
+      where("type", "==", "Receita")
+    )
+  );
+
+  return querySnapshot.docs.reduce(
+    (acc, doc) => acc + (doc.data().value || 0),
+    0
+  );
 }

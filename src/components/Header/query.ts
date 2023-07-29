@@ -1,6 +1,20 @@
-import { doc, getDoc } from "firebase/firestore";
-import { currentUser } from "../../utils/query.helper";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { currentUser, getRevenue } from "../../utils/query.helper";
 import { db } from "../../services/firebase";
+import { getMonthDate } from "../../utils/date.helper";
+
+interface GetRevenueProps {
+  modality: "Real" | "Projetado";
+  month: number;
+  year: number;
+}
 
 export async function getData() {
   const user = await currentUser();
@@ -32,4 +46,23 @@ export async function getData() {
   } catch (error) {
     return defaultData;
   }
+}
+
+export async function getRevenueGrowth({
+  modality,
+  month,
+  year,
+}: GetRevenueProps) {
+  const user = await currentUser();
+  if (!user) return Promise.reject(false);
+
+  const [initialDate, finalDate] = getMonthDate(month, year);
+
+  const currentRevenue = await getRevenue(
+    user,
+    modality,
+    initialDate,
+    finalDate
+  );
+  console.log(currentRevenue);
 }
