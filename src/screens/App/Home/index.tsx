@@ -48,7 +48,6 @@ export const Home = () => {
   const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
-  const {} = useGetPlanning();
 
   useEffect(() => {
     handleGetLastEntries();

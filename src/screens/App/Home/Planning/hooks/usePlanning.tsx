@@ -1,17 +1,19 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { usePromise } from "../../../../../hooks/usePromise";
 import { getPlanning } from "../query";
 import { DataContext } from "../../../../../context/Data/dataContext";
+import { PlanningList } from "../types";
 
 export const useGetPlanning = () => {
   const { isLoading, handleExecute } = usePromise(getPlanning);
   const {
     data: { month, year },
   } = useContext(DataContext);
+  const [list, setList] = useState<PlanningList[]>([]);
 
   async function execute() {
     if (!year) return;
-    await handleExecute({ month, year }, "Projetado");
+    handleExecute({ month, year }).then(setList);
   }
 
   useEffect(() => {
@@ -21,5 +23,6 @@ export const useGetPlanning = () => {
   return {
     isLoading,
     handleExecute: execute,
+    list,
   };
 };

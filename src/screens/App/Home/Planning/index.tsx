@@ -4,9 +4,12 @@ import { IThemeProvider } from "../../../../styles/baseTheme";
 import Tooltip from "../../../../components/Tooltip";
 import { InfoIcon } from "lucide-react-native";
 import { numberToReal } from "../../../../utils/number.helper";
+import { useGetPlanning } from "./hooks/usePlanning";
 
 export const Planning = () => {
   const { theme }: IThemeProvider = useTheme();
+  const { isLoading, list } = useGetPlanning();
+
   return (
     <VStack backgroundColor={theme?.secondary} borderRadius="30px" p={4} pt={5}>
       <HStack justifyContent="space-between" alignItems="center" mb={2}>
@@ -18,7 +21,8 @@ export const Planning = () => {
         </Pressable>
       </HStack>
       <VStack>
-        {progressTypes.map((item, index) => {
+        {list.map((item, index) => {
+          const bold = item.realized > item.designed;
           return (
             <VStack paddingY={3} key={index}>
               <HStack
@@ -27,8 +31,8 @@ export const Planning = () => {
                 alignItems="center"
                 mb={2}
               >
-                <Text fontWeight={500}>{item.name}</Text>
-                <Text fontSize="14px">
+                <Text fontWeight={500}>{item.description}</Text>
+                <Text fontSize="14px" fontWeight={bold ? "bold" : "normal"}>
                   {numberToReal(item.realized).split(",")[0]}/
                   {numberToReal(item.designed).split(",")[0]}
                 </Text>
@@ -45,21 +49,3 @@ export const Planning = () => {
     </VStack>
   );
 };
-
-const progressTypes = [
-  {
-    name: "Receita",
-    realized: 4505,
-    designed: 5500,
-  },
-  {
-    name: "Despesas Fixas",
-    realized: 4505,
-    designed: 4750,
-  },
-  {
-    name: "Despesas Variáveis",
-    realized: 875,
-    designed: 1500,
-  },
-];
