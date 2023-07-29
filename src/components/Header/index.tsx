@@ -18,7 +18,8 @@ import { CalendarRange } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useGetData } from "./hooks/useHeader";
+import { useGetData, useGetRevenue } from "./hooks/useHeader";
+import When from "../When";
 
 import LOGO_SMALL from "../../../assets/images/logoSmall.png";
 
@@ -26,6 +27,7 @@ export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
   const { data } = useContext(DataContext);
+  const { data: revenue, isLoading } = useGetRevenue();
   const {} = useGetData();
 
   const {
@@ -40,6 +42,7 @@ export const Header = () => {
   } = useDisclose();
 
   const [balanceInteger, balanceCents] = data.balance.split(",");
+  const negativeRevenue = revenue < 0;
 
   return (
     <>
@@ -101,17 +104,17 @@ export const Header = () => {
           paddingX="15px"
           paddingY="15px"
         >
-          <Svg width="88" height="37" viewBox="0 0 88 37" fill="none">
-            <Path
-              d="M2 13.0842C2 13.0842 17.3846 46.3131 22.7692 30.9385C28.1538 15.564 38.5385 -14.1933 45.4615 13.0842C52.3846 40.3617 65.4861 16.987 87 3.16513"
-              stroke={theme?.blue}
-              strokeWidth="3"
-            />
-          </Svg>
+          <When is={!negativeRevenue}>
+            <LineUp />
+          </When>
+          <When is={negativeRevenue}>
+            <LineDown />
+          </When>
           <VStack>
             <Text>Receita Mensal</Text>
             <Text color={theme?.blue} fontWeight={600}>
-              +10%
+              {!negativeRevenue ? `+${revenue.toFixed(0)}` : revenue.toFixed(0)}
+              %
             </Text>
           </VStack>
           <Pressable
@@ -175,6 +178,32 @@ const HomeMenu = () => {
       </Pressable>
       <Menu {...menu} />
     </VStack>
+  );
+};
+
+const LineUp = () => {
+  const { theme }: IThemeProvider = useTheme();
+  return (
+    <Svg width="88" height="37" viewBox="0 0 88 37" fill="none">
+      <Path
+        d="M2 13.0842C2 13.0842 17.3846 46.3131 22.7692 30.9385C28.1538 15.564 38.5385 -14.1933 45.4615 13.0842C52.3846 40.3617 65.4861 16.987 87 3.16513"
+        stroke={theme?.blue}
+        strokeWidth="3"
+      />
+    </Svg>
+  );
+};
+
+const LineDown = () => {
+  const { theme }: IThemeProvider = useTheme();
+  return (
+    <Svg width="88" height="37" viewBox="0 0 88 37" fill="none">
+      <Path
+        d="M2 23.9158C2 23.9158 17.3846 -9.31307 22.7692 6.06148C28.1538 21.436 38.5385 51.1933 45.4615 23.9158C52.3846 -3.36165 65.4861 20.013 87 33.8349"
+        stroke={theme?.blue}
+        strokeWidth="3"
+      />
+    </Svg>
   );
 };
 

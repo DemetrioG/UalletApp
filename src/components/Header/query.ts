@@ -56,13 +56,13 @@ export async function getRevenueGrowth({
   const user = await currentUser();
   if (!user) return Promise.reject(false);
 
+  const [initialPastDate, finalPastDate] = getMonthDate(month - 1, year);
   const [initialDate, finalDate] = getMonthDate(month, year);
 
-  const currentRevenue = await getRevenue(
-    user,
-    modality,
-    initialDate,
-    finalDate
-  );
-  console.log(currentRevenue);
+  const [pastRevenue, currentRevenue] = await Promise.all([
+    getRevenue(user, modality, initialPastDate, finalPastDate),
+    getRevenue(user, modality, initialDate, finalDate),
+  ]);
+
+  return ((currentRevenue - pastRevenue) / pastRevenue) * 100;
 }

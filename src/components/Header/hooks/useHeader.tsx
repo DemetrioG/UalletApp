@@ -35,11 +35,17 @@ export const useGetRevenue = () => {
   const [data, setData] = useState(0);
 
   async function execute() {
-    handleExecute({ modality, month, year }).then((data) => console.log(data));
+    handleExecute({ modality, month, year }).then(setData);
   }
+
+  useEffect(() => {
+    if (!year) return;
+    execute();
+  }, [month, year, modality]);
 
   return {
     isLoading,
+    handleExecute: execute,
     data,
   };
 };

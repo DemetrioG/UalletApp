@@ -17,6 +17,7 @@ export const Complete = () => {
     <BackgroundContainer p="20px">
       <BackgroundEffect />
       <Image
+        alt="Notificações'"
         source={theme?.isOnDarkTheme ? notificationsDark : notificationsLight}
         position="absolute"
         bottom={2}
