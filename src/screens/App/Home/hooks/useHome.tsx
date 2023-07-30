@@ -27,10 +27,12 @@ export const useGetLastEntries = () => {
 
   async function execute() {
     if (!year) return setLastEntries([]);
-    return handleExecute({ month, year, modality }).then((entries) =>
-      setLastEntries(entries)
-    );
+    return handleExecute({ month, year, modality }).then(setLastEntries);
   }
+
+  useEffect(() => {
+    execute();
+  }, [month, year, modality]);
 
   return {
     isLoading,

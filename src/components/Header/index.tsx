@@ -7,6 +7,7 @@ import {
   HStack,
   Image,
   Pressable,
+  Skeleton,
   Text,
   VStack,
   useDisclose,
@@ -104,18 +105,32 @@ export const Header = () => {
           paddingX="15px"
           paddingY="15px"
         >
-          <When is={!negativeRevenue}>
-            <LineUp />
+          <When is={isLoading}>
+            <Skeleton width="90px" rounded="lg" startColor={theme?.secondary} />
           </When>
-          <When is={negativeRevenue}>
-            <LineDown />
+          <When is={!isLoading}>
+            <>
+              <When is={!negativeRevenue}>
+                <LineUp />
+              </When>
+              <When is={negativeRevenue}>
+                <LineDown />
+              </When>
+            </>
           </When>
           <VStack>
             <Text>Receita Mensal</Text>
-            <Text color={theme?.blue} fontWeight={600}>
-              {!negativeRevenue ? `+${revenue.toFixed(0)}` : revenue.toFixed(0)}
-              %
-            </Text>
+            <When is={isLoading}>
+              <Skeleton h="3" mt="10.5px" startColor={theme?.secondary} />
+            </When>
+            <When is={!isLoading}>
+              <Text color={theme?.blue} fontWeight={600}>
+                {!negativeRevenue
+                  ? `+${revenue.toFixed(0)}`
+                  : revenue.toFixed(0)}
+                %
+              </Text>
+            </When>
           </VStack>
           <Pressable
             backgroundColor={theme?.isOnDarkTheme ? "white" : "black"}

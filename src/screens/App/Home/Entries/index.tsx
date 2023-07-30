@@ -1,4 +1,4 @@
-import { HStack, Pressable, Text, VStack } from "native-base";
+import { HStack, Pressable, Skeleton, Text, VStack } from "native-base";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { numberToReal } from "../../../../utils/number.helper";
@@ -9,9 +9,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CardDownIcon, CardUpIcon } from "../../../../components/CustomIcons";
 import { EmptyChart } from "../../../../components/EmptyChart";
 import { ListEntries } from "../../Entries/types";
+import { useGetLastEntries } from "../hooks/useHome";
 
-export const Entries = ({ lastEntries }: { lastEntries: ListEntries[] }) => {
+export const Entries = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const { isLoading, lastEntries } = useGetLastEntries();
   const { theme }: IThemeProvider = useTheme();
   const isEmpty = !Boolean(lastEntries.length);
 
@@ -26,14 +28,26 @@ export const Entries = ({ lastEntries }: { lastEntries: ListEntries[] }) => {
         </Pressable>
       </HStack>
       <VStack>
-        <When is={isEmpty}>
-          <EmptyChart actionText="Realize seu primeiro lançamento" />
+        <When is={isLoading}>
+          <Skeleton
+            h="75px"
+            startColor={theme?.tertiary}
+            rounded="20px"
+            mt="10px"
+          />
         </When>
-        <When is={!isEmpty}>
+        <When is={!isLoading}>
           <>
-            {lastEntries.map((item, index) => {
-              return <Item item={item} key={index} index={index} />;
-            })}
+            <When is={isEmpty}>
+              <EmptyChart actionText="Realize seu primeiro lançamento" />
+            </When>
+            <When is={!isEmpty}>
+              <>
+                {lastEntries.map((item, index) => {
+                  return <Item item={item} key={index} index={index} />;
+                })}
+              </>
+            </When>
           </>
         </When>
       </VStack>

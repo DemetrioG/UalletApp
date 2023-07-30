@@ -30,13 +30,11 @@ import { DataContext } from "../../../context/Data/dataContext";
 import { useGetBalance } from "../../../hooks/useBalance";
 import {
   useCheckConsolidation,
-  useGetLastEntries,
   useIsUserWithCompleteData,
 } from "./hooks/useHome";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
-import { useGetPlanning } from "./Planning/hooks/usePlanning";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -44,20 +42,9 @@ export const Home = () => {
 
   const menu = useDisclose();
   const consolidation = useDisclose();
-  const { handleGetLastEntries, lastEntries } = useGetLastEntries();
   const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
-
-  useEffect(() => {
-    handleGetLastEntries();
-  }, [
-    data.modality,
-    data.month,
-    data.year,
-    consolidation.isOpen,
-    data.balance,
-  ]);
 
   return (
     <BackgroundContainer>
@@ -75,7 +62,7 @@ export const Home = () => {
             <Action text="Upgrades" Icon={Rocket} />
             <Action text="Mais" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
-          <Entries lastEntries={lastEntries.slice(0, 3)} />
+          <Entries />
           <Planning />
           <EntriesSegmentChart />
         </Stack>
