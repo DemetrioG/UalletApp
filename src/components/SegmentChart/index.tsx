@@ -43,7 +43,16 @@ export const SegmentChart = ({
                         <Text fontSize="14px" fontWeight={700}>
                           {value.toFixed(0)}%
                         </Text>
-                        <Text fontSize="14px">{label}</Text>
+                        <Text
+                          fontSize="14px"
+                          numberOfLines={1}
+                          style={{
+                            flex: 1,
+                            overflow: "hidden",
+                          }}
+                        >
+                          {label}
+                        </Text>
                       </HStack>
                     </VStack>
                   </When>

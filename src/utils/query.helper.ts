@@ -103,3 +103,30 @@ export async function getRevenue(
     0
   );
 }
+
+export async function getExpense(
+  user: any,
+  modality: "Real" | "Projetado",
+  initialDate: Date,
+  finalDate: Date,
+  segment?: string
+) {
+  const queryRef = collection(db, "entry", user.uid, modality);
+
+  const queryConstraints = [
+    where("date", ">=", initialDate),
+    where("date", "<=", finalDate),
+    where("type", "==", "Despesa"),
+  ];
+
+  if (segment) {
+    queryConstraints.push(where("segment", "==", segment));
+  }
+
+  const querySnapshot = await getDocs(query(queryRef, ...queryConstraints));
+
+  return querySnapshot.docs.reduce(
+    (acc, doc) => acc + (doc.data().value || 0),
+    0
+  );
+}

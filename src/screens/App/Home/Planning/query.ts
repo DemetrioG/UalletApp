@@ -1,6 +1,10 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../../services/firebase";
-import { currentUser, getRevenue } from "../../../../utils/query.helper";
+import {
+  currentUser,
+  getExpense,
+  getRevenue,
+} from "../../../../utils/query.helper";
 import { getMonthDate } from "../../../../utils/date.helper";
 
 interface GetPlanningProps {
@@ -28,8 +32,8 @@ export async function getPlanning(props: GetPlanningProps) {
     segments.docs.map(async (doc) => {
       const segment = doc.data().description;
       const [expenseReal, expenseProjetado] = await Promise.all([
-        getExpense(user, "Real", segment, initialDate, finalDate),
-        getExpense(user, "Projetado", segment, initialDate, finalDate),
+        getExpense(user, "Real", initialDate, finalDate, segment),
+        getExpense(user, "Projetado", initialDate, finalDate, segment),
       ]);
       const percentual = (expenseReal / expenseProjetado) * 100;
       return {
@@ -52,27 +56,4 @@ export async function getPlanning(props: GetPlanningProps) {
   ];
 
   return result;
-}
-
-async function getExpense(
-  user: any,
-  modality: "Real" | "Projetado",
-  segment: string,
-  initialDate: Date,
-  finalDate: Date
-) {
-  const queryRef = collection(db, "entry", user.uid, modality);
-  const querySnapshot = await getDocs(
-    query(
-      queryRef,
-      where("date", ">=", initialDate),
-      where("date", "<=", finalDate),
-      where("segment", "==", segment)
-    )
-  );
-
-  return querySnapshot.docs.reduce(
-    (acc, doc) => acc + (doc.data().value || 0),
-    0
-  );
 }

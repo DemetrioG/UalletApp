@@ -2,16 +2,18 @@ import { useContext, useState } from "react";
 import { usePromise } from "../../../../../hooks/usePromise";
 import { getData } from "../query";
 import { DataContext } from "../../../../../context/Data/dataContext";
+import { ChartProps } from "../../../../../components/SegmentChart/types";
 
 export const useData = () => {
   const { isLoading, handleExecute } = usePromise(getData);
   const { data: dataContext } = useContext(DataContext);
 
-  const [data, setData] = useState(defaultData);
+  const [data, setData] = useState<ChartProps[]>([]);
   const [empty, setEmpty] = useState(true);
 
   async function execute() {
-    return handleExecute(dataContext, defaultData)
+    if (!dataContext.year) return;
+    return handleExecute(dataContext)
       .then((data) => {
         setEmpty(false);
         if (data) setData(data);
@@ -28,26 +30,3 @@ export const useData = () => {
     handleGetData: execute,
   };
 };
-
-const defaultData = [
-  {
-    label: "Lazer",
-    value: 0,
-  },
-  {
-    label: "Investimentos",
-    value: 0,
-  },
-  {
-    label: "Educação",
-    value: 0,
-  },
-  {
-    label: "Curto e médio prazo",
-    value: 0,
-  },
-  {
-    label: "Necessidades",
-    value: 0,
-  },
-];
