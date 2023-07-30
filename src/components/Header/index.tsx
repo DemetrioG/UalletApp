@@ -23,6 +23,7 @@ import { useGetData, useGetRevenue } from "./hooks/useHeader";
 import When from "../When";
 
 import LOGO_SMALL from "../../../assets/images/logoSmall.png";
+import { StepableDatePicker } from "../StepableDatePicker";
 
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -60,6 +61,7 @@ export const Header = () => {
         visibility={isOpenYear}
         handleClose={onCloseYear}
       />
+      <StepableDatePicker />
       <VStack position="relative" minHeight="260px">
         <VStack
           position="absolute"
