@@ -3,8 +3,11 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
-  updateDoc,
+  query,
+  where,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../../../../services/firebase";
 import { currentUser } from "../../../../../utils/query.helper";
@@ -32,7 +35,24 @@ export async function updateSegment(formData: ValidatedSegmentDTO, id: string) {
   if (!user) return Promise.reject();
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
-  return await updateDoc(segmentRef, { description: formData.description });
+  const snapshot = await getDoc(segmentRef);
+  const segment = snapshot.data()?.description;
+
+  const batch = writeBatch(db);
+  const updateData = { segment: formData.description };
+
+  batch.update(segmentRef, { description: formData.description });
+
+  const updateEntries = async (collectionName: "Real" | "Projetado") => {
+    const entriesSnapshot = await getEntries(user, collectionName, segment);
+    entriesSnapshot.docs.forEach((doc) => {
+      const ref = doc.ref;
+      batch.update(ref, { ...doc.data(), ...updateData });
+    });
+  };
+
+  await Promise.all([updateEntries("Real"), updateEntries("Projetado")]);
+  return await batch.commit();
 }
 
 export async function deleteSegment(id: string) {
@@ -40,5 +60,32 @@ export async function deleteSegment(id: string) {
   if (!user) return Promise.reject();
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
+  const snapshot = await getDoc(segmentRef);
+  const segment = snapshot.data()?.description;
+
+  const [projectedEntries, realEntries] = await Promise.all([
+    getEntries(user, "Projetado", segment),
+    getEntries(user, "Real", segment),
+  ]);
+
+  const hasEntries =
+    projectedEntries.docs.length > 0 || realEntries.docs.length > 0;
+
+  if (hasEntries)
+    return Promise.reject("Há lançamentos vinculados a este segmento.");
+
   return await deleteDoc(segmentRef);
+}
+
+async function getEntries(
+  user: any,
+  modality: "Real" | "Projetado",
+  segment: string
+) {
+  return await getDocs(
+    query(
+      collection(db, "entry", user.uid, modality),
+      where("segment", "==", segment)
+    )
+  );
 }

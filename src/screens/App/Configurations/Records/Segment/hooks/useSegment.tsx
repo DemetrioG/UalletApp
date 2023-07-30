@@ -142,10 +142,13 @@ export const useDeleteSegment = () => {
           text1: "Segmento excluído com sucesso",
         });
       })
-      .catch(() => {
+      .catch((err) => {
         return Toast.show({
           type: "error",
-          text1: "Erro ao excluir segmento",
+          text1:
+            err.message === "Há lançamentos vinculados a este segmento."
+              ? err.message
+              : "Erro ao excluir segmento",
         });
       });
   }
