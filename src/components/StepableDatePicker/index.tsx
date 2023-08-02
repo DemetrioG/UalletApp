@@ -121,7 +121,7 @@ const ActionSheet = (props: ActionSheetProps) => {
           ref={flatListRef}
           style={{ width: "100%", height: 200 }}
           data={props.options}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <ActionSheetItem
               item={item}
