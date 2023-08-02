@@ -1,31 +1,37 @@
-import { memo, useContext, useState } from "react";
+import { memo, useContext, useEffect, useRef } from "react";
+import { useTheme } from "styled-components";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react-native";
 import {
   Actionsheet,
   FlatList,
   HStack,
-  Pressable,
   Text,
   VStack,
   useDisclose,
 } from "native-base";
-import { IThemeProvider } from "../../styles/baseTheme";
-import { useTheme } from "styled-components";
-import { ActionSheetItemProps, ActionSheetProps } from "./types";
 import {
+  addMonths,
   eachMonthOfInterval,
   endOfYear,
   format,
   parse,
   startOfYear,
+  subMonths,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { IThemeProvider } from "../../styles/baseTheme";
+import {
+  ActionSheetItemProps,
+  ActionSheetProps,
+  StepableDatePickerProps,
+} from "./types";
 import { DataContext } from "../../context/Data/dataContext";
 import { IOption } from "../../types/types";
+import { TouchableOpacity } from "react-native";
 
-export const StepableDatePicker = () => {
+export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { theme }: IThemeProvider = useTheme();
-  const { data } = useContext(DataContext);
+  const { data, setData } = useContext(DataContext);
   const action = useDisclose();
 
   const currentDate = parse(`${data.month}/${data.year}`, "M/yyyy", new Date());
@@ -33,38 +39,60 @@ export const StepableDatePicker = () => {
     ? capitalize(format(currentDate, "MMM yyyy", { locale: ptBR }))
     : null;
 
+  function handleArrowPress(type: "prev" | "next") {
+    if (!data.year) return;
+    const currentDate = new Date(data.year, data.month - 1);
+    let nextMonthDate: Date;
+
+    if (type === "next") {
+      nextMonthDate = addMonths(currentDate, 1);
+    } else {
+      nextMonthDate = subMonths(currentDate, 1);
+    }
+
+    return setData((rest) => ({
+      ...rest,
+      month: nextMonthDate.getMonth() + 1,
+      year: nextMonthDate.getFullYear(),
+    }));
+  }
+
   return (
-    <HStack borderWidth={1} justifyContent="space-between">
-      <Pressable p={1.5} borderWidth={1} borderColor={theme?.secondary}>
+    <HStack justifyContent="space-between">
+      <TouchableOpacity
+        {...props.SideButtonProps}
+        onPress={() => handleArrowPress("prev")}
+      >
         <ChevronLeft color={theme?.text} />
-      </Pressable>
+      </TouchableOpacity>
       <HStack
         flex={1}
         alignItems="center"
         justifyContent="center"
-        borderTopWidth={1}
-        borderBottomWidth={1}
-        borderColor={theme?.secondary}
+        {...props.ContainerProps}
       >
-        <Pressable onPress={action.onToggle}>
+        <TouchableOpacity onPress={action.onToggle}>
           <HStack space={1}>
             <Text>{formattedDate}</Text>
             <VStack>
               <ChevronDown color={theme?.text} />
             </VStack>
           </HStack>
-        </Pressable>
+        </TouchableOpacity>
       </HStack>
-      <Pressable p={1.5} borderWidth={1} borderColor={theme?.secondary}>
+      <TouchableOpacity
+        {...props.SideButtonProps}
+        onPress={() => handleArrowPress("next")}
+      >
         <ChevronRight color={theme?.text} />
-      </Pressable>
+      </TouchableOpacity>
       <ActionSheet options={actionSheetOptions} {...action} />
     </HStack>
   );
 };
 
 const ActionSheet = (props: ActionSheetProps) => {
-  const [ref, setRef] = useState<unknown | null>(null);
+  const flatListRef = useRef<typeof FlatList | null>(null);
   const { setData } = useContext(DataContext);
 
   function handleUpdateDataContext(option: IOption) {
@@ -77,24 +105,21 @@ const ActionSheet = (props: ActionSheetProps) => {
     props.onClose();
   }
 
-  // useEffect(() => {
-  //   if (!ref) return;
-  //   // @ts-expect-error
-  //   ref.scrollTo({
-  //     x: 0,
-  //     y: 60 * 4,
-  //     animated: true,
-  //   });
-  // }, [ref]);
+  useEffect(() => {
+    if (!flatListRef.current) return;
+    // @ts-expect-error
+    flatListRef.current.scrollToOffset({
+      offset: 60 * 4,
+      animated: true,
+    });
+  }, []);
 
   return (
     <Actionsheet isOpen={props.isOpen} onClose={props.onClose}>
       <Actionsheet.Content>
         <FlatList
+          ref={flatListRef}
           style={{ width: "100%", height: 200 }}
-          // ref={(ref) => {
-          //   setRef(ref);
-          // }}
           data={props.options}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (

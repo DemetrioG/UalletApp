@@ -15,8 +15,6 @@ import {
 import { Path, Svg } from "react-native-svg";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
-import { CalendarRange } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useGetData, useGetRevenue } from "./hooks/useHeader";
@@ -61,8 +59,7 @@ export const Header = () => {
         visibility={isOpenYear}
         handleClose={onCloseYear}
       />
-      <StepableDatePicker />
-      <VStack position="relative" minHeight="260px">
+      <VStack position="relative" minHeight="315px">
         <VStack
           position="absolute"
           width="100%"
@@ -70,20 +67,26 @@ export const Header = () => {
           backgroundColor={theme?.secondary}
           borderBottomLeftRadius="40px"
           borderBottomRightRadius="40px"
-          paddingX={4}
           paddingBottom="40px"
         >
+          <StepableDatePicker
+            SideButtonProps={{
+              style: { padding: 8, backgroundColor: theme?.secondary },
+            }}
+            ContainerProps={{
+              borderBottomLeftRadius: '30px',
+              borderBottomRightRadius: '30px',
+              backgroundColor: theme?.primary,
+              borderColor: theme?.secondary,
+            }}
+          />
           <HStack
             position="relative"
             paddingY="20px"
-            justifyContent="space-between"
+            justifyContent="center"
             alignItems="center"
           >
-            <TouchableOpacity onPress={onOpenMonth}>
-              <CalendarRange color={theme?.text} />
-            </TouchableOpacity>
             <Text>Saldo atual</Text>
-            <HomeMenu />
           </HStack>
           <HStack justifyContent="center" paddingY="5px">
             <Text fontWeight={700} fontSize="4xl">
@@ -103,7 +106,7 @@ export const Header = () => {
           backgroundColor={theme?.tertiary}
           borderBottomLeftRadius="40px"
           borderBottomRightRadius="40px"
-          height="240px"
+          height="275px"
           paddingX="15px"
           paddingY="15px"
         >
