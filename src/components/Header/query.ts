@@ -64,5 +64,6 @@ export async function getRevenueGrowth({
     getRevenue(user, modality, initialDate, finalDate),
   ]);
 
+  if (!pastRevenue) return currentRevenue;
   return ((currentRevenue - pastRevenue) / pastRevenue) * 100;
 }
