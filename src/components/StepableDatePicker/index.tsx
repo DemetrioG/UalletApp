@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useRef } from "react";
+import { memo, useContext, useEffect, useMemo, useRef } from "react";
 import { useTheme } from "styled-components";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react-native";
 import {
@@ -34,10 +34,18 @@ export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { data, setData } = useContext(DataContext);
   const action = useDisclose();
 
-  const currentDate = parse(`${data.month}/${data.year}`, "M/yyyy", new Date());
-  const formattedDate = data.year
-    ? capitalize(format(currentDate, "MMM yyyy", { locale: ptBR }))
-    : null;
+  const currentDate = useMemo(
+    () => parse(`${data.month}/${data.year}`, "M/yyyy", new Date()),
+    [data.month, data.year]
+  );
+
+  const formattedDate = useMemo(
+    () =>
+      data.year
+        ? capitalize(format(currentDate, "MMM yyyy", { locale: ptBR }))
+        : null,
+    [currentDate, data.year]
+  );
 
   function handleArrowPress(type: "prev" | "next") {
     if (!data.year) return;
@@ -93,7 +101,13 @@ export const StepableDatePicker = (props: StepableDatePickerProps) => {
 
 const ActionSheet = (props: ActionSheetProps) => {
   const flatListRef = useRef<typeof FlatList | null>(null);
-  const { setData } = useContext(DataContext);
+  const { data, setData } = useContext(DataContext);
+  const activeMonthRef = `${data.month}/${data.year}`;
+  const activeOptionRef = useMemo(() => {
+    return props.options.findIndex((option) =>
+      option.value.includes(activeMonthRef)
+    );
+  }, [props.options, activeMonthRef]);
 
   function handleUpdateDataContext(option: IOption) {
     const [month, year] = option.value.split("/");
@@ -109,10 +123,10 @@ const ActionSheet = (props: ActionSheetProps) => {
     if (!flatListRef.current) return;
     // @ts-expect-error
     flatListRef.current.scrollToOffset({
-      offset: 60 * 4,
+      offset: 60 * activeOptionRef + 1,
       animated: true,
     });
-  }, []);
+  }, [flatListRef, data.month]);
 
   return (
     <Actionsheet isOpen={props.isOpen} onClose={props.onClose}>
