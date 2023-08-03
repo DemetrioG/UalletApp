@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  initializeFirestore,
+  memoryLocalCache,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import {
   API_KEY,
@@ -23,4 +27,8 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
+
+initializeFirestore(firebaseApp, {
+  localCache: memoryLocalCache(),
+});
 export const db = getFirestore(firebaseApp);
