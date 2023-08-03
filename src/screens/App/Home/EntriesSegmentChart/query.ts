@@ -41,5 +41,7 @@ export async function getData(context: IData) {
     })
   );
 
-  return expenseBySegment;
+  const hasExpense = expenseBySegment.some((item) => item.value > 0);
+
+  return { expenseBySegment, hasExpense };
 }

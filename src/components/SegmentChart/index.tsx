@@ -7,23 +7,18 @@ import When from "../When";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 
-export const SegmentChart = ({
-  data,
-  empty,
-}: {
-  data: ChartProps[];
-  empty: boolean;
-}) => {
+export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
   const { theme }: IThemeProvider = useTheme();
   const chartValues = data.map(({ value }) => value);
+  const isEmpty = !data.length;
 
   return (
     <>
       <Center>
-        <When is={empty}>
+        <When is={isEmpty}>
           <EmptyChart actionText="Realize seu primeiro lançamento" />
         </When>
-        <When is={!empty}>
+        <When is={!isEmpty}>
           <HStack>
             <VStack w="50%">
               <StyledPieChart data={chartValues} />

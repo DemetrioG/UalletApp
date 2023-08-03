@@ -13,7 +13,9 @@ export const useGetPlanning = () => {
 
   async function execute() {
     if (!year) return;
-    handleExecute({ month, year }).then(setList);
+    handleExecute({ month, year }).then(({ hasPlanning, result }) =>
+      setList(hasPlanning ? result : [])
+    );
   }
 
   useEffect(() => {

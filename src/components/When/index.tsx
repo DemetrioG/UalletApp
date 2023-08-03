@@ -1,5 +1,11 @@
-const When = ({ children, is }: { children: JSX.Element; is: boolean }) => {
-  return is ? children : <></>;
+const When = ({
+  children,
+  is,
+}: {
+  children: JSX.Element | JSX.Element[];
+  is: boolean;
+}) => {
+  return is ? <>{children}</> : <></>;
 };
 
 export default When;

@@ -13,7 +13,7 @@ import When from "../../../../components/When";
 export const EntriesSegmentChart = () => {
   const { theme }: IThemeProvider = useTheme();
   const { data: dataContext } = useContext(DataContext);
-  const { handleGetData, data, empty, isLoading } = useData();
+  const { handleGetData, data, isLoading } = useData();
 
   useEffect(() => {
     handleGetData();
@@ -44,7 +44,7 @@ export const EntriesSegmentChart = () => {
       </When>
       <When is={!isLoading}>
         <VStack pb={2}>
-          <SegmentChart data={data} empty={empty} />
+          <SegmentChart data={data} />
         </VStack>
       </When>
     </VStack>

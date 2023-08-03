@@ -132,7 +132,7 @@ const ActionSheet = (props: ActionSheetProps) => {
       offset: 60 * activeOptionRef + 1,
       animated: true,
     });
-  }, [flatListRef, data.month]);
+  }, [flatListRef, activeOptionRef]);
 
   return (
     <Actionsheet isOpen={props.isOpen} onClose={props.onClose}>

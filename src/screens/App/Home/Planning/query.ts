@@ -55,5 +55,7 @@ export async function getPlanning(props: GetPlanningProps) {
     ...expenseBySegment,
   ];
 
-  return result;
+  const hasPlanning = result.some((item) => item.designed > 0);
+
+  return { hasPlanning, result };
 }
