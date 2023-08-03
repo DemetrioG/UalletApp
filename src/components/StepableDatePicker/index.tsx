@@ -28,6 +28,7 @@ import {
 import { DataContext } from "../../context/Data/dataContext";
 import { IOption } from "../../types/types";
 import { TouchableOpacity } from "react-native";
+import { setStorage } from "../../utils/storage.helper";
 
 export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { theme }: IThemeProvider = useTheme();
@@ -58,6 +59,8 @@ export const StepableDatePicker = (props: StepableDatePickerProps) => {
       nextMonthDate = subMonths(currentDate, 1);
     }
 
+    setStorage("Mês", nextMonthDate.getMonth() + 1);
+    setStorage("Ano", nextMonthDate.getFullYear());
     return setData((rest) => ({
       ...rest,
       month: nextMonthDate.getMonth() + 1,
@@ -111,6 +114,9 @@ const ActionSheet = (props: ActionSheetProps) => {
 
   function handleUpdateDataContext(option: IOption) {
     const [month, year] = option.value.split("/");
+
+    setStorage("Mês", Number(month));
+    setStorage("Ano", Number(year));
     setData((rest) => ({
       ...rest,
       month: Number(month),

@@ -43,6 +43,7 @@ const Routes = () => {
   React.useEffect(() => {
     setupNotifications();
     userIsAuthenticated();
+    loadStorage();
     NetInfo.addEventListener(({ isConnected }) => {
       setData((dataState) => ({
         ...dataState,
@@ -50,6 +51,20 @@ const Routes = () => {
       }));
     });
   }, []);
+
+  /**
+   * Pega a referência de Mês e Ano, e coloca no Contexto
+   */
+  async function loadStorage() {
+    const storedMonth = await getStorage("Mês");
+    const storedYear = await getStorage("Ano");
+
+    return setData((rest) => ({
+      ...rest,
+      month: storedMonth ?? new Date().getMonth() + 1,
+      year: storedYear ?? new Date().getFullYear(),
+    }));
+  }
 
   return user.signed ? <AppStackRoutes /> : <AuthRoutes />;
 };

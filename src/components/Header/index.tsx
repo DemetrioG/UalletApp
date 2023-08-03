@@ -1,7 +1,6 @@
 import { useContext } from "react";
 
 import { Menu } from "../Menu";
-import { DatePicker } from "../DatePicker";
 import { DataContext } from "../../context/Data/dataContext";
 import {
   HStack,
@@ -30,130 +29,102 @@ export const Header = () => {
   const { data: revenue, isLoading } = useGetRevenue();
   const {} = useGetData();
 
-  const {
-    isOpen: isOpenMonth,
-    onClose: onCloseMonth,
-    onOpen: onOpenMonth,
-  } = useDisclose();
-  const {
-    isOpen: isOpenYear,
-    onClose: onCloseYear,
-    onOpen: onOpenYear,
-  } = useDisclose();
-
   const [balanceInteger, balanceCents] = data.balance.split(",");
   const negativeRevenue = revenue < 0;
 
   return (
-    <>
-      <DatePicker
-        options={optionsMonth}
-        type="Mês"
-        visibility={isOpenMonth}
-        handleClose={onCloseMonth}
-        next={onOpenYear}
-      />
-      <DatePicker
-        options={optionsYear}
-        type="Ano"
-        visibility={isOpenYear}
-        handleClose={onCloseYear}
-      />
-      <VStack position="relative" minHeight="315px">
-        <VStack
-          position="absolute"
-          width="100%"
-          zIndex={2}
-          backgroundColor={theme?.secondary}
-          borderBottomLeftRadius="40px"
-          borderBottomRightRadius="40px"
-          paddingBottom="40px"
-        >
-          <StepableDatePicker
-            SideButtonProps={{
-              style: { padding: 8, backgroundColor: theme?.secondary },
-            }}
-            ContainerProps={{
-              borderBottomLeftRadius: '30px',
-              borderBottomRightRadius: '30px',
-              backgroundColor: theme?.primary,
-              borderColor: theme?.secondary,
-            }}
-          />
-          <HStack
-            position="relative"
-            paddingY="20px"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Text>Saldo atual</Text>
-          </HStack>
-          <HStack justifyContent="center" paddingY="5px">
-            <Text fontWeight={700} fontSize="4xl">
-              {balanceInteger}
-              <Text fontWeight={700} opacity={0.3} fontSize="4xl">
-                ,{balanceCents}
-              </Text>
-            </Text>
-          </HStack>
-        </VStack>
+    <VStack position="relative" minHeight="315px">
+      <VStack
+        position="absolute"
+        width="100%"
+        zIndex={2}
+        backgroundColor={theme?.secondary}
+        borderBottomLeftRadius="40px"
+        borderBottomRightRadius="40px"
+        paddingBottom="40px"
+      >
+        <StepableDatePicker
+          SideButtonProps={{
+            style: { padding: 8, backgroundColor: theme?.secondary },
+          }}
+          ContainerProps={{
+            borderBottomLeftRadius: "30px",
+            borderBottomRightRadius: "30px",
+            backgroundColor: theme?.primary,
+            borderColor: theme?.secondary,
+          }}
+        />
         <HStack
-          position="absolute"
-          alignItems="flex-end"
-          justifyContent="space-between"
-          width="100%"
-          zIndex={1}
-          backgroundColor={theme?.tertiary}
-          borderBottomLeftRadius="40px"
-          borderBottomRightRadius="40px"
-          height="275px"
-          paddingX="15px"
-          paddingY="15px"
+          position="relative"
+          paddingY="20px"
+          justifyContent="center"
+          alignItems="center"
         >
-          <When is={isLoading}>
-            <Skeleton width="90px" rounded="lg" startColor={theme?.secondary} />
-          </When>
-          <When is={!isLoading}>
-            <>
-              <When is={!negativeRevenue}>
-                <LineUp />
-              </When>
-              <When is={negativeRevenue}>
-                <LineDown />
-              </When>
-            </>
-          </When>
-          <VStack>
-            <Text>Receita Mensal</Text>
-            <When is={isLoading}>
-              <Skeleton h="3" mt="10.5px" startColor={theme?.secondary} />
-            </When>
-            <When is={!isLoading}>
-              <Text color={theme?.blue} fontWeight={600}>
-                {!negativeRevenue
-                  ? `+${revenue.toFixed(0)}`
-                  : revenue.toFixed(0)}
-                %
-              </Text>
-            </When>
-          </VStack>
-          <Pressable
-            backgroundColor={theme?.isOnDarkTheme ? "white" : "black"}
-            paddingX="14px"
-            paddingY="10px"
-            borderRadius={30}
-            onPress={() => navigate("Lancamentos")}
-          >
-            <Text
-              color={theme?.isOnDarkTheme ? "black" : "white"}
-              fontWeight={600}
-            >
-              Ver mais
+          <Text>Saldo atual</Text>
+        </HStack>
+        <HStack justifyContent="center" paddingY="5px">
+          <Text fontWeight={700} fontSize="4xl">
+            {balanceInteger}
+            <Text fontWeight={700} opacity={0.3} fontSize="4xl">
+              ,{balanceCents}
             </Text>
-          </Pressable>
+          </Text>
         </HStack>
       </VStack>
-    </>
+      <HStack
+        position="absolute"
+        alignItems="flex-end"
+        justifyContent="space-between"
+        width="100%"
+        zIndex={1}
+        backgroundColor={theme?.tertiary}
+        borderBottomLeftRadius="40px"
+        borderBottomRightRadius="40px"
+        height="275px"
+        paddingX="15px"
+        paddingY="15px"
+      >
+        <When is={isLoading}>
+          <Skeleton width="90px" rounded="lg" startColor={theme?.secondary} />
+        </When>
+        <When is={!isLoading}>
+          <>
+            <When is={!negativeRevenue}>
+              <LineUp />
+            </When>
+            <When is={negativeRevenue}>
+              <LineDown />
+            </When>
+          </>
+        </When>
+        <VStack>
+          <Text>Receita Mensal</Text>
+          <When is={isLoading}>
+            <Skeleton h="3" mt="10.5px" startColor={theme?.secondary} />
+          </When>
+          <When is={!isLoading}>
+            <Text color={theme?.blue} fontWeight={600}>
+              {!negativeRevenue ? `+${revenue.toFixed(0)}` : revenue.toFixed(0)}
+              %
+            </Text>
+          </When>
+        </VStack>
+        <Pressable
+          backgroundColor={theme?.isOnDarkTheme ? "white" : "black"}
+          paddingX="14px"
+          paddingY="10px"
+          borderRadius={30}
+          onPress={() => navigate("Lancamentos")}
+        >
+          <Text
+            color={theme?.isOnDarkTheme ? "black" : "white"}
+            fontWeight={600}
+          >
+            Ver mais
+          </Text>
+        </Pressable>
+      </HStack>
+    </VStack>
   );
 };
 
