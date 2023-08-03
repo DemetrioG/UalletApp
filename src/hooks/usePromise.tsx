@@ -9,11 +9,11 @@ export const usePromise = <T extends any>(
     setIsLoading(true);
     try {
       const result = await promiseFn(...args);
-      setIsLoading(false);
       return result;
     } catch (error) {
-      setIsLoading(false);
       throw new Error(error as string);
+    } finally {
+      setIsLoading(false);
     }
   };
 

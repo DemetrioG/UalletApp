@@ -29,6 +29,7 @@ import { DataContext } from "../../context/Data/dataContext";
 import { IOption } from "../../types/types";
 import { TouchableOpacity } from "react-native";
 import { setStorage } from "../../utils/storage.helper";
+import When from "../When";
 
 export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { theme }: IThemeProvider = useTheme();
@@ -125,14 +126,16 @@ const ActionSheet = (props: ActionSheetProps) => {
     props.onClose();
   }
 
-  useEffect(() => {
-    if (!flatListRef.current) return;
-    // @ts-expect-error
-    flatListRef.current.scrollToOffset({
-      offset: 60 * activeOptionRef + 1,
-      animated: true,
-    });
-  }, [flatListRef, activeOptionRef]);
+  // useEffect(() => {
+  //   console.log("entrou");
+  //   if (!flatListRef.current || !props.isOpen) return;
+  //   console.log("opa", activeOptionRef);
+  //   // @ts-expect-error
+  //   flatListRef.current.scrollToOffset({
+  //     offset: 60 * activeOptionRef + 1,
+  //     animated: true,
+  //   });
+  // }, [flatListRef.current, props.isOpen]);
 
   return (
     <Actionsheet isOpen={props.isOpen} onClose={props.onClose}>
@@ -142,6 +145,7 @@ const ActionSheet = (props: ActionSheetProps) => {
           style={{ width: "100%", height: 200 }}
           data={props.options}
           keyExtractor={(_, index) => index.toString()}
+          contentOffset={{ x: 0, y: 60 * 50 }} 
           renderItem={({ item }) => (
             <ActionSheetItem
               item={item}
