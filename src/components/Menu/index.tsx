@@ -72,7 +72,7 @@ export const Menu = (props: ReturnUseDisclosure) => {
       >
         <VStack alignItems="center" mt={8} space={2}>
           <Avatar size={90} backgroundColor={theme?.blue}>
-            <Text fontWeight={800} fontSize={34}>
+            <Text fontWeight={800} fontSize={34} color="white">
               {user.name[0]}
             </Text>
           </Avatar>

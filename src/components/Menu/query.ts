@@ -4,7 +4,6 @@ import { db } from "../../services/firebase";
 
 export async function refreshAuthDevice(expoPushToken: string) {
   const user = await currentUser();
-
   if (!user) return Promise.reject();
 
   const userRef = doc(db, "users", user.uid);

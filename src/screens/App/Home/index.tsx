@@ -35,6 +35,7 @@ import {
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
+import { Internet } from "./Internet";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -62,6 +63,7 @@ export const Home = () => {
             <Action text="Upgrades" Icon={Rocket} />
             <Action text="Mais" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
+          <Internet />
           <Entries />
           <Planning />
           <EntriesSegmentChart />

@@ -126,17 +126,6 @@ const ActionSheet = (props: ActionSheetProps) => {
     props.onClose();
   }
 
-  // useEffect(() => {
-  //   console.log("entrou");
-  //   if (!flatListRef.current || !props.isOpen) return;
-  //   console.log("opa", activeOptionRef);
-  //   // @ts-expect-error
-  //   flatListRef.current.scrollToOffset({
-  //     offset: 60 * activeOptionRef + 1,
-  //     animated: true,
-  //   });
-  // }, [flatListRef.current, props.isOpen]);
-
   return (
     <Actionsheet isOpen={props.isOpen} onClose={props.onClose}>
       <Actionsheet.Content>
@@ -145,7 +134,7 @@ const ActionSheet = (props: ActionSheetProps) => {
           style={{ width: "100%", height: 200 }}
           data={props.options}
           keyExtractor={(_, index) => index.toString()}
-          contentOffset={{ x: 0, y: 60 * 50 }} 
+          contentOffset={{ x: 0, y: 60 * activeOptionRef + 1 }}
           renderItem={({ item }) => (
             <ActionSheetItem
               item={item}

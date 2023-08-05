@@ -62,6 +62,7 @@ const Item = ({ item, index }: { item: ListEntries; index: number }) => {
       justifyContent="space-between"
       alignItems="center"
       borderTopWidth={index === 0 ? 0 : 1}
+      borderColor={theme?.primary}
       paddingY={3}
     >
       <HStack space={2} alignItems="center">

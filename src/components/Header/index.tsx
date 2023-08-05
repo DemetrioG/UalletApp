@@ -21,6 +21,7 @@ import When from "../When";
 
 import LOGO_SMALL from "../../../assets/images/logoSmall.png";
 import { StepableDatePicker } from "../StepableDatePicker";
+import { WifiOff } from "lucide-react-native";
 
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -162,11 +163,21 @@ export const HeaderSummary = () => {
 
 const HomeMenu = () => {
   const menu = useDisclose();
+  const { data } = useContext(DataContext);
+  const { theme }: IThemeProvider = useTheme();
+
   return (
     <VStack>
-      <Pressable onPress={menu.onToggle}>
-        <Image source={LOGO_SMALL} width="25px" h="30px" alt="Logo Uallet" />
-      </Pressable>
+      <When is={!data.isNetworkConnected}>
+        <Pressable onPress={menu.onToggle}>
+          <WifiOff color={theme?.red} />
+        </Pressable>
+      </When>
+      <When is={!!data.isNetworkConnected}>
+        <Pressable onPress={menu.onToggle}>
+          <Image source={LOGO_SMALL} width="25px" h="30px" alt="Logo Uallet" />
+        </Pressable>
+      </When>
       <Menu {...menu} />
     </VStack>
   );
