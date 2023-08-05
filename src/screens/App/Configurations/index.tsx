@@ -69,10 +69,10 @@ const actions = [
     Icon: PlusCircle,
     color: "blue",
   },
-  {
-    label: "Alertas",
-    url: "Configuracoes/Alertas",
-    Icon: Flag,
-    color: "blue",
-  },
+  // {
+  //   label: "Alertas",
+  //   url: "Configuracoes/Alertas",
+  //   Icon: Flag,
+  //   color: "blue",
+  // },
 ];
