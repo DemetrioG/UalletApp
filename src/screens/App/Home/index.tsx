@@ -1,4 +1,3 @@
-import { useEffect, useContext } from "react";
 import {
   HStack,
   IPressableProps,
@@ -26,7 +25,6 @@ import { Header } from "../../../components/Header";
 import { Entries } from "./Entries";
 import { Planning } from "./Planning";
 import { EntriesSegmentChart } from "./EntriesSegmentChart";
-import { DataContext } from "../../../context/Data/dataContext";
 import { useGetBalance } from "../../../hooks/useBalance";
 import {
   useCheckConsolidation,
@@ -39,7 +37,6 @@ import { Internet } from "./Internet";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { data } = useContext(DataContext);
 
   const menu = useDisclose();
   const consolidation = useDisclose();
