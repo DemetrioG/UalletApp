@@ -34,6 +34,16 @@ import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
 import { Internet } from "./Internet";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
+import When from "../../../components/When";
+
+const adUnitId = __DEV__
+  ? TestIds.BANNER
+  : "ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -67,6 +77,13 @@ export const Home = () => {
         </Stack>
       </ScrollView>
       <Menu {...menu} />
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+      />
     </BackgroundContainer>
   );
 };
