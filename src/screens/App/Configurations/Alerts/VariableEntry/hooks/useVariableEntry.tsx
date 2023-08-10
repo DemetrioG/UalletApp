@@ -1,7 +1,7 @@
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { usePromise } from "../../../../../../hooks/usePromise";
 import { registerAlert } from "../query";
 import { useNavigation } from "@react-navigation/native";
+import { handleToast } from "../../../../../../utils/functions.helper";
 
 export const useSubmit = () => {
   const { isLoading, handleExecute } = usePromise(registerAlert);
@@ -11,13 +11,13 @@ export const useSubmit = () => {
     handleExecute(value)
       .then(() => {
         navigate("Configuracoes/Alertas" as never);
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Alerta definido com sucesso",
         });
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao definir alerta",
         });

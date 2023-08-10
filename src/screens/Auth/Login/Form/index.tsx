@@ -6,7 +6,6 @@ import {
   Platform,
 } from "react-native";
 import { Actionsheet, Button, Center, Text, VStack } from "native-base";
-import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useFormContext } from "react-hook-form";
@@ -34,6 +33,7 @@ import {
 import { colors } from "../../../../styles";
 import { loginByEmailAndPassword } from "../querys";
 import { LoginDTO } from "../types";
+import { handleToast } from "../../../../utils/functions.helper";
 
 export const LoginForm = () => {
   const formMethods = useFormContext<LoginDTO>();
@@ -58,7 +58,7 @@ export const LoginForm = () => {
         }));
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Verifique os campos informados",
         });

@@ -4,9 +4,9 @@ import { UseFormReturn, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { usePromise } from "../../../../../../hooks/usePromise";
 import { changePassword } from "../querys";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { handleToast } from "../../../../../../utils/functions.helper";
 
 const defaultValues = {
   oldPassword: "",
@@ -48,7 +48,7 @@ export const useChangePassword = (
     const changed = await handleExecute(formData);
 
     if (!changed) {
-      Toast.show({
+      handleToast({
         type: "error",
         text1: "A senha antiga é inválida",
       });
@@ -58,7 +58,7 @@ export const useChangePassword = (
       });
     }
 
-    Toast.show({
+    handleToast({
       type: "success",
       text1: "Senha alterada com sucesso",
     });

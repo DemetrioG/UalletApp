@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { usePromise } from "../../../../../hooks/usePromise";
 import { consolidateData, getData } from "../query";
 import { ConsolidateDTO, ItemListType } from "../types";
-import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { ReturnUseDisclosure } from "../../../../../types/types";
+import { handleToast } from "../../../../../utils/functions.helper";
 
 export const useFormConsolidate = () => {
   const formMethods = useForm<ConsolidateDTO>();
@@ -34,13 +34,13 @@ export const useCreateConsolidate = (
     handleExecute(data)
       .then(() => {
         onClose();
-        return Toast.show({
+        return handleToast({
           type: "success",
           text1: "Dados consolidados com sucesso",
         });
       })
       .catch(() => {
-        return Toast.show({
+        return handleToast({
           type: "error",
           text1: "Erro ao consolidar os dados",
         });

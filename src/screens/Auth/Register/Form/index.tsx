@@ -1,7 +1,6 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button, Center, Text, VStack } from "native-base";
-import Toast from "react-native-toast-message";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -18,6 +17,7 @@ import { TouchableOpacity } from "react-native";
 import { ChevronLeft } from "lucide-react-native";
 import { usePromise } from "../../../../hooks/usePromise";
 import { RegisterDTO } from "../types";
+import { handleToast } from "../../../../utils/functions.helper";
 
 export const RegisterForm = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -31,14 +31,14 @@ export const RegisterForm = () => {
   async function register(props: RegisterDTO) {
     return registerUser(props)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Usuário cadastrado com sucesso",
         });
         return navigate("Login");
       })
       .catch((error) => {
-        return Toast.show({
+        return handleToast({
           type: "error",
           text1: error,
         });

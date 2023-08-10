@@ -17,8 +17,8 @@ import { numberToReal } from "../../../../utils/number.helper";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
+import { handleToast } from "../../../../utils/functions.helper";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
@@ -106,7 +106,7 @@ export const useCreateEntrie = () => {
   async function execute(formData: NewEntrieDTO) {
     handleExecute(formData)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Dados cadastrados com sucesso",
         });
@@ -114,7 +114,7 @@ export const useCreateEntrie = () => {
       })
       .catch((e) => {
         console.error(e);
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao cadastrar as informações",
         });
@@ -140,14 +140,14 @@ export const useUpdateEntrie = () => {
     console.log(formData);
     handleExecute(formData, id, params)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Lançamento atualizado com sucesso",
         });
         navigate("Lancamentos" as never);
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao atualizar as informações",
         });
@@ -185,14 +185,14 @@ const useDeleteEntrie = () => {
   async function execute(params: ListEntries) {
     handleExecute(params)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Lançamento excluído com  sucesso",
         });
         navigate("Lancamentos" as never);
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao excluir o lançamento",
         });
