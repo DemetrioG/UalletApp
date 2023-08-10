@@ -1,23 +1,31 @@
 import * as React from "react";
 import { Platform, StatusBar, View } from "react-native";
+import { VStack } from "native-base";
+import styled from "styled-components";
 import Toast from "react-native-toast-message";
-import { SafeAreaView } from "react-navigation";
-import { toastConfig } from "../components/Toast/config";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import Routes from "../routes";
-import styled from "styled-components";
+import { toastConfig } from "../components/Toast/config";
+import When from "../components/When";
 
 export const App = () => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {Platform.OS === "ios" && (
-        // Backgound da StatusBar no iPhone
-        <IphoneStatusBar />
-      )}
-      <StyledStatusBar />
+    <SafeAreaProvider>
+      <VStack pt={insets.top}>
+        <When is={Platform.OS === "ios"}>
+          <IphoneStatusBar />
+        </When>
+        <StyledStatusBar />
+      </VStack>
       <Routes />
       <Toast config={toastConfig} />
-    </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
