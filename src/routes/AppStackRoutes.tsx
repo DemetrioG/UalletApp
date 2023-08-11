@@ -32,7 +32,6 @@ const {
 export const AppStackRoutes = () => {
   return (
     <NavigationContainer>
-      <ConfirmDialog />
       <StackNavigator initialRouteName="Home">
         {/* Home */}
         <StackScreen

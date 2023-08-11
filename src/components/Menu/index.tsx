@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import { VStack, Avatar, Text, HStack } from "native-base";
 import Modal from "react-native-modal";
 
@@ -12,7 +13,6 @@ import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
 import { LogOut, Repeat, Settings } from "lucide-react-native";
 import { ReturnUseDisclosure } from "../../types/types";
-import { useContext } from "react";
 
 export const Menu = (props: ReturnUseDisclosure) => {
   const { theme }: IThemeProvider = useTheme();
@@ -20,6 +20,7 @@ export const Menu = (props: ReturnUseDisclosure) => {
   const { data, setData } = useContext(DataContext);
   const { setConfirm } = useContext(ConfirmContext);
   const { user, setUser } = useContext(UserContext);
+  const [canLogout, setCanLogout] = useState(false);
 
   function changeModality() {
     return setData((dataState) => ({
@@ -36,14 +37,8 @@ export const Menu = (props: ReturnUseDisclosure) => {
   }
 
   function handleLogout() {
+    setCanLogout(true);
     props.onClose();
-    setTimeout(() => {
-      setConfirm({
-        title: "Deseja realmente sair do app?",
-        visibility: true,
-        callbackFunction: logout,
-      });
-    }, 500);
   }
 
   function goToConfiguracoesScreen() {
@@ -59,6 +54,15 @@ export const Menu = (props: ReturnUseDisclosure) => {
       onBackdropPress={props.onClose}
       swipeDirection={"down"}
       style={{ width: "100%", left: -20 }}
+      onModalHide={() => {
+        if (!canLogout) return;
+        setConfirm({
+          title: "Deseja realmente sair do app?",
+          visibility: true,
+          callbackFunction: logout,
+        });
+        setCanLogout(false);
+      }}
       coverScreen
     >
       <VStack

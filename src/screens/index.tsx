@@ -10,6 +10,7 @@ import {
 
 import Routes from "../routes";
 import { toastConfig } from "../components/Toast/config";
+import { ConfirmDialog } from "../components/ConfirmDialog";
 import When from "../components/When";
 
 export const App = () => {
@@ -25,6 +26,7 @@ export const App = () => {
       </VStack>
       <Routes />
       <Toast config={toastConfig} />
+      <ConfirmDialog />
     </SafeAreaProvider>
   );
 };

@@ -58,7 +58,8 @@ export const ConfirmDialog = () => {
       >
         <VStack
           backgroundColor={theme?.secondary}
-          p={5}
+          paddingY={5}
+          paddingX={10}
           space={10}
           borderRadius="20px"
           borderLeftWidth={6}
