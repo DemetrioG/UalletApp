@@ -66,7 +66,7 @@ export const Home = () => {
               Icon={Rocket}
               StackProps={{ opacity: 0.4 }}
             />
-            <Action text="Mais" Icon={MoreHorizontal} onPress={menu.onOpen} />
+            <Action text="Menu" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
           <Internet />
           <Entries />

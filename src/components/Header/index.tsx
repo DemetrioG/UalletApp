@@ -34,7 +34,7 @@ export const Header = () => {
   const negativeRevenue = revenue < 0;
 
   return (
-    <VStack position="relative" minHeight="315px">
+    <VStack position="relative" minHeight="360px">
       <VStack
         position="absolute"
         width="100%"
@@ -42,7 +42,6 @@ export const Header = () => {
         backgroundColor={theme?.secondary}
         borderBottomLeftRadius="40px"
         borderBottomRightRadius="40px"
-        paddingBottom="40px"
       >
         <StepableDatePicker
           SideButtonProps={{
@@ -55,22 +54,44 @@ export const Header = () => {
             borderColor: theme?.secondary,
           }}
         />
-        <HStack
-          position="relative"
-          paddingY="20px"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text>Saldo atual</Text>
-        </HStack>
-        <HStack justifyContent="center" paddingY="5px">
-          <Text fontWeight={700} fontSize="4xl">
-            {balanceInteger}
-            <Text fontWeight={700} opacity={0.3} fontSize="4xl">
-              ,{balanceCents}
+        <VStack space={5} paddingY={5}>
+          <HStack
+            position="relative"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text>Saldo atual</Text>
+          </HStack>
+          <HStack justifyContent="center">
+            <Text fontWeight={700} fontSize="4xl">
+              {balanceInteger}
+              <Text fontWeight={700} opacity={0.3} fontSize="4xl">
+                ,{balanceCents}
+              </Text>
             </Text>
-          </Text>
-        </HStack>
+          </HStack>
+          <HStack alignItems="center" justifyContent="center" space={6}>
+            <VStack
+              paddingX={10}
+              paddingY={3}
+              borderRadius="40px"
+              backgroundColor={theme?.blue}
+              alignSelf="flex-start"
+            >
+              <Text color="white">Realizado</Text>
+            </VStack>
+            <VStack
+              paddingX={10}
+              paddingY={3}
+              borderRadius="40px"
+              backgroundColor={theme?.blue}
+              opacity={0.3}
+              alignSelf="flex-start"
+            >
+              <Text color="white">Projetado</Text>
+            </VStack>
+          </HStack>
+        </VStack>
       </VStack>
       <HStack
         position="absolute"
@@ -81,7 +102,7 @@ export const Header = () => {
         backgroundColor={theme?.tertiary}
         borderBottomLeftRadius="40px"
         borderBottomRightRadius="40px"
-        height="275px"
+        height="320px"
         paddingX="15px"
         paddingY="15px"
       >

@@ -137,7 +137,6 @@ export const useUpdateEntrie = () => {
     id?: number
   ) {
     if (!id) throw new Error("Identificador não encontrado");
-    console.log(formData);
     handleExecute(formData, id, params)
       .then(() => {
         handleToast({
@@ -187,7 +186,7 @@ const useDeleteEntrie = () => {
       .then(() => {
         handleToast({
           type: "success",
-          text1: "Lançamento excluído com  sucesso",
+          text1: "Lançamento excluído com sucesso",
         });
         navigate("Lancamentos" as never);
       })
