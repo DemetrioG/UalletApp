@@ -3,6 +3,7 @@ import { useTheme } from "styled-components";
 import {
   Button,
   Center,
+  FlatList,
   HStack,
   Pressable,
   Text,
@@ -37,6 +38,7 @@ import {
 import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
 import { ServerFilterFields } from "./ModalFilter/types";
+import { Item } from "./Item";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -160,12 +162,15 @@ export const Entries = () => {
           </Button>
         </HStack>
         <When is={!isLoading}>
-          <DataGrid
-            columns={columns}
-            data={filtered}
-            height="60%"
-            onRowPress={(_, row) => navigate("Lancamentos/Form", row)}
-          />
+          <VStack height="80%">
+            <FlatList
+              data={filtered}
+              renderItem={({ item, index }) => (
+                <Item row={item} index={index} />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </VStack>
         </When>
         <When is={isLoading}>
           <Center flex={1}>
