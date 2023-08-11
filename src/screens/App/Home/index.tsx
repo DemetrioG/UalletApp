@@ -1,6 +1,5 @@
 import {
   HStack,
-  IPressableProps,
   Pressable,
   Stack,
   Text,
@@ -34,6 +33,7 @@ import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
 import { Internet } from "./Internet";
+import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -56,8 +56,16 @@ export const Home = () => {
               Icon={Edit3}
               onPress={() => navigate("Lancamentos")}
             />
-            <Action text="Integrações" Icon={Plug} />
-            <Action text="Upgrades" Icon={Rocket} />
+            <Action
+              text="Integrações"
+              Icon={Plug}
+              StackProps={{ opacity: 0.4 }}
+            />
+            <Action
+              text="Upgrades"
+              Icon={Rocket}
+              StackProps={{ opacity: 0.4 }}
+            />
             <Action text="Mais" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
           <Internet />
@@ -75,18 +83,18 @@ export const Action = ({
   text,
   onPress,
   Icon,
-  PressableProps,
+  StackProps,
 }: {
   text: string;
   onPress?: () => any;
   Icon: LucideIcon;
-  PressableProps?: IPressableProps;
+  StackProps?: InterfaceVStackProps;
 }) => {
   const { theme }: IThemeProvider = useTheme();
 
   return (
-    <Pressable onPress={onPress} {...PressableProps}>
-      <VStack alignItems="center" space={1}>
+    <Pressable onPress={onPress}>
+      <VStack alignItems="center" space={1} {...StackProps}>
         <VStack background={theme?.secondary} borderRadius={50} p="20px">
           <Icon color={theme?.text} />
         </VStack>
