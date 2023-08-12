@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TouchableOpacity } from "react-native";
-import { Tooltip as NativeTooltip, useDisclose } from "native-base";
+import { Popover, Text, VStack, useDisclose } from "native-base";
 
 const Tooltip = ({
   label,
@@ -9,12 +9,18 @@ const Tooltip = ({
   label: string;
   children: JSX.Element;
 }) => {
-  const { isOpen, onToggle } = useDisclose();
-
   return (
-    <NativeTooltip label={label} isOpen={isOpen} maxW="330px">
-      <TouchableOpacity onPress={onToggle}>{children}</TouchableOpacity>
-    </NativeTooltip>
+    <Popover
+      trigger={(props) => (
+        <TouchableOpacity {...props}>{children}</TouchableOpacity>
+      )}
+    >
+      <Popover.Content borderWidth={0} borderRadius={10}>
+        <VStack maxW="330px" backgroundColor="rgba(0, 0, 0, 0.9)" p={2}>
+          <Text fontSize="14px">{label}</Text>
+        </VStack>
+      </Popover.Content>
+    </Popover>
   );
 };
 

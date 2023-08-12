@@ -54,7 +54,7 @@ export const useIsUserWithCompleteData = () => {
         ...rest,
         complete: true,
       }));
-      if (!v.data()?.birthDate) return navigate("Home/Complete");
+      if (!v.data()?.birthdate) return navigate("Home/Complete");
     });
   }
 

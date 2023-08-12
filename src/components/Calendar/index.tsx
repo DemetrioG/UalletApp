@@ -3,9 +3,10 @@ import { Platform, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import When from "../When";
 import { ReturnUseDisclosure } from "../../types/types";
-import { Text, VStack } from "native-base";
+import { Pressable, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
+import { metrics } from "../../styles";
 
 interface ICalendar extends ReturnUseDisclosure {
   setDateToInput: Function;
@@ -15,7 +16,22 @@ const Calendar = ({ setDateToInput, isOpen, onClose }: ICalendar) => {
   const { theme }: IThemeProvider = useTheme();
   return (
     <When is={isOpen}>
-      <VStack position="absolute" w="95%" top="48px" borderRadius={10}>
+      <Pressable
+        onPress={onClose}
+        backgroundColor="transparent"
+        position="absolute"
+        h={metrics.screenHeight}
+        top={-200}
+        left={0}
+        right={0}
+      />
+      <VStack
+        position="absolute"
+        w="95%"
+        top="48px"
+        borderRadius={10}
+        zIndex={2}
+      >
         <DateTimePicker
           style={{ backgroundColor: theme?.tertiary }}
           value={new Date()}
