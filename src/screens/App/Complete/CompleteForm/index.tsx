@@ -37,6 +37,7 @@ export const CompleteForm = () => {
             name="birthdate"
             formMethods={formMethods}
             errors={formMethods.formState.errors.birthdate}
+            setDateOnOpen
             isRequired
           />
           <FormSelectInput

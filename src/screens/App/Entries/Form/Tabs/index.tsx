@@ -49,6 +49,7 @@ export const FormEntriesTab = ({
             formMethods={formMethods}
             control={formMethods.control}
             errors={formMethods.formState.errors.date}
+            setDateOnOpen={!activeTab.isEditing}
             isRequired
           />
           <FormTextInput

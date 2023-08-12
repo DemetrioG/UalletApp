@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import When from "../When";
@@ -12,7 +11,8 @@ interface ICalendar extends ReturnUseDisclosure {
   setDateToInput: Function;
 }
 
-const Calendar = ({ setDateToInput, isOpen, onClose }: ICalendar) => {
+const Calendar = (props: ICalendar) => {
+  const { setDateToInput, isOpen, onClose } = props;
   const { theme }: IThemeProvider = useTheme();
   return (
     <When is={isOpen}>

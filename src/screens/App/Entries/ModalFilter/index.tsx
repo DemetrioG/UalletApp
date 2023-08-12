@@ -75,6 +75,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 control={filterMethods.control}
                 formMethods={filterMethods}
                 withIcon={false}
+                setDateOnOpen
               />
             </VStack>
             <VStack w="48%">
@@ -84,6 +85,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 control={filterMethods.control}
                 formMethods={filterMethods}
                 withIcon={false}
+                setDateOnOpen
               />
             </VStack>
           </HStack>
