@@ -11,23 +11,16 @@ import { refreshAuthDevice } from "./query";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
-import { LogOut, Repeat, Settings } from "lucide-react-native";
+import { LogOut, Settings } from "lucide-react-native";
 import { ReturnUseDisclosure } from "../../types/types";
 
 export const Menu = (props: ReturnUseDisclosure) => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation();
-  const { data, setData } = useContext(DataContext);
+  const { data } = useContext(DataContext);
   const { setConfirm } = useContext(ConfirmContext);
   const { user, setUser } = useContext(UserContext);
   const [canLogout, setCanLogout] = useState(false);
-
-  function changeModality() {
-    return setData((dataState) => ({
-      ...dataState,
-      modality: dataState.modality === "Real" ? "Projetado" : "Real",
-    }));
-  }
 
   function logout() {
     refreshAuthDevice(data.expoPushToken!);
@@ -66,7 +59,7 @@ export const Menu = (props: ReturnUseDisclosure) => {
       coverScreen
     >
       <VStack
-        h="91%"
+        h="85%"
         w="100%"
         position="absolute"
         bottom={-20}
@@ -89,14 +82,6 @@ export const Menu = (props: ReturnUseDisclosure) => {
           p={5}
           borderTopRadius="40px"
         >
-          <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
-            <TouchableOpacity onPress={changeModality}>
-              <HStack alignItems="center" justifyContent="space-between">
-                <Text>{data.modality}</Text>
-                <Repeat color={theme?.text} size={20} />
-              </HStack>
-            </TouchableOpacity>
-          </VStack>
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
             <TouchableOpacity onPress={goToConfiguracoesScreen}>
               <HStack alignItems="center" justifyContent="space-between">

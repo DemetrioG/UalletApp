@@ -176,25 +176,42 @@ export const HeaderSummary = () => {
 
   return (
     <VStack
-      backgroundColor={theme?.secondary}
+      background={theme?.secondary}
       borderBottomLeftRadius="40px"
       borderBottomRightRadius="40px"
-      paddingX={6}
     >
-      <HStack paddingY={4} justifyContent="space-between" alignItems="center">
-        <HStack alignItems="center" space={3}>
-          <Text>Saldo:</Text>
-          <HStack>
-            <Text fontWeight={700} fontSize="18px">
-              {balanceInteger}
-              <Text fontWeight={700} opacity={0.3} fontSize="18px">
-                ,{balanceCents}
+      <StepableDatePicker
+        SideButtonProps={{
+          style: { padding: 8, backgroundColor: theme?.secondary },
+        }}
+        ContainerProps={{
+          borderBottomLeftRadius: "30px",
+          borderBottomRightRadius: "30px",
+          backgroundColor: theme?.primary,
+          borderColor: theme?.secondary,
+        }}
+      />
+      <VStack
+        backgroundColor={theme?.secondary}
+        paddingX={6}
+        borderBottomLeftRadius="40px"
+        borderBottomRightRadius="40px"
+      >
+        <HStack paddingY={4} justifyContent="space-between" alignItems="center">
+          <HStack alignItems="center" space={3}>
+            <Text>Saldo:</Text>
+            <HStack>
+              <Text fontWeight={700} fontSize="18px">
+                {balanceInteger}
+                <Text fontWeight={700} opacity={0.3} fontSize="18px">
+                  ,{balanceCents}
+                </Text>
               </Text>
-            </Text>
+            </HStack>
           </HStack>
+          <HomeMenu />
         </HStack>
-        <HomeMenu />
-      </HStack>
+      </VStack>
     </VStack>
   );
 };
