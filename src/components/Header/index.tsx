@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { TouchableOpacity } from "react-native";
 
 import { Menu } from "../Menu";
 import { DataContext } from "../../context/Data/dataContext";
@@ -26,12 +27,19 @@ import { WifiOff } from "lucide-react-native";
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
-  const { data } = useContext(DataContext);
+  const { data, setData } = useContext(DataContext);
   const { data: revenue, isLoading } = useGetRevenue();
   const {} = useGetData();
 
   const [balanceInteger, balanceCents] = data.balance.split(",");
   const negativeRevenue = revenue < 0;
+
+  function changeModality() {
+    return setData((rest) => ({
+      ...rest,
+      modality: rest.modality === "Real" ? "Projetado" : "Real",
+    }));
+  }
 
   return (
     <VStack position="relative" minHeight="360px">
@@ -71,25 +79,34 @@ export const Header = () => {
             </Text>
           </HStack>
           <HStack alignItems="center" justifyContent="center" space={6}>
-            <VStack
-              paddingX={10}
-              paddingY={3}
-              borderRadius="40px"
-              backgroundColor={theme?.blue}
-              alignSelf="flex-start"
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 35,
+                paddingVertical: 10,
+                borderRadius: 40,
+                backgroundColor: theme?.blue,
+                opacity: data.modality === "Real" ? 1 : 0.3,
+                alignSelf: "flex-start",
+              }}
+              disabled={data.modality === "Real"}
+              onPress={changeModality}
             >
               <Text color="white">Realizado</Text>
-            </VStack>
-            <VStack
-              paddingX={10}
-              paddingY={3}
-              borderRadius="40px"
-              backgroundColor={theme?.blue}
-              opacity={0.3}
-              alignSelf="flex-start"
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 35,
+                paddingVertical: 10,
+                borderRadius: 40,
+                backgroundColor: theme?.blue,
+                opacity: data.modality === "Projetado" ? 1 : 0.3,
+                alignSelf: "flex-start",
+              }}
+              disabled={data.modality === "Projetado"}
+              onPress={changeModality}
             >
               <Text color="white">Projetado</Text>
-            </VStack>
+            </TouchableOpacity>
           </HStack>
         </VStack>
       </VStack>
