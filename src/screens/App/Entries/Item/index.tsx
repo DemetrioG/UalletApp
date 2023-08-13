@@ -8,6 +8,7 @@ import When from "../../../../components/When";
 import { CardDownIcon, CardUpIcon } from "../../../../components/CustomIcons";
 import { convertDateFromDatabase } from "../../../../utils/date.helper";
 import { numberToReal } from "../../../../utils/number.helper";
+import { Swipeable } from "react-native-gesture-handler";
 
 export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const { theme }: IThemeProvider = useTheme();
@@ -15,45 +16,66 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const isRevenue = row.type === "Receita";
 
   return (
-    <Pressable onPress={() => navigate("Lancamentos/Form", row)}>
-      <HStack
-        justifyContent="space-between"
-        alignItems="center"
-        borderTopWidth={index === 0 ? 0 : 1}
-        borderColor={theme?.primary}
-        paddingY={3}
-      >
-        <HStack space={2} alignItems="center">
-          <VStack
-            backgroundColor={theme?.primary}
-            alignItems="center"
-            justifyContent="center"
-            p={2}
-            w="55px"
-            h="55px"
-            borderRadius="50%"
-          >
-            <When is={row.type === "Receita"}>
-              <CardUpIcon />
-            </When>
-            <When is={row.type === "Despesa"}>
-              <CardDownIcon />
-            </When>
-          </VStack>
-          <VStack>
-            <Text fontWeight={500} fontSize="14px">
-              {row.description}
-            </Text>
-            <Text fontSize="14px" opacity={0.8}>
-              {convertDateFromDatabase(row.date).slice(0, 5)}
-            </Text>
-          </VStack>
+    <Swipeable renderRightActions={() => <Delete index={index} />}>
+      <Pressable onPress={() => navigate("Lancamentos/Form", row)}>
+        <HStack
+          backgroundColor={theme?.secondary}
+          justifyContent="space-between"
+          alignItems="center"
+          borderTopWidth={index === 0 ? 0 : 1}
+          borderColor={theme?.primary}
+          paddingY={3}
+        >
+          <HStack space={2} alignItems="center">
+            <VStack
+              backgroundColor={theme?.primary}
+              alignItems="center"
+              justifyContent="center"
+              p={2}
+              w="55px"
+              h="55px"
+              borderRadius="50%"
+            >
+              <When is={row.type === "Receita"}>
+                <CardUpIcon />
+              </When>
+              <When is={row.type === "Despesa"}>
+                <CardDownIcon />
+              </When>
+            </VStack>
+            <VStack>
+              <Text fontWeight={500} fontSize="14px">
+                {row.description}
+              </Text>
+              <Text fontSize="14px" opacity={0.8}>
+                {convertDateFromDatabase(row.date).slice(0, 5)}
+              </Text>
+            </VStack>
+          </HStack>
+          <Text fontWeight={600} color={isRevenue ? theme?.blue : theme?.text}>
+            {isRevenue ? "+" : "-"}
+            {numberToReal(row.value)}
+          </Text>
         </HStack>
-        <Text fontWeight={600} color={isRevenue ? theme?.blue : theme?.text}>
-          {isRevenue ? "+" : "-"}
-          {numberToReal(row.value)}
-        </Text>
-      </HStack>
-    </Pressable>
+      </Pressable>
+    </Swipeable>
+  );
+};
+
+const Delete = (props: { index: number }) => {
+  const { theme }: IThemeProvider = useTheme();
+  return (
+    <VStack
+      backgroundColor={theme?.red}
+      opacity={0.8}
+      alignItems="center"
+      justifyContent="center"
+      paddingX={5}
+      marginLeft={5}
+      borderTopRightRadius="20px"
+      borderBottomRightRadius="20px"
+    >
+      <Text color="white">Exluir</Text>
+    </VStack>
   );
 };
