@@ -1,4 +1,5 @@
 import { useTheme } from "styled-components";
+import { Swipeable } from "react-native-gesture-handler";
 import { ListEntries } from "../types";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useNavigation } from "@react-navigation/native";
@@ -8,7 +9,6 @@ import When from "../../../../components/When";
 import { CardDownIcon, CardUpIcon } from "../../../../components/CustomIcons";
 import { convertDateFromDatabase } from "../../../../utils/date.helper";
 import { numberToReal } from "../../../../utils/number.helper";
-import { Swipeable } from "react-native-gesture-handler";
 
 export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const { theme }: IThemeProvider = useTheme();
