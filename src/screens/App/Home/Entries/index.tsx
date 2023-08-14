@@ -43,7 +43,10 @@ export const Entries = () => {
         <When is={!isLoading}>
           <>
             <When is={isEmpty}>
-              <EmptyChart actionText="Realize seu primeiro lançamento" />
+              <EmptyChart
+                actionText="Realize seu primeiro lançamento"
+                route="Lancamentos"
+              />
             </When>
             <When is={!isEmpty}>
               <FlatList

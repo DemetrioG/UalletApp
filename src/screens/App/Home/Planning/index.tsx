@@ -72,7 +72,10 @@ export const Planning = () => {
             </>
           </When>
           <When is={!hasPlanning}>
-            <EmptyChart actionText="Comece a planejar seu mês" />
+            <EmptyChart
+              actionText="Comece a planejar seu mês"
+              route="Lancamentos"
+            />
           </When>
         </When>
       </VStack>
