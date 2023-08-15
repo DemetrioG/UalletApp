@@ -21,7 +21,18 @@
         "com.apple.developer.networking.wifi-info": true
       },
       "bundleIdentifier": "com.uallet.uallet",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -52,6 +63,11 @@
           "color": "#FFFFFF"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "87d0b7d4-bbd1-44ae-bc18-478c2aecb7ec"
+      }
+    }
   }
 }
