@@ -19,12 +19,13 @@ export const useData = () => {
     );
 
     setData(hasExpense ? expenseBySegment : []);
+    setHasExpense(hasExpense);
+    setHasSegments(hasSegments);
+
     if (!hasSegments) {
-      setHasSegments(hasSegments);
       setEmptyText("Nenhum segmento cadastrado");
     }
     if (!hasExpense) {
-      setHasExpense(hasExpense);
       setEmptyText("Cadastre sua primeira despesa");
     }
   }
