@@ -9,6 +9,11 @@ import When from "../../../../components/When";
 import { CardDownIcon, CardUpIcon } from "../../../../components/CustomIcons";
 import { convertDateFromDatabase } from "../../../../utils/date.helper";
 import { numberToReal } from "../../../../utils/number.helper";
+import { TrashIcon } from "lucide-react-native";
+import { useHandleConfirmDeleteEntrie } from "../hooks/useEntries";
+import { ActivityIndicator } from "react-native";
+import { useContext } from "react";
+import { DataContext } from "../../../../context/Data/dataContext";
 
 export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const { theme }: IThemeProvider = useTheme();
@@ -16,7 +21,7 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const isRevenue = row.type === "Receita";
 
   return (
-    <Swipeable renderRightActions={() => <Delete index={index} />}>
+    <Swipeable renderRightActions={() => <Delete row={row} />}>
       <Pressable onPress={() => navigate("Lancamentos/Form", row)}>
         <HStack
           backgroundColor={theme?.secondary}
@@ -62,10 +67,21 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   );
 };
 
-const Delete = (props: { index: number }) => {
+const Delete = (props: { row: ListEntries }) => {
   const { theme }: IThemeProvider = useTheme();
+  const { setData } = useContext(DataContext);
+  const { isLoading, handleDelete } = useHandleConfirmDeleteEntrie();
+
+  function handleDeleteItem(row: ListEntries) {
+    handleDelete(row);
+    return setData((rest) => ({
+      ...rest,
+      trigger: Math.random(),
+    }));
+  }
+
   return (
-    <VStack
+    <Pressable
       backgroundColor={theme?.red}
       opacity={0.8}
       alignItems="center"
@@ -74,8 +90,14 @@ const Delete = (props: { index: number }) => {
       marginLeft={5}
       borderTopRightRadius="20px"
       borderBottomRightRadius="20px"
+      onPress={() => handleDeleteItem(props.row)}
     >
-      <Text color="white">Exluir</Text>
-    </VStack>
+      <When is={isLoading}>
+        <ActivityIndicator color="white" />
+      </When>
+      <When is={!isLoading}>
+        <TrashIcon color="white" />
+      </When>
+    </Pressable>
   );
 };

@@ -23,10 +23,10 @@ export const useData = () => {
     setHasSegments(hasSegments);
 
     if (!hasSegments) {
-      setEmptyText("Nenhum segmento cadastrado");
+      return setEmptyText("Nenhum segmento cadastrado");
     }
     if (!hasExpense) {
-      setEmptyText("Cadastre sua primeira despesa");
+      return setEmptyText("Cadastre sua primeira despesa");
     }
   }
 

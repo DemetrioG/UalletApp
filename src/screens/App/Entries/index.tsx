@@ -29,12 +29,6 @@ import { metrics } from "../../../styles";
 import { IThemeProvider } from "../../../styles/baseTheme";
 
 import LoadingAnimation from "../../../../assets/icons/blueLoading.json";
-import { DataGrid } from "../../../components/DataGrid";
-import { DataGridColumnRef } from "../../../components/DataGrid/types";
-import {
-  ITimestamp,
-  convertDateFromDatabase,
-} from "../../../utils/date.helper";
 import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
 import { ServerFilterFields } from "./ModalFilter/types";
@@ -69,53 +63,6 @@ export const Entries = () => {
   const debits = filtered.filter((item) => item.type === "Despesa");
   const totalCredits = credits.reduce((total, item) => total + item.value, 0);
   const totalDebits = debits.reduce((total, item) => total + item.value, 0);
-
-  const columns: DataGridColumnRef<ListEntries>[] = [
-    {
-      name: "description",
-      label: "Descrição",
-      flex: 1,
-      headerAlign: "flex-start",
-      align: "flex-start",
-      RowProps: {
-        styles: {
-          borderColor: theme?.primary,
-        },
-      },
-    },
-    {
-      name: "date",
-      label: "Data",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      valueFormatter: ({ value }) => {
-        return convertDateFromDatabase(value as ITimestamp);
-      },
-      RowProps: {
-        styles: {
-          borderColor: theme?.primary,
-        },
-      },
-    },
-    {
-      name: "value",
-      label: "Valor",
-      flex: 1,
-      headerAlign: "flex-end",
-      align: "flex-end",
-      valueFormatter: ({ row, value }) => {
-        return `${row.type === "Receita" ? "+" : "-"}${numberToReal(
-          value as number
-        )}`;
-      },
-      RowProps: {
-        styles: {
-          borderColor: theme?.primary,
-        },
-      },
-    },
-  ];
 
   return (
     <BackgroundContainer>
@@ -163,13 +110,20 @@ export const Entries = () => {
         </HStack>
         <When is={!isLoading}>
           <VStack height="80%">
-            <FlatList
-              data={filtered}
-              renderItem={({ item, index }) => (
-                <Item row={item} index={index} />
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
+            <When is={!filtered.length}>
+              <Center flex={1}>
+                <Text>Não há lançamentos para visualizar</Text>
+              </Center>
+            </When>
+            <When is={!!filtered.length}>
+              <FlatList
+                data={filtered}
+                renderItem={({ item, index }) => (
+                  <Item row={item} index={index} />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </When>
           </VStack>
         </When>
         <When is={isLoading}>
