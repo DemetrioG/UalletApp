@@ -1,15 +1,15 @@
 import { VStack } from "native-base";
-import { ReturnUseDisclosure } from "../../types/types";
 import NativeModal from "react-native-modal";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
-import { PropsWithChildren } from "react";
+import { ModalProps } from "./types";
 
 export const Modal = ({
   isOpen,
   onClose,
   children,
-}: ReturnUseDisclosure & PropsWithChildren) => {
+  ContainerProps,
+}: ModalProps) => {
   const { theme }: IThemeProvider = useTheme();
   return (
     <NativeModal
@@ -27,6 +27,7 @@ export const Modal = ({
         bottom={-20}
         background={theme?.tertiary}
         borderTopRadius="30px"
+        {...ContainerProps}
       >
         {children}
       </VStack>
