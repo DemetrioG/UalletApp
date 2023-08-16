@@ -55,7 +55,7 @@ export const Entries = () => {
 
   useEffect(() => {
     handleGetData();
-  }, [data.modality, data.month, data.year, isFocused]);
+  }, [data.modality, data.month, data.year, data.trigger, isFocused]);
 
   const filtered = list.filter(clientFilters);
 
@@ -109,7 +109,7 @@ export const Entries = () => {
           </Button>
         </HStack>
         <When is={!isLoading}>
-          <VStack height="80%">
+          <VStack height="68%">
             <When is={!filtered.length}>
               <Center flex={1}>
                 <Text>Não há lançamentos para visualizar</Text>

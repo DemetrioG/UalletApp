@@ -7,7 +7,7 @@ import { PlanningList } from "../types";
 export const useGetPlanning = () => {
   const { isLoading, handleExecute } = usePromise(getPlanning);
   const {
-    data: { month, year },
+    data: { month, year, trigger },
   } = useContext(DataContext);
   const [list, setList] = useState<PlanningList[]>([]);
 
@@ -20,7 +20,7 @@ export const useGetPlanning = () => {
 
   useEffect(() => {
     execute();
-  }, [month, year]);
+  }, [month, year, trigger]);
 
   return {
     isLoading,

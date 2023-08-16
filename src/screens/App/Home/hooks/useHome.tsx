@@ -19,7 +19,7 @@ import { ReturnUseDisclosure } from "../../../../types/types";
 
 export const useGetLastEntries = () => {
   const {
-    data: { month, year, modality },
+    data: { month, year, modality, trigger },
   } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise<any[]>(getLastEntry);
 
@@ -32,7 +32,7 @@ export const useGetLastEntries = () => {
 
   useEffect(() => {
     execute();
-  }, [month, year, modality]);
+  }, [month, year, modality, trigger]);
 
   return {
     isLoading,

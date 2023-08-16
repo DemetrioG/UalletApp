@@ -55,7 +55,6 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 await sleep(500);
                 handleSubmit();
               }}
-              borderWidth={1}
             >
               <FilterX color={theme?.blue} />
             </Pressable>

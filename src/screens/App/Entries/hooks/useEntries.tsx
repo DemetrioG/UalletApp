@@ -101,6 +101,7 @@ export const useFormEntries = (params: ListEntries, id?: number) => {
 
 export const useCreateEntrie = () => {
   const { navigate } = useNavigation();
+  const { setData } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise(registerNewEntry);
 
   async function execute(formData: NewEntrieDTO) {
@@ -110,6 +111,10 @@ export const useCreateEntrie = () => {
           type: "success",
           text1: "Dados cadastrados com sucesso",
         });
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         navigate("Lancamentos" as never);
       })
       .catch((e) => {
@@ -129,6 +134,7 @@ export const useCreateEntrie = () => {
 
 export const useUpdateEntrie = () => {
   const { navigate } = useNavigation();
+  const { setData } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise(updateEntry);
 
   async function execute(
@@ -143,6 +149,10 @@ export const useUpdateEntrie = () => {
           type: "success",
           text1: "Lançamento atualizado com sucesso",
         });
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         navigate("Lancamentos" as never);
       })
       .catch(() => {
@@ -179,6 +189,7 @@ export const useHandleConfirmDeleteEntrie = () => {
 
 const useDeleteEntrie = () => {
   const { navigate } = useNavigation();
+  const { setData } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise(deleteEntry);
 
   async function execute(params: ListEntries) {
@@ -188,6 +199,10 @@ const useDeleteEntrie = () => {
           type: "success",
           text1: "Lançamento excluído com sucesso",
         });
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         navigate("Lancamentos" as never);
       })
       .catch(() => {

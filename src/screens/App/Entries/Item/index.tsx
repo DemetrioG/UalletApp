@@ -12,8 +12,6 @@ import { numberToReal } from "../../../../utils/number.helper";
 import { TrashIcon } from "lucide-react-native";
 import { useHandleConfirmDeleteEntrie } from "../hooks/useEntries";
 import { ActivityIndicator } from "react-native";
-import { useContext } from "react";
-import { DataContext } from "../../../../context/Data/dataContext";
 
 export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const { theme }: IThemeProvider = useTheme();
@@ -27,7 +25,7 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
           backgroundColor={theme?.secondary}
           justifyContent="space-between"
           alignItems="center"
-          borderTopWidth={index === 0 ? 0 : 1}
+          // borderTopWidth={index === 0 ? 0 : 1}
           borderColor={theme?.primary}
           paddingY={3}
         >
@@ -69,16 +67,7 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
 
 const Delete = (props: { row: ListEntries }) => {
   const { theme }: IThemeProvider = useTheme();
-  const { setData } = useContext(DataContext);
   const { isLoading, handleDelete } = useHandleConfirmDeleteEntrie();
-
-  function handleDeleteItem(row: ListEntries) {
-    handleDelete(row);
-    return setData((rest) => ({
-      ...rest,
-      trigger: Math.random(),
-    }));
-  }
 
   return (
     <Pressable
@@ -90,7 +79,7 @@ const Delete = (props: { row: ListEntries }) => {
       marginLeft={5}
       borderTopRightRadius="20px"
       borderBottomRightRadius="20px"
-      onPress={() => handleDeleteItem(props.row)}
+      onPress={() => handleDelete(props.row)}
     >
       <When is={isLoading}>
         <ActivityIndicator color="white" />

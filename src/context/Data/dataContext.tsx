@@ -7,6 +7,7 @@ export interface IData {
   year: number;
   modality: "Real" | "Projetado";
   expoPushToken: string | undefined;
+  trigger: number;
 }
 
 export const initialDataState: IData = {
@@ -16,6 +17,7 @@ export const initialDataState: IData = {
   year: 0,
   modality: "Real",
   expoPushToken: undefined,
+  trigger: 0,
 };
 
 export const DataContext = React.createContext<{
