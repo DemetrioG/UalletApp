@@ -39,7 +39,7 @@ const Consolidate = (props: ReturnUseDisclosure) => {
   const anySelectedEntrie = !!Object.keys(formMethods.watch()).length;
 
   return (
-    <Modal {...props}>
+    <Modal {...props} ModalProps={{ swipeDirection: "down" }}>
       <FormProvider {...formMethods}>
         <HStack alignItems="center" space={3} mb={6}>
           <Pressable onPress={props.onClose}>

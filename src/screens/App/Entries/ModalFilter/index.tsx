@@ -39,7 +39,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
   }
 
   return (
-    <Modal {...props}>
+    <Modal {...props} ModalProps={{ swipeDirection: "down" }}>
       <HStack justifyContent="space-between">
         <HStack alignItems="center" space={3} mb={6}>
           <Pressable onPress={props.onClose}>

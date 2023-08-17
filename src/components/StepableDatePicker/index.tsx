@@ -120,7 +120,16 @@ const ActionSheet = (props: ActionSheetProps) => {
   }
 
   return (
-    <Modal {...props} ContainerProps={{ backgroundColor: "#FAFAFA", h: "40%" }}>
+    <Modal
+      {...props}
+      ContainerProps={{
+        backgroundColor: "#FAFAFA",
+        h: "40%",
+        borderRadius: "20px",
+        alignItems: "center",
+      }}
+    >
+      <VStack backgroundColor="#737373" w="40px" h="4px" borderRadius="2px" />
       <FlatList
         ref={flatListRef}
         style={{ width: "100%", height: 200 }}
@@ -141,8 +150,12 @@ const ActionSheet = (props: ActionSheetProps) => {
 const ActionSheetItem = memo(({ item, onPress }: ActionSheetItemProps) => {
   return (
     <TouchableOpacity
-      style={{ height: 60, justifyContent: "center", paddingHorizontal: 10 }}
       onPress={onPress}
+      style={{
+        height: 60,
+        justifyContent: "center",
+        paddingHorizontal: 10,
+      }}
     >
       <Text color="black">{item.label}</Text>
     </TouchableOpacity>

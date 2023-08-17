@@ -9,6 +9,7 @@ export const Modal = ({
   onClose,
   children,
   ContainerProps,
+  ModalProps,
 }: ModalProps) => {
   const { theme }: IThemeProvider = useTheme();
   return (
@@ -16,8 +17,9 @@ export const Modal = ({
       isVisible={isOpen}
       onSwipeComplete={onClose}
       onBackdropPress={onClose}
-      swipeDirection={"down"}
+      propagateSwipe
       style={{ width: "100%", left: -20 }}
+      {...ModalProps}
     >
       <VStack
         p={5}
