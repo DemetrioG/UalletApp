@@ -86,3 +86,19 @@ export const useCheckConsolidation = ({ onOpen }: ReturnUseDisclosure) => {
 
   return {};
 };
+
+export const useScrollToRefresh = () => {
+  const { isLoading, handleExecute } = usePromise(execute);
+  const { setData } = useContext(DataContext);
+  async function execute() {
+    return setData((rest) => ({
+      ...rest,
+      trigger: Math.random(),
+    }));
+  }
+
+  return {
+    isLoading,
+    handleExecute,
+  };
+};

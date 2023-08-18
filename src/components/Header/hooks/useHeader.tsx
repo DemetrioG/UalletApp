@@ -30,7 +30,7 @@ export const useGetData = () => {
 export const useGetRevenue = () => {
   const { isLoading, handleExecute } = usePromise(getRevenueGrowth);
   const {
-    data: { modality, month, year },
+    data: { modality, month, year, trigger },
   } = useContext(DataContext);
   const [data, setData] = useState(0);
 
@@ -41,7 +41,7 @@ export const useGetRevenue = () => {
   useEffect(() => {
     if (!year) return;
     execute();
-  }, [month, year, modality]);
+  }, [month, year, modality, trigger]);
 
   return {
     isLoading,

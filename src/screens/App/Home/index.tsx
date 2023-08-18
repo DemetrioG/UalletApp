@@ -28,12 +28,14 @@ import { useGetBalance } from "../../../hooks/useBalance";
 import {
   useCheckConsolidation,
   useIsUserWithCompleteData,
+  useScrollToRefresh,
 } from "./hooks/useHome";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
 import { Menu } from "../../../components/Menu";
 import { Internet } from "./Internet";
 import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
+import { RefreshControl } from "react-native";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -43,11 +45,17 @@ export const Home = () => {
   const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
+  const { isLoading, handleExecute } = useScrollToRefresh();
 
   return (
     <BackgroundContainer>
       <Consolidate {...consolidation} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleExecute} />
+        }
+      >
         <Header />
         <Stack space={5}>
           <HStack justifyContent="space-evenly">
