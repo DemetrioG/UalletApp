@@ -49,13 +49,11 @@ export const Entries = () => {
               />
             </When>
             <When is={!isEmpty}>
-              <FlatList
-                data={lastEntries}
-                renderItem={({ item, index }) => (
-                  <Item row={item} index={index} />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
+              <>
+                {lastEntries.map((row, index) => (
+                  <Item row={row} key={index} index={index} />
+                ))}
+              </>
             </When>
           </>
         </When>
