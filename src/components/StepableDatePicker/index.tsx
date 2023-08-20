@@ -125,11 +125,11 @@ const ActionSheet = (props: ActionSheetProps) => {
       ContainerProps={{
         backgroundColor: "#FAFAFA",
         h: "40%",
-        borderRadius: "20px",
+        borderRadius: 20,
         alignItems: "center",
       }}
     >
-      <VStack backgroundColor="#737373" w="40px" h="4px" borderRadius="2px" />
+      <VStack backgroundColor="#737373" w="40px" h="4px" borderRadius={2} />
       <FlatList
         ref={flatListRef}
         style={{ width: "100%", height: 200 }}

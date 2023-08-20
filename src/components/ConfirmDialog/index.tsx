@@ -61,7 +61,7 @@ export const ConfirmDialog = () => {
           paddingY={5}
           paddingX={10}
           space={10}
-          borderRadius="20px"
+          borderRadius={20}
           borderLeftWidth={6}
           borderLeftColor={theme?.red}
         >

@@ -37,7 +37,7 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
               p={2}
               w="55px"
               h="55px"
-              borderRadius="50%"
+              borderRadius={50}
             >
               <When is={row.type === "Receita"}>
                 <CardUpIcon />
