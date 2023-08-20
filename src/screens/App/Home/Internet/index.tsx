@@ -14,7 +14,7 @@ export const Internet = () => {
     <When is={!data.isNetworkConnected}>
       <VStack
         backgroundColor={theme?.secondary}
-        borderRadius="20px"
+        borderRadius={20}
         p={4}
         space={2}
       >

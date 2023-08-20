@@ -21,7 +21,7 @@ export const Planning = () => {
   const hasPlanning = !!list.length;
 
   return (
-    <VStack backgroundColor={theme?.secondary} borderRadius="30px" p={4} pt={5}>
+    <VStack backgroundColor={theme?.secondary} borderRadius={30} p={4} pt={5}>
       <HStack justifyContent="space-between" alignItems="center" mb={2}>
         <Text fontWeight={600}>Planejamento</Text>
         <Pressable>

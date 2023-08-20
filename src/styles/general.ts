@@ -35,7 +35,7 @@ export const BackgroundEffect = styled(View)`
   position: absolute;
   top: -10%;
   left: -20%;
-  border-radius: 200%;
+  border-radius: 500px;
   width: 400px;
   height: 400px;
   background-color: ${({ theme: { theme } }) =>

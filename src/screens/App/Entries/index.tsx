@@ -161,7 +161,7 @@ export const Entries = () => {
               justifyContent="center"
               p={1}
               pl={2}
-              borderRadius="100px"
+              borderRadius={50}
               h="45px"
               w="45px"
             >
@@ -193,7 +193,7 @@ export const Entries = () => {
             justifyContent="center"
             p={1}
             pl={2}
-            borderRadius="100px"
+            borderRadius={50}
             h="45px"
             w="45px"
           >
