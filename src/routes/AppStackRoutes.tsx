@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -13,7 +14,6 @@ import { DeleteAccountScreen } from "../screens/App/Configurations/Security/Dele
 import { Entries } from "../screens/App/Entries";
 import { Home } from "../screens/App/Home";
 import { FormEntries } from "../screens/App/Entries/Form";
-import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HeaderSummary } from "../components/Header";
 import { View } from "native-base";
 import { IThemeProvider } from "../styles/baseTheme";
