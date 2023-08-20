@@ -25,7 +25,7 @@ export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
                     <VStack
                       w="10px"
                       h="10px"
-                      borderRadius="100%"
+                      borderRadius="500px"
                       backgroundColor={theme?.colorPieChart[index]}
                     />
                     <Text fontSize="14px" fontWeight={700}>
