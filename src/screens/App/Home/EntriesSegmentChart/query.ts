@@ -37,13 +37,13 @@ export async function getData(context: IData) {
       const percentage = (expense / totalExpenses) * 100;
 
       return {
-        label: segment,
-        value: percentage,
+        x: segment,
+        y: percentage,
       };
     })
   );
 
-  const hasExpense = expenseBySegment.some((item) => item.value > 0);
+  const hasExpense = expenseBySegment.some((item) => item.y > 0);
 
   return { expenseBySegment, hasExpense, hasSegments };
 }
