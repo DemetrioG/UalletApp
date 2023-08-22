@@ -10,11 +10,7 @@ export const LIGHT = {
   text: "#000000",
   blue: "#266DD3",
   red: "#FF2F45",
-  green: "#70AE6E",
-  transparency: "rgba(227, 222, 222, 0.95)",
   statusBar: "dark-content",
-  yellow: "#FFB100",
-  colorPieChart: ["rgba(38, 109, 211, 1)", "rgba(38, 109, 211, 0.8)", "rgba(38, 109, 211, 0.6)", "rgba(38, 109, 211, 0.4)", "rgba(38, 109, 211, 0.2)"],
 };
 
 export const DARK = {
@@ -25,9 +21,5 @@ export const DARK = {
   text: "#FFFFFF",
   blue: "#6499E3",
   red: "#FF4C5F",
-  green: "#98BC71",
-  transparency: "rgba(49, 47, 66, 0.95)",
   statusBar: "light-content",
-  yellow: "#FFFD82",
-  colorPieChart: ["rgba(38, 109, 211, 1)", "rgba(38, 109, 211, 0.8)", "rgba(38, 109, 211, 0.6)", "rgba(38, 109, 211, 0.4)", "rgba(38, 109, 211, 0.2)"],
 };
