@@ -2,37 +2,37 @@ import { Center, HStack, Text, VStack } from "native-base";
 
 import { ChartProps } from "./types";
 import When from "../When";
-import { IThemeProvider } from "../../styles/baseTheme";
-import { useTheme } from "styled-components";
 import { VictoryPie } from "victory-native";
 
 export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
-  const { theme }: IThemeProvider = useTheme();
-
   return (
     <Center>
       <HStack>
-        <VStack w="50%">
-          <VictoryPie
-            data={data}
-            width={200}
-            height={200}
-            colorScale={["blue"]}
-            innerRadius={25}
-            animate
-          />
+        <VStack w="50%" h={150} position="relative">
+          <VStack position="absolute" w="100%" top={-30} left={-25}>
+            <VictoryPie
+              data={data}
+              width={200}
+              height={200}
+              padAngle={5}
+              cornerRadius={15}
+              innerRadius={25}
+              colorScale={colorScale}
+              animate
+            />
+          </VStack>
         </VStack>
-        <VStack w="50%">
+        <VStack w="45%" justifyContent="center" space={1}>
           {data.map(({ x, y }, index) => {
             return (
               <When is={!!y} key={index}>
-                <VStack justifyContent="center" flex={1}>
+                <VStack justifyContent="center">
                   <HStack alignItems="center" space={2}>
                     <VStack
                       w="10px"
                       h="10px"
                       borderRadius="500px"
-                      backgroundColor={theme?.colorPieChart[index]}
+                      backgroundColor={colorScale[index]}
                     />
                     <Text fontSize="14px" fontWeight={700}>
                       {y.toFixed(0)}%
@@ -57,3 +57,11 @@ export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
     </Center>
   );
 };
+
+const colorScale = [
+  "rgba(38, 109, 211, 1)",
+  "rgba(38, 109, 211, 0.8)",
+  "rgba(38, 109, 211, 0.6)",
+  "rgba(38, 109, 211, 0.4)",
+  "rgba(38, 109, 211, 0.2)",
+];
