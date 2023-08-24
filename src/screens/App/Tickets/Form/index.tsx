@@ -1,15 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
-import { IThemeProvider } from "../../../../../styles/baseTheme";
+import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import {
   BackgroundContainer,
   StyledKeyboardAvoidingView,
-} from "../../../../../styles/general";
+} from "../../../../styles/general";
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { ChevronLeft } from "lucide-react-native";
-import { FormSelectInput } from "../../../../../components/Inputs/SelectInput";
-import { FormTextArea } from "../../../../../components/Inputs/TextArea";
+import { FormSelectInput } from "../../../../components/Inputs/SelectInput";
+import { FormTextArea } from "../../../../components/Inputs/TextArea";
 import { useFormTickets } from "../hooks/useTickets";
 
 export const TicketsForm = () => {

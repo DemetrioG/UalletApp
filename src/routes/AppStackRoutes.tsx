@@ -22,8 +22,8 @@ import { CompleteForm } from "../screens/App/Complete/CompleteForm";
 import { Records } from "../screens/App/Configurations/Records";
 import { Segment } from "../screens/App/Configurations/Records/Segment";
 import { SegmentForm } from "../screens/App/Configurations/Records/Segment/Form";
-import { Tickets } from "../screens/App/Configurations/Tickets";
-import { TicketsForm } from "../screens/App/Configurations/Tickets/Form";
+import { Tickets } from "../screens/App/Tickets";
+import { TicketsForm } from "../screens/App/Tickets/Form";
 
 const {
   Navigator: StackNavigator,
