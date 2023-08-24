@@ -3,8 +3,11 @@ import { Center, HStack, Text, VStack } from "native-base";
 import { ChartProps } from "./types";
 import When from "../When";
 import { VictoryPie } from "victory-native";
+import { useTheme } from "styled-components";
+import { IThemeProvider } from "../../styles/baseTheme";
 
 export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
+  const { theme }: IThemeProvider = useTheme();
   return (
     <Center>
       <HStack>
@@ -16,7 +19,12 @@ export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
               height={200}
               padAngle={5}
               cornerRadius={15}
-              innerRadius={25}
+              innerRadius={28}
+              style={{
+                labels: {
+                  fill: theme?.text,
+                },
+              }}
               colorScale={colorScale}
               animate
             />
