@@ -1,5 +1,8 @@
 import { useTheme } from "styled-components";
-import { Swipeable } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
 import { ListEntries } from "../types";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useNavigation } from "@react-navigation/native";
@@ -19,49 +22,54 @@ export const Item = ({ row, index }: { row: ListEntries; index: number }) => {
   const isRevenue = row.type === "Receita";
 
   return (
-    <Swipeable renderRightActions={() => <Delete row={row} />}>
-      <Pressable onPress={() => navigate("Lancamentos/Form", row)}>
-        <HStack
-          backgroundColor={theme?.secondary}
-          justifyContent="space-between"
-          alignItems="center"
-          // borderTopWidth={index === 0 ? 0 : 1}
-          borderColor={theme?.primary}
-          paddingY={3}
-        >
-          <HStack space={2} alignItems="center">
-            <VStack
-              backgroundColor={theme?.primary}
-              alignItems="center"
-              justifyContent="center"
-              p={2}
-              w="55px"
-              h="55px"
-              borderRadius={50}
+    <GestureHandlerRootView>
+      <Swipeable renderRightActions={() => <Delete row={row} />}>
+        <Pressable onPress={() => navigate("Lancamentos/Form", row)}>
+          <HStack
+            backgroundColor={theme?.secondary}
+            justifyContent="space-between"
+            alignItems="center"
+            // borderTopWidth={index === 0 ? 0 : 1}
+            borderColor={theme?.primary}
+            paddingY={3}
+          >
+            <HStack space={2} alignItems="center">
+              <VStack
+                backgroundColor={theme?.primary}
+                alignItems="center"
+                justifyContent="center"
+                p={2}
+                w="55px"
+                h="55px"
+                borderRadius={50}
+              >
+                <When is={row.type === "Receita"}>
+                  <CardUpIcon />
+                </When>
+                <When is={row.type === "Despesa"}>
+                  <CardDownIcon />
+                </When>
+              </VStack>
+              <VStack>
+                <Text fontWeight={500} fontSize="14px">
+                  {row.description}
+                </Text>
+                <Text fontSize="14px" opacity={0.8}>
+                  {convertDateFromDatabase(row.date).slice(0, 5)}
+                </Text>
+              </VStack>
+            </HStack>
+            <Text
+              fontWeight={600}
+              color={isRevenue ? theme?.blue : theme?.text}
             >
-              <When is={row.type === "Receita"}>
-                <CardUpIcon />
-              </When>
-              <When is={row.type === "Despesa"}>
-                <CardDownIcon />
-              </When>
-            </VStack>
-            <VStack>
-              <Text fontWeight={500} fontSize="14px">
-                {row.description}
-              </Text>
-              <Text fontSize="14px" opacity={0.8}>
-                {convertDateFromDatabase(row.date).slice(0, 5)}
-              </Text>
-            </VStack>
+              {isRevenue ? "+" : "-"}
+              {numberToReal(row.value)}
+            </Text>
           </HStack>
-          <Text fontWeight={600} color={isRevenue ? theme?.blue : theme?.text}>
-            {isRevenue ? "+" : "-"}
-            {numberToReal(row.value)}
-          </Text>
-        </HStack>
-      </Pressable>
-    </Swipeable>
+        </Pressable>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 

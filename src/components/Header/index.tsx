@@ -199,8 +199,10 @@ export const HeaderSummary = () => {
       >
         <HStack paddingY={4} justifyContent="space-between" alignItems="center">
           <HStack alignItems="center" space={3}>
-            <Text>Saldo:</Text>
-            <HStack>
+            <Text>
+              {data.modality === "Real" ? "Saldo:" : "Saldo projetado:"}
+            </Text>
+            <HStack maxWidth="160px">
               <Text fontWeight={700} fontSize="18px">
                 {balanceInteger}
                 <Text fontWeight={700} opacity={0.3} fontSize="18px">
