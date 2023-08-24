@@ -6,7 +6,6 @@ import {
 } from "react-native";
 import { Button, Center, Text, VStack } from "native-base";
 
-import Toast from "react-native-toast-message";
 import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import {
   BackgroundContainer,
@@ -20,6 +19,7 @@ import { ChevronLeft } from "lucide-react-native";
 import { usePromise } from "../../../../hooks/usePromise";
 import { ForgotPasswordDTO } from "../types";
 import { useFormContext } from "react-hook-form";
+import { handleToast } from "../../../../utils/functions.helper";
 
 export const ForgotPasswordForm = () => {
   const { isLoading, handleExecute } = usePromise(sendPassword);
@@ -30,13 +30,13 @@ export const ForgotPasswordForm = () => {
     return resetPassword(email)
       .then((successMessage) => {
         navigate("Login");
-        Toast.show({
+        handleToast({
           type: "success",
           text1: successMessage,
         });
       })
       .catch((errorMessage: string) => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: errorMessage,
         });

@@ -21,7 +21,18 @@
         "com.apple.developer.networking.wifi-info": true
       },
       "bundleIdentifier": "com.uallet.uallet",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -57,5 +68,10 @@
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-1480409232067685~6867477245",
     "ios_app_id": "ca-app-pub-1480409232067685~8513315887"
+  },
+  "extra": {
+    "eas": {
+      "projectId": "87d0b7d4-bbd1-44ae-bc18-478c2aecb7ec"
+    }
   }
 }

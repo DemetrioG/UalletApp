@@ -38,7 +38,9 @@ export const FormEntriesTab = ({
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+      >
         <Center flex={1} paddingY={5}>
           <FormTextInputCalendar
             variant="filled"
@@ -47,6 +49,7 @@ export const FormEntriesTab = ({
             formMethods={formMethods}
             control={formMethods.control}
             errors={formMethods.formState.errors.date}
+            setDateOnOpen={!activeTab.isEditing}
             isRequired
           />
           <FormTextInput

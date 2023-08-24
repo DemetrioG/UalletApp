@@ -7,4 +7,5 @@ declare module "@env" {
   export const APP_ID: string;
   export const MEASUREMENT_ID: string;
   export const AWS_WEBSERVICE_ENDPOINT: string;
+  export const EMAIL: string;
 }

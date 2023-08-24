@@ -1,14 +1,7 @@
 import { memo, useContext, useEffect, useMemo, useRef } from "react";
 import { useTheme } from "styled-components";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react-native";
-import {
-  Actionsheet,
-  FlatList,
-  HStack,
-  Text,
-  VStack,
-  useDisclose,
-} from "native-base";
+import { FlatList, HStack, Text, VStack, useDisclose } from "native-base";
 import {
   addMonths,
   eachMonthOfInterval,
@@ -29,7 +22,7 @@ import { DataContext } from "../../context/Data/dataContext";
 import { IOption } from "../../types/types";
 import { TouchableOpacity } from "react-native";
 import { setStorage } from "../../utils/storage.helper";
-import When from "../When";
+import { Modal } from "../Modal";
 
 export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { theme }: IThemeProvider = useTheme();
@@ -127,31 +120,45 @@ const ActionSheet = (props: ActionSheetProps) => {
   }
 
   return (
-    <Actionsheet isOpen={props.isOpen} onClose={props.onClose}>
-      <Actionsheet.Content>
-        <FlatList
-          ref={flatListRef}
-          style={{ width: "100%", height: 200 }}
-          data={props.options}
-          keyExtractor={(_, index) => index.toString()}
-          contentOffset={{ x: 0, y: 60 * activeOptionRef + 1 }}
-          renderItem={({ item }) => (
-            <ActionSheetItem
-              item={item}
-              onPress={() => handleUpdateDataContext(item)}
-            />
-          )}
-        />
-      </Actionsheet.Content>
-    </Actionsheet>
+    <Modal
+      {...props}
+      ContainerProps={{
+        backgroundColor: "#FAFAFA",
+        h: "40%",
+        borderRadius: 20,
+        alignItems: "center",
+      }}
+    >
+      <VStack backgroundColor="#737373" w="40px" h="4px" borderRadius={2} />
+      <FlatList
+        ref={flatListRef}
+        style={{ width: "100%", height: 200 }}
+        data={props.options}
+        keyExtractor={(_, index) => index.toString()}
+        contentOffset={{ x: 0, y: 60 * activeOptionRef + 1 }}
+        renderItem={({ item }) => (
+          <ActionSheetItem
+            item={item}
+            onPress={() => handleUpdateDataContext(item)}
+          />
+        )}
+      />
+    </Modal>
   );
 };
 
 const ActionSheetItem = memo(({ item, onPress }: ActionSheetItemProps) => {
   return (
-    <Actionsheet.Item h={60} onPress={onPress}>
-      {item.label}
-    </Actionsheet.Item>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        height: 60,
+        justifyContent: "center",
+        paddingHorizontal: 10,
+      }}
+    >
+      <Text color="black">{item.label}</Text>
+    </TouchableOpacity>
   );
 });
 

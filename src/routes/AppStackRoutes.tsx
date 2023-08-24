@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -13,7 +14,6 @@ import { DeleteAccountScreen } from "../screens/App/Configurations/Security/Dele
 import { Entries } from "../screens/App/Entries";
 import { Home } from "../screens/App/Home";
 import { FormEntries } from "../screens/App/Entries/Form";
-import { ConfirmDialog } from "../components/ConfirmDialog";
 import { HeaderSummary } from "../components/Header";
 import { View } from "native-base";
 import { IThemeProvider } from "../styles/baseTheme";
@@ -22,6 +22,8 @@ import { CompleteForm } from "../screens/App/Complete/CompleteForm";
 import { Records } from "../screens/App/Configurations/Records";
 import { Segment } from "../screens/App/Configurations/Records/Segment";
 import { SegmentForm } from "../screens/App/Configurations/Records/Segment/Form";
+import { Tickets } from "../screens/App/Tickets";
+import { TicketsForm } from "../screens/App/Tickets/Form";
 
 const {
   Navigator: StackNavigator,
@@ -32,7 +34,6 @@ const {
 export const AppStackRoutes = () => {
   return (
     <NavigationContainer>
-      <ConfirmDialog />
       <StackNavigator initialRouteName="Home">
         {/* Home */}
         <StackScreen
@@ -106,6 +107,11 @@ export const AppStackRoutes = () => {
             component={VariableEntryScreen}
           />
           {/* !Configuracoes */}
+
+          {/* Menu */}
+          <StackScreen name="Tickets" component={Tickets} />
+          <StackScreen name="Tickets/Form" component={TicketsForm} />
+          {/* !Menu */}
         </StackGroup>
       </StackNavigator>
     </NavigationContainer>

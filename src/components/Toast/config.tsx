@@ -1,16 +1,8 @@
 import { BaseToast } from "react-native-toast-message";
-import styled, { useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 import { colors } from "../../styles";
-import DefaultIcon from "../Icon";
 import { IThemeProvider } from "../../styles/baseTheme";
-
-const Icon = styled(DefaultIcon)`
-  top: 0;
-  bottom: 0;
-  left: 10px;
-  margin-top: auto;
-  margin-bottom: auto;
-`;
+import { CheckIcon, XIcon } from "lucide-react-native";
 
 export const toastConfig = {
   success: (props: any) => {
@@ -28,7 +20,19 @@ export const toastConfig = {
             : colors.darkPrimary,
           borderLeftColor: theme?.blue,
         }}
-        renderLeadingIcon={() => <Icon name="check" color={theme?.blue} />}
+        renderLeadingIcon={() => (
+          <CheckIcon
+            name="check"
+            color={theme?.blue}
+            style={{
+              top: 0,
+              bottom: 0,
+              marginTop: "auto",
+              marginBottom: "auto",
+              left: 10,
+            }}
+          />
+        )}
         {...props}
       />
     );
@@ -49,7 +53,19 @@ export const toastConfig = {
             : colors.darkPrimary,
           borderLeftColor: theme?.red,
         }}
-        renderLeadingIcon={() => <Icon name="x" color={colors.strongRed} />}
+        renderLeadingIcon={() => (
+          <XIcon
+            name="x"
+            color={colors.strongRed}
+            style={{
+              top: 0,
+              bottom: 0,
+              marginTop: "auto",
+              marginBottom: "auto",
+              left: 10,
+            }}
+          />
+        )}
         {...props}
       />
     );

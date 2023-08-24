@@ -5,9 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { CompleteDTO } from "../types";
 import { usePromise } from "../../../../hooks/usePromise";
 import { updateUserData } from "../querys";
-import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { handleToast } from "../../../../utils/functions.helper";
 
 const schema = yup.object({
   birthdate: yup
@@ -54,13 +54,13 @@ export const useCreateComplete = () => {
     handleExecute(formData)
       .then(() => {
         navigate("Home");
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Dados cadastrados com sucesso",
         });
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao cadastrar as informações",
         });

@@ -1,3 +1,4 @@
+import { useContext, useState } from "react";
 import { VStack, Avatar, Text, HStack } from "native-base";
 import Modal from "react-native-modal";
 
@@ -10,23 +11,17 @@ import { refreshAuthDevice } from "./query";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
-import { LogOut, Repeat, Settings } from "lucide-react-native";
+import { Flag, LogOut, Settings } from "lucide-react-native";
 import { ReturnUseDisclosure } from "../../types/types";
-import { useContext } from "react";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export const Menu = (props: ReturnUseDisclosure) => {
   const { theme }: IThemeProvider = useTheme();
-  const { navigate } = useNavigation();
-  const { data, setData } = useContext(DataContext);
+  const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
+  const { data } = useContext(DataContext);
   const { setConfirm } = useContext(ConfirmContext);
   const { user, setUser } = useContext(UserContext);
-
-  function changeModality() {
-    return setData((dataState) => ({
-      ...dataState,
-      modality: dataState.modality === "Real" ? "Projetado" : "Real",
-    }));
-  }
+  const [canLogout, setCanLogout] = useState(false);
 
   function logout() {
     refreshAuthDevice(data.expoPushToken!);
@@ -36,20 +31,13 @@ export const Menu = (props: ReturnUseDisclosure) => {
   }
 
   function handleLogout() {
+    setCanLogout(true);
     props.onClose();
-    setTimeout(() => {
-      setConfirm({
-        title: "Deseja realmente sair do app?",
-        visibility: true,
-        callbackFunction: logout,
-      });
-    }, 500);
   }
 
-  function goToConfiguracoesScreen() {
+  function goToScreen(path: string) {
     props.onClose();
-    //#TODO: adicionar tipagem de navegação
-    return setTimeout(() => navigate("Configuracoes" as never), 150);
+    return setTimeout(() => navigate(path), 150);
   }
 
   return (
@@ -59,10 +47,19 @@ export const Menu = (props: ReturnUseDisclosure) => {
       onBackdropPress={props.onClose}
       swipeDirection={"down"}
       style={{ width: "100%", left: -20 }}
+      onModalHide={() => {
+        if (!canLogout) return;
+        setConfirm({
+          title: "Deseja realmente sair do app?",
+          visibility: true,
+          callbackFunction: logout,
+        });
+        setCanLogout(false);
+      }}
       coverScreen
     >
       <VStack
-        h="91%"
+        h="85%"
         w="100%"
         position="absolute"
         bottom={-20}
@@ -86,18 +83,18 @@ export const Menu = (props: ReturnUseDisclosure) => {
           borderTopRadius="40px"
         >
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
-            <TouchableOpacity onPress={changeModality}>
+            <TouchableOpacity onPress={() => goToScreen("Configuracoes")}>
               <HStack alignItems="center" justifyContent="space-between">
-                <Text>{data.modality}</Text>
-                <Repeat color={theme?.text} size={20} />
+                <Text>Configurações</Text>
+                <Settings color={theme?.text} size={20} />
               </HStack>
             </TouchableOpacity>
           </VStack>
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
-            <TouchableOpacity onPress={goToConfiguracoesScreen}>
+            <TouchableOpacity onPress={() => goToScreen("Tickets")}>
               <HStack alignItems="center" justifyContent="space-between">
-                <Text>Configurações</Text>
-                <Settings color={theme?.text} size={20} />
+                <Text>Suporte</Text>
+                <Flag color={theme?.text} size={20} />
               </HStack>
             </TouchableOpacity>
           </VStack>

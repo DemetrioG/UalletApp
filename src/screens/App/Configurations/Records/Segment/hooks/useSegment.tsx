@@ -9,9 +9,9 @@ import {
   updateSegment,
 } from "../query";
 import { useNavigation } from "@react-navigation/native";
-import Toast from "react-native-toast-message";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
+import { handleToast } from "../../../../../../utils/functions.helper";
 
 const defaultValues: SegmentDTO = {
   description: null,
@@ -83,13 +83,13 @@ export const useCreateSegment = () => {
     handleExecute(formData)
       .then(() => {
         goBack();
-        return Toast.show({
+        return handleToast({
           type: "success",
           text1: "Segmento cadastrado com sucesso",
         });
       })
       .catch(() => {
-        return Toast.show({
+        return handleToast({
           type: "error",
           text1: "Erro ao cadastrar segmento",
         });
@@ -110,13 +110,13 @@ export const useUpdateSegment = () => {
     handleExecute(formData, id)
       .then(() => {
         goBack();
-        return Toast.show({
+        return handleToast({
           type: "success",
           text1: "Segmento atualizado com sucesso",
         });
       })
       .catch(() => {
-        return Toast.show({
+        return handleToast({
           type: "error",
           text1: "Erro ao atualizar segmento",
         });
@@ -137,13 +137,13 @@ export const useDeleteSegment = () => {
     handleExecute(id)
       .then(() => {
         goBack();
-        return Toast.show({
+        return handleToast({
           type: "success",
           text1: "Segmento excluído com sucesso",
         });
       })
       .catch((err) => {
-        return Toast.show({
+        return handleToast({
           type: "error",
           text1:
             err.message === "Há lançamentos vinculados a este segmento."

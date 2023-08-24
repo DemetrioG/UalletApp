@@ -1,6 +1,5 @@
 import {
   HStack,
-  IPressableProps,
   Pressable,
   Stack,
   Text,
@@ -29,6 +28,7 @@ import { useGetBalance } from "../../../hooks/useBalance";
 import {
   useCheckConsolidation,
   useIsUserWithCompleteData,
+  useScrollToRefresh,
 } from "./hooks/useHome";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer } from "../../../styles/general";
@@ -39,7 +39,8 @@ import {
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
-import When from "../../../components/When";
+import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
+import { RefreshControl } from "react-native";
 
 const adUnitId = __DEV__
   ? TestIds.BANNER
@@ -53,11 +54,17 @@ export const Home = () => {
   const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
+  const { isLoading, handleExecute } = useScrollToRefresh();
 
   return (
     <BackgroundContainer>
       <Consolidate {...consolidation} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleExecute} />
+        }
+      >
         <Header />
         <Stack space={5}>
           <HStack justifyContent="space-evenly">
@@ -66,9 +73,17 @@ export const Home = () => {
               Icon={Edit3}
               onPress={() => navigate("Lancamentos")}
             />
-            <Action text="Integrações" Icon={Plug} />
-            <Action text="Upgrades" Icon={Rocket} />
-            <Action text="Mais" Icon={MoreHorizontal} onPress={menu.onOpen} />
+            <Action
+              text="Integrações"
+              Icon={Plug}
+              StackProps={{ opacity: 0.4 }}
+            />
+            <Action
+              text="Upgrades"
+              Icon={Rocket}
+              StackProps={{ opacity: 0.4 }}
+            />
+            <Action text="Menu" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
           <Internet />
           <Entries />
@@ -92,18 +107,18 @@ export const Action = ({
   text,
   onPress,
   Icon,
-  PressableProps,
+  StackProps,
 }: {
   text: string;
   onPress?: () => any;
   Icon: LucideIcon;
-  PressableProps?: IPressableProps;
+  StackProps?: InterfaceVStackProps;
 }) => {
   const { theme }: IThemeProvider = useTheme();
 
   return (
-    <Pressable onPress={onPress} {...PressableProps}>
-      <VStack alignItems="center" space={1}>
+    <Pressable onPress={onPress}>
+      <VStack alignItems="center" space={1} {...StackProps}>
         <VStack background={theme?.secondary} borderRadius={50} p="20px">
           <Icon color={theme?.text} />
         </VStack>

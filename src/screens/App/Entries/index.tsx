@@ -3,6 +3,7 @@ import { useTheme } from "styled-components";
 import {
   Button,
   Center,
+  FlatList,
   HStack,
   Pressable,
   Text,
@@ -28,15 +29,10 @@ import { metrics } from "../../../styles";
 import { IThemeProvider } from "../../../styles/baseTheme";
 
 import LoadingAnimation from "../../../../assets/icons/blueLoading.json";
-import { DataGrid } from "../../../components/DataGrid";
-import { DataGridColumnRef } from "../../../components/DataGrid/types";
-import {
-  ITimestamp,
-  convertDateFromDatabase,
-} from "../../../utils/date.helper";
 import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
 import { ServerFilterFields } from "./ModalFilter/types";
+import { Item } from "./Item";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -59,7 +55,7 @@ export const Entries = () => {
 
   useEffect(() => {
     handleGetData();
-  }, [data.modality, data.month, data.year, isFocused]);
+  }, [data.modality, data.month, data.year, data.trigger, isFocused]);
 
   const filtered = list.filter(clientFilters);
 
@@ -67,53 +63,6 @@ export const Entries = () => {
   const debits = filtered.filter((item) => item.type === "Despesa");
   const totalCredits = credits.reduce((total, item) => total + item.value, 0);
   const totalDebits = debits.reduce((total, item) => total + item.value, 0);
-
-  const columns: DataGridColumnRef<ListEntries>[] = [
-    {
-      name: "description",
-      label: "Descrição",
-      flex: 1,
-      headerAlign: "flex-start",
-      align: "flex-start",
-      RowProps: {
-        styles: {
-          borderColor: theme?.primary,
-        },
-      },
-    },
-    {
-      name: "date",
-      label: "Data",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      valueFormatter: ({ value }) => {
-        return convertDateFromDatabase(value as ITimestamp);
-      },
-      RowProps: {
-        styles: {
-          borderColor: theme?.primary,
-        },
-      },
-    },
-    {
-      name: "value",
-      label: "Valor",
-      flex: 1,
-      headerAlign: "flex-end",
-      align: "flex-end",
-      valueFormatter: ({ row, value }) => {
-        return `${row.type === "Receita" ? "+" : "-"}${numberToReal(
-          value as number
-        )}`;
-      },
-      RowProps: {
-        styles: {
-          borderColor: theme?.primary,
-        },
-      },
-    },
-  ];
 
   return (
     <BackgroundContainer>
@@ -160,12 +109,22 @@ export const Entries = () => {
           </Button>
         </HStack>
         <When is={!isLoading}>
-          <DataGrid
-            columns={columns}
-            data={filtered}
-            height="60%"
-            onRowPress={(_, row) => navigate("Lancamentos/Form", row)}
-          />
+          <VStack height="68%">
+            <When is={!filtered.length}>
+              <Center flex={1}>
+                <Text>Não há lançamentos para visualizar</Text>
+              </Center>
+            </When>
+            <When is={!!filtered.length}>
+              <FlatList
+                data={filtered}
+                renderItem={({ item, index }) => (
+                  <Item row={item} index={index} />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </When>
+          </VStack>
         </When>
         <When is={isLoading}>
           <Center flex={1}>
@@ -202,7 +161,7 @@ export const Entries = () => {
               justifyContent="center"
               p={1}
               pl={2}
-              borderRadius="100px"
+              borderRadius={50}
               h="45px"
               w="45px"
             >
@@ -234,7 +193,7 @@ export const Entries = () => {
             justifyContent="center"
             p={1}
             pl={2}
-            borderRadius="100px"
+            borderRadius={50}
             h="45px"
             w="45px"
           >

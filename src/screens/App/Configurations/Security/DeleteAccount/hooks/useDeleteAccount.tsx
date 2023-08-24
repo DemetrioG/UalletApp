@@ -8,9 +8,9 @@ import {
   UserContext,
   initialUserState,
 } from "../../../../../../context/User/userContext";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { ConfirmContext } from "../../../../../../context/ConfirmDialog/confirmContext";
 import { DeleteAccountDTO } from "../types";
+import { handleToast } from "../../../../../../utils/functions.helper";
 
 const schema = yup
   .object({
@@ -54,13 +54,13 @@ const useDeleteAccount = () => {
     return handleExecute(password)
       .then(() => {
         setUser(initialUserState);
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Conta excluída com sucesso",
         });
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao excluir a conta",
         });

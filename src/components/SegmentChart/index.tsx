@@ -1,62 +1,75 @@
 import { Center, HStack, Text, VStack } from "native-base";
 
-import { EmptyChart } from "../EmptyChart";
-import { StyledPieChart } from "./styles";
 import { ChartProps } from "./types";
 import When from "../When";
-import { IThemeProvider } from "../../styles/baseTheme";
+import { VictoryPie } from "victory-native";
 import { useTheme } from "styled-components";
+import { IThemeProvider } from "../../styles/baseTheme";
 
 export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
   const { theme }: IThemeProvider = useTheme();
-  const chartValues = data.map(({ value }) => value);
-  const isEmpty = !data.length;
-
   return (
-    <>
-      <Center>
-        <When is={isEmpty}>
-          <EmptyChart actionText="Realize seu primeiro lançamento" />
-        </When>
-        <When is={!isEmpty}>
-          <HStack>
-            <VStack w="50%">
-              <StyledPieChart data={chartValues} />
-            </VStack>
-            <VStack w="50%">
-              {data.map(({ label, value }, index) => {
-                return (
-                  <When is={!!value} key={index}>
-                    <VStack justifyContent="center" flex={1}>
-                      <HStack alignItems="center" space={2}>
-                        <VStack
-                          w="10px"
-                          h="10px"
-                          borderRadius="100%"
-                          backgroundColor={theme?.colorPieChart[index]}
-                        />
-                        <Text fontSize="14px" fontWeight={700}>
-                          {value.toFixed(0)}%
-                        </Text>
-                        <Text
-                          fontSize="14px"
-                          numberOfLines={1}
-                          style={{
-                            flex: 1,
-                            overflow: "hidden",
-                          }}
-                        >
-                          {label}
-                        </Text>
-                      </HStack>
-                    </VStack>
-                  </When>
-                );
-              })}
-            </VStack>
-          </HStack>
-        </When>
-      </Center>
-    </>
+    <Center>
+      <HStack>
+        <VStack w="50%" h={150} position="relative">
+          <VStack position="absolute" w="100%" top={-30} left={-25}>
+            <VictoryPie
+              data={data}
+              width={200}
+              height={200}
+              padAngle={5}
+              cornerRadius={15}
+              innerRadius={28}
+              style={{
+                labels: {
+                  fill: theme?.text,
+                },
+              }}
+              colorScale={colorScale}
+              animate
+            />
+          </VStack>
+        </VStack>
+        <VStack w="45%" justifyContent="center" space={1}>
+          {data.map(({ x, y }, index) => {
+            return (
+              <When is={!!y} key={index}>
+                <VStack justifyContent="center">
+                  <HStack alignItems="center" space={2}>
+                    <VStack
+                      w="10px"
+                      h="10px"
+                      borderRadius="500px"
+                      backgroundColor={colorScale[index]}
+                    />
+                    <Text fontSize="14px" fontWeight={700}>
+                      {y.toFixed(0)}%
+                    </Text>
+                    <Text
+                      fontSize="14px"
+                      numberOfLines={1}
+                      style={{
+                        flex: 1,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {x}
+                    </Text>
+                  </HStack>
+                </VStack>
+              </When>
+            );
+          })}
+        </VStack>
+      </HStack>
+    </Center>
   );
 };
+
+const colorScale = [
+  "rgba(38, 109, 211, 1)",
+  "rgba(38, 109, 211, 0.8)",
+  "rgba(38, 109, 211, 0.6)",
+  "rgba(38, 109, 211, 0.4)",
+  "rgba(38, 109, 211, 0.2)",
+];

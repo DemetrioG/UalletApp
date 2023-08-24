@@ -6,8 +6,7 @@ import { useFormContext } from "react-hook-form";
 
 import { FormTextInputPassword } from "../../../../../../components/Inputs/TextInputPassword";
 import {
-  BackgroundContainer,
-  ButtonText,
+  BackgroundContainer
 } from "../../../../../../styles/general";
 import { IThemeProvider } from "../../../../../../styles/baseTheme";
 import { useTheme } from "styled-components";

@@ -39,7 +39,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
   }
 
   return (
-    <Modal {...props}>
+    <Modal {...props} ModalProps={{ swipeDirection: "down" }}>
       <HStack justifyContent="space-between">
         <HStack alignItems="center" space={3} mb={6}>
           <Pressable onPress={props.onClose}>
@@ -55,7 +55,6 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 await sleep(500);
                 handleSubmit();
               }}
-              borderWidth={1}
             >
               <FilterX color={theme?.blue} />
             </Pressable>
@@ -75,6 +74,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 control={filterMethods.control}
                 formMethods={filterMethods}
                 withIcon={false}
+                setDateOnOpen
               />
             </VStack>
             <VStack w="48%">
@@ -84,6 +84,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 control={filterMethods.control}
                 formMethods={filterMethods}
                 withIcon={false}
+                setDateOnOpen
               />
             </VStack>
           </HStack>

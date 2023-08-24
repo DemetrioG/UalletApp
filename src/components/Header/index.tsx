@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { TouchableOpacity } from "react-native";
 
 import { Menu } from "../Menu";
 import { DataContext } from "../../context/Data/dataContext";
@@ -26,15 +27,22 @@ import { WifiOff } from "lucide-react-native";
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { theme }: IThemeProvider = useTheme();
-  const { data } = useContext(DataContext);
+  const { data, setData } = useContext(DataContext);
   const { data: revenue, isLoading } = useGetRevenue();
   const {} = useGetData();
 
   const [balanceInteger, balanceCents] = data.balance.split(",");
   const negativeRevenue = revenue < 0;
 
+  function changeModality() {
+    return setData((rest) => ({
+      ...rest,
+      modality: rest.modality === "Real" ? "Projetado" : "Real",
+    }));
+  }
+
   return (
-    <VStack position="relative" minHeight="315px">
+    <VStack position="relative" minHeight="360px">
       <VStack
         position="absolute"
         width="100%"
@@ -42,7 +50,6 @@ export const Header = () => {
         backgroundColor={theme?.secondary}
         borderBottomLeftRadius="40px"
         borderBottomRightRadius="40px"
-        paddingBottom="40px"
       >
         <StepableDatePicker
           SideButtonProps={{
@@ -55,22 +62,53 @@ export const Header = () => {
             borderColor: theme?.secondary,
           }}
         />
-        <HStack
-          position="relative"
-          paddingY="20px"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text>Saldo atual</Text>
-        </HStack>
-        <HStack justifyContent="center" paddingY="5px">
-          <Text fontWeight={700} fontSize="4xl">
-            {balanceInteger}
-            <Text fontWeight={700} opacity={0.3} fontSize="4xl">
-              ,{balanceCents}
+        <VStack space={5} paddingY={5}>
+          <HStack
+            position="relative"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text>Saldo atual</Text>
+          </HStack>
+          <HStack justifyContent="center">
+            <Text fontWeight={700} fontSize="4xl">
+              {balanceInteger}
+              <Text fontWeight={700} opacity={0.3} fontSize="4xl">
+                ,{balanceCents}
+              </Text>
             </Text>
-          </Text>
-        </HStack>
+          </HStack>
+          <HStack alignItems="center" justifyContent="center" space={6}>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 35,
+                paddingVertical: 10,
+                borderRadius: 40,
+                backgroundColor: theme?.blue,
+                opacity: data.modality === "Real" ? 1 : 0.3,
+                alignSelf: "flex-start",
+              }}
+              disabled={data.modality === "Real"}
+              onPress={changeModality}
+            >
+              <Text color="white">Realizado</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: 35,
+                paddingVertical: 10,
+                borderRadius: 40,
+                backgroundColor: theme?.blue,
+                opacity: data.modality === "Projetado" ? 1 : 0.3,
+                alignSelf: "flex-start",
+              }}
+              disabled={data.modality === "Projetado"}
+              onPress={changeModality}
+            >
+              <Text color="white">Projetado</Text>
+            </TouchableOpacity>
+          </HStack>
+        </VStack>
       </VStack>
       <HStack
         position="absolute"
@@ -81,7 +119,7 @@ export const Header = () => {
         backgroundColor={theme?.tertiary}
         borderBottomLeftRadius="40px"
         borderBottomRightRadius="40px"
-        height="275px"
+        height="320px"
         paddingX="15px"
         paddingY="15px"
       >
@@ -138,25 +176,42 @@ export const HeaderSummary = () => {
 
   return (
     <VStack
-      backgroundColor={theme?.secondary}
+      background={theme?.secondary}
       borderBottomLeftRadius="40px"
       borderBottomRightRadius="40px"
-      paddingX={6}
     >
-      <HStack paddingY={4} justifyContent="space-between" alignItems="center">
-        <HStack alignItems="center" space={3}>
-          <Text>Saldo:</Text>
-          <HStack>
-            <Text fontWeight={700} fontSize="18px">
-              {balanceInteger}
-              <Text fontWeight={700} opacity={0.3} fontSize="18px">
-                ,{balanceCents}
+      <StepableDatePicker
+        SideButtonProps={{
+          style: { padding: 8, backgroundColor: theme?.secondary },
+        }}
+        ContainerProps={{
+          borderBottomLeftRadius: "30px",
+          borderBottomRightRadius: "30px",
+          backgroundColor: theme?.primary,
+          borderColor: theme?.secondary,
+        }}
+      />
+      <VStack
+        backgroundColor={theme?.secondary}
+        paddingX={6}
+        borderBottomLeftRadius="40px"
+        borderBottomRightRadius="40px"
+      >
+        <HStack paddingY={4} justifyContent="space-between" alignItems="center">
+          <HStack alignItems="center" space={3}>
+            <Text>Saldo:</Text>
+            <HStack>
+              <Text fontWeight={700} fontSize="18px">
+                {balanceInteger}
+                <Text fontWeight={700} opacity={0.3} fontSize="18px">
+                  ,{balanceCents}
+                </Text>
               </Text>
-            </Text>
+            </HStack>
           </HStack>
+          <HomeMenu />
         </HStack>
-        <HomeMenu />
-      </HStack>
+      </VStack>
     </VStack>
   );
 };

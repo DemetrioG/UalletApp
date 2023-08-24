@@ -2,8 +2,8 @@ import { useState } from "react";
 import { usePromise } from "../../../../../hooks/usePromise";
 import { deleteData, getData } from "../query";
 import { AlertDataProps } from "../types";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { DocumentData } from "firebase/firestore";
+import { handleToast } from "../../../../../utils/functions.helper";
 
 export const useGetData = () => {
   const { isLoading, handleExecute } = usePromise(getData);
@@ -32,13 +32,13 @@ export const useDelete = () => {
     handleExecute(i)
       .then(() => {
         refreshData();
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Alerta excluído com sucesso",
         });
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao excluir alerta",
         });

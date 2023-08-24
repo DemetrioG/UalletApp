@@ -20,7 +20,7 @@ export const Complete = () => {
         alt="Notificações'"
         source={theme?.isOnDarkTheme ? notificationsDark : notificationsLight}
         position="absolute"
-        bottom={2}
+        bottom={10}
         right={0}
         w="70%"
         resizeMode="contain"

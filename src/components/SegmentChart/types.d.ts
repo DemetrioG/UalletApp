@@ -1,4 +1,4 @@
 export interface ChartProps {
-  label: string;
-  value: number;
+  x: string;
+  y: number;
 }

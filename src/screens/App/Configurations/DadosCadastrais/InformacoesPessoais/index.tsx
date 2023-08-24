@@ -48,7 +48,7 @@ export const InformacoesPessoaisScreen = () => {
           </VStack>
           <VStack mb={3}>
             <Text fontWeight="bold">Data de nascimento</Text>
-            <Text>{data?.birthDate || "Não informado"}</Text>
+            <Text>{data?.birthdate || "Não informado"}</Text>
           </VStack>
           <VStack mb={3}>
             <Text fontWeight="bold">Data de registro</Text>

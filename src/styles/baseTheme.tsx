@@ -44,7 +44,7 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
         defaultProps: {
           minW: "56",
           minH: "12",
-          borderRadius: "13",
+          borderRadius: 13,
           marginBottom: metrics.baseMargin,
           width: "full",
         },
@@ -78,7 +78,7 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           fontFamily: "body",
           fontWeight: 400,
           fontSize: 14,
-          borderRadius: "13",
+          borderRadius: 13,
           minH: "12",
           width: "full",
         },
@@ -100,8 +100,34 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           fontFamily: "body",
           fontWeight: 400,
           fontSize: 14,
-          borderRadius: "13",
+          borderRadius: 13,
           minH: "12",
+          width: "full",
+        },
+        defaultProps: {
+          variants: {
+            outline: {
+              backgroundColor: theme.secondary,
+            },
+            filled: {
+              backgroundColor: theme.primary,
+            },
+          },
+        },
+      },
+      TextArea: {
+        baseStyle: {
+          placeholderTextColor: theme.text,
+          selectionColor: colors.lightBlue,
+          color: theme.text,
+          borderWidth: 0,
+          _focus: {
+            borderWidth: 1,
+            borderColor: theme.blue,
+          },
+          fontFamily: "body",
+          fontWeight: 400,
+          borderRadius: 13,
           width: "full",
         },
         defaultProps: {

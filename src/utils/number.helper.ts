@@ -18,48 +18,6 @@ export function numberToReal(number: number, withoutSign?: boolean) {
     currency: "BRL",
   });
 
-  // No Android, o toLocaleString não retorna os números corretamente, então é preciso tratar por código
-  if (Platform.OS === "android") {
-    newValue = newValue.replace(",", "[");
-    newValue = newValue.replace(".", ",");
-    newValue = newValue.replace("[", ".");
-
-    let androidCheckValue = newValue
-      .replace(".", "")
-      .replace(",", "")
-      .replace("R$", "");
-    let androidCheckValueLength = androidCheckValue.length;
-
-    if (androidCheckValueLength > 7) {
-      let cents =
-        "," +
-        androidCheckValue.slice(
-          androidCheckValueLength - 2,
-          androidCheckValueLength
-        );
-
-      androidCheckValue = androidCheckValue.slice(
-        0,
-        androidCheckValueLength - 3
-      );
-
-      androidCheckValueLength = androidCheckValue.length;
-
-      for (
-        let index = androidCheckValueLength - 3;
-        index > 1;
-        index = index - 3
-      ) {
-        androidCheckValue =
-          androidCheckValue.slice(0, index) +
-          "." +
-          androidCheckValue.slice(index);
-      }
-
-      newValue = "R$" + androidCheckValue + cents;
-    }
-  }
-
   if (withoutSign) {
     newValue = newValue.replace("R$", "");
     newValue = newValue.replace(/\s/g, "");

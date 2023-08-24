@@ -9,11 +9,13 @@ import { useTheme } from "styled-components";
 import Tooltip from "../../../../components/Tooltip";
 import { InfoIcon } from "lucide-react-native";
 import When from "../../../../components/When";
+import { EmptyChart } from "../../../../components/EmptyChart";
 
 export const EntriesSegmentChart = () => {
   const { theme }: IThemeProvider = useTheme();
   const { data: dataContext } = useContext(DataContext);
-  const { handleGetData, data, isLoading } = useData();
+  const { handleGetData, data, isLoading, emptyText, hasSegments } = useData();
+  const isEmpty = !data.length;
 
   useEffect(() => {
     handleGetData();
@@ -44,7 +46,17 @@ export const EntriesSegmentChart = () => {
       </When>
       <When is={!isLoading}>
         <VStack pb={2}>
-          <SegmentChart data={data} />
+          <When is={!isEmpty}>
+            <SegmentChart data={data} />
+          </When>
+          <When is={isEmpty}>
+            <EmptyChart
+              actionText={emptyText}
+              route={
+                !hasSegments ? "Configuracoes/Records/Segment" : "Lancamentos"
+              }
+            />
+          </When>
         </VStack>
       </When>
     </VStack>

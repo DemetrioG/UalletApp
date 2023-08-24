@@ -19,7 +19,7 @@ import { ReturnUseDisclosure } from "../../../../types/types";
 
 export const useGetLastEntries = () => {
   const {
-    data: { month, year, modality },
+    data: { month, year, modality, trigger },
   } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise<any[]>(getLastEntry);
 
@@ -32,7 +32,7 @@ export const useGetLastEntries = () => {
 
   useEffect(() => {
     execute();
-  }, [month, year, modality]);
+  }, [month, year, modality, trigger]);
 
   return {
     isLoading,
@@ -54,7 +54,7 @@ export const useIsUserWithCompleteData = () => {
         ...rest,
         complete: true,
       }));
-      if (!v.data()?.birthDate) return navigate("Home/Complete");
+      if (!v.data()?.birthdate) return navigate("Home/Complete");
     });
   }
 
@@ -85,4 +85,20 @@ export const useCheckConsolidation = ({ onOpen }: ReturnUseDisclosure) => {
   }, []);
 
   return {};
+};
+
+export const useScrollToRefresh = () => {
+  const { isLoading, handleExecute } = usePromise(execute);
+  const { setData } = useContext(DataContext);
+  async function execute() {
+    return setData((rest) => ({
+      ...rest,
+      trigger: Math.random(),
+    }));
+  }
+
+  return {
+    isLoading,
+    handleExecute,
+  };
 };

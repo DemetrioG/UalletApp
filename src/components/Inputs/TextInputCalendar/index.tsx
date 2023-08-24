@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { VStack, useDisclose } from "native-base";
 import Calendar from "../../Calendar";
 import { FormTextInput } from "../TextInput";
@@ -11,6 +12,11 @@ export const FormTextInputCalendar = (props: FormTextInputCalendarProps) => {
   function setDateToInput(date: Date) {
     formMethods.setValue(name, convertDate(date));
   }
+
+  useEffect(() => {
+    if (!calendar.isOpen || !props.setDateOnOpen) return;
+    setDateToInput(new Date());
+  }, [calendar.isOpen]);
 
   return (
     <VStack position="relative" zIndex={2} alignItems="center">

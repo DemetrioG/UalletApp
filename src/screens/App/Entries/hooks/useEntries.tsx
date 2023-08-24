@@ -17,8 +17,8 @@ import { numberToReal } from "../../../../utils/number.helper";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
+import { handleToast } from "../../../../utils/functions.helper";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
@@ -101,20 +101,25 @@ export const useFormEntries = (params: ListEntries, id?: number) => {
 
 export const useCreateEntrie = () => {
   const { navigate } = useNavigation();
+  const { setData } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise(registerNewEntry);
 
   async function execute(formData: NewEntrieDTO) {
     handleExecute(formData)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Dados cadastrados com sucesso",
         });
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         navigate("Lancamentos" as never);
       })
       .catch((e) => {
         console.error(e);
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao cadastrar as informações",
         });
@@ -129,6 +134,7 @@ export const useCreateEntrie = () => {
 
 export const useUpdateEntrie = () => {
   const { navigate } = useNavigation();
+  const { setData } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise(updateEntry);
 
   async function execute(
@@ -137,17 +143,20 @@ export const useUpdateEntrie = () => {
     id?: number
   ) {
     if (!id) throw new Error("Identificador não encontrado");
-    console.log(formData);
     handleExecute(formData, id, params)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
           text1: "Lançamento atualizado com sucesso",
         });
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         navigate("Lancamentos" as never);
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao atualizar as informações",
         });
@@ -180,19 +189,24 @@ export const useHandleConfirmDeleteEntrie = () => {
 
 const useDeleteEntrie = () => {
   const { navigate } = useNavigation();
+  const { setData } = useContext(DataContext);
   const { isLoading, handleExecute } = usePromise(deleteEntry);
 
   async function execute(params: ListEntries) {
     handleExecute(params)
       .then(() => {
-        Toast.show({
+        handleToast({
           type: "success",
-          text1: "Lançamento excluído com  sucesso",
+          text1: "Lançamento excluído com sucesso",
         });
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         navigate("Lancamentos" as never);
       })
       .catch(() => {
-        Toast.show({
+        handleToast({
           type: "error",
           text1: "Erro ao excluir o lançamento",
         });
