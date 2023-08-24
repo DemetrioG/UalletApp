@@ -115,6 +115,32 @@ const BaseProvider = ({ children }: { children: React.ReactNode }) => {
           },
         },
       },
+      TextArea: {
+        baseStyle: {
+          placeholderTextColor: theme.text,
+          selectionColor: colors.lightBlue,
+          color: theme.text,
+          borderWidth: 0,
+          _focus: {
+            borderWidth: 1,
+            borderColor: theme.blue,
+          },
+          fontFamily: "body",
+          fontWeight: 400,
+          borderRadius: 13,
+          width: "full",
+        },
+        defaultProps: {
+          variants: {
+            outline: {
+              backgroundColor: theme.secondary,
+            },
+            filled: {
+              backgroundColor: theme.primary,
+            },
+          },
+        },
+      },
       Switch: {
         baseStyle: {
           trackColor: {

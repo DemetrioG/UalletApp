@@ -22,6 +22,8 @@ import { CompleteForm } from "../screens/App/Complete/CompleteForm";
 import { Records } from "../screens/App/Configurations/Records";
 import { Segment } from "../screens/App/Configurations/Records/Segment";
 import { SegmentForm } from "../screens/App/Configurations/Records/Segment/Form";
+import { Tickets } from "../screens/App/Configurations/Tickets";
+import { TicketsForm } from "../screens/App/Configurations/Tickets/Form";
 
 const {
   Navigator: StackNavigator,
@@ -105,6 +107,11 @@ export const AppStackRoutes = () => {
             component={VariableEntryScreen}
           />
           {/* !Configuracoes */}
+
+          {/* Menu */}
+          <StackScreen name="Tickets" component={Tickets} />
+          <StackScreen name="Tickets/Form" component={TicketsForm} />
+          {/* !Menu */}
         </StackGroup>
       </StackNavigator>
     </NavigationContainer>
