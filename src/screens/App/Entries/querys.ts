@@ -127,7 +127,7 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
       items["segment"] = segment;
     }
 
-    await createCollection("entry");
+    // await createCollection("entry");
 
     /**
      *  Registra o novo lançamento no banco
@@ -137,7 +137,7 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
       items
     );
 
-    await createCollection("balance");
+    // await createCollection("balance");
 
     const docRef = `${Number(
       registerDate.slice(3, 5)
@@ -184,7 +184,7 @@ export async function updateEntry(
     items["segment"] = segment;
   }
 
-  await createCollection("entry");
+  // await createCollection("entry");
 
   /**
    * Registra o novo lançamento no banco
@@ -194,7 +194,7 @@ export async function updateEntry(
     items
   );
 
-  await createCollection("balance");
+  // await createCollection("balance");
 
   const docRef = `${Number(date.slice(3, 5)).toString()}_${date.slice(6, 10)}`;
   await updateCurrentBalance({

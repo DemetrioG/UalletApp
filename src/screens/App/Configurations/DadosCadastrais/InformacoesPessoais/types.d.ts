@@ -1,5 +1,5 @@
 export interface UserInfo {
-  birthdate: string;
+  birthDate: string;
   dateRegister: {
     seconds: number;
     nanoseconds: number;

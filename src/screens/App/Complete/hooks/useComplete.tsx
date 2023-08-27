@@ -10,7 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { handleToast } from "../../../../utils/functions.helper";
 
 const schema = yup.object({
-  birthdate: yup
+  birthDate: yup
     .string()
     .required()
     .min(10)
@@ -23,7 +23,7 @@ const schema = yup.object({
 });
 
 const defaultValues: CompleteDTO = {
-  birthdate: null,
+  birthDate: null,
   gender: null,
   profile: null,
   income: null,

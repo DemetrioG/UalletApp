@@ -34,9 +34,9 @@ export const CompleteForm = () => {
           <FormTextInputCalendar
             placeholder="Data de nascimento"
             control={formMethods.control}
-            name="birthdate"
+            name="birthDate"
             formMethods={formMethods}
-            errors={formMethods.formState.errors.birthdate}
+            errors={formMethods.formState.errors.birthDate}
             setDateOnOpen
             isRequired
           />
