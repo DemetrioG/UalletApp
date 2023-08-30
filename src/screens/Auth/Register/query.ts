@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth, db } from "../../../services/firebase";
 import { RegisterDTO } from "./types";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDays } from "date-fns";
 
 export async function registerUser(props: RegisterDTO) {
   const { name, email, password, confirm } = props;
@@ -17,6 +18,7 @@ export async function registerUser(props: RegisterDTO) {
         email: email,
         typeUser: "default",
         dateRegister: serverTimestamp(),
+        expirationDate: addDays(new Date(), 7),
         schema: "free",
       });
       return Promise.resolve();
