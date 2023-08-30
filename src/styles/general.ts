@@ -36,8 +36,8 @@ export const BackgroundEffect = styled(View)`
   top: -10%;
   left: -20%;
   border-radius: 500px;
-  width: 400px;
-  height: 400px;
+  width: 450px;
+  height: 450px;
   background-color: ${({ theme: { theme } }) =>
     theme.isOnDarkTheme ? theme.tertiary : theme.blue};
 `;
