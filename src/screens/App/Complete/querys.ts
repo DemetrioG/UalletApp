@@ -3,7 +3,7 @@ import { db } from "../../../services/firebase";
 import { currentUser } from "../../../utils/query.helper";
 
 type TUpdateUserData = {
-  birthdate: string;
+  birthDate: string;
   gender: string | null;
   income: string;
   profile: string | null;
