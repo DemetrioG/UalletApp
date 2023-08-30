@@ -17,6 +17,7 @@
     "@react-native-community/slider": "^4.4.2",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "@stripe/stripe-react-native": "^0.30.0",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "date-fns": "^2.30.0",
