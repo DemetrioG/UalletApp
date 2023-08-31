@@ -8,7 +8,7 @@ import { STRIPE_CLIENT_SECRET } from "@env";
 import { useEffect, useState } from "react";
 import When from "../../When";
 
-export const PaymentScreen = () => {
+export const ApplePay = () => {
   const [isApplePaySupported, setIsApplePaySupported] = useState(false);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const PaymentScreen = () => {
     <When is={isApplePaySupported}>
       <PlatformPayButton
         onPress={pay}
-        appearance={PlatformPay.ButtonStyle.Black}
+        appearance={PlatformPay.ButtonStyle.WhiteOutline}
         borderRadius={4}
         style={{
           width: "100%",
