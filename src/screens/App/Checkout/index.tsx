@@ -1,10 +1,16 @@
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer, BackgroundEffect } from "../../../styles/general";
-import { Button, Center, HStack, Text, VStack } from "native-base";
+import { Center, HStack, Skeleton, Text, VStack } from "native-base";
+import { GooglePay } from "../../../components/Payments/GooglePay";
+import { ApplePay } from "../../../components/Payments/ApplePay";
+import { useGetPrice } from "./hooks/useCheckout";
+import When from "../../../components/When";
 
 export const Checkout = () => {
   const { theme }: IThemeProvider = useTheme();
+  const { isLoading, data } = useGetPrice();
+
   return (
     <BackgroundContainer p="20px">
       <BackgroundEffect />
@@ -40,9 +46,19 @@ export const Checkout = () => {
         >
           <Text fontWeight={600}>Plano premium 💰</Text>
           <HStack alignItems="center" space={2}>
-            <Text fontSize="46" fontWeight="bold">
-              R$9,90
-            </Text>
+            <When is={isLoading}>
+              <Skeleton
+                h="50px"
+                width="155px"
+                rounded="lg"
+                startColor={theme?.primary}
+              />
+            </When>
+            <When is={!isLoading}>
+              <Text fontSize="46" fontWeight="bold">
+                {data}
+              </Text>
+            </When>
             <VStack>
               <Text opacity={0.6}>por</Text>
               <Text opacity={0.6}>mês</Text>
@@ -59,12 +75,9 @@ export const Checkout = () => {
           </VStack>
         </VStack>
       </Center>
-      <VStack justifyContent="flex-end">
-        <Button onPress={() => {}}>
-          <Text fontWeight="bold" color="white">
-            Prosseguir
-          </Text>
-        </Button>
+      <VStack justifyContent="flex-end" pb={3}>
+        <GooglePay />
+        <ApplePay />
       </VStack>
     </BackgroundContainer>
   );
