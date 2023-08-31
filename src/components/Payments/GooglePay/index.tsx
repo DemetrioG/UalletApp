@@ -1,11 +1,11 @@
-import { STRIPE_CLIENT_SECRET } from "@env";
+import { useEffect, useState } from "react";
 import {
   PlatformPay,
   PlatformPayButton,
   confirmPlatformPayPayment,
   isPlatformPaySupported,
 } from "@stripe/stripe-react-native";
-import { useEffect, useState } from "react";
+import { API_URL } from "@env";
 import When from "../../When";
 
 export const GooglePay = () => {
@@ -20,7 +20,18 @@ export const GooglePay = () => {
   }, [isPlatformPaySupported]);
 
   async function sendPaymentIntent() {
-    return STRIPE_CLIENT_SECRET.toString();
+    const response = await fetch(`${API_URL.toString()}/create-payment-intent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        currency: 'usd',
+      }),
+    });
+
+    const { clientSecret } = await response.json();
+    return clientSecret;
   }
 
   const pay = async () => {
