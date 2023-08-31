@@ -65,6 +65,7 @@ export const Planning = () => {
                       backgroundColor={theme?.primary}
                       _filledTrack={{ bg: theme?.blue }}
                       value={(item.realized / item.designed) * 100}
+                      h={3}
                     />
                   </VStack>
                 );
