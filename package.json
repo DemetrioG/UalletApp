@@ -33,6 +33,7 @@
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.2",
     "expo-updates": "^0.16.4",
+    "expo-web-browser": "^12.3.2",
     "firebase": "^10.0.0",
     "intl": "^1.2.5",
     "lottie-react-native": "5.1.4",
