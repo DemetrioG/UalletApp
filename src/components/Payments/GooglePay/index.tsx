@@ -20,18 +20,15 @@ export const GooglePay = () => {
   }, [isPlatformPaySupported]);
 
   async function sendPaymentIntent() {
-    const response = await fetch(`${API_URL.toString()}/create-payment-intent`, {
-      method: 'POST',
+    const response = await fetch(`${API_URL.toString()}/createPaymentIntent`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        currency: 'usd',
-      }),
     });
 
-    const { clientSecret } = await response.json();
-    return clientSecret;
+    const { client_secret } = await response.json();
+    return client_secret;
   }
 
   const pay = async () => {

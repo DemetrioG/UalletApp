@@ -7,9 +7,11 @@ import {
 } from "@stripe/stripe-react-native";
 import { API_URL } from "@env";
 import When from "../../When";
+import { useGetPrice } from "../../../screens/App/Checkout/hooks/useCheckout";
 
 export const ApplePay = () => {
   const [isApplePaySupported, setIsApplePaySupported] = useState(false);
+  const { data } = useGetPrice();
 
   useEffect(() => {
     (async function () {
@@ -18,18 +20,15 @@ export const ApplePay = () => {
   }, [isPlatformPaySupported]);
 
   async function sendPaymentIntent() {
-    const response = await fetch(`${API_URL.toString()}/create-payment-intent`, {
-      method: 'POST',
+    const response = await fetch(`${API_URL.toString()}/createPaymentIntent`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        currency: 'usd',
-      }),
     });
 
-    const { clientSecret } = await response.json();
-    return clientSecret;
+    const { client_secret } = await response.json();
+    return client_secret;
   }
 
   const pay = async () => {
@@ -40,7 +39,7 @@ export const ApplePay = () => {
         cartItems: [
           {
             label: "Total",
-            amount: "1.50",
+            amount: data.toString(),
             paymentType: PlatformPay.PaymentType.Recurring,
             intervalCount: 1,
             intervalUnit: PlatformPay.IntervalUnit.Month,
