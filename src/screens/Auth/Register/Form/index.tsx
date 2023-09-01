@@ -36,7 +36,7 @@ export const RegisterForm = () => {
           type: "success",
           text1: "Usuário cadastrado com sucesso",
         });
-        return navigate("Login");
+        return navigate("Login", { email: props.email });
       })
       .catch((error) => {
         return handleToast({

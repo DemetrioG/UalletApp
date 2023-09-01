@@ -35,13 +35,17 @@ import { loginByEmailAndPassword } from "../querys";
 import { LoginDTO } from "../types";
 import { handleToast } from "../../../../utils/functions.helper";
 
-export const LoginForm = () => {
+export const LoginForm = ({ email }: { email?: string }) => {
   const formMethods = useFormContext<LoginDTO>();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { setUser } = React.useContext(UserContext);
   const { data: dataContext } = React.useContext(DataContext);
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const { isLoading, handleExecute } = usePromise(loginUser);
+
+  React.useEffect(() => {
+    if (email) formMethods.setValue("email", email);
+  }, [email]);
 
   async function loginUser(formData: LoginDTO) {
     const data = {

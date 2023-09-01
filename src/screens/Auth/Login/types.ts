@@ -10,3 +10,9 @@ export interface LoginDTO {
   email: string;
   password: string;
 }
+
+export interface LoginParams {
+  route: {
+    params: { email?: string };
+  };
+}
