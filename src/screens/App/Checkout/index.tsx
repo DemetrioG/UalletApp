@@ -6,6 +6,7 @@ import { GooglePay } from "../../../components/Payments/GooglePay";
 import { ApplePay } from "../../../components/Payments/ApplePay";
 import { useGetPrice } from "./hooks/useCheckout";
 import When from "../../../components/When";
+import { numberToReal } from "../../../utils/number.helper";
 
 export const Checkout = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -56,7 +57,7 @@ export const Checkout = () => {
             </When>
             <When is={!isLoading}>
               <Text fontSize="46" fontWeight="bold">
-                {data}
+                {numberToReal(data)}
               </Text>
             </When>
             <VStack>

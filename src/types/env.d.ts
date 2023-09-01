@@ -6,7 +6,6 @@ declare module "@env" {
   export const MESSAGING_SENDER_ID: string;
   export const APP_ID: string;
   export const MEASUREMENT_ID: string;
-  export const AWS_WEBSERVICE_ENDPOINT: string;
-  export const STRIPE_PUBLISHABLE_KEY: string;
   export const API_URL: string;
+  export const STRIPE_PUBLISHABLE_KEY: string;
 }

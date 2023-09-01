@@ -17,10 +17,5 @@ export async function getPrice() {
   );
 
   const price = priceSnapshot.data()?.unit_amount ?? 0;
-  const formattedValue = Number(price) / 100;
-
-  return formattedValue.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+  return Number(price) / 100;
 }

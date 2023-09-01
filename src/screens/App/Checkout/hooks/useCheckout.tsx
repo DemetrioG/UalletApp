@@ -4,7 +4,7 @@ import { getPrice } from "../query";
 
 export const useGetPrice = () => {
   const { isLoading, handleExecute } = usePromise(getPrice);
-  const [data, setData] = useState("0,00");
+  const [data, setData] = useState(0);
 
   async function execute() {
     const price = await handleExecute();
