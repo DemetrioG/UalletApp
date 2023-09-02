@@ -1,16 +1,16 @@
+import * as WebBrowser from "expo-web-browser";
+import { Button, Center, HStack, Skeleton, Text, VStack } from "native-base";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../styles/baseTheme";
 import { BackgroundContainer, BackgroundEffect } from "../../../styles/general";
-import { Center, HStack, Skeleton, Text, VStack } from "native-base";
-import { GooglePay } from "../../../components/Payments/GooglePay";
-import { ApplePay } from "../../../components/Payments/ApplePay";
-import { useGetPrice } from "./hooks/useCheckout";
+import { useGetPrice, useGetUrl } from "./hooks/useCheckout";
 import When from "../../../components/When";
 import { numberToReal } from "../../../utils/number.helper";
 
 export const Checkout = () => {
   const { theme }: IThemeProvider = useTheme();
   const { isLoading, data } = useGetPrice();
+  const { isLoadingUrl, url } = useGetUrl();
 
   return (
     <BackgroundContainer p="20px">
@@ -77,8 +77,14 @@ export const Checkout = () => {
         </VStack>
       </Center>
       <VStack justifyContent="flex-end" pb={3}>
-        <GooglePay />
-        <ApplePay />
+        <Button
+          onPress={() => WebBrowser.openBrowserAsync(url)}
+          isDisabled={isLoadingUrl}
+        >
+          <Text fontWeight={600} color="white">
+            Prosseguir
+          </Text>
+        </Button>
       </VStack>
     </BackgroundContainer>
   );
