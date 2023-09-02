@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import { LogBox } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { initStripe } from "@stripe/stripe-react-native";
-import { STRIPE_PUBLISHABLE_KEY } from "@env";
 
 import { App as AppContent } from "./src/screens";
 import { UserContextProvider } from "./src/context/User/userContext";
@@ -25,13 +23,6 @@ const App = () => {
       }
     })();
   }, [fontLoaded]);
-
-  useEffect(() => {
-    initStripe({
-      publishableKey: STRIPE_PUBLISHABLE_KEY.toString(),
-      merchantIdentifier: "merchant.identifier",
-    });
-  }, []);
 
   if (!fontLoaded) {
     return null;
