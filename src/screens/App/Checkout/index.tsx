@@ -82,7 +82,7 @@ export const Checkout = () => {
           isDisabled={isLoadingUrl}
         >
           <Text fontWeight={600} color="white">
-            Prosseguir
+            {isLoadingUrl ? "Gerando link..." : "Prosseguir"}
           </Text>
         </Button>
       </VStack>

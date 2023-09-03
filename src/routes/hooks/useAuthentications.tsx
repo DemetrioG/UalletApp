@@ -86,10 +86,8 @@ export const useUserIsExpired = () => {
   const [expired, setExpired] = useState(false);
 
   async function execute() {
-    const data = await handleExecute();
-    const currentDate = new Date();
-    const expirationDate = fromUnixTime(data.seconds);
-    return setExpired(currentDate > expirationDate);
+    const isExpired = await handleExecute();
+    return setExpired(isExpired);
   }
 
   useEffect(() => {
