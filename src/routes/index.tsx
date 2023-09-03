@@ -9,9 +9,7 @@ import {
   useLoadStorage,
   useSetupNotifications,
   useUserIsAuthenticated,
-  useUserIsExpired,
 } from "./hooks/useAuthentications";
-import { Checkout } from "../screens/App/Checkout";
 
 const Routes = () => {
   const { setData } = useContext(DataContext);
@@ -19,7 +17,6 @@ const Routes = () => {
   const {} = useUserIsAuthenticated();
   const {} = useSetupNotifications();
   const {} = useLoadStorage();
-  const { expired } = useUserIsExpired();
 
   useEffect(() => {
     NetInfo.addEventListener(({ isConnected }) => {
@@ -29,8 +26,6 @@ const Routes = () => {
       }));
     });
   }, []);
-
-  if (expired) return <Checkout />;
 
   return user.signed ? <AppStackRoutes /> : <AuthRoutes />;
 };

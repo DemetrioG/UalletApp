@@ -24,6 +24,8 @@ import { Segment } from "../screens/App/Configurations/Records/Segment";
 import { SegmentForm } from "../screens/App/Configurations/Records/Segment/Form";
 import { Tickets } from "../screens/App/Tickets";
 import { TicketsForm } from "../screens/App/Tickets/Form";
+import { useUserIsExpired } from "./hooks/useAuthentications";
+import { Checkout } from "../screens/App/Checkout";
 
 const {
   Navigator: StackNavigator,
@@ -32,6 +34,11 @@ const {
 } = createNativeStackNavigator();
 
 export const AppStackRoutes = () => {
+  const { subscription, expiredSubscription, expiredUser } = useUserIsExpired();
+  const isExpired = subscription ? expiredSubscription : expiredUser;
+
+  if (isExpired) return <Checkout />;
+
   return (
     <NavigationContainer>
       <StackNavigator initialRouteName="Home">

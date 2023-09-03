@@ -4,8 +4,10 @@ import { getStorage, removeAllStorage } from "../../utils/storage.helper";
 import { UserContext } from "../../context/User/userContext";
 import { setupPushNotifications } from "../../utils/notification.helper";
 import { DataContext } from "../../context/Data/dataContext";
-import { getUserData } from "../query";
 import { fromUnixTime } from "date-fns";
+import { currentUser } from "../../utils/query.helper";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../../services/firebase";
 
 export const useUserIsAuthenticated = () => {
   const { isLoading, handleExecute } = usePromise(execute);
@@ -82,20 +84,60 @@ export const useSetupNotifications = () => {
 };
 
 export const useUserIsExpired = () => {
-  const { isLoading, handleExecute } = usePromise(getUserData);
-  const [expired, setExpired] = useState(false);
+  const [subscription, setSubscription] = useState(false);
+  const [expiredSubscription, setExpiredSubscription] = useState(false);
+  const [expiredUser, setExpiredUser] = useState(false);
+
+  let subscriptions: () => void;
+  let activeSubscription: () => void;
+  let userSnapshot: () => void;
 
   async function execute() {
-    const isExpired = await handleExecute();
-    return setExpired(isExpired);
+    const user = await currentUser();
+    if (!user) return Promise.reject();
+
+    const currentDate = new Date();
+
+    subscriptions = onSnapshot(
+      collection(db, "customers", user.uid, "subscriptions"),
+      (snapshot) => {
+        if (!snapshot.docs) return;
+        const hasSubscription = snapshot.docs.length > 0;
+        return setSubscription(hasSubscription);
+      }
+    );
+
+    activeSubscription = onSnapshot(
+      query(
+        collection(db, "customers", user.uid, "subscriptions"),
+        where("status", "==", "active"),
+        where("current_period_end", ">=", currentDate)
+      ),
+      (snapshot) => {
+        const hasExpiredSubscription = !Boolean(snapshot.size);
+        return setExpiredSubscription(hasExpiredSubscription);
+      }
+    );
+
+    userSnapshot = onSnapshot(doc(db, "users", user.uid), (snapshot) => {
+      const expirationDate = snapshot.data()?.expirationDate;
+      const hasExpiredUser = currentDate > fromUnixTime(expirationDate.seconds);
+      return setExpiredUser(hasExpiredUser);
+    });
   }
 
   useEffect(() => {
     execute();
+    return () => {
+      if (subscriptions) subscriptions();
+      if (activeSubscription) activeSubscription();
+      if (userSnapshot) userSnapshot();
+    };
   }, []);
 
   return {
-    isLoading,
-    expired,
+    subscription,
+    expiredSubscription,
+    expiredUser,
   };
 };
