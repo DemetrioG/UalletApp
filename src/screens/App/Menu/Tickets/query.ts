@@ -5,9 +5,9 @@ import {
   getDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { currentUser } from "../../../utils/query.helper";
 import { ValidatedTicketsDTO } from "./types";
-import { db } from "../../../services/firebase";
+import { currentUser } from "../../../../utils/query.helper";
+import { db } from "../../../../services/firebase";
 
 export async function sendTicket(formData: ValidatedTicketsDTO) {
   const user = await currentUser();

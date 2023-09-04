@@ -11,7 +11,7 @@ import { refreshAuthDevice } from "./query";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
-import { Flag, LogOut, Settings } from "lucide-react-native";
+import { CreditCard, Flag, LogOut, Settings } from "lucide-react-native";
 import { ReturnUseDisclosure } from "../../types/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -95,6 +95,14 @@ export const Menu = (props: ReturnUseDisclosure) => {
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Suporte</Text>
                 <Flag color={theme?.text} size={20} />
+              </HStack>
+            </TouchableOpacity>
+          </VStack>
+          <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
+            <TouchableOpacity onPress={() => goToScreen("Plan")}>
+              <HStack alignItems="center" justifyContent="space-between">
+                <Text>Meu plano</Text>
+                <CreditCard color={theme?.text} size={20} />
               </HStack>
             </TouchableOpacity>
           </VStack>

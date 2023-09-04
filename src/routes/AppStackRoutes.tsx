@@ -22,10 +22,11 @@ import { CompleteForm } from "../screens/App/Complete/CompleteForm";
 import { Records } from "../screens/App/Configurations/Records";
 import { Segment } from "../screens/App/Configurations/Records/Segment";
 import { SegmentForm } from "../screens/App/Configurations/Records/Segment/Form";
-import { Tickets } from "../screens/App/Tickets";
-import { TicketsForm } from "../screens/App/Tickets/Form";
+import { Tickets } from "../screens/App/Menu/Tickets";
+import { TicketsForm } from "../screens/App/Menu/Tickets/Form";
 import { useUserIsExpired } from "./hooks/useAuthentications";
 import { Checkout } from "../screens/App/Checkout";
+import { Plan } from "../screens/App/Menu/Plan";
 
 const {
   Navigator: StackNavigator,
@@ -118,6 +119,7 @@ export const AppStackRoutes = () => {
           {/* Menu */}
           <StackScreen name="Tickets" component={Tickets} />
           <StackScreen name="Tickets/Form" component={TicketsForm} />
+          <StackScreen name="Plan" component={Plan} />
           {/* !Menu */}
         </StackGroup>
       </StackNavigator>

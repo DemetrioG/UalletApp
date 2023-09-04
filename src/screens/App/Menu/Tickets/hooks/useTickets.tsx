@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
-import { TicketsDTO } from "../../Tickets/types";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { usePromise } from "../../../../hooks/usePromise";
-import { handleToast } from "../../../../utils/functions.helper";
+import { usePromise } from "../../../../../hooks/usePromise";
+import { handleToast } from "../../../../../utils/functions.helper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { sendTicket } from "../../Tickets/query";
+import { sendTicket } from "../query";
+import { TicketsDTO } from "../types";
 
 const defaultValues: TicketsDTO = {
   type: null,
