@@ -7,4 +7,5 @@ declare module "@env" {
   export const APP_ID: string;
   export const MEASUREMENT_ID: string;
   export const API_URL: string;
+  export const STRIPE_CUSTOMER_PORTAL: string;
 }
