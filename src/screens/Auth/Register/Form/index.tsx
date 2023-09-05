@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Button, Center, Text, VStack } from "native-base";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -13,38 +13,17 @@ import {
   StyledKeyboardAvoidingView,
 } from "../../../../styles/general";
 import { PasswordRules } from "../PasswordRules";
-import { registerUser } from "../query";
 import { TouchableOpacity } from "react-native";
 import { ChevronLeft } from "lucide-react-native";
-import { usePromise } from "../../../../hooks/usePromise";
-import { RegisterDTO } from "../types";
-import { handleToast } from "../../../../utils/functions.helper";
+import { useFormRegister } from "../hooks/useRegister";
 
 export const RegisterForm = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { isLoading, handleExecute } = usePromise(register);
-  const formMethods = useFormContext<RegisterDTO>();
+  const { isLoading, handleSubmit, formMethods } = useFormRegister();
   const passwordText = useWatch({
     control: formMethods.control,
     name: "password",
   });
-
-  async function register(props: RegisterDTO) {
-    return registerUser(props)
-      .then(() => {
-        handleToast({
-          type: "success",
-          text1: "Usuário cadastrado com sucesso",
-        });
-        return navigate("Login", { email: props.email });
-      })
-      .catch((error) => {
-        return handleToast({
-          type: "error",
-          text1: error,
-        });
-      });
-  }
 
   return (
     <StyledKeyboardAvoidingView>
@@ -87,7 +66,7 @@ export const RegisterForm = () => {
             />
             <FormTextInputPassword
               placeholder="Confirme sua senha"
-              onSubmitEditing={formMethods.handleSubmit(handleExecute)}
+              onSubmitEditing={handleSubmit}
               returnKeyType="done"
               name="confirm"
               control={formMethods.control}
@@ -99,10 +78,7 @@ export const RegisterForm = () => {
               <PasswordRules mb={5} content={passwordText} />
             </VStack>
           </Center>
-          <Button
-            isLoading={isLoading}
-            onPress={formMethods.handleSubmit(handleExecute)}
-          >
+          <Button isLoading={isLoading} onPress={handleSubmit}>
             <Text fontWeight="bold" color="white">
               Criar conta
             </Text>

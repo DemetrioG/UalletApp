@@ -6,13 +6,13 @@ import { useTheme } from "styled-components";
 import { FormTextInputCalendar } from "../../../../components/Inputs/TextInputCalendar";
 import { FormTextInput } from "../../../../components/Inputs/TextInput";
 import { FormSelectInputModality } from "../../../../components/Inputs/SelectInputModality";
-import { FormSelectInputSegment } from "../../../../components/Inputs/SelectInputSegment";
 import { TouchableWithoutFeedback } from "react-native";
 import { Keyboard } from "react-native";
 import { ModalFilterProps } from "./types";
 import { FormSelectInputType } from "../../../../components/Inputs/SelectInputType";
 import When from "../../../../components/When";
 import { sleep } from "../../../../utils/query.helper";
+import { FormFetchableSelectInputSegment } from "../../../../components/Inputs/FetchableSelectInputSegment";
 
 const defaultValues = {
   client: {
@@ -101,7 +101,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             name="server.modality"
             control={filterMethods.control}
           />
-          <FormSelectInputSegment
+          <FormFetchableSelectInputSegment
             name="server.segment"
             control={filterMethods.control}
           />
