@@ -1,4 +1,12 @@
-import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
+import {
+  Button,
+  Center,
+  FlatList,
+  HStack,
+  Pressable,
+  Text,
+  VStack,
+} from "native-base";
 import { BackgroundContainer } from "../../../../../styles/general";
 import { IThemeProvider } from "../../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
@@ -39,32 +47,11 @@ export const Account = () => {
             </HStack>
           </HStack>
           <When is={!!data.length}>
-            <>
-              {data.map((_) => (
-                <Pressable
-                  onPress={() =>
-                    navigate("Configuracoes/Records/Account/Form", _)
-                  }
-                  key={_.id}
-                >
-                  <VStack
-                    borderBottomWidth={1}
-                    borderColor={theme?.primary}
-                    p={4}
-                  >
-                    <HStack
-                      justifyContent="space-between"
-                      alignItems={"center"}
-                    >
-                      <HStack alignItems="center" space={3}>
-                        <Text>{_.name}</Text>
-                      </HStack>
-                      <ChevronRight color={theme?.text} />
-                    </HStack>
-                  </VStack>
-                </Pressable>
-              ))}
-            </>
+            <FlatList
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+            />
           </When>
           <When is={!data.length}>
             <Center flex={1}>
