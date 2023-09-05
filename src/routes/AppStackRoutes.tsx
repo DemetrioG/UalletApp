@@ -27,6 +27,8 @@ import { TicketsForm } from "../screens/App/Menu/Tickets/Form";
 import { useUserIsExpired } from "./hooks/useAuthentications";
 import { Checkout } from "../screens/App/Checkout";
 import { Plan } from "../screens/App/Menu/Plan";
+import { Account } from "../screens/App/Configurations/Records/Account";
+import { AccountForm } from "../screens/App/Configurations/Records/Account/Form";
 
 const {
   Navigator: StackNavigator,
@@ -100,6 +102,14 @@ export const AppStackRoutes = () => {
           <StackScreen
             name="Configuracoes/Records/Segment/Form"
             component={SegmentForm}
+          />
+          <StackScreen
+            name="Configuracoes/Records/Account"
+            component={Account}
+          />
+          <StackScreen
+            name="Configuracoes/Records/Account/Form"
+            component={AccountForm}
           />
           <StackScreen
             name="Configuracoes/Seguranca"
