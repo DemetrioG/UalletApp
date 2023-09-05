@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react";
+import { ActivityIndicator } from "react-native";
 import { useTheme } from "styled-components";
 import {
   Button,
@@ -47,7 +48,10 @@ export const Entries = () => {
   const {} = useGetBalance();
   const {
     isLoading,
+    isLoadingMore,
     data: list,
+    lastVisible,
+    isLastPage,
     handleGetData,
   } = useGetEntries({
     server: { filters: serverFilters as ServerFilterFields },
@@ -122,6 +126,17 @@ export const Entries = () => {
                   <Item row={item} index={index} />
                 )}
                 keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                onEndReachedThreshold={0.2}
+                onEndReached={() => {
+                  if (!isLastPage && !isLoadingMore) handleGetData(lastVisible);
+                }}
+                ListFooterComponent={() => (
+                  <VStack p={5} width="100%" alignItems="center" opacity={0.5}>
+                    {isLoadingMore && <ActivityIndicator color={theme?.text} />}
+                    {isLastPage && <Text>Não há mais lançamentos</Text>}
+                  </VStack>
+                )}
               />
             </When>
           </VStack>

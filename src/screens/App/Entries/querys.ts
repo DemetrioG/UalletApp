@@ -1,4 +1,5 @@
 import {
+  QuerySnapshot,
   collection,
   deleteDoc,
   doc,
@@ -7,6 +8,7 @@ import {
   orderBy,
   query,
   setDoc,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { db } from "../../../services/firebase";
@@ -17,11 +19,7 @@ import {
   getMonthDate,
 } from "../../../utils/date.helper";
 import { realToNumber } from "../../../utils/number.helper";
-import {
-  createCollection,
-  currentUser,
-  updateCurrentBalance,
-} from "../../../utils/query.helper";
+import { currentUser, updateCurrentBalance } from "../../../utils/query.helper";
 import { ServerFilterFields } from "./ModalFilter/types";
 import { ListEntries, ValidatedNewEntrieDTO } from "./types";
 
@@ -30,6 +28,9 @@ type TEntriesList = {
   year: number;
   modality: string;
   filters?: ServerFilterFields;
+  pagination: {
+    lastVisible?: QuerySnapshot;
+  };
 };
 
 export async function returnLastId(modality: "Real" | "Projetado") {
@@ -54,6 +55,7 @@ export const getEntries = async ({
   year,
   modality,
   filters,
+  pagination,
 }: TEntriesList) => {
   const user = await currentUser();
   if (!user) return Promise.reject(null);
@@ -89,7 +91,18 @@ export const getEntries = async ({
     baseQuery = query(baseQuery, where("date", "<=", finalDate));
   }
 
-  const orderedQuery = query(baseQuery, orderBy("date", "desc"));
+  let orderedQuery;
+
+  if (pagination.lastVisible) {
+    orderedQuery = query(
+      baseQuery,
+      orderBy("date", "desc"),
+      startAfter(pagination.lastVisible),
+      limit(25)
+    );
+  } else {
+    orderedQuery = query(baseQuery, orderBy("date", "desc"), limit(25));
+  }
 
   return getDocs(orderedQuery);
 };

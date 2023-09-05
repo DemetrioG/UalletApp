@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
 import { handleToast } from "../../../../utils/functions.helper";
+import { QueryDocumentSnapshot } from "firebase/firestore";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
@@ -223,24 +224,44 @@ export const useGetEntries = (props: ListEntriesProps) => {
   const { isLoading, handleExecute } = usePromise(getEntries);
   const { data } = useContext(DataContext);
 
-  const [list, setList] = useState<ListEntries[]>([]);
   const [empty, setEmpty] = useState(false);
+  const [list, setList] = useState<ListEntries[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLastPage, setIsLastPage] = useState(true);
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>(
+    null
+  );
 
-  async function execute() {
+  async function execute(lastVisible?: QueryDocumentSnapshot | null) {
+    if (lastVisible) setIsLoadingMore(true);
     const snapshot = await handleExecute({
       ...data,
       filters: props.server?.filters,
+      pagination: {
+        lastVisible,
+      },
     });
 
     if (!snapshot.docs.length) setEmpty(true);
-
+    const last = snapshot.docs[snapshot.docs.length - 1];
     const list = snapshot.docs.map((doc) => doc.data()) as ListEntries[];
-    return setList(list);
+
+    if (lastVisible) {
+      setIsLoadingMore(false);
+      setList((rest) => [...rest, ...list]);
+    } else {
+      setList(list);
+    }
+    setIsLastPage(!Boolean(list[24]));
+    return setLastVisible(last);
   }
 
   return {
-    isLoading,
+    isLoading: isLoading && !isLoadingMore,
+    isLoadingMore,
+    isLastPage,
     isEmpty: empty,
+    lastVisible,
     data: list ?? [],
     handleGetData: execute,
   };
