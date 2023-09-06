@@ -1,26 +1,18 @@
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { auth, db } from "../../../services/firebase";
+import { auth } from "../../../services/firebase";
 import { RegisterDTO } from "./types";
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { addDays } from "date-fns";
+import { createPresets } from "./presets";
 
-export async function registerUser(props: RegisterDTO) {
-  const { name, email, password, confirm } = props;
+export async function registerUser(formData: RegisterDTO) {
+  const { email, password, confirm } = formData;
 
   if (password !== confirm) {
     return Promise.reject("As senhas informadas são diferentes");
   }
 
   createUserWithEmailAndPassword(auth, email, password)
-    .then((v) => {
-      setDoc(doc(collection(db, "users"), v.user?.uid), {
-        name: name,
-        email: email,
-        typeUser: "default",
-        dateRegister: serverTimestamp(),
-        expirationDate: addDays(new Date(), 7),
-        schema: "free",
-      });
+    .then(async (user) => {
+      await createPresets(user, formData);
       return Promise.resolve();
     })
     .catch((error) => {
