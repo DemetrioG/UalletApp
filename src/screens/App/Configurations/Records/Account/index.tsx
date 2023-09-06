@@ -17,6 +17,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect } from "react";
 import When from "../../../../../components/When";
 import { useListAccount } from "./hooks/useAccount";
+import { ListAccount } from "./types";
 
 export const Account = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -49,7 +50,7 @@ export const Account = () => {
           <When is={!!data.length}>
             <FlatList
               data={data}
-              renderItem={renderItem}
+              renderItem={({ item }) => <Item item={item} />}
               keyExtractor={(item) => item.id}
             />
           </When>
@@ -69,7 +70,7 @@ export const Account = () => {
   );
 };
 
-const renderItem = ({ item }: { item: any }) => {
+const Item = ({ item }: { item: ListAccount }) => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   return (
