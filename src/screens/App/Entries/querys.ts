@@ -62,7 +62,15 @@ export const getEntries = async ({
 
   const [initialDate, finalDate] = getMonthDate(month, year);
 
-  let baseQuery = query(collection(db, "entry", user.uid, modality as string));
+  let baseQuery;
+
+  if (filters?.modality) {
+    baseQuery = query(
+      collection(db, "entry", user.uid, filters?.modality as string)
+    );
+  } else {
+    baseQuery = query(collection(db, "entry", user.uid, modality as string));
+  }
 
   if (filters?.segment)
     baseQuery = query(baseQuery, where("segment", "==", filters?.segment));

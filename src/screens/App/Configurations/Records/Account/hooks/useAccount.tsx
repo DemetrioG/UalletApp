@@ -20,7 +20,7 @@ const defaultValues: AccountDTO = {
 
 const schema = yup.object({
   name: yup.string().nullable().required("Informe o nome da conta"),
-  balance: yup.number().nullable().required("Informe o saldo inicial da conta"),
+  balance: yup.string().nullable().required("Informe o saldo inicial da conta"),
 });
 
 export const useFormAccount = (id?: string) => {

@@ -43,7 +43,11 @@ export const Records = () => {
 
 const actions = [
   {
-    label: "Cadastro de Segmentos",
+    label: "Segmentos",
     url: "Configuracoes/Records/Segment",
+  },
+  {
+    label: "Contas Bancárias",
+    url: "Configuracoes/Records/Account",
   },
 ];
