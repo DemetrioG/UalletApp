@@ -12,6 +12,7 @@ import {
 import { db } from "../../../../../services/firebase";
 import { currentUser } from "../../../../../utils/query.helper";
 import { AccountDTO, ValidatedAccountDTO } from "./types";
+import { realToNumber } from "../../../../../utils/number.helper";
 
 export async function listAccount() {
   const user = await currentUser();
@@ -20,14 +21,14 @@ export async function listAccount() {
   return await getDocs(collection(db, "accounts", user.uid, "accounts"));
 }
 
-export async function createAccount(formData: AccountDTO) {
+export async function createAccount(formData: ValidatedAccountDTO) {
   const user = await currentUser();
   if (!user) return Promise.reject();
 
-  return await addDoc(
-    collection(db, "accounts", user.uid, "accounts"),
-    formData
-  );
+  return await addDoc(collection(db, "accounts", user.uid, "accounts"), {
+    ...formData,
+    balance: realToNumber(formData.balance),
+  });
 }
 
 export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
@@ -41,7 +42,10 @@ export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
   const batch = writeBatch(db);
   const updateData = { account: formData.name };
 
-  batch.update(accountRef, { name: formData.name });
+  batch.update(accountRef, {
+    name: formData.name,
+    balance: realToNumber(formData.balance),
+  });
 
   const updateEntries = async (collectionName: "Real" | "Projetado") => {
     const entriesSnapshot = await getEntries(user, collectionName, account);

@@ -1,11 +1,11 @@
 export interface AccountDTO {
   name: string | null;
-  balance: number | null;
+  balance: string | null;
 }
 
 export interface ValidatedAccountDTO {
   name: string;
-  balance: number;
+  balance: string;
 }
 
 export interface ListAccount {
