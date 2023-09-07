@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import {
   Edit3,
+  Landmark,
   LucideIcon,
   MoreHorizontal,
   Plug,
@@ -70,9 +71,9 @@ export const Home = () => {
               StackProps={{ opacity: 0.4 }}
             />
             <Action
-              text="Upgrades"
-              Icon={Rocket}
-              StackProps={{ opacity: 0.4 }}
+              text="Contas"
+              Icon={Landmark}
+              onPress={() => navigate("Configuracoes/Records/Account")}
             />
             <Action text="Menu" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
