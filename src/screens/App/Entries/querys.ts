@@ -179,6 +179,7 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
       sumBalance: type === "Receita",
       docDate: docRef,
       value: realToNumber(value),
+      account: account,
     });
   }
 
@@ -235,13 +236,14 @@ export async function updateEntry(
     sumBalance: type === "Receita",
     docDate: docRef,
     value: realToNumber(value) - routeParams.value,
+    account: account,
   });
 
   return Promise.resolve();
 }
 
 export async function deleteEntry(routeParams: ListEntries) {
-  const { date, id, modality, type, value } = routeParams;
+  const { date, id, modality, type, value, account } = routeParams;
   const user = await currentUser();
   if (!user) return Promise.reject();
 
@@ -259,6 +261,7 @@ export async function deleteEntry(routeParams: ListEntries) {
     docDate: docRef,
     sumBalance: type === "Despesa",
     value: value,
+    account: account,
   });
 
   return Promise.resolve();

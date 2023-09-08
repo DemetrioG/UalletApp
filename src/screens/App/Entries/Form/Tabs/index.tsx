@@ -79,7 +79,7 @@ export const FormEntriesTab = ({
             name="value"
             placeholder="Valor"
             control={formMethods.control}
-            errors={formMethods.formState.errors}
+            errors={formMethods.formState.errors.value}
             masked="money"
             isRequired
           />

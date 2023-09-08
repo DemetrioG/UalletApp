@@ -23,6 +23,7 @@ type UpdateCurrentBalanceProps = {
   sumBalance: boolean;
   docDate: string;
   value: number;
+  account: string;
 };
 
 /**
@@ -33,17 +34,21 @@ export const updateCurrentBalance = async ({
   sumBalance,
   docDate,
   value,
+  account,
 }: UpdateCurrentBalanceProps) => {
   const user = await currentUser();
   if (!user) return Promise.resolve(false);
 
   let balance = 0;
-  const balanceCollectionRef = collection(db, "balance", user.uid, modality!);
+  let balanceData;
+
+  const balanceCollectionRef = collection(db, "balance", user.uid, modality);
   const balanceDocRef = doc(balanceCollectionRef, docDate);
 
   try {
     const balanceSnapshot = await getDoc(balanceDocRef);
-    balance = balanceSnapshot.data()?.balance || 0;
+    balanceData = balanceSnapshot.data();
+    balance = balanceSnapshot.data()?.[account]?.balance || 0;
   } catch (error) {
     return Promise.reject(false);
   }
@@ -55,7 +60,7 @@ export const updateCurrentBalance = async ({
   }
 
   try {
-    await setDoc(balanceDocRef, { balance });
+    await setDoc(balanceDocRef, { ...balanceData, [account]: { balance } });
     return Promise.resolve(true);
   } catch (error) {
     return Promise.resolve(false);
