@@ -143,6 +143,7 @@ export const useDeleteSegment = () => {
         });
       })
       .catch((err) => {
+        console.log(err);
         return handleToast({
           type: "error",
           text1:

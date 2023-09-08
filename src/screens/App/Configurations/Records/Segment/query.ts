@@ -11,7 +11,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../../../services/firebase";
 import { currentUser } from "../../../../../utils/query.helper";
-import { SegmentDTO, ValidatedSegmentDTO } from "./types";
+import { ValidatedSegmentDTO } from "./types";
+import { stringToPath } from "../../../../../utils/general.helper";
 
 export async function listSegment() {
   const user = await currentUser();
@@ -20,14 +21,14 @@ export async function listSegment() {
   return await getDocs(collection(db, "segments", user.uid, "segments"));
 }
 
-export async function createSegment(formData: SegmentDTO) {
+export async function createSegment(formData: ValidatedSegmentDTO) {
   const user = await currentUser();
   if (!user) return Promise.reject();
 
-  return await addDoc(
-    collection(db, "segments", user.uid, "segments"),
-    formData
-  );
+  return await addDoc(collection(db, "segments", user.uid, "segments"), {
+    ...formData,
+    value: stringToPath(formData.description),
+  });
 }
 
 export async function updateSegment(formData: ValidatedSegmentDTO, id: string) {
@@ -36,12 +37,15 @@ export async function updateSegment(formData: ValidatedSegmentDTO, id: string) {
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
   const snapshot = await getDoc(segmentRef);
-  const segment = snapshot.data()?.description;
+  const segment = snapshot.data()?.value;
 
   const batch = writeBatch(db);
-  const updateData = { segment: formData.description };
+  const updateData = { segment: stringToPath(formData.description) };
 
-  batch.update(segmentRef, { description: formData.description });
+  batch.update(segmentRef, {
+    description: formData.description,
+    value: stringToPath(formData.description),
+  });
 
   const updateEntries = async (collectionName: "Real" | "Projetado") => {
     const entriesSnapshot = await getEntries(user, collectionName, segment);
@@ -61,7 +65,7 @@ export async function deleteSegment(id: string) {
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
   const snapshot = await getDoc(segmentRef);
-  const segment = snapshot.data()?.description;
+  const segment = snapshot.data()?.value;
 
   const [projectedEntries, realEntries] = await Promise.all([
     getEntries(user, "Projetado", segment),

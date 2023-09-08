@@ -10,7 +10,7 @@ export async function listSegment() {
   const data = docs.docs.map((doc) => doc.data());
   return data.map((segment) => {
     return {
-      value: segment.description,
+      value: segment.value,
       label: segment.description,
     };
   });

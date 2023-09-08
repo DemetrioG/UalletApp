@@ -26,7 +26,8 @@ export async function getData(context: IData) {
 
   const expenseBySegment = await Promise.all(
     segments.docs.map(async (doc) => {
-      const segment = doc.data().description;
+      const segment = doc.data().value;
+      const description = doc.data().description;
       const expense = await getExpense(
         user,
         modality,
@@ -35,9 +36,14 @@ export async function getData(context: IData) {
         segment
       );
       const percentage = (expense / totalExpenses) * 100;
+      if (!percentage)
+        return {
+          x: null,
+          y: 0,
+        };
 
       return {
-        x: segment,
+        x: description,
         y: percentage,
       };
     })
