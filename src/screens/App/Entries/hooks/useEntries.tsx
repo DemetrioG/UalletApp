@@ -122,7 +122,6 @@ export const useCreateEntrie = () => {
         navigate("Lancamentos" as never);
       })
       .catch((e) => {
-        console.error(e);
         handleToast({
           type: "error",
           text1: "Erro ao cadastrar as informações",
