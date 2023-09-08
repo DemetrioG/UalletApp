@@ -9,6 +9,7 @@ export interface ListEntries {
   modality: "Real" | "Projetado";
   classification?: string;
   segment?: string | null;
+  account: string;
   type: TEntrieType;
   value: number;
 }
@@ -25,6 +26,7 @@ export interface NewEntrieDTO {
   id?: number;
   modality: "Real" | "Projetado" | null;
   segment?: string | null;
+  account: string | null;
   type: TEntrieType | null;
   value: string | null;
   recurrent: boolean;
@@ -37,6 +39,7 @@ export interface ValidatedNewEntrieDTO {
   id?: number;
   modality: "Real" | "Projetado";
   segment?: string | null;
+  account: string;
   type: TEntrieType;
   value: string;
   recurrent: boolean;

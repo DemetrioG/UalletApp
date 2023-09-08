@@ -116,7 +116,17 @@ export const getEntries = async ({
 };
 
 export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
-  const { description, date, value, modality, segment, type, quantity } = props;
+  const {
+    description,
+    date,
+    value,
+    modality,
+    segment,
+    type,
+    quantity,
+    account,
+  } = props;
+
   const user = await currentUser();
   if (!user) return Promise.reject();
 
@@ -133,7 +143,8 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
       date: convertDateToDatabase(registerDate),
       type: type,
       description: description,
-      modality: modality!,
+      modality: modality,
+      account: account,
       value: realToNumber(value),
     };
 
@@ -179,7 +190,7 @@ export async function updateEntry(
   idRegister: number,
   routeParams: ListEntries
 ) {
-  const { description, date, value, modality, segment, type } = props;
+  const { description, date, value, modality, segment, type, account } = props;
   const user = await currentUser();
   if (!user) return Promise.reject();
 
@@ -191,6 +202,7 @@ export async function updateEntry(
     type: type,
     description: description,
     modality: modality,
+    account: account,
     value: realToNumber(value),
   };
 
