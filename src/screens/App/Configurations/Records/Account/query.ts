@@ -11,8 +11,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../../../services/firebase";
 import { currentUser } from "../../../../../utils/query.helper";
-import { AccountDTO, ValidatedAccountDTO } from "./types";
+import { ValidatedAccountDTO } from "./types";
 import { realToNumber } from "../../../../../utils/number.helper";
+import { stringToPath } from "../../../../../utils/general.helper";
 
 export async function listAccount() {
   const user = await currentUser();
@@ -27,6 +28,7 @@ export async function createAccount(formData: ValidatedAccountDTO) {
 
   return await addDoc(collection(db, "accounts", user.uid, "accounts"), {
     ...formData,
+    value: stringToPath(formData.name),
     balance: realToNumber(formData.balance),
   });
 }
@@ -37,13 +39,14 @@ export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
 
   const accountRef = doc(collection(db, "accounts", user.uid, "accounts"), id);
   const snapshot = await getDoc(accountRef);
-  const account = snapshot.data()?.name;
+  const account = snapshot.data()?.value;
 
   const batch = writeBatch(db);
-  const updateData = { account: formData.name };
+  const updateData = { account: stringToPath(formData.name) };
 
   batch.update(accountRef, {
     name: formData.name,
+    value: stringToPath(formData.name),
     balance: realToNumber(formData.balance),
   });
 
@@ -65,7 +68,7 @@ export async function deleteAccount(id: string) {
 
   const accountRef = doc(collection(db, "accounts", user.uid, "accounts"), id);
   const snapshot = await getDoc(accountRef);
-  const account = snapshot.data()?.name;
+  const account = snapshot.data()?.value;
 
   const [projectedEntries, realEntries] = await Promise.all([
     getEntries(user, "Projetado", account),

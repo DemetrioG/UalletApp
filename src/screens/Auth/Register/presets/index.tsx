@@ -35,6 +35,7 @@ async function userPreset(user: UserCredential, formData: RegisterDTO) {
 async function accountPreset(user: UserCredential) {
   const data = {
     name: "Carteira",
+    value: "carteira",
     balance: 0,
   };
   return await addDoc(
