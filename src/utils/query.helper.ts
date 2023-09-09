@@ -19,7 +19,7 @@ export const currentUser = async () => {
 };
 
 type UpdateCurrentBalanceProps = {
-  modality: string;
+  modality: "Real" | "Projetado";
   sumBalance: boolean;
   docDate: string;
   value: number;
@@ -38,29 +38,29 @@ export const updateCurrentBalance = async ({
 }: UpdateCurrentBalanceProps) => {
   const user = await currentUser();
   if (!user) return Promise.resolve(false);
-
-  let balance = 0;
-  let balanceData;
-
   const balanceCollectionRef = collection(db, "balance", user.uid, modality);
-  const balanceDocRef = doc(balanceCollectionRef, docDate);
+  const balanceDocRef = doc(
+    balanceCollectionRef,
+    modality === "Projetado" ? docDate : "balance"
+  );
 
   try {
     const balanceSnapshot = await getDoc(balanceDocRef);
-    balanceData = balanceSnapshot.data();
-    balance = balanceSnapshot.data()?.[account]?.balance || 0;
-  } catch (error) {
-    return Promise.reject(false);
-  }
+    const balanceData = balanceSnapshot.data();
+    const balance = balanceData?.[account]?.balance || 0;
 
-  if (sumBalance) {
-    balance += value;
-  } else {
-    balance -= value;
-  }
+    if (sumBalance) {
+      await setDoc(balanceDocRef, {
+        ...balanceData,
+        [account]: { balance: balance + value },
+      });
+    } else {
+      await setDoc(balanceDocRef, {
+        ...balanceData,
+        [account]: { balance: balance - value },
+      });
+    }
 
-  try {
-    await setDoc(balanceDocRef, { ...balanceData, [account]: { balance } });
     return Promise.resolve(true);
   } catch (error) {
     return Promise.resolve(false);
