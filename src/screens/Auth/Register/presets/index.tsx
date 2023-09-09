@@ -33,15 +33,31 @@ async function userPreset(user: UserCredential, formData: RegisterDTO) {
 }
 
 async function accountPreset(user: UserCredential) {
+  const accountsCollectionRef = collection(
+    db,
+    "accounts",
+    user.user?.uid,
+    "accounts"
+  );
+  const balanceDocRef = doc(
+    collection(db, "balance", user.user?.uid, "Real"),
+    "balance"
+  );
+
   const data = {
     name: "Carteira",
     value: "carteira",
     balance: 0,
   };
-  return await addDoc(
-    collection(db, "accounts", user.user?.uid, "accounts"),
-    data
-  );
+
+  await Promise.all([
+    addDoc(accountsCollectionRef, data),
+    setDoc(balanceDocRef, {
+      carteira: {
+        balance: 0,
+      },
+    }),
+  ]);
 }
 
 async function segmentPreset(user: UserCredential) {
