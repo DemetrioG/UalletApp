@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   query,
+  setDoc,
   where,
   writeBatch,
 } from "firebase/firestore";
@@ -25,11 +26,20 @@ export async function listAccount() {
 export async function createAccount(formData: ValidatedAccountDTO) {
   const user = await currentUser();
   if (!user) return Promise.reject();
-
-  return await addDoc(collection(db, "accounts", user.uid, "accounts"), {
+  const accountsCollection = collection(db, "accounts", user.uid, "accounts");
+  await addDoc(accountsCollection, {
     ...formData,
     value: stringToPath(formData.name),
     balance: realToNumber(formData.balance),
+  });
+
+  const balanceCollection = collection(db, "balance", user.uid, "Real");
+  const balanceRef = doc(balanceCollection, "balance");
+  const balanceSnapshot = await getDoc(balanceRef);
+  const balanceData = balanceSnapshot.data();
+  await setDoc(balanceRef, {
+    ...balanceData,
+    [stringToPath(formData.name)]: { balance: 0 },
   });
 }
 
@@ -38,8 +48,9 @@ export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
   if (!user) return Promise.reject();
 
   const accountRef = doc(collection(db, "accounts", user.uid, "accounts"), id);
-  const snapshot = await getDoc(accountRef);
-  const account = snapshot.data()?.value;
+  const accountSnapshot = await getDoc(accountRef);
+  const accountData = accountSnapshot.data();
+  const account = accountData?.value;
 
   const batch = writeBatch(db);
   const updateData = { account: stringToPath(formData.name) };
@@ -59,7 +70,21 @@ export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
   };
 
   await Promise.all([updateEntries("Real"), updateEntries("Projetado")]);
-  return await batch.commit();
+  await batch.commit();
+
+  const balanceRef = doc(
+    collection(db, "balance", user.uid, "Real"),
+    "balance"
+  );
+  const balanceSnapshot = await getDoc(balanceRef);
+  const balanceData = balanceSnapshot.data();
+  const balance = balanceData?.[account]?.balance || 0;
+  const oldAccountBalance = accountData?.balance || 0;
+  const newAccountBalance = realToNumber(formData.balance);
+  await setDoc(balanceRef, {
+    ...balanceData,
+    [account]: { balance: balance + (newAccountBalance - oldAccountBalance) },
+  });
 }
 
 export async function deleteAccount(id: string) {
@@ -81,7 +106,15 @@ export async function deleteAccount(id: string) {
   if (hasEntries)
     return Promise.reject("Há lançamentos vinculados a esta conta.");
 
-  return await deleteDoc(accountRef);
+  const balanceRef = doc(
+    collection(db, "balance", user.uid, "Real"),
+    "balance"
+  );
+  const balanceSnapshot = await getDoc(balanceRef);
+  const balanceData = balanceSnapshot.data();
+  delete balanceData?.[account];
+  await setDoc(balanceRef, balanceData);
+  await deleteDoc(accountRef);
 }
 
 async function getEntries(
