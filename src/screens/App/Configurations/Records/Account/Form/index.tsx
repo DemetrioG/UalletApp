@@ -47,7 +47,7 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
               control={formMethods.control}
               name="name"
               errors={formMethods.formState.errors.name}
-              helperText="Informe o nome da conta"
+              helperText={formMethods.formState.errors.name?.message}
               isRequired
             />
             <FormTextInput

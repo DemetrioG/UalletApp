@@ -117,6 +117,18 @@ export async function deleteAccount(id: string) {
   await deleteDoc(accountRef);
 }
 
+export async function checkIfAccountExist(account: string) {
+  const user = await currentUser();
+  if (!user) return Promise.reject();
+
+  const accountRef = collection(db, "accounts", user.uid, "accounts");
+  const accountSnapshot = await getDocs(
+    query(accountRef, where("name", "==", account))
+  );
+
+  return !(accountSnapshot.docs.length > 0);
+}
+
 async function getEntries(
   user: any,
   modality: "Real" | "Projetado",

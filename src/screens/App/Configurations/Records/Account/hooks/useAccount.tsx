@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { ListAccount, AccountDTO } from "../types";
 import { usePromise } from "../../../../../../hooks/usePromise";
 import {
+  checkIfAccountExist,
   createAccount,
   deleteAccount,
   listAccount,
@@ -19,7 +20,14 @@ const defaultValues: AccountDTO = {
 };
 
 const schema = yup.object({
-  name: yup.string().nullable().required("Informe o nome da conta"),
+  name: yup
+    .string()
+    .nullable()
+    .required("Informe o nome da conta")
+    .test("account", "Conta já existente", async (name) => {
+      if (!name) return false;
+      return await checkIfAccountExist(name);
+    }),
   balance: yup.string().nullable().required("Informe o saldo inicial da conta"),
 });
 
