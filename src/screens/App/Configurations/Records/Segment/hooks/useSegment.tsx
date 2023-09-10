@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { ListSegment, SegmentDTO } from "../types";
 import { usePromise } from "../../../../../../hooks/usePromise";
 import {
+  checkIfSegmentExist,
   createSegment,
   deleteSegment,
   listSegment,
@@ -21,7 +22,11 @@ const schema = yup.object({
   description: yup
     .string()
     .nullable()
-    .required("Informe a descrição do segmento"),
+    .required("Informe a descrição")
+    .test("description", "Descrição já existente", async (desc) => {
+      if (!desc) return false;
+      return await checkIfSegmentExist(desc);
+    }),
 });
 
 export const useFormSegment = (id?: string) => {

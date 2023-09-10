@@ -81,6 +81,18 @@ export async function deleteSegment(id: string) {
   return await deleteDoc(segmentRef);
 }
 
+export async function checkIfSegmentExist(description: string) {
+  const user = await currentUser();
+  if (!user) return Promise.reject();
+
+  const segmentRef = collection(db, "segments", user.uid, "segments");
+  const segmentSnapshot = await getDocs(
+    query(segmentRef, where("description", "==", description))
+  );
+
+  return !(segmentSnapshot.docs.length > 0);
+}
+
 async function getEntries(
   user: any,
   modality: "Real" | "Projetado",

@@ -47,6 +47,7 @@ export const SegmentForm = ({ route: { params } }: SegmentFormParams) => {
               control={formMethods.control}
               name="description"
               errors={formMethods.formState.errors.description}
+              helperText={formMethods.formState.errors.description?.message}
               isRequired
             />
           </Center>

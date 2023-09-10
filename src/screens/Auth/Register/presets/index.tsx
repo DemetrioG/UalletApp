@@ -64,18 +64,23 @@ async function segmentPreset(user: UserCredential) {
   const data = [
     {
       description: "Alimentação",
+      value: "alimentacao",
     },
     {
       description: "Lazer",
+      value: "lazer",
     },
     {
       description: "Educação",
+      value: "educacao",
     },
     {
       description: "Empréstimos",
+      value: "emprestimos",
     },
     {
       description: "Necessidades",
+      value: "necessidades",
     },
   ];
 
