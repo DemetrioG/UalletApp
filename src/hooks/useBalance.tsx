@@ -1,9 +1,8 @@
 import { useContext, useEffect } from "react";
-import { DataContext } from "../context/Data/dataContext";
+import { BalanceProps, DataContext } from "../context/Data/dataContext";
 import { currentUser } from "../utils/query.helper";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../services/firebase";
-import { numberToReal } from "../utils/number.helper";
 
 export const useGetBalance = () => {
   const {
@@ -24,13 +23,15 @@ export const useGetBalance = () => {
 
     unsubscribe = onSnapshot(balanceDocRef, (snapshot) => {
       const data = snapshot.data();
-      const balanceSum = data
-        ? Object.values(data).reduce((sum, { balance }) => sum + balance, 0)
-        : 0;
-      const balance = numberToReal(balanceSum);
+      if (!data) return;
+
+      const balanceSum = Object.values(data).reduce(
+        (sum, { balance }) => sum + balance,
+        0
+      );
       return setData((rest) => ({
         ...rest,
-        balance,
+        balance: { ...data, total: balanceSum } as BalanceProps,
       }));
     });
   }

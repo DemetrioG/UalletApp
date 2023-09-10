@@ -4,6 +4,7 @@ import { TouchableOpacity } from "react-native";
 import { Menu } from "../Menu";
 import { DataContext } from "../../context/Data/dataContext";
 import {
+  Center,
   HStack,
   Image,
   Pressable,
@@ -23,6 +24,8 @@ import When from "../When";
 import LOGO_SMALL from "../../../assets/images/logoSmall.png";
 import { StepableDatePicker } from "../StepableDatePicker";
 import { WifiOff } from "lucide-react-native";
+import { numberToReal } from "../../utils/number.helper";
+import { BalanceCard } from "../BalanceCard";
 
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -31,7 +34,6 @@ export const Header = () => {
   const { data: revenue, isLoading } = useGetRevenue();
   const {} = useGetData();
 
-  const [balanceInteger, balanceCents] = data.balance.split(",");
   const negativeRevenue = revenue < 0;
 
   function changeModality() {
@@ -42,7 +44,7 @@ export const Header = () => {
   }
 
   return (
-    <VStack position="relative" minHeight="360px">
+    <VStack position="relative" minHeight="450px">
       <VStack
         position="absolute"
         width="100%"
@@ -62,8 +64,11 @@ export const Header = () => {
             borderColor: theme?.secondary,
           }}
         />
-        <VStack space={5} paddingY={5}>
-          <HStack
+        <VStack space={10} paddingY={5}>
+          <Center>
+            <BalanceCard data={data.balance} />
+          </Center>
+          {/* <HStack
             position="relative"
             justifyContent="center"
             alignItems="center"
@@ -77,7 +82,7 @@ export const Header = () => {
                 ,{balanceCents}
               </Text>
             </Text>
-          </HStack>
+          </HStack> */}
           <HStack alignItems="center" justifyContent="center" space={6}>
             <TouchableOpacity
               style={{
@@ -119,7 +124,7 @@ export const Header = () => {
         backgroundColor={theme?.tertiary}
         borderBottomLeftRadius="40px"
         borderBottomRightRadius="40px"
-        height="320px"
+        height="410px"
         paddingX="15px"
         paddingY="15px"
       >
@@ -172,7 +177,8 @@ export const HeaderSummary = () => {
   const { data } = useContext(DataContext);
   const {} = useGetData();
 
-  const [balanceInteger, balanceCents] = data.balance.split(",");
+  const totalBalance = numberToReal(data.balance.total);
+  const [balanceInteger, balanceCents] = totalBalance.split(",");
 
   return (
     <VStack
@@ -199,9 +205,7 @@ export const HeaderSummary = () => {
       >
         <HStack paddingY={4} justifyContent="space-between" alignItems="center">
           <HStack alignItems="center" space={3}>
-            <Text>
-              {data.modality === "Real" ? "Saldo:" : "Saldo projetado:"}
-            </Text>
+            <Text>Saldo total:</Text>
             <HStack maxWidth="160px">
               <Text fontWeight={700} fontSize="18px">
                 {balanceInteger}
@@ -265,23 +269,3 @@ const LineDown = () => {
     </Svg>
   );
 };
-
-const optionsMonth = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
-];
-const optionsYear: number[] = [];
-
-for (let index = 0; index < 5; index++) {
-  optionsYear.push(new Date().getFullYear() + index);
-}

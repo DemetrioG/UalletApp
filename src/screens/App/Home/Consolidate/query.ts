@@ -40,7 +40,8 @@ export async function consolidateData(data: ItemListType[]) {
     });
 
     for (const item of data) {
-      const { date, description, segment, type, value, id, checked } = item;
+      const { date, description, segment, type, value, id, checked, account } =
+        item;
 
       await setDoc(
         doc(projetadoCollectionRef, id.toString()),
@@ -61,6 +62,7 @@ export async function consolidateData(data: ItemListType[]) {
           description: description,
           modality: "Real",
           value: value,
+          account,
         };
 
         if (segment) {
@@ -78,6 +80,7 @@ export async function consolidateData(data: ItemListType[]) {
           sumBalance: type === "Receita",
           docDate: docRef,
           value: value,
+          account,
         });
 
         return Promise.resolve("Dados consolidados com sucesso");
