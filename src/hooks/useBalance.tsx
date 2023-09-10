@@ -19,13 +19,15 @@ export const useGetBalance = () => {
     if (!user) return "R$0,00";
 
     const balanceCollectionRef = collection(db, "balance", user.uid, modality);
-    const balanceDocRef = doc(balanceCollectionRef, `${month}_${year}`);
+    const collectionRef = modality === "Real" ? "balance" : `${month}_${year}`;
+    const balanceDocRef = doc(balanceCollectionRef, collectionRef);
 
     unsubscribe = onSnapshot(balanceDocRef, (snapshot) => {
       const data = snapshot.data();
-      const balance = data?.balance
-        ? numberToReal(data?.balance || 0)
-        : "R$0,00";
+      const balanceSum = data
+        ? Object.values(data).reduce((sum, { balance }) => sum + balance, 0)
+        : 0;
+      const balance = numberToReal(balanceSum);
       return setData((rest) => ({
         ...rest,
         balance,
