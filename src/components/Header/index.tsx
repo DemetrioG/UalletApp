@@ -68,7 +68,7 @@ export const Header = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Text>Saldo atual</Text>
+            <Text>Saldo total</Text>
           </HStack>
           <HStack justifyContent="center">
             <Text fontWeight={700} fontSize="4xl">

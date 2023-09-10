@@ -80,7 +80,7 @@ export const Segment = () => {
           </When>
         </VStack>
         <Button
-          isDisabled={data.length > 4}
+          isDisabled={data.length > 9}
           onPress={() => navigate("Configuracoes/Records/Segment/Form")}
         >
           <Text fontWeight="bold" color="white">
