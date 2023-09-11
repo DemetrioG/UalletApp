@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useMemo, useRef } from "react";
+import { memo, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "styled-components";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react-native";
 import { FlatList, HStack, Text, VStack, useDisclose } from "native-base";
@@ -106,6 +106,8 @@ const ActionSheet = (props: ActionSheetProps) => {
     );
   }, [props.options, activeMonthRef]);
 
+  const [xRef, setXRef] = useState(0);
+
   function handleUpdateDataContext(option: IOption) {
     const [month, year] = option.value.split("/");
 
@@ -118,6 +120,14 @@ const ActionSheet = (props: ActionSheetProps) => {
     }));
     props.onClose();
   }
+
+  /**
+   * Por algum acaso o contentOffset não funciona ao renderizar.
+   * Sendo assim, forço uma re-renderização com essa state
+   */
+  useEffect(() => {
+    setTimeout(() => setXRef((ref) => ref + 1), 100);
+  }, [props.isOpen]);
 
   return (
     <Modal
@@ -135,7 +145,7 @@ const ActionSheet = (props: ActionSheetProps) => {
         style={{ width: "100%", height: 200 }}
         data={props.options}
         keyExtractor={(_, index) => index.toString()}
-        contentOffset={{ x: 0, y: 60 * activeOptionRef + 1 }}
+        contentOffset={{ x: xRef, y: 60 * activeOptionRef + 1 }}
         renderItem={({ item }) => (
           <ActionSheetItem
             item={item}
