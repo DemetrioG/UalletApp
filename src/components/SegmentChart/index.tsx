@@ -18,7 +18,6 @@ export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
               width={390}
               height={210}
               padAngle={3}
-              cornerRadius={10}
               innerRadius={30}
               style={{
                 labels: {
@@ -30,11 +29,11 @@ export const SegmentChart = ({ data }: { data: ChartProps[] }) => {
             />
           </VStack>
         </VStack>
-        <VStack width="100%" justifyContent="center">
+        <VStack width="100%" justifyContent="center" mt={10}>
           {data.map(({ x, y }, index) => {
             return (
               <When is={!!y} key={index}>
-                <VStack justifyContent="center" paddingY={4}>
+                <VStack justifyContent="center" paddingY={1.5}>
                   <HStack alignItems="center" space={4}>
                     <VStack
                       w="15px"
