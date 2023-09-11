@@ -1,13 +1,14 @@
 import { HStack, Text, VStack } from "native-base";
 import { useTheme } from "styled-components";
-import Carousel from "react-native-reanimated-carousel";
+import Carousel from "react-native-snap-carousel";
 import { BalanceProps } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { CardProps } from "./types";
+import { metrics } from "../../styles";
 
 const test = [
-  { name: "Total", value: 10, color: "white" },
+  { name: "Total das contas", value: 10, color: "#6499E3" },
   { name: "Carteira", value: 10, color: "white" },
 ];
 
@@ -16,8 +17,8 @@ export const BalanceCard = ({ data }: { data: BalanceProps }) => {
     <Carousel
       data={test}
       renderItem={({ item }) => <Card {...item} />}
-      width={280}
-      height={200}
+      sliderWidth={metrics.screenWidth}
+      itemWidth={(metrics.screenWidth * 80) / 100}
     />
   );
 };
@@ -28,7 +29,6 @@ const Card = (props: CardProps) => {
   const [balanceInteger, balanceCents] = totalBalance.split(",");
   return (
     <VStack
-      width="80%"
       p={5}
       space={5}
       backgroundColor={theme?.tertiary}
