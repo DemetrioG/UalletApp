@@ -25,7 +25,7 @@ import LOGO_SMALL from "../../../assets/images/logoSmall.png";
 import { StepableDatePicker } from "../StepableDatePicker";
 import { WifiOff } from "lucide-react-native";
 import { numberToReal } from "../../utils/number.helper";
-import { BalanceCard } from "../BalanceCard";
+import { BalanceCards } from "../BalanceCard";
 
 export const Header = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -65,24 +65,7 @@ export const Header = () => {
           }}
         />
         <VStack space={10} paddingY={5}>
-          <Center>
-            <BalanceCard data={data.balance} />
-          </Center>
-          {/* <HStack
-            position="relative"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Text>Saldo total</Text>
-          </HStack>
-          <HStack justifyContent="center">
-            <Text fontWeight={700} fontSize="4xl">
-              {balanceInteger}
-              <Text fontWeight={700} opacity={0.3} fontSize="4xl">
-                ,{balanceCents}
-              </Text>
-            </Text>
-          </HStack> */}
+          <BalanceCards />
           <HStack alignItems="center" justifyContent="center" space={6}>
             <TouchableOpacity
               style={{

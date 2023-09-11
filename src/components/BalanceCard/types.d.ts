@@ -3,3 +3,9 @@ export interface CardProps {
   name: string;
   color: string;
 }
+
+export interface BalanceCardsProps {
+  name: string;
+  value: number;
+  color: string;
+}

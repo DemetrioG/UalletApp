@@ -48,6 +48,7 @@ async function accountPreset(user: UserCredential) {
     name: "Carteira",
     value: "carteira",
     balance: 0,
+    color: "#FFF",
   };
 
   await Promise.all([

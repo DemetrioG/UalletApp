@@ -83,7 +83,7 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
             <Button
               variant="outline"
               isLoading={isLoadingDelete}
-              isDisabled={isLoadingUpdate}
+              isDisabled={isLoadingUpdate || params.name === "Carteira"}
               onPress={() => handleDelete(id)}
             >
               <Text fontWeight="bold" color={theme?.blue}>

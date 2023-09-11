@@ -1,25 +1,48 @@
-import { HStack, Text, VStack } from "native-base";
+import { Center, HStack, Skeleton, Text, VStack } from "native-base";
 import { useTheme } from "styled-components";
 import Carousel from "react-native-snap-carousel";
-import { BalanceProps } from "../../context/Data/dataContext";
+import { DataContext } from "../../context/Data/dataContext";
 import { numberToReal } from "../../utils/number.helper";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { CardProps } from "./types";
 import { metrics } from "../../styles";
+import { useContext } from "react";
+import { useBalanceCards } from "./hooks/useBalanceCards";
+import When from "../When";
 
 const test = [
   { name: "Total das contas", value: 10, color: "#6499E3" },
   { name: "Carteira", value: 10, color: "white" },
 ];
 
-export const BalanceCard = ({ data }: { data: BalanceProps }) => {
+export const BalanceCards = () => {
+  const { theme }: IThemeProvider = useTheme();
+  const {
+    data: { balance },
+  } = useContext(DataContext);
+  const { isLoading, data } = useBalanceCards(balance);
+
   return (
-    <Carousel
-      data={test}
-      renderItem={({ item }) => <Card {...item} />}
-      sliderWidth={metrics.screenWidth}
-      itemWidth={(metrics.screenWidth * 80) / 100}
-    />
+    <>
+      <When is={isLoading}>
+        <Center>
+          <Skeleton
+            width="80%"
+            height="176px"
+            borderRadius="20px"
+            startColor={theme?.tertiary}
+          />
+        </Center>
+      </When>
+      <When is={!isLoading}>
+        <Carousel
+          data={data}
+          renderItem={({ item }) => <Card {...item} />}
+          sliderWidth={metrics.screenWidth}
+          itemWidth={(metrics.screenWidth * 80) / 100}
+        />
+      </When>
+    </>
   );
 };
 
