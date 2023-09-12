@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
@@ -18,7 +18,8 @@ import { FormTextInput } from "../../../../../../components/Inputs/TextInput";
 import { useDeleteAccount, useFormAccount } from "../hooks/useAccount";
 import { AccountFormParams } from "../types";
 import When from "../../../../../../components/When";
-import ColorPicker from "react-native-wheel-color-picker";
+import { Controller } from "react-hook-form";
+import { ColorPicker } from "./ColorPicker";
 
 export const AccountForm = ({ route: { params } }: AccountFormParams) => {
   const id = params?.id;
@@ -28,8 +29,11 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
     useFormAccount(id);
   const { isLoadingDelete, handleDelete } = useDeleteAccount();
 
-  const [color, setColor] = useState("#266DD3");
   const colorPicker = useDisclose();
+
+  function handleSetColor(color: string) {
+    return formMethods.setValue("color", color, { shouldDirty: true });
+  }
 
   useEffect(() => {
     params && formMethods.reset(params);
@@ -56,11 +60,17 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
               <HStack justifyContent="space-between">
                 <HStack alignItems="center" space={3}>
                   <Text>Cor de referência</Text>
-                  <VStack
-                    width="15px"
-                    height="15px"
-                    backgroundColor={color}
-                    borderRadius={10}
+                  <Controller
+                    name="color"
+                    control={formMethods.control}
+                    render={({ field: { value } }) => (
+                      <VStack
+                        width="15px"
+                        height="15px"
+                        backgroundColor={value}
+                        borderRadius={10}
+                      />
+                    )}
                   />
                 </HStack>
                 <Pressable onPress={colorPicker.onToggle}>
@@ -87,17 +97,6 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
               helperText="Informe saldo inicial da conta"
               isRequired
             />
-            <When is={colorPicker.isOpen}>
-              <VStack height={100}>
-                <ColorPicker
-                  thumbSize={30}
-                  swatches={false}
-                  sliderHidden
-                  onColorChange={setColor}
-                  row={false}
-                />
-              </VStack>
-            </When>
           </Center>
           <When is={!id}>
             <Button onPress={handleSubmit} isLoading={isLoadingCreate}>
@@ -129,6 +128,7 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
               </Text>
             </Button>
           </When>
+          <ColorPicker {...colorPicker} handleSetColor={handleSetColor} />
         </VStack>
       </BackgroundContainer>
     </TouchableWithoutFeedback>

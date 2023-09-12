@@ -17,16 +17,25 @@ import { handleToast } from "../../../../../../utils/functions.helper";
 const defaultValues: AccountDTO = {
   name: null,
   balance: null,
+  color: "#266DD3",
 };
 
-const schema = yup.object({
+const schema = yup.object().shape({
+  id: yup.string().optional(),
   name: yup
     .string()
     .nullable()
-    .required("Informe o nome da conta")
-    .test("account", "Conta já existente", async (name) => {
-      if (!name) return false;
-      return await checkIfAccountExist(name);
+    .when("id", {
+      is: (id: string) => !id,
+      then: yup
+        .string()
+        .nullable()
+        .required("Informe o nome da conta")
+        .test("account", "Conta já existente", async (name) => {
+          if (!name) return false;
+          return await checkIfAccountExist(name);
+        }),
+      otherwise: yup.string().nullable().required("Informe o nome da conta"),
     }),
   balance: yup.string().nullable().required("Informe o saldo inicial da conta"),
 });

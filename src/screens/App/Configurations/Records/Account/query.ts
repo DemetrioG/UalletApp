@@ -57,6 +57,7 @@ export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
 
   batch.update(accountRef, {
     name: formData.name,
+    color: formData.color,
     value: stringToPath(formData.name),
     balance: realToNumber(formData.balance),
   });
