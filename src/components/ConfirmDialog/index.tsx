@@ -1,10 +1,11 @@
 import { useContext, useRef, useEffect } from "react";
-import Modal from "react-native-modal";
 
 import { ConfirmContext } from "../../context/ConfirmDialog/confirmContext";
-import { Button, Center, Text, VStack } from "native-base";
+import { Button, Center, HStack, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
+import { Modal } from "../Modal";
+import { AlertCircle } from "lucide-react-native";
 
 export const ConfirmDialog = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -43,45 +44,39 @@ export const ConfirmDialog = () => {
 
   return (
     <Modal
-      isVisible={confirm.visibility}
-      swipeDirection={"down"}
-      onSwipeComplete={handleCancel}
-      onBackdropPress={handleCancel}
+      isOpen={!!confirm.visibility}
+      onClose={handleCancel}
+      onOpen={() => {}}
+      onToggle={() => {}}
+      ContainerProps={{ height: 400, ...confirm.ContainerProps }}
     >
-      <Center
-        position="absolute"
-        top={0}
-        bottom={0}
-        marginBottom="auto"
-        marginTop="auto"
-        w="100%"
-      >
-        <VStack
-          backgroundColor={theme?.secondary}
-          paddingY={5}
-          paddingX={10}
-          space={10}
-          borderRadius={20}
-          borderLeftWidth={6}
-          borderLeftColor={theme?.red}
-        >
-          <Text textAlign="center" fontWeight={500}>
-            {confirm.title}
+      {!!confirm.header ? (
+        <>{confirm.header}</>
+      ) : (
+        <HStack alignItems="center" justifyContent="space-between">
+          <Text fontWeight={700} fontSize="18px">
+            Atenção
           </Text>
-          <VStack>
-            <Button variant="outline" onPress={handleConfirm}>
-              <Text fontWeight="bold" color={theme?.blue}>
-                Ok
-              </Text>
-            </Button>
-            <Button onPress={handleCancel}>
-              <Text fontWeight="bold" color="white">
-                Cancelar
-              </Text>
-            </Button>
-          </VStack>
-        </VStack>
+          <AlertCircle color={theme?.red} />
+        </HStack>
+      )}
+      <Center flex={1}>
+        <Text textAlign="center" fontWeight={500}>
+          {confirm.title}
+        </Text>
       </Center>
+      <VStack>
+        <Button onPress={handleCancel}>
+          <Text fontWeight="bold" color="white">
+            Não
+          </Text>
+        </Button>
+        <Button variant="outline" onPress={handleConfirm}>
+          <Text fontWeight="bold" color={theme?.blue}>
+            Sim
+          </Text>
+        </Button>
+      </VStack>
     </Modal>
   );
 };

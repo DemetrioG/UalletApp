@@ -1,11 +1,14 @@
+import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 import * as React from "react";
 
 export interface IConfirm {
   visibility?: boolean;
-  title: string;
   redirect?: string | null;
   callback?: boolean;
   callbackFunction?: Function;
+  header?: JSX.Element;
+  title: string;
+  ContainerProps?: InterfaceVStackProps;
 }
 
 export const initialConfirmState: IConfirm = {
