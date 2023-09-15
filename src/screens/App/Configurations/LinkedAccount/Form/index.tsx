@@ -3,13 +3,13 @@ import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { ChevronLeft } from "lucide-react-native";
-import { BackgroundContainer } from "../../../../../../styles/general";
+import { BackgroundContainer } from "../../../../../styles/general";
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
-import { IThemeProvider } from "../../../../../../styles/baseTheme";
-import { FormTextInput } from "../../../../../../components/Inputs/TextInput";
-import { LinkedAccountFormParams } from "../types";
-import When from "../../../../../../components/When";
+import { IThemeProvider } from "../../../../../styles/baseTheme";
+import { FormTextInput } from "../../../../../components/Inputs/TextInput";
+import When from "../../../../../components/When";
 import { useFormLinkedAccount } from "../hooks/useLinkedAccount";
+import { LinkedAccountFormParams } from "../types";
 
 export const LinkedAccountForm = ({
   route: { params },
@@ -42,9 +42,12 @@ export const LinkedAccountForm = ({
           <Center flex={1}>
             <FormTextInput
               variant="filled"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
               placeholder="E-mail"
               control={formMethods.control}
-              name="name"
+              name="email"
               errors={formMethods.formState.errors.email}
               helperText={formMethods.formState.errors.email?.message}
               isRequired

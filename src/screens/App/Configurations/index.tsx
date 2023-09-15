@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Flag,
+  Heart,
   PlusCircle,
   Shield,
   User,
@@ -37,7 +38,7 @@ export const ConfiguracoesScreen = () => {
             <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
               <HStack justifyContent="space-between" alignItems={"center"}>
                 <HStack alignItems="center" space={3}>
-                  <action.Icon color={theme?.blue} />
+                  <action.Icon color={theme?.[action.color as keyof IThemeProvider['theme']]} />
                   <Text>{action.label}</Text>
                 </HStack>
                 <ChevronRight color={theme?.text} />
@@ -69,10 +70,10 @@ const actions = [
     Icon: PlusCircle,
     color: "blue",
   },
-  // {
-  //   label: "Alertas",
-  //   url: "Configuracoes/Alertas",
-  //   Icon: Flag,
-  //   color: "blue",
-  // },
+  {
+    label: "Conta conjunta",
+    url: "Configuracoes/LinkedAccount",
+    Icon: Heart,
+    color: "red",
+  },
 ];

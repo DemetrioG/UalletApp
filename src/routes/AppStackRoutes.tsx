@@ -29,8 +29,8 @@ import { Checkout } from "../screens/App/Checkout";
 import { Plan } from "../screens/App/Menu/Plan";
 import { Account } from "../screens/App/Configurations/Records/Account";
 import { AccountForm } from "../screens/App/Configurations/Records/Account/Form";
-import { LinkedAccount } from "../screens/App/Configurations/Records/LinkedAccount";
-import { LinkedAccountForm } from "../screens/App/Configurations/Records/LinkedAccount/Form";
+import { LinkedAccount } from "../screens/App/Configurations/LinkedAccount";
+import { LinkedAccountForm } from "../screens/App/Configurations/LinkedAccount/Form";
 
 const {
   Navigator: StackNavigator,
@@ -114,11 +114,11 @@ export const AppStackRoutes = () => {
             component={AccountForm}
           />
           <StackScreen
-            name="Configuracoes/Records/LinkedAccount"
+            name="Configuracoes/LinkedAccount"
             component={LinkedAccount}
           />
           <StackScreen
-            name="Configuracoes/Records/LinkedAccount/Form"
+            name="Configuracoes/LinkedAccount/Form"
             component={LinkedAccountForm}
           />
           <StackScreen

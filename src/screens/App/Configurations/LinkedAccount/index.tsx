@@ -7,27 +7,29 @@ import {
   Text,
   VStack,
 } from "native-base";
-import { BackgroundContainer } from "../../../../../styles/general";
-import { IThemeProvider } from "../../../../../styles/baseTheme";
+import { BackgroundContainer } from "../../../../styles/general";
+import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { ChevronLeft, HeartIcon } from "lucide-react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ChevronRight } from "lucide-react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useEffect } from "react";
-import When from "../../../../../components/When";
+import When from "../../../../components/When";
 import { useListLinkedAccount } from "./hooks/useLinkedAccount";
 import { ListLinkedAccount } from "./types";
 
 export const LinkedAccount = () => {
   const { theme }: IThemeProvider = useTheme();
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { data, isLoading, handleExecute } = useListLinkedAccount();
+  const { listYouShared, isLoading, handleExecute } = useListLinkedAccount();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     isFocused && handleExecute();
   }, [isFocused]);
+
+  console.log(listYouShared, listYouShared.length);
 
   return (
     <BackgroundContainer>
@@ -48,22 +50,44 @@ export const LinkedAccount = () => {
             </HStack>
             <HeartIcon color={theme?.red} />
           </HStack>
-          <When is={!!data.length}>
-            <FlatList
-              data={data}
-              renderItem={({ item }) => <Item item={item} />}
-              keyExtractor={(item) => item.email}
-            />
-          </When>
-          <When is={!data.length}>
-            <Center flex={1}>
-              <Text>Você ainda não compartilhou seus dados</Text>
-            </Center>
-          </When>
+          <VStack flex={1} space={10}>
+            <VStack space={5}>
+              <Text fontWeight={600} fontSize="18" opacity={0.5}>
+                Compartilhado com você
+              </Text>
+              <When is={!!listYouShared.length}>
+                <FlatList
+                  data={listYouShared}
+                  renderItem={({ item }) => <Item item={item} />}
+                  keyExtractor={(item) => item.email}
+                />
+              </When>
+              <When is={!listYouShared.length}>
+                <Center height="30%">
+                  <Text>Não há contas compartilhadas com você</Text>
+                </Center>
+              </When>
+            </VStack>
+            <VStack space={5}>
+              <Text fontWeight={600} fontSize="18" opacity={0.5}>
+                Com quem você compartilhou
+              </Text>
+              <When is={!!listYouShared.length}>
+                <FlatList
+                  data={listYouShared}
+                  renderItem={({ item }) => <Item item={item} />}
+                  keyExtractor={(item) => item.email}
+                />
+              </When>
+              <When is={!listYouShared.length}>
+                <Center height="30%">
+                  <Text>Você ainda não compartilhou seus dados</Text>
+                </Center>
+              </When>
+            </VStack>
+          </VStack>
         </VStack>
-        <Button
-          onPress={() => navigate("Configuracoes/Records/LinkedAccount/Form")}
-        >
+        <Button onPress={() => navigate("Configuracoes/LinkedAccount/Form")}>
           <Text fontWeight="bold" color="white">
             Compartilhar seus dados
           </Text>
@@ -78,7 +102,7 @@ const Item = ({ item }: { item: ListLinkedAccount }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   return (
     <Pressable
-      onPress={() => navigate("Configuracoes/Records/LinkedAccount/Form", item)}
+      onPress={() => navigate("Configuracoes/LinkedAccount/Form", item)}
       key={item.email}
     >
       <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>

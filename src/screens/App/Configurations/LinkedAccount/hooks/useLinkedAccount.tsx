@@ -1,17 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
-import { usePromise } from "../../../../../../hooks/usePromise";
+import { usePromise } from "../../../../../hooks/usePromise";
 import {
   checkIfEmailExist,
   createLinkedAccount,
-  listLinkedAccounts,
+  listLinkedAccountsSharedWithYou,
+  listLinkedAccountsWhenYouShareData,
 } from "../query";
-import { LinkedAccountDTO } from "../types";
 import * as yup from "yup";
-import { handleToast } from "../../../../../../utils/functions.helper";
+import { handleToast } from "../../../../../utils/functions.helper";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserInfo } from "../../../DadosCadastrais/InformacoesPessoais/types";
-import { useEffect, useState } from "react";
+import { UserInfo } from "../../DadosCadastrais/InformacoesPessoais/types";
+import { useState } from "react";
+import { LinkedAccountDTO } from "../types";
 
 const defaultValues: LinkedAccountDTO = {
   email: null,
@@ -19,7 +20,7 @@ const defaultValues: LinkedAccountDTO = {
 
 const schema = yup.object().shape({
   id: yup.string().optional(),
-  name: yup
+  email: yup
     .string()
     .nullable()
     .when("id", {
@@ -28,9 +29,9 @@ const schema = yup.object().shape({
         .string()
         .nullable()
         .required("Informe o e-mail da conta para compartilhar")
-        .test("account", "Conta já existente", async (email) => {
+        .test("account", "Conta não existente", async (email) => {
           if (!email) return false;
-          return await checkIfEmailExist(email);
+          return !(await checkIfEmailExist(email));
         }),
       otherwise: yup
         .string()
@@ -58,22 +59,31 @@ export const useFormLinkedAccount = () => {
 };
 
 export const useListLinkedAccount = () => {
-  const { isLoading, handleExecute } = usePromise(listLinkedAccounts);
-  const [list, setList] = useState<UserInfo[]>([]);
+  const {
+    isLoading: isLoadingYouShared,
+    handleExecute: handleExecuteYouShared,
+  } = usePromise(listLinkedAccountsWhenYouShareData);
+
+  const {
+    isLoading: isLoadingSharedWithYou,
+    handleExecute: handleExecuteSharedWithYou,
+  } = usePromise(listLinkedAccountsSharedWithYou);
+
+  const [listYouShared, setListYouShared] = useState<UserInfo[]>([]);
+  const [listSharedWithYou, setListSharedWithYou] = useState<UserInfo[]>([]);
 
   async function execute() {
-    const snapshot = await handleExecute();
-    const list = snapshot.docs.map((doc) => doc.data()) as UserInfo[];
-    return setList(list);
+    const youShared = await handleExecuteYouShared();
+    // setListYouShared(youShared);
+
+    const sharedWithYou = await handleExecuteSharedWithYou();
+    // setListSharedWithYou(sharedWithYou);
   }
 
-  useEffect(() => {
-    execute();
-  }, []);
-
   return {
-    isLoading,
-    data: list ?? [],
+    isLoading: isLoadingYouShared || isLoadingSharedWithYou,
+    listYouShared: listYouShared ?? [],
+    listSharedWithYou: listSharedWithYou ?? [],
     handleExecute: execute,
   };
 };
