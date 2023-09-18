@@ -7,7 +7,10 @@ import { ChevronLeft } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { IThemeProvider } from "../../../../../../styles/baseTheme";
 import { FormTextInput } from "../../../../../../components/Inputs/TextInput";
-import { useDeleteSegment, useFormSegment } from "../hooks/useSegment";
+import {
+  useFormSegment,
+  useHandleConfirmDeleteSegment,
+} from "../hooks/useSegment";
 import { SegmentFormParams } from "../types";
 import { useEffect } from "react";
 import When from "../../../../../../components/When";
@@ -18,7 +21,7 @@ export const SegmentForm = ({ route: { params } }: SegmentFormParams) => {
   const { goBack } = useNavigation();
   const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
     useFormSegment(id);
-  const { isLoadingDelete, handleDelete } = useDeleteSegment();
+  const { isLoadingDelete, handleDelete } = useHandleConfirmDeleteSegment();
 
   useEffect(() => {
     params && formMethods.reset(params);

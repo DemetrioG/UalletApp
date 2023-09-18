@@ -15,7 +15,10 @@ import {
 } from "native-base";
 import { IThemeProvider } from "../../../../../../styles/baseTheme";
 import { FormTextInput } from "../../../../../../components/Inputs/TextInput";
-import { useDeleteAccount, useFormAccount } from "../hooks/useAccount";
+import {
+  useFormAccount,
+  useHandleConfirmDeleteAccount,
+} from "../hooks/useAccount";
 import { AccountFormParams } from "../types";
 import When from "../../../../../../components/When";
 import { Controller } from "react-hook-form";
@@ -27,7 +30,7 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
   const { goBack } = useNavigation();
   const { formMethods, isLoadingCreate, isLoadingUpdate, handleSubmit } =
     useFormAccount(id);
-  const { isLoadingDelete, handleDelete } = useDeleteAccount();
+  const { isLoadingDelete, handleDelete } = useHandleConfirmDeleteAccount();
 
   const colorPicker = useDisclose();
 

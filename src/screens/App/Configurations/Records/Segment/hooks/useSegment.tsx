@@ -10,9 +10,10 @@ import {
   updateSegment,
 } from "../query";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import { handleToast } from "../../../../../../utils/functions.helper";
+import { ConfirmContext } from "../../../../../../context/ConfirmDialog/confirmContext";
 
 const defaultValues: SegmentDTO = {
   description: null,
@@ -134,7 +135,25 @@ export const useUpdateSegment = () => {
   };
 };
 
-export const useDeleteSegment = () => {
+export const useHandleConfirmDeleteSegment = () => {
+  const { isLoadingDelete, handleDelete } = useDeleteSegment();
+  const { setConfirm } = useContext(ConfirmContext);
+
+  function execute(id: string) {
+    setConfirm(() => ({
+      title: "Deseja excluir este segmento?",
+      visibility: true,
+      callbackFunction: () => handleDelete(id),
+    }));
+  }
+
+  return {
+    isLoadingDelete,
+    handleDelete: execute,
+  };
+};
+
+const useDeleteSegment = () => {
   const { isLoading, handleExecute } = usePromise(deleteSegment);
   const { goBack } = useNavigation();
 

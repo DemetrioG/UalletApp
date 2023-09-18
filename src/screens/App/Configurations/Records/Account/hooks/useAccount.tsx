@@ -10,9 +10,10 @@ import {
   updateAccount,
 } from "../query";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import { handleToast } from "../../../../../../utils/functions.helper";
+import { ConfirmContext } from "../../../../../../context/ConfirmDialog/confirmContext";
 
 const defaultValues: AccountDTO = {
   name: null,
@@ -145,7 +146,25 @@ export const useUpdateAccount = () => {
   };
 };
 
-export const useDeleteAccount = () => {
+export const useHandleConfirmDeleteAccount = () => {
+  const { isLoadingDelete, handleDelete } = useDeleteAccount();
+  const { setConfirm } = useContext(ConfirmContext);
+
+  function execute(id: string) {
+    setConfirm(() => ({
+      title: "Deseja excluir esta conta?",
+      visibility: true,
+      callbackFunction: () => handleDelete(id),
+    }));
+  }
+
+  return {
+    isLoadingDelete,
+    handleDelete: execute,
+  };
+};
+
+const useDeleteAccount = () => {
   const { isLoading, handleExecute } = usePromise(deleteAccount);
   const { goBack } = useNavigation();
 
