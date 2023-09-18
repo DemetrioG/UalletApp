@@ -38,6 +38,7 @@ import { Menu } from "../../../components/Menu";
 import { Internet } from "./Internet";
 import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 import { RefreshControl } from "react-native";
+import { Linked } from "./Linked";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -78,6 +79,7 @@ export const Home = () => {
             />
             <Action text="Menu" Icon={MoreHorizontal} onPress={menu.onOpen} />
           </HStack>
+          <Linked />
           <Internet />
           <Entries />
           <Planning />

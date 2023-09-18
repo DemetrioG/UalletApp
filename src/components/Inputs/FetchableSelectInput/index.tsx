@@ -1,5 +1,8 @@
 import { Controller } from "react-hook-form";
-import { FormFetchableSelectInputTypes } from "./types";
+import {
+  FetchableSelectInputTypes,
+  FormFetchableSelectInputTypes,
+} from "./types";
 import { SelectInput } from "../SelectInput";
 
 export const FormFetchableSelectInput = (
@@ -22,6 +25,20 @@ export const FormFetchableSelectInput = (
           {...restProps}
         />
       )}
+    />
+  );
+};
+
+export const FetchableSelectInput = (props: FetchableSelectInputTypes) => {
+  const { placeholder, ...restProps } = props;
+  const { options, isLoading } = props.fetchFn();
+
+  return (
+    <SelectInput
+      isDisabled={isLoading}
+      placeholder={isLoading ? "Carregando..." : placeholder}
+      options={options ?? []}
+      {...restProps}
     />
   );
 };

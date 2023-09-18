@@ -10,7 +10,7 @@ import {
 import { BackgroundContainer } from "../../../../styles/general";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
-import { ChevronLeft, HeartIcon } from "lucide-react-native";
+import { ChevronLeft, HeartIcon, Link } from "lucide-react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ChevronRight } from "lucide-react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -117,7 +117,7 @@ const Item = ({
           <HStack alignItems="center" space={3}>
             <Text>{item.name}</Text>
           </HStack>
-          <ChevronRight color={theme?.text} />
+          <Link color={theme?.text} />
         </HStack>
       </VStack>
     </Pressable>

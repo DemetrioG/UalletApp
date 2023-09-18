@@ -8,3 +8,11 @@ export interface FormFetchableSelectInputTypes
     isLoading: boolean;
   };
 }
+
+export interface FetchableSelectInputTypes
+  extends Omit<SelectInputProps, "options"> {
+  fetchFn: (...args: any) => {
+    options: IOption[] | null;
+    isLoading: boolean;
+  };
+}

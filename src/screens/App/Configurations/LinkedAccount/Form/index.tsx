@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
-import { ChevronLeft } from "lucide-react-native";
+import { ChevronLeft, Heart } from "lucide-react-native";
 import { BackgroundContainer } from "../../../../../styles/general";
 import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../../../../styles/baseTheme";
@@ -38,12 +38,18 @@ export const LinkedAccountForm = ({
           borderTopLeftRadius="30px"
           borderTopRightRadius="30px"
         >
-          <HStack alignItems="center" space={3} mb={10}>
-            <Pressable onPress={goBack}>
-              <ChevronLeft color={theme?.text} />
-            </Pressable>
-            <Text fontWeight={700}>Conta Conjunta</Text>
+          <HStack alignItems="center" justifyContent="space-between" mb={10}>
+            <HStack space={3}>
+              <Pressable onPress={goBack}>
+                <ChevronLeft color={theme?.text} />
+              </Pressable>
+              <Text fontWeight={700}>Conta Conjunta</Text>
+            </HStack>
+            <Heart color={theme?.red} />
           </HStack>
+          <Text textAlign="center">
+            Compartilhe suas informações financeiras com um usuário ativo
+          </Text>
           <Center flex={1}>
             <FormTextInput
               variant="filled"
