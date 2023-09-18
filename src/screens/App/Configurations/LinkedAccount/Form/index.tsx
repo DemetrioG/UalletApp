@@ -8,7 +8,10 @@ import { Button, Center, HStack, Pressable, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../../../../styles/baseTheme";
 import { FormTextInput } from "../../../../../components/Inputs/TextInput";
 import When from "../../../../../components/When";
-import { useFormLinkedAccount } from "../hooks/useLinkedAccount";
+import {
+  useFormLinkedAccount,
+  useHandleConfirmDeleteLinkedAccount,
+} from "../hooks/useLinkedAccount";
 import { LinkedAccountFormParams } from "../types";
 
 export const LinkedAccountForm = ({
@@ -18,6 +21,8 @@ export const LinkedAccountForm = ({
   const { theme }: IThemeProvider = useTheme();
   const { goBack } = useNavigation();
   const { formMethods, isLoadingCreate, handleSubmit } = useFormLinkedAccount();
+  const { isLoadingDelete, handleDelete } =
+    useHandleConfirmDeleteLinkedAccount();
 
   useEffect(() => {
     params && formMethods.reset(params);
@@ -60,18 +65,17 @@ export const LinkedAccountForm = ({
               </Text>
             </Button>
           </When>
-          {/* <When is={!!id}>
+          <When is={!!id && !!params.youShared}>
             <Button
               variant="outline"
               isLoading={isLoadingDelete}
-              isDisabled={isLoadingUpdate || params?.name === "Carteira"}
-              onPress={() => handleDelete(id)}
+              onPress={() => handleDelete(params)}
             >
               <Text fontWeight="bold" color={theme?.blue}>
-                Excluir
+                Desvincular
               </Text>
             </Button>
-          </When> */}
+          </When>
         </VStack>
       </BackgroundContainer>
     </TouchableWithoutFeedback>

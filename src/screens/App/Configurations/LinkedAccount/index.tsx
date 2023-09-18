@@ -22,14 +22,13 @@ import { ListLinkedAccount } from "./types";
 export const LinkedAccount = () => {
   const { theme }: IThemeProvider = useTheme();
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<any>>();
-  const { listYouShared, isLoading, handleExecute } = useListLinkedAccount();
+  const { listYouShared, listSharedWithYou, isLoading, handleExecute } =
+    useListLinkedAccount();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     isFocused && handleExecute();
   }, [isFocused]);
-
-  console.log(listYouShared, listYouShared.length);
 
   return (
     <BackgroundContainer>
@@ -50,37 +49,37 @@ export const LinkedAccount = () => {
             </HStack>
             <HeartIcon color={theme?.red} />
           </HStack>
-          <VStack flex={1} space={10}>
-            <VStack space={5}>
+          <VStack flex={1}>
+            <VStack space={5} flex={1}>
               <Text fontWeight={600} fontSize="18" opacity={0.5}>
                 Compartilhado com você
               </Text>
-              <When is={!!listYouShared.length}>
+              <When is={!!listSharedWithYou.length}>
                 <FlatList
-                  data={listYouShared}
+                  data={listSharedWithYou}
                   renderItem={({ item }) => <Item item={item} />}
                   keyExtractor={(item) => item.email}
                 />
               </When>
-              <When is={!listYouShared.length}>
-                <Center height="30%">
+              <When is={!listSharedWithYou.length}>
+                <Center>
                   <Text>Não há contas compartilhadas com você</Text>
                 </Center>
               </When>
             </VStack>
-            <VStack space={5}>
+            <VStack space={5} flex={1}>
               <Text fontWeight={600} fontSize="18" opacity={0.5}>
                 Com quem você compartilhou
               </Text>
               <When is={!!listYouShared.length}>
                 <FlatList
                   data={listYouShared}
-                  renderItem={({ item }) => <Item item={item} />}
+                  renderItem={({ item }) => <Item item={item} youShared />}
                   keyExtractor={(item) => item.email}
                 />
               </When>
               <When is={!listYouShared.length}>
-                <Center height="30%">
+                <Center>
                   <Text>Você ainda não compartilhou seus dados</Text>
                 </Center>
               </When>
@@ -97,12 +96,20 @@ export const LinkedAccount = () => {
   );
 };
 
-const Item = ({ item }: { item: ListLinkedAccount }) => {
+const Item = ({
+  item,
+  youShared,
+}: {
+  item: ListLinkedAccount;
+  youShared?: boolean;
+}) => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   return (
     <Pressable
-      onPress={() => navigate("Configuracoes/LinkedAccount/Form", item)}
+      onPress={() =>
+        navigate("Configuracoes/LinkedAccount/Form", { ...item, youShared })
+      }
       key={item.email}
     >
       <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>

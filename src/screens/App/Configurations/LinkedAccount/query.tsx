@@ -7,7 +7,11 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { SharedAccount, ValidatedLinkedAccountDTO } from "./types";
+import {
+  ListLinkedAccount,
+  SharedAccount,
+  ValidatedLinkedAccountDTO,
+} from "./types";
 import { db } from "../../../../services/firebase";
 import { currentUser } from "../../../../utils/query.helper";
 import { UserInfo } from "../DadosCadastrais/InformacoesPessoais/types";
@@ -34,7 +38,9 @@ export async function listLinkedAccountsWhenYouShareData() {
     )
   );
 
-  return snapshot.docs.map((doc) => doc.data()) as UserInfo[];
+  return snapshot.docs.map((doc) => {
+    return { ...doc.data(), uid: doc.ref.id };
+  }) as ListLinkedAccount[];
 }
 
 export async function listLinkedAccountsSharedWithYou() {
@@ -43,9 +49,9 @@ export async function listLinkedAccountsSharedWithYou() {
 
   const snapshotUser = await getDoc(doc(db, "users", user.uid));
   const data = snapshotUser.data();
-  const sharedAccounts = data?.shared_accounts as SharedAccount[];
+  const sharedAccounts = data?.sharedAccounts as SharedAccount[];
 
-  const list: UserInfo[] = [];
+  const list: ListLinkedAccount[] = [];
 
   if (sharedAccounts) {
     await Promise.all(
@@ -53,7 +59,10 @@ export async function listLinkedAccountsSharedWithYou() {
         const snapshotSharedAccount = await getDoc(
           doc(db, "users", account.uid)
         );
-        const data = snapshotSharedAccount.data() as UserInfo;
+        const data = {
+          ...snapshotSharedAccount.data(),
+          uid: snapshotSharedAccount.ref.id,
+        } as ListLinkedAccount;
         list.push(data);
       })
     );
@@ -74,18 +83,30 @@ export async function createLinkedAccount(formData: ValidatedLinkedAccountDTO) {
   if (!doc) return Promise.reject("Usuário não encontrado");
 
   const data = doc.data();
-  console.log(data);
 
-  if (data.shared_accounts) {
-    data.shared_accounts = [
-      ...data.shared_accounts,
+  if (data.sharedAccounts) {
+    data.sharedAccounts = [
+      ...data.sharedAccounts,
       { uid: user.uid, linked: false },
     ];
   } else {
-    data.shared_accounts = [{ uid: user.uid, linked: false }];
+    data.sharedAccounts = [{ uid: user.uid, linked: false }];
   }
 
   return await setDoc(doc.ref, data);
+}
+
+export async function deleteLinkedAccount(formData: ListLinkedAccount) {
+  const user = await currentUser();
+  if (!user) return Promise.reject();
+
+  const userRef = doc(db, "users", formData.uid);
+  const userSnapshot = await getDoc(userRef);
+  const userData = userSnapshot.data() as UserInfo;
+  const sharedAccounts = userData.sharedAccounts.filter(
+    (item) => item.uid !== user.uid
+  );
+  return await setDoc(userRef, { ...userData, sharedAccounts });
 }
 
 export async function checkIfEmailExist(email: string) {

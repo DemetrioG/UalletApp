@@ -8,11 +8,13 @@ export interface ValidatedLinkedAccountDTO {
   email: string;
 }
 
-export interface ListLinkedAccount extends UserInfo {}
+export interface ListLinkedAccount extends UserInfo {
+  uid: string;
+}
 
 export interface LinkedAccountFormParams {
   route: {
-    params: ListLinkedAccount;
+    params: ListLinkedAccount & { youShared?: boolean };
   };
 }
 

@@ -3,6 +3,7 @@ import { usePromise } from "../../../../../hooks/usePromise";
 import {
   checkIfEmailExist,
   createLinkedAccount,
+  deleteLinkedAccount,
   listLinkedAccountsSharedWithYou,
   listLinkedAccountsWhenYouShareData,
 } from "../query";
@@ -10,9 +11,9 @@ import * as yup from "yup";
 import { handleToast } from "../../../../../utils/functions.helper";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserInfo } from "../../DadosCadastrais/InformacoesPessoais/types";
-import { useState } from "react";
-import { LinkedAccountDTO } from "../types";
+import { useContext, useState } from "react";
+import { LinkedAccountDTO, ListLinkedAccount } from "../types";
+import { ConfirmContext } from "../../../../../context/ConfirmDialog/confirmContext";
 
 const defaultValues: LinkedAccountDTO = {
   email: null,
@@ -69,15 +70,17 @@ export const useListLinkedAccount = () => {
     handleExecute: handleExecuteSharedWithYou,
   } = usePromise(listLinkedAccountsSharedWithYou);
 
-  const [listYouShared, setListYouShared] = useState<UserInfo[]>([]);
-  const [listSharedWithYou, setListSharedWithYou] = useState<UserInfo[]>([]);
+  const [listYouShared, setListYouShared] = useState<ListLinkedAccount[]>([]);
+  const [listSharedWithYou, setListSharedWithYou] = useState<
+    ListLinkedAccount[]
+  >([]);
 
   async function execute() {
     const youShared = await handleExecuteYouShared();
-    // setListYouShared(youShared);
+    setListYouShared(youShared);
 
     const sharedWithYou = await handleExecuteSharedWithYou();
-    // setListSharedWithYou(sharedWithYou);
+    setListSharedWithYou(sharedWithYou);
   }
 
   return {
@@ -112,5 +115,50 @@ export const useCreateLinkedAccount = () => {
   return {
     isLoading,
     handleExecute: execute,
+  };
+};
+
+export const useHandleConfirmDeleteLinkedAccount = () => {
+  const { isLoadingDelete, handleDelete } = useDeleteLinkedAccount();
+  const { setConfirm } = useContext(ConfirmContext);
+
+  function execute(formData: ListLinkedAccount) {
+    setConfirm(() => ({
+      title: "Deseja desvincular seu compartilhamento?",
+      visibility: true,
+      callbackFunction: () => handleDelete(formData),
+    }));
+  }
+
+  return {
+    isLoadingDelete,
+    handleDelete: execute,
+  };
+};
+
+const useDeleteLinkedAccount = () => {
+  const { isLoading, handleExecute } = usePromise(deleteLinkedAccount);
+  const { goBack } = useNavigation();
+
+  async function execute(formData: ListLinkedAccount) {
+    handleExecute(formData)
+      .then(() => {
+        goBack();
+        return handleToast({
+          type: "success",
+          text1: "Conta desvinculada com sucesso",
+        });
+      })
+      .catch(() => {
+        return handleToast({
+          type: "error",
+          text1: "Erro ao desvincular conta",
+        });
+      });
+  }
+
+  return {
+    isLoadingDelete: isLoading,
+    handleDelete: execute,
   };
 };
