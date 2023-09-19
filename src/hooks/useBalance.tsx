@@ -6,7 +6,7 @@ import { db } from "../services/firebase";
 
 export const useGetBalance = () => {
   const {
-    data: { month, year, modality },
+    data: { month, year, modality, trigger },
     setData,
   } = useContext(DataContext);
 
@@ -15,6 +15,7 @@ export const useGetBalance = () => {
   async function execute() {
     if (!year) return;
     const user = await currentUser();
+    console.log(user?.uid);
     if (!user) return "R$0,00";
 
     const balanceCollectionRef = collection(db, "balance", user.uid, modality);
@@ -39,7 +40,7 @@ export const useGetBalance = () => {
   useEffect(() => {
     execute();
     return () => unsubscribe && unsubscribe();
-  }, [month, year, modality]);
+  }, [month, year, modality, trigger]);
 
   return {};
 };

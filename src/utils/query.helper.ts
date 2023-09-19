@@ -14,8 +14,15 @@ import { getStorage } from "./storage.helper";
 /**
  * Retorna os dados de autenticação do usuário logado
  */
-export const currentUser = async () => {
-  return auth.currentUser || (await getStorage("authUser"));
+export const currentUser = async (withoutLink?: boolean) => {
+  if (withoutLink) {
+    return auth.currentUser || (await getStorage("authUser"));
+  } else {
+    return (
+      (await getStorage("linkedUidRef")) ??
+      (auth.currentUser || (await getStorage("authUser")))
+    );
+  }
 };
 
 type UpdateCurrentBalanceProps = {

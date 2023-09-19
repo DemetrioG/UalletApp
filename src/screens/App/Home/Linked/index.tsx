@@ -6,10 +6,28 @@ import { Link } from "lucide-react-native";
 import { FetchableSelectInputSharedAccounts } from "../../../../components/Inputs/FetchableSelectInputSharedAccounts";
 import { useContext } from "react";
 import { UserContext } from "../../../../context/User/userContext";
+import {
+  getStorage,
+  removeStorage,
+  setStorage,
+} from "../../../../utils/storage.helper";
+import { DataContext } from "../../../../context/Data/dataContext";
 
 export const Linked = () => {
   const { theme }: IThemeProvider = useTheme();
   const { user } = useContext(UserContext);
+  const { setData } = useContext(DataContext);
+
+  async function handleChangeUidRef(uid: string) {
+    const auth = await getStorage("authUser");
+    if (auth?.uid === uid) {
+      await removeStorage("linkedUidRef");
+    } else {
+      await setStorage("linkedUidRef", { uid });
+    }
+    return setData((rest) => ({ ...rest, trigger: Math.random() }));
+  }
+
   return (
     <VStack
       backgroundColor={theme?.secondary}
@@ -27,7 +45,7 @@ export const Linked = () => {
         </Pressable>
       </HStack>
       <FetchableSelectInputSharedAccounts
-        defaultValue={user.uid}
+        onValueChange={handleChangeUidRef}
         variant="filled"
       />
     </VStack>

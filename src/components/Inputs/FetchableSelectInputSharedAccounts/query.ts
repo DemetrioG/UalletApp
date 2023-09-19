@@ -5,13 +5,14 @@ import { currentUser } from "../../../utils/query.helper";
 import { ListLinkedAccount } from "../../../screens/App/Configurations/LinkedAccount/types";
 
 export async function listAccounts() {
-  const user = await currentUser();
+  const user = await currentUser(true);
   if (!user) return Promise.reject();
 
   const data = await listLinkedAccountsSharedWithYou();
   const snapshotUser = await getDoc(doc(db, "users", user.uid));
   const userData = snapshotUser.data();
   data.push({ ...userData, uid: snapshotUser.ref.id } as ListLinkedAccount);
+  console.log(data);
 
   return data.map((account) => {
     return {
