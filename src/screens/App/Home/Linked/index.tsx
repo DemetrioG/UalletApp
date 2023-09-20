@@ -2,7 +2,7 @@ import { HStack, Pressable, Text, VStack } from "native-base";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import Tooltip from "../../../../components/Tooltip";
-import { Link } from "lucide-react-native";
+import { Heart } from "lucide-react-native";
 import { FetchableSelectInputSharedAccounts } from "../../../../components/Inputs/FetchableSelectInputSharedAccounts";
 import { useContext } from "react";
 import { UserContext } from "../../../../context/User/userContext";
@@ -40,7 +40,7 @@ export const Linked = () => {
         <Text fontWeight={600}>Conta selecionada</Text>
         <Pressable>
           <Tooltip label="Seus lançamentos Realizados/Projetados">
-            <Link color={theme?.text} />
+            <Heart color={theme?.red} />
           </Tooltip>
         </Pressable>
       </HStack>
