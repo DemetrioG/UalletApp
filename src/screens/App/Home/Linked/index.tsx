@@ -45,6 +45,7 @@ export const Linked = () => {
         </Pressable>
       </HStack>
       <FetchableSelectInputSharedAccounts
+        defaultValue={user?.uid}
         onValueChange={handleChangeUidRef}
         variant="filled"
       />

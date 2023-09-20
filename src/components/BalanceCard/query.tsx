@@ -30,8 +30,7 @@ export async function getAccountRefs(balance: BalanceProps) {
     })
   );
 
-  const filteredAccountRefs = filter(accountRefs, (item) => item.value > 0);
-  return sortBy(filteredAccountRefs, (item) => {
+  return sortBy(accountRefs, (item) => {
     if (item.name === "Total das contas") return 0;
     return 1;
   }) as BalanceCardsProps[];

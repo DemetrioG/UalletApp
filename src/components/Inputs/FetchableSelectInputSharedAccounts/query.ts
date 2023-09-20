@@ -11,8 +11,11 @@ export async function listAccounts() {
   const data = await listLinkedAccountsSharedWithYou();
   const snapshotUser = await getDoc(doc(db, "users", user.uid));
   const userData = snapshotUser.data();
-  data.push({ ...userData, uid: snapshotUser.ref.id } as ListLinkedAccount);
-  console.log(data);
+  data.push({
+    ...userData,
+    uid: snapshotUser.ref.id,
+    name: `${userData?.name} (Você)`,
+  } as ListLinkedAccount);
 
   return data.map((account) => {
     return {
