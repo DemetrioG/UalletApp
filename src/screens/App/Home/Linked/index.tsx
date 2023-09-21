@@ -1,4 +1,4 @@
-import { HStack, Pressable, Text, VStack } from "native-base";
+import { HStack, Pressable, Text, VStack, useDisclose } from "native-base";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import Tooltip from "../../../../components/Tooltip";
@@ -12,20 +12,28 @@ import {
   setStorage,
 } from "../../../../utils/storage.helper";
 import { DataContext } from "../../../../context/Data/dataContext";
+import { ChangingAccount } from "./ChangingAccount";
 
 export const Linked = () => {
   const { theme }: IThemeProvider = useTheme();
   const { user } = useContext(UserContext);
   const { setData } = useContext(DataContext);
 
+  const modal = useDisclose();
+
   async function handleChangeUidRef(uid: string) {
+    modal.onOpen();
+
     const auth = await getStorage("authUser");
     if (auth?.uid === uid) {
       await removeStorage("linkedUidRef");
     } else {
       await setStorage("linkedUidRef", { uid });
     }
-    return setData((rest) => ({ ...rest, trigger: Math.random() }));
+    setData((rest) => ({ ...rest, trigger: Math.random() }));
+
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    return modal.onClose();
   }
 
   return (
@@ -49,6 +57,7 @@ export const Linked = () => {
         onValueChange={handleChangeUidRef}
         variant="filled"
       />
+      <ChangingAccount {...modal} />
     </VStack>
   );
 };

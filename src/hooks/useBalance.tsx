@@ -38,8 +38,6 @@ export const useGetBalance = () => {
         })[0];
       }
 
-      console.log(data);
-
       const balanceSum = Object.values(data).reduce(
         (sum, { balance }) => sum + balance,
         0
