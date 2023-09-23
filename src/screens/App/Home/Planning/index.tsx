@@ -1,11 +1,4 @@
-import {
-  HStack,
-  Pressable,
-  Progress,
-  Skeleton,
-  Text,
-  VStack,
-} from "native-base";
+import { HStack, Pressable, Skeleton, Text, VStack } from "native-base";
 import { useTheme } from "styled-components";
 import { IThemeProvider } from "../../../../styles/baseTheme";
 import Tooltip from "../../../../components/Tooltip";
@@ -14,14 +7,35 @@ import { numberToReal } from "../../../../utils/number.helper";
 import { useGetPlanning } from "./hooks/usePlanning";
 import When from "../../../../components/When";
 import { EmptyChart } from "../../../../components/EmptyChart";
+import {
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryGroup,
+  VictoryZoomContainer,
+} from "victory-native";
 
 export const Planning = () => {
   const { theme }: IThemeProvider = useTheme();
   const { isLoading, list } = useGetPlanning();
   const hasPlanning = !!list.length;
 
+  const designedData = list.map((item, i) => {
+    return { x: item.description, y: item.designed };
+  });
+  const realizedData = list.map((item, i) => {
+    return { x: item.description, y: item.realized };
+  });
+  const categories = list.map((item) => item.description);
+
   return (
-    <VStack backgroundColor={theme?.secondary} borderRadius={30} p={4} pt={5}>
+    <VStack
+      backgroundColor={theme?.secondary}
+      borderRadius={30}
+      p={4}
+      pt={5}
+      space={3}
+    >
       <HStack justifyContent="space-between" alignItems="center" mb={2}>
         <Text fontWeight={600}>Planejamento</Text>
         <Pressable>
@@ -30,7 +44,7 @@ export const Planning = () => {
           </Tooltip>
         </Pressable>
       </HStack>
-      <VStack>
+      <VStack backgroundColor={theme?.primary} borderRadius={20}>
         <When is={isLoading}>
           <Skeleton
             h="120px"
@@ -41,36 +55,62 @@ export const Planning = () => {
         </When>
         <When is={!isLoading}>
           <When is={hasPlanning}>
-            <>
-              {list.map((item, index) => {
-                const bold = item.realized > item.designed;
-                return (
-                  <VStack paddingY={3} key={index}>
-                    <HStack
-                      key={index}
-                      justifyContent="space-between"
-                      alignItems="center"
-                      mb={2}
-                    >
-                      <Text fontWeight={500}>{item.description}</Text>
-                      <Text
-                        fontSize="14px"
-                        fontWeight={bold ? "bold" : "normal"}
-                      >
-                        {numberToReal(item.realized).split(",")[0]}/
-                        {numberToReal(item.designed).split(",")[0]}
-                      </Text>
-                    </HStack>
-                    <Progress
-                      backgroundColor={theme?.primary}
-                      _filledTrack={{ bg: theme?.blue }}
-                      value={(item.realized / item.designed) * 100}
-                      h={3}
-                    />
-                  </VStack>
-                );
-              })}
-            </>
+            <VictoryChart
+              theme={{
+                axis: {
+                  style: {
+                    axis: {
+                      opacity: 0.3,
+                      stroke: theme?.text,
+                    },
+                    grid: {
+                      opacity: 0.08,
+                      stroke: theme?.text,
+                    },
+                    tickLabels: {
+                      fill: theme?.text,
+                      padding: 10,
+                    },
+                  },
+                },
+              }}
+            >
+              <VictoryAxis dependentAxis tickFormat={(value) => `R$${value}`} />
+              <VictoryAxis tickValues={categories} />
+              {/* <VictoryZoomContainer allowZoom={false} /> */}
+              <VictoryGroup colorScale={["#6499E3", "#266DD3"]} offset={45}>
+                <VictoryBar
+                  data={realizedData}
+                  cornerRadius={{ top: 6 }}
+                  barWidth={60}
+                />
+                <VictoryBar
+                  data={designedData}
+                  cornerRadius={{ top: 6 }}
+                  barWidth={60}
+                />
+              </VictoryGroup>
+            </VictoryChart>
+            <HStack justifyContent="center" space={6} pb={5}>
+              <HStack alignItems="center" space={2}>
+                <VStack
+                  width="15px"
+                  height="15px"
+                  borderRadius={20}
+                  backgroundColor="#6499E3"
+                />
+                <Text>Projetado</Text>
+              </HStack>
+              <HStack alignItems="center" space={2}>
+                <VStack
+                  width="15px"
+                  height="15px"
+                  borderRadius={20}
+                  backgroundColor="#266DD3"
+                />
+                <Text>Realizado</Text>
+              </HStack>
+            </HStack>
           </When>
           <When is={!hasPlanning}>
             <EmptyChart

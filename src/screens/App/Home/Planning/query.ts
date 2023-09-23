@@ -57,5 +57,8 @@ export async function getPlanning(props: GetPlanningProps) {
 
   const hasPlanning = result.some((item) => item.designed > 0);
 
-  return { hasPlanning, result };
+  return {
+    hasPlanning,
+    result: result.filter((item) => item.designed > 0 || item.realized > 0),
+  };
 }

@@ -37,14 +37,8 @@ export const Linked = () => {
   }
 
   return (
-    <VStack
-      backgroundColor={theme?.secondary}
-      borderRadius={30}
-      p={4}
-      pt={5}
-      space={5}
-    >
-      <HStack justifyContent="space-between" alignItems="center" mb={2}>
+    <VStack backgroundColor={theme?.secondary} borderRadius={30} p={4} pt={5}>
+      <HStack justifyContent="space-between" alignItems="center" mb={5}>
         <Text fontWeight={600}>Conta selecionada</Text>
         <Pressable>
           <Tooltip label="Seus lançamentos Realizados/Projetados">
