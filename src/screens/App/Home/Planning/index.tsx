@@ -44,7 +44,7 @@ export const Planning = () => {
           </Tooltip>
         </Pressable>
       </HStack>
-      <VStack backgroundColor={theme?.primary} borderRadius={20}>
+      <VStack>
         <When is={isLoading}>
           <Skeleton
             h="120px"
@@ -55,62 +55,71 @@ export const Planning = () => {
         </When>
         <When is={!isLoading}>
           <When is={hasPlanning}>
-            <VictoryChart
-              theme={{
-                axis: {
-                  style: {
-                    axis: {
-                      opacity: 0.3,
-                      stroke: theme?.text,
-                    },
-                    grid: {
-                      opacity: 0.08,
-                      stroke: theme?.text,
-                    },
-                    tickLabels: {
-                      fill: theme?.text,
-                      padding: 10,
+            <VStack
+              backgroundColor={theme?.primary}
+              borderRadius={20}
+              paddingX={4}
+            >
+              <VictoryChart
+                theme={{
+                  axis: {
+                    style: {
+                      axis: {
+                        opacity: 0.3,
+                        stroke: theme?.text,
+                      },
+                      grid: {
+                        opacity: 0.08,
+                        stroke: theme?.text,
+                      },
+                      tickLabels: {
+                        fill: theme?.text,
+                        padding: 10,
+                      },
                     },
                   },
-                },
-              }}
-            >
-              <VictoryAxis dependentAxis tickFormat={(value) => `R$${value}`} />
-              <VictoryAxis tickValues={categories} />
-              {/* <VictoryZoomContainer allowZoom={false} /> */}
-              <VictoryGroup colorScale={["#6499E3", "#266DD3"]} offset={45}>
-                <VictoryBar
-                  data={realizedData}
-                  cornerRadius={{ top: 6 }}
-                  barWidth={60}
+                }}
+              >
+                <VictoryAxis
+                  dependentAxis
+                  tickFormat={(value) => `R$${value}`}
                 />
-                <VictoryBar
-                  data={designedData}
-                  cornerRadius={{ top: 6 }}
-                  barWidth={60}
-                />
-              </VictoryGroup>
-            </VictoryChart>
-            <HStack justifyContent="center" space={6} pb={5}>
-              <HStack alignItems="center" space={2}>
-                <VStack
-                  width="15px"
-                  height="15px"
-                  borderRadius={20}
-                  backgroundColor="#6499E3"
-                />
-                <Text>Projetado</Text>
+                <VictoryAxis tickValues={categories} />
+                {/* <VictoryZoomContainer allowZoom={false} /> */}
+                <VictoryGroup colorScale={["#6499E3", "#266DD3"]} offset={45}>
+                  <VictoryBar
+                    data={realizedData}
+                    cornerRadius={{ top: 6 }}
+                    barWidth={60}
+                  />
+                  <VictoryBar
+                    data={designedData}
+                    cornerRadius={{ top: 6 }}
+                    barWidth={60}
+                  />
+                </VictoryGroup>
+              </VictoryChart>
+              <HStack justifyContent="center" space={6} pb={5}>
+                <HStack alignItems="center" space={2}>
+                  <VStack
+                    width="15px"
+                    height="15px"
+                    borderRadius={20}
+                    backgroundColor="#6499E3"
+                  />
+                  <Text>Projetado</Text>
+                </HStack>
+                <HStack alignItems="center" space={2}>
+                  <VStack
+                    width="15px"
+                    height="15px"
+                    borderRadius={20}
+                    backgroundColor="#266DD3"
+                  />
+                  <Text>Realizado</Text>
+                </HStack>
               </HStack>
-              <HStack alignItems="center" space={2}>
-                <VStack
-                  width="15px"
-                  height="15px"
-                  borderRadius={20}
-                  backgroundColor="#266DD3"
-                />
-                <Text>Realizado</Text>
-              </HStack>
-            </HStack>
+            </VStack>
           </When>
           <When is={!hasPlanning}>
             <EmptyChart
