@@ -31,9 +31,10 @@ export async function getPlanning(props: GetPlanningProps) {
   const expenseBySegment = await Promise.all(
     segments.docs.map(async (doc) => {
       const segment = doc.data().description;
+      const value = doc.data().value;
       const [expenseReal, expenseProjetado] = await Promise.all([
-        getExpense(user, "Real", initialDate, finalDate, segment),
-        getExpense(user, "Projetado", initialDate, finalDate, segment),
+        getExpense(user, "Real", initialDate, finalDate, value),
+        getExpense(user, "Projetado", initialDate, finalDate, value),
       ]);
       const percentual = (expenseReal / expenseProjetado) * 100;
       return {
@@ -55,7 +56,9 @@ export async function getPlanning(props: GetPlanningProps) {
     ...expenseBySegment,
   ];
 
-  const hasPlanning = result.some((item) => item.designed > 0);
+  const hasPlanning = result.some(
+    (item) => item.designed > 0 || item.realized > 0
+  );
 
   return {
     hasPlanning,

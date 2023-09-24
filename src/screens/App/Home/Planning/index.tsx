@@ -12,8 +12,9 @@ import {
   VictoryBar,
   VictoryChart,
   VictoryGroup,
-  VictoryZoomContainer,
+  VictoryLabel,
 } from "victory-native";
+import { ScrollView } from "react-native";
 
 export const Planning = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -60,52 +61,66 @@ export const Planning = () => {
               borderRadius={20}
               paddingX={4}
             >
-              <VictoryChart
-                theme={{
-                  axis: {
-                    style: {
-                      axis: {
-                        opacity: 0.3,
-                        stroke: theme?.text,
-                      },
-                      grid: {
-                        opacity: 0.08,
-                        stroke: theme?.text,
-                      },
-                      tickLabels: {
-                        fill: theme?.text,
-                        padding: 10,
+              <ScrollView horizontal contentOffset={{ x: 20, y: 0 }}>
+                <VictoryChart
+                  theme={{
+                    axis: {
+                      style: {
+                        axis: {
+                          opacity: 0.3,
+                          stroke: theme?.text,
+                        },
+                        grid: {
+                          opacity: 0.08,
+                          stroke: theme?.text,
+                        },
+                        tickLabels: {
+                          fill: theme?.text,
+                          padding: 10,
+                        },
                       },
                     },
-                  },
-                }}
-              >
-                <VictoryAxis
-                  dependentAxis
-                  tickFormat={(value) => `R$${value}`}
-                />
-                <VictoryAxis tickValues={categories} />
-                {/* <VictoryZoomContainer allowZoom={false} /> */}
-                <VictoryGroup colorScale={["#6499E3", "#266DD3"]} offset={45}>
-                  <VictoryBar
-                    data={realizedData}
-                    cornerRadius={{ top: 6 }}
-                    barWidth={60}
-                  />
-                  <VictoryBar
-                    data={designedData}
-                    cornerRadius={{ top: 6 }}
-                    barWidth={60}
-                  />
-                </VictoryGroup>
-              </VictoryChart>
+                  }}
+                  width={categories.length * 200}
+                >
+                  <VictoryAxis tickValues={categories} />
+                  <VictoryGroup colorScale={["#98BBEC", "#266DD3"]} offset={70}>
+                    <VictoryBar
+                      data={designedData}
+                      cornerRadius={{ top: 6 }}
+                      barWidth={60}
+                      labels={({ datum }) => numberToReal(datum.y)}
+                      labelComponent={
+                        <VictoryLabel
+                          dy={-10}
+                          textAnchor="middle"
+                          style={{ fill: theme?.text }}
+                        />
+                      }
+                    />
+                    <VictoryBar
+                      data={realizedData}
+                      cornerRadius={{ top: 6 }}
+                      barWidth={60}
+                      labels={({ datum }) => numberToReal(datum.y)}
+                      labelComponent={
+                        <VictoryLabel
+                          dy={-10}
+                          textAnchor="middle"
+                          style={{ fill: theme?.text }}
+                        />
+                      }
+                    />
+                  </VictoryGroup>
+                </VictoryChart>
+              </ScrollView>
               <HStack justifyContent="center" space={6} pb={5}>
                 <HStack alignItems="center" space={2}>
                   <VStack
                     width="15px"
                     height="15px"
                     borderRadius={20}
-                    backgroundColor="#6499E3"
+                    backgroundColor="#98BBEC"
                   />
                   <Text>Projetado</Text>
                 </HStack>

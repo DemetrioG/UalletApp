@@ -56,7 +56,7 @@ export const useCreateUser = () => {
       .catch((error) => {
         return handleToast({
           type: "error",
-          text1: error,
+          text1: error.message,
         });
       });
   }

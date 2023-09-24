@@ -34,15 +34,15 @@ export const FormEntries = ({
 
   const routes: RouteProps[] = [
     {
-      key: "Receita",
-      title: "Receita",
-      selected: params?.type === "Receita",
-      isEditing: !!id,
-    },
-    {
       key: "Despesa",
       title: "Despesa",
       selected: params?.type === "Despesa",
+      isEditing: !!id,
+    },
+    {
+      key: "Receita",
+      title: "Receita",
+      selected: params?.type === "Receita",
       isEditing: !!id,
     },
   ];
