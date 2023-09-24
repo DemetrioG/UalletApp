@@ -1,12 +1,5 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-import { currentUser, getRevenue } from "../../utils/query.helper";
+import { doc, getDoc } from "firebase/firestore";
+import { authUser, currentUser, getRevenue } from "../../utils/query.helper";
 import { db } from "../../services/firebase";
 import { getMonthDate } from "../../utils/date.helper";
 
@@ -17,7 +10,7 @@ interface GetRevenueProps {
 }
 
 export async function getData() {
-  const user = await currentUser();
+  const user = await authUser();
 
   if (!user) return Promise.reject(false);
 

@@ -3,10 +3,10 @@ import {
   deleteUser,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { currentUser } from "../../../../../utils/query.helper";
+import { authUser } from "../../../../../utils/query.helper";
 
 export async function deleteAccount(password: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject(false);
   const credential = EmailAuthProvider.credential(user?.email, password);
 

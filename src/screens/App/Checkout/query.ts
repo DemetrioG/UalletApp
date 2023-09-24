@@ -1,10 +1,10 @@
 import { doc, getDoc } from "firebase/firestore";
-import { currentUser } from "../../../utils/query.helper";
+import { authUser } from "../../../utils/query.helper";
 import { db } from "../../../services/firebase";
 import { API_URL } from "@env";
 
 export async function getPrice() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const priceSnapshot = await getDoc(
@@ -22,7 +22,7 @@ export async function getPrice() {
 }
 
 export async function sendPaymentIntent() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const customerSnapshot = await getDoc(doc(db, "customers", user.uid));

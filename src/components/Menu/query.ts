@@ -1,9 +1,9 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { currentUser } from "../../utils/query.helper";
+import { authUser } from "../../utils/query.helper";
 import { db } from "../../services/firebase";
 
 export async function refreshAuthDevice(expoPushToken: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const userRef = doc(db, "users", user.uid);

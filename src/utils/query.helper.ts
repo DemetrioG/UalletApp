@@ -11,6 +11,10 @@ import {
 import { auth, db } from "../services/firebase";
 import { getStorage } from "./storage.helper";
 
+export const authUser = async () => {
+  return await currentUser(true);
+};
+
 /**
  * Retorna os dados de autenticação do usuário logado
  */

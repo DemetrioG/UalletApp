@@ -1,9 +1,9 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { currentUser } from "../../../../utils/query.helper";
+import { authUser } from "../../../../utils/query.helper";
 import { db } from "../../../../services/firebase";
 
 export async function getPlans() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const [subscription, userData] = await Promise.all([

@@ -1,11 +1,11 @@
 import { doc, getDoc } from "firebase/firestore";
 import { listLinkedAccountsSharedWithYou } from "../../../screens/App/Configurations/LinkedAccount/query";
 import { db } from "../../../services/firebase";
-import { currentUser } from "../../../utils/query.helper";
+import { authUser } from "../../../utils/query.helper";
 import { ListLinkedAccount } from "../../../screens/App/Configurations/LinkedAccount/types";
 
 export async function listAccounts() {
-  const user = await currentUser(true);
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const data = await listLinkedAccountsSharedWithYou();

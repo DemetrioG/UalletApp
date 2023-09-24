@@ -22,9 +22,9 @@ export async function getAccountRefs(balance: BalanceProps) {
         );
         const [data] = accountRef.docs.map((doc) => doc.data());
         return {
-          name: data.name,
+          name: data?.name,
           value: balance?.[key].balance ?? 0,
-          color: data.color,
+          color: data?.color,
         };
       }
     })

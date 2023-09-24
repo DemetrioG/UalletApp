@@ -1,6 +1,5 @@
 import {
   User,
-  getAuth,
   signInWithEmailAndPassword,
   updatePassword,
 } from "firebase/auth";

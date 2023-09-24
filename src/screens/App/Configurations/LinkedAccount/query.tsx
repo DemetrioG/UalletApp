@@ -13,11 +13,11 @@ import {
   ValidatedLinkedAccountDTO,
 } from "./types";
 import { db } from "../../../../services/firebase";
-import { currentUser } from "../../../../utils/query.helper";
+import { authUser, currentUser } from "../../../../utils/query.helper";
 import { UserInfo } from "../DadosCadastrais/InformacoesPessoais/types";
 
 export async function listLinkedAccountsWhenYouShareData() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const conditional = [
@@ -44,7 +44,7 @@ export async function listLinkedAccountsWhenYouShareData() {
 }
 
 export async function listLinkedAccountsSharedWithYou() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const snapshotUser = await getDoc(doc(db, "users", user.uid));
@@ -72,7 +72,7 @@ export async function listLinkedAccountsSharedWithYou() {
 }
 
 export async function createLinkedAccount(formData: ValidatedLinkedAccountDTO) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const snapshot = await getDocs(
@@ -97,7 +97,7 @@ export async function createLinkedAccount(formData: ValidatedLinkedAccountDTO) {
 }
 
 export async function deleteLinkedAccount(formData: ListLinkedAccount) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const userRef = doc(db, "users", formData.uid);
@@ -110,7 +110,7 @@ export async function deleteLinkedAccount(formData: ListLinkedAccount) {
 }
 
 export async function checkIfEmailExist(email: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const userRef = collection(db, "users");
