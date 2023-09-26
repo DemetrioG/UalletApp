@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext";
 import { handleToast } from "../../../../utils/functions.helper";
 import { QueryDocumentSnapshot } from "firebase/firestore";
+import { sortBy } from "lodash";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
@@ -247,12 +248,13 @@ export const useGetEntries = (props: ListEntriesProps) => {
     if (!snapshot.docs.length) setEmpty(true);
     const last = snapshot.docs[snapshot.docs.length - 1];
     const list = snapshot.docs.map((doc) => doc.data()) as ListEntries[];
+    const sorted = sortBy(list, (item) => -item.id);
 
     if (lastVisible) {
       setIsLoadingMore(false);
-      setList((rest) => [...rest, ...list]);
+      setList((rest) => [...rest, ...sorted]);
     } else {
-      setList(list);
+      setList(sorted);
     }
     setIsLastPage(!Boolean(list[24]));
     return setLastVisible(last);

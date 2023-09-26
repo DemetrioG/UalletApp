@@ -52,7 +52,7 @@ export const ModalFilter = (props: ModalFilterProps) => {
             <Pressable
               onPress={async () => {
                 filterMethods.reset(defaultValues);
-                await sleep(500);
+                await sleep(100);
                 handleSubmit();
               }}
             >

@@ -31,7 +31,7 @@ export async function getAccountRefs(balance: BalanceProps) {
   );
 
   return sortBy(accountRefs, (item) => {
-    if (item.name === "Total das contas") return 0;
-    return 1;
+    if (item.name === "Total das contas") return Number.MIN_SAFE_INTEGER;
+    return -item.value;
   }) as BalanceCardsProps[];
 }

@@ -71,7 +71,12 @@ export const FormSelectInput = (props: FormSelectInputProps) => {
       render={({ field: { value, onChange } }) => (
         <SelectInput
           selectedValue={value}
-          onValueChange={onChange}
+          onValueChange={(newValue) => {
+            if (newValue === value) {
+              return onChange(null);
+            }
+            onChange(newValue);
+          }}
           options={options}
           {...restProps}
         />
