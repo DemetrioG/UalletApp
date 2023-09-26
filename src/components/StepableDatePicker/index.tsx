@@ -64,12 +64,12 @@ export const StepableDatePicker = (props: StepableDatePickerProps) => {
 
   return (
     <HStack justifyContent="space-between">
-      {/* <TouchableOpacity
+      <TouchableOpacity
         {...props.SideButtonProps}
-        onPress={() => handleArrowPress("prev")}
+        // onPress={() => handleArrowPress("prev")}
       >
-        <ChevronLeft color={theme?.text} />
-      </TouchableOpacity> */}
+        <ChevronLeft color={"transparent"} />
+      </TouchableOpacity>
       <HStack
         flex={1}
         alignItems="center"
@@ -85,12 +85,12 @@ export const StepableDatePicker = (props: StepableDatePickerProps) => {
           </HStack>
         </TouchableOpacity>
       </HStack>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         {...props.SideButtonProps}
-        onPress={() => handleArrowPress("next")}
+        // onPress={() => handleArrowPress("next")}
       >
-        <ChevronRight color={theme?.text} />
-      </TouchableOpacity> */}
+        <ChevronRight color={"transparent"} />
+      </TouchableOpacity>
       <ActionSheet options={actionSheetOptions} {...action} />
     </HStack>
   );
