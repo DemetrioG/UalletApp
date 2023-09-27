@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../services/firebase";
 import { getStorage } from "./storage.helper";
+import { fromUnixTime } from "date-fns";
 
 export const authUser = async () => {
   return await currentUser(true);
@@ -145,4 +146,27 @@ export async function getExpense(
     (acc, doc) => acc + (doc.data().value || 0),
     0
   );
+}
+
+export async function userIsExpired(uid: string) {
+  const currentDate = new Date();
+  const subscriptions = await getDoc(
+    doc(db, "customers", uid, "subscriptions")
+  );
+  const hasSubscription = subscriptions.exists();
+
+  const expiredSubscription = await getDocs(
+    query(
+      collection(db, "customers", uid, "subscriptions"),
+      where("status", "==", "active"),
+      where("current_period_end", ">=", currentDate)
+    )
+  );
+  const hasExpiredSubscription = !Boolean(expiredSubscription.size);
+
+  const user = await getDoc(doc(db, "users", uid));
+  const expirationDate = user.data()?.expirationDate;
+  const hasExpiredUser = currentDate > fromUnixTime(expirationDate.seconds);
+
+  return hasSubscription ? hasExpiredSubscription : hasExpiredUser;
 }

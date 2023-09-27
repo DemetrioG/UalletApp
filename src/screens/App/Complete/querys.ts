@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../services/firebase";
-import { currentUser } from "../../../utils/query.helper";
+import { authUser } from "../../../utils/query.helper";
 
 type TUpdateUserData = {
   birthDate: string;
@@ -13,7 +13,7 @@ export const updateUserData = async (
   userData: TUpdateUserData
 ): Promise<string> => {
   try {
-    const user = await currentUser();
+    const user = await authUser();
     if (!user) throw new Error("Úsuario não encontrado");
 
     await setDoc(doc(collection(db, "users"), user.uid), userData, {

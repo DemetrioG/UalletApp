@@ -10,19 +10,19 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../../../../../services/firebase";
-import { currentUser } from "../../../../../utils/query.helper";
+import { authUser } from "../../../../../utils/query.helper";
 import { ValidatedSegmentDTO } from "./types";
 import { stringToPath } from "../../../../../utils/general.helper";
 
 export async function listSegment() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   return await getDocs(collection(db, "segments", user.uid, "segments"));
 }
 
 export async function createSegment(formData: ValidatedSegmentDTO) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   return await addDoc(collection(db, "segments", user.uid, "segments"), {
@@ -32,7 +32,7 @@ export async function createSegment(formData: ValidatedSegmentDTO) {
 }
 
 export async function updateSegment(formData: ValidatedSegmentDTO, id: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
@@ -60,7 +60,7 @@ export async function updateSegment(formData: ValidatedSegmentDTO, id: string) {
 }
 
 export async function deleteSegment(id: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const segmentRef = doc(collection(db, "segments", user.uid, "segments"), id);
@@ -82,7 +82,7 @@ export async function deleteSegment(id: string) {
 }
 
 export async function checkIfSegmentExist(description: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const segmentRef = collection(db, "segments", user.uid, "segments");

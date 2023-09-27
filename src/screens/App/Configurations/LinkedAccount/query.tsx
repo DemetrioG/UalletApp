@@ -13,7 +13,7 @@ import {
   ValidatedLinkedAccountDTO,
 } from "./types";
 import { db } from "../../../../services/firebase";
-import { authUser, currentUser } from "../../../../utils/query.helper";
+import { authUser, userIsExpired } from "../../../../utils/query.helper";
 import { UserInfo } from "../DadosCadastrais/InformacoesPessoais/types";
 
 export async function listLinkedAccountsWhenYouShareData() {
@@ -59,11 +59,15 @@ export async function listLinkedAccountsSharedWithYou() {
         const snapshotSharedAccount = await getDoc(
           doc(db, "users", account.uid)
         );
-        const data = {
-          ...snapshotSharedAccount.data(),
-          uid: snapshotSharedAccount.ref.id,
-        } as ListLinkedAccount;
-        list.push(data);
+        const isExpired = await userIsExpired(account.uid);
+
+        if (!isExpired) {
+          const data = {
+            ...snapshotSharedAccount.data(),
+            uid: snapshotSharedAccount.ref.id,
+          } as ListLinkedAccount;
+          list.push(data);
+        }
       })
     );
   }

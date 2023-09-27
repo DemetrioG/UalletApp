@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../services/firebase";
 import { getAtualDate, getMonthDate } from "../../../utils/date.helper";
-import { currentUser, sleep } from "../../../utils/query.helper";
+import { authUser, currentUser, sleep } from "../../../utils/query.helper";
 
 type GetLastEntryProps = { month: number; year: number; modality: string };
 /**
@@ -60,7 +60,7 @@ export const checkFutureDebitsToConsolidate = async () => {
 };
 
 export const completeUser = async () => {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject(false);
 
   return getDoc(doc(collection(db, "users"), user.uid));

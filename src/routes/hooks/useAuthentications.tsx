@@ -5,7 +5,7 @@ import { UserContext } from "../../context/User/userContext";
 import { setupPushNotifications } from "../../utils/notification.helper";
 import { DataContext } from "../../context/Data/dataContext";
 import { fromUnixTime } from "date-fns";
-import { currentUser } from "../../utils/query.helper";
+import { authUser } from "../../utils/query.helper";
 import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
@@ -93,7 +93,7 @@ export const useUserIsExpired = () => {
   let userSnapshot: () => void;
 
   async function execute() {
-    const user = await currentUser();
+    const user = await authUser();
     if (!user) return Promise.reject();
 
     const currentDate = new Date();

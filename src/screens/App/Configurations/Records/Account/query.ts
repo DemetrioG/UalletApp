@@ -11,20 +11,20 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../../../../../services/firebase";
-import { currentUser } from "../../../../../utils/query.helper";
+import { authUser } from "../../../../../utils/query.helper";
 import { ValidatedAccountDTO } from "./types";
 import { realToNumber } from "../../../../../utils/number.helper";
 import { stringToPath } from "../../../../../utils/general.helper";
 
 export async function listAccount() {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   return await getDocs(collection(db, "accounts", user.uid, "accounts"));
 }
 
 export async function createAccount(formData: ValidatedAccountDTO) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
   const accountsCollection = collection(db, "accounts", user.uid, "accounts");
   await addDoc(accountsCollection, {
@@ -44,7 +44,7 @@ export async function createAccount(formData: ValidatedAccountDTO) {
 }
 
 export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const accountRef = doc(collection(db, "accounts", user.uid, "accounts"), id);
@@ -89,7 +89,7 @@ export async function updateAccount(formData: ValidatedAccountDTO, id: string) {
 }
 
 export async function deleteAccount(id: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const accountRef = doc(collection(db, "accounts", user.uid, "accounts"), id);
@@ -119,7 +119,7 @@ export async function deleteAccount(id: string) {
 }
 
 export async function checkIfAccountExist(account: string) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject();
 
   const accountRef = collection(db, "accounts", user.uid, "accounts");

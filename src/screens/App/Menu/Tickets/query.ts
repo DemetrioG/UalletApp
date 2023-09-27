@@ -6,11 +6,11 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { ValidatedTicketsDTO } from "./types";
-import { currentUser } from "../../../../utils/query.helper";
+import { authUser } from "../../../../utils/query.helper";
 import { db } from "../../../../services/firebase";
 
 export async function sendTicket(formData: ValidatedTicketsDTO) {
-  const user = await currentUser();
+  const user = await authUser();
   if (!user) return Promise.reject(false);
 
   const userDoc = await getDoc(doc(db, "users", user.uid));
