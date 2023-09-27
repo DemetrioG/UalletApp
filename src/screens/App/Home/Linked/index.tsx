@@ -13,11 +13,13 @@ import {
 } from "../../../../utils/storage.helper";
 import { DataContext } from "../../../../context/Data/dataContext";
 import { ChangingAccount } from "./ChangingAccount";
+import { useHasLinked } from "./hooks/useLinked";
 
 export const Linked = () => {
   const { theme }: IThemeProvider = useTheme();
   const { user } = useContext(UserContext);
   const { setData } = useContext(DataContext);
+  const { hasLinked } = useHasLinked();
 
   const [selectedValue, setSelectedValue] = useState<string | undefined>(
     user?.uid
@@ -51,21 +53,30 @@ export const Linked = () => {
   }
 
   return (
-    <VStack backgroundColor={theme?.secondary} borderRadius={30} p={4} pt={5}>
-      <HStack justifyContent="space-between" alignItems="center" mb={5}>
-        <Text fontWeight={600}>Conta selecionada</Text>
-        <Pressable>
-          <Tooltip label="Seus lançamentos Realizados/Projetados">
-            <Heart color={theme?.red} />
-          </Tooltip>
-        </Pressable>
-      </HStack>
-      <FetchableSelectInputSharedAccounts
-        onValueChange={handleChangeUidRef}
-        variant="filled"
-        selectedValue={selectedValue}
-      />
-      <ChangingAccount {...modal} />
-    </VStack>
+    <>
+      {hasLinked && (
+        <VStack
+          backgroundColor={theme?.secondary}
+          borderRadius={30}
+          p={4}
+          pt={5}
+        >
+          <HStack justifyContent="space-between" alignItems="center" mb={5}>
+            <Text fontWeight={600}>Conta selecionada</Text>
+            <Pressable>
+              <Tooltip label="Seus lançamentos Realizados/Projetados">
+                <Heart color={theme?.red} />
+              </Tooltip>
+            </Pressable>
+          </HStack>
+          <FetchableSelectInputSharedAccounts
+            onValueChange={handleChangeUidRef}
+            variant="filled"
+            selectedValue={selectedValue}
+          />
+          <ChangingAccount {...modal} />
+        </VStack>
+      )}
+    </>
   );
 };
