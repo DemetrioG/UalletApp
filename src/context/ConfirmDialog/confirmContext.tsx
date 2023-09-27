@@ -8,6 +8,7 @@ export interface IConfirm {
   callbackFunction?: Function;
   header?: JSX.Element;
   title: string;
+  content?: JSX.Element;
   ContainerProps?: InterfaceVStackProps;
 }
 

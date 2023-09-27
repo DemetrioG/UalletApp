@@ -6,6 +6,7 @@ import { IThemeProvider } from "../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { Modal } from "../Modal";
 import { AlertCircle } from "lucide-react-native";
+import When from "../When";
 
 export const ConfirmDialog = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -61,9 +62,14 @@ export const ConfirmDialog = () => {
         </HStack>
       )}
       <Center flex={1}>
-        <Text textAlign="center" fontWeight={500}>
-          {confirm.title}
-        </Text>
+        <When is={!!confirm.content}>
+          <>{confirm.content}</>
+        </When>
+        <When is={!confirm.content}>
+          <Text textAlign="center" fontWeight={500}>
+            {confirm.title}
+          </Text>
+        </When>
       </Center>
       <VStack>
         <Button onPress={handleCancel}>

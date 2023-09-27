@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext, useState } from "react";
 import { LinkedAccountDTO, ListLinkedAccount } from "../types";
 import { ConfirmContext } from "../../../../../context/ConfirmDialog/confirmContext";
+import { Text, VStack } from "native-base";
 
 const defaultValues: LinkedAccountDTO = {
   email: null,
@@ -47,8 +48,8 @@ export const useFormLinkedAccount = () => {
     resolver: yupResolver(schema),
   });
 
-  const { isLoading: isLoadingCreate, handleExecute: handleCreate } =
-    useCreateLinkedAccount();
+  const { isLoadingCreate, handleCreate } =
+    useHandleConfirmCreateLinkedAccount();
 
   const onSubmit = formMethods.handleSubmit(handleCreate);
 
@@ -88,6 +89,50 @@ export const useListLinkedAccount = () => {
     listYouShared: listYouShared ?? [],
     listSharedWithYou: listSharedWithYou ?? [],
     handleExecute: execute,
+  };
+};
+
+export const useHandleConfirmCreateLinkedAccount = () => {
+  const { isLoading, handleExecute } = useCreateLinkedAccount();
+  const { setConfirm } = useContext(ConfirmContext);
+
+  function execute(formData: LinkedAccountDTO) {
+    setConfirm(() => ({
+      title: "",
+      content: (
+        <VStack space={8} width="100%">
+          <Text fontSize="18px" fontWeight={600}>
+            O que o usuário acessa?
+          </Text>
+          <VStack space={1}>
+            <Text fontWeight={600} opacity={0.5} mb={2}>
+              Poderá:
+            </Text>
+            <Text>Consultar saldo</Text>
+            <Text>Consultar a home</Text>
+            <Text>Realizar lançamentos</Text>
+            <Text>Consolidar lançamentos</Text>
+          </VStack>
+          <VStack space={1}>
+            <Text fontWeight={600} opacity={0.5} mb={2}>
+              Não poderá:
+            </Text>
+            <Text>Realizar cadastros no menu</Text>
+            <Text>Gerenciar assinatura</Text>
+            <Text>Alterar dados da conta</Text>
+            <Text>Conectar à outras contas</Text>
+          </VStack>
+        </VStack>
+      ),
+      visibility: true,
+      callbackFunction: () => handleExecute(formData),
+      ContainerProps: { height: "85%" },
+    }));
+  }
+
+  return {
+    isLoadingCreate: isLoading,
+    handleCreate: execute,
   };
 };
 
