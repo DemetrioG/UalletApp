@@ -9,6 +9,7 @@ export interface ActionSheetProps extends ReturnUseDisclosure {
 export interface ActionSheetItemProps {
   item: IOption;
   onPress: () => void;
+  activeRef: string;
 }
 
 export interface StepableDatePickerProps {

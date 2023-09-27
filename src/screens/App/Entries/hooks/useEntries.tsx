@@ -21,6 +21,7 @@ import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext
 import { handleToast } from "../../../../utils/functions.helper";
 import { QueryDocumentSnapshot } from "firebase/firestore";
 import { sortBy } from "lodash";
+import { isThisMonth, parseISO } from "date-fns";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
@@ -81,11 +82,17 @@ export const useFormEntries = (params: ListEntries, id?: number) => {
     useCreateEntrie();
   const { isLoading: isLoadingUpdate, handleExecute: handleUpdate } =
     useUpdateEntrie();
+  const { isLoadingConfirmCreate, handleConfirmCreate } =
+    useHandleConfirmCreateEntrie();
 
   const onSubmit = (formData: NewEntrieDTO) => {
     if (id) {
       return handleUpdate(formData, params, id);
     } else {
+      const date = formData.date;
+      const isCurrentMonth = !!date ? isThisMonth(parseISO(date)) : false;
+
+      if (!isCurrentMonth) return handleConfirmCreate(formData);
       return handleCreate(formData);
     }
   };
@@ -98,9 +105,27 @@ export const useFormEntries = (params: ListEntries, id?: number) => {
 
   return {
     formMethods,
-    isLoadingCreate,
+    isLoadingCreate: isLoadingCreate || isLoadingConfirmCreate,
     isLoadingUpdate,
     handleSubmit,
+  };
+};
+
+export const useHandleConfirmCreateEntrie = () => {
+  const { isLoading, handleExecute } = useCreateEntrie();
+  const { setConfirm } = useContext(ConfirmContext);
+
+  function execute(formData: NewEntrieDTO) {
+    setConfirm(() => ({
+      title: "A data do lançamento não é do mês atual, está correto?",
+      visibility: true,
+      callbackFunction: () => handleExecute(formData),
+    }));
+  }
+
+  return {
+    isLoadingConfirmCreate: isLoading,
+    handleConfirmCreate: execute,
   };
 };
 

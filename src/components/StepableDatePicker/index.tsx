@@ -1,6 +1,11 @@
 import { memo, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "styled-components";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react-native";
+import {
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react-native";
 import { FlatList, HStack, Text, VStack, useDisclose } from "native-base";
 import {
   addMonths,
@@ -23,6 +28,7 @@ import { IOption } from "../../types/types";
 import { TouchableOpacity } from "react-native";
 import { setStorage } from "../../utils/storage.helper";
 import { Modal } from "../Modal";
+import When from "../When";
 
 export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { theme }: IThemeProvider = useTheme();
@@ -149,6 +155,7 @@ const ActionSheet = (props: ActionSheetProps) => {
         renderItem={({ item }) => (
           <ActionSheetItem
             item={item}
+            activeRef={activeMonthRef}
             onPress={() => handleUpdateDataContext(item)}
           />
         )}
@@ -157,20 +164,32 @@ const ActionSheet = (props: ActionSheetProps) => {
   );
 };
 
-const ActionSheetItem = memo(({ item, onPress }: ActionSheetItemProps) => {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        height: 60,
-        justifyContent: "center",
-        paddingHorizontal: 10,
-      }}
-    >
-      <Text color="black">{item.label}</Text>
-    </TouchableOpacity>
-  );
-});
+const ActionSheetItem = memo(
+  ({ item, onPress, activeRef }: ActionSheetItemProps) => {
+    const [month, year] = activeRef.split("/");
+    const [itemMonth, itemYear] = item.value.split("/");
+    const isCurrent =
+      Number(month) === Number(itemMonth) && Number(year) === Number(itemYear);
+
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={{
+          height: 60,
+          justifyContent: "center",
+          paddingHorizontal: 10,
+        }}
+      >
+        <HStack alignItems="center" space={3}>
+          <Text color="black">{item.label}</Text>
+          <When is={isCurrent}>
+            <Check color="#266DD3" />
+          </When>
+        </HStack>
+      </TouchableOpacity>
+    );
+  }
+);
 
 const startYear = 2020;
 const currentYear = new Date().getFullYear();
