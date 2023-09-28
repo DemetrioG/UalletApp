@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { authUser, currentUser } from "../utils/query.helper";
 import { usePromise } from "./usePromise";
+import { ReturnUseDisclosure } from "../types/types";
 
-export const useLinked = () => {
+export const useLinked = (isOpen: ReturnUseDisclosure['isOpen']) => {
   const { handleExecute } = usePromise(execute);
   const [linked, setLinked] = useState(false);
 
@@ -15,7 +16,7 @@ export const useLinked = () => {
 
   useEffect(() => {
     handleExecute();
-  }, []);
+  }, [isOpen]);
 
   return {
     isLinkedInAnyAccount: linked,

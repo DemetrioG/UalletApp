@@ -39,7 +39,6 @@ import { Internet } from "./Internet";
 import { InterfaceVStackProps } from "native-base/lib/typescript/components/primitives/Stack/VStack";
 import { RefreshControl } from "react-native";
 import { Linked } from "./Linked";
-import { useLinked } from "../../../hooks/useLinked";
 
 export const Home = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -49,7 +48,6 @@ export const Home = () => {
   const {} = useGetBalance();
   const {} = useCheckConsolidation(consolidation);
   const {} = useIsUserWithCompleteData();
-  const { isLinkedInAnyAccount } = useLinked();
   const { isLoading, handleExecute } = useScrollToRefresh();
 
   return (
@@ -88,7 +86,7 @@ export const Home = () => {
           <EntriesSegmentChart />
         </Stack>
       </ScrollView>
-      <Menu isLinkedInAnyAccount={isLinkedInAnyAccount} {...menu} />
+      <Menu {...menu} />
     </BackgroundContainer>
   );
 };

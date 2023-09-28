@@ -118,9 +118,9 @@ export const LoginForm = ({ email }: { email?: string }) => {
                 Entrar
               </Text>
             </Button>
-            <TouchableOpacity onPress={() => setSheetOpen(true)}>
+            {/* <TouchableOpacity onPress={() => setSheetOpen(true)}>
               <Text>Prefere entrar com as redes sociais?</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </VStack>
         </BackgroundContainer>
       </TouchableWithoutFeedback>

@@ -14,9 +14,10 @@ import { TouchableOpacity } from "react-native";
 import { CreditCard, Flag, LogOut, Settings } from "lucide-react-native";
 import { ReturnUseDisclosure } from "../../types/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useLinked } from "../../hooks/useLinked";
 
 export const Menu = (
-  props: ReturnUseDisclosure & { isLinkedInAnyAccount: boolean }
+  props: ReturnUseDisclosure
 ) => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
@@ -24,6 +25,8 @@ export const Menu = (
   const { setConfirm } = useContext(ConfirmContext);
   const { user, setUser } = useContext(UserContext);
   const [canLogout, setCanLogout] = useState(false);
+
+  const { isLinkedInAnyAccount } = useLinked(props.isOpen);
 
   function logout() {
     refreshAuthDevice(data.expoPushToken!);
@@ -87,8 +90,8 @@ export const Menu = (
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
             <TouchableOpacity
               onPress={() => goToScreen("Configuracoes")}
-              disabled={props.isLinkedInAnyAccount}
-              style={{ opacity: props.isLinkedInAnyAccount ? 0.3 : 1 }}
+              disabled={isLinkedInAnyAccount}
+              style={{ opacity: isLinkedInAnyAccount ? 0.3 : 1 }}
             >
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Configurações</Text>
@@ -99,8 +102,8 @@ export const Menu = (
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
             <TouchableOpacity
               onPress={() => goToScreen("Tickets")}
-              disabled={props.isLinkedInAnyAccount}
-              style={{ opacity: props.isLinkedInAnyAccount ? 0.3 : 1 }}
+              disabled={isLinkedInAnyAccount}
+              style={{ opacity: isLinkedInAnyAccount ? 0.3 : 1 }}
             >
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Suporte</Text>
@@ -111,8 +114,8 @@ export const Menu = (
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
             <TouchableOpacity
               onPress={() => goToScreen("Plan")}
-              disabled={props.isLinkedInAnyAccount}
-              style={{ opacity: props.isLinkedInAnyAccount ? 0.3 : 1 }}
+              disabled={isLinkedInAnyAccount}
+              style={{ opacity: isLinkedInAnyAccount ? 0.3 : 1 }}
             >
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Meu plano</Text>
