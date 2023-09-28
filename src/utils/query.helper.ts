@@ -151,7 +151,7 @@ export async function getExpense(
 export async function userIsExpired(uid: string) {
   const currentDate = new Date();
   const subscriptions = await getDoc(
-    doc(db, "customers", uid, "subscriptions")
+    doc(collection(db, "customers", uid, "subscriptions"))
   );
   const hasSubscription = subscriptions.exists();
 

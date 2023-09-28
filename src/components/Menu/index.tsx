@@ -15,7 +15,9 @@ import { CreditCard, Flag, LogOut, Settings } from "lucide-react-native";
 import { ReturnUseDisclosure } from "../../types/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-export const Menu = (props: ReturnUseDisclosure) => {
+export const Menu = (
+  props: ReturnUseDisclosure & { isLinkedInAnyAccount: boolean }
+) => {
   const { theme }: IThemeProvider = useTheme();
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { data } = useContext(DataContext);
@@ -83,7 +85,11 @@ export const Menu = (props: ReturnUseDisclosure) => {
           borderTopRadius="40px"
         >
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
-            <TouchableOpacity onPress={() => goToScreen("Configuracoes")}>
+            <TouchableOpacity
+              onPress={() => goToScreen("Configuracoes")}
+              disabled={props.isLinkedInAnyAccount}
+              style={{ opacity: props.isLinkedInAnyAccount ? 0.3 : 1 }}
+            >
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Configurações</Text>
                 <Settings color={theme?.text} size={20} />
@@ -91,7 +97,11 @@ export const Menu = (props: ReturnUseDisclosure) => {
             </TouchableOpacity>
           </VStack>
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
-            <TouchableOpacity onPress={() => goToScreen("Tickets")}>
+            <TouchableOpacity
+              onPress={() => goToScreen("Tickets")}
+              disabled={props.isLinkedInAnyAccount}
+              style={{ opacity: props.isLinkedInAnyAccount ? 0.3 : 1 }}
+            >
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Suporte</Text>
                 <Flag color={theme?.text} size={20} />
@@ -99,7 +109,11 @@ export const Menu = (props: ReturnUseDisclosure) => {
             </TouchableOpacity>
           </VStack>
           <VStack borderBottomWidth={1} borderColor={theme?.primary} p={4}>
-            <TouchableOpacity onPress={() => goToScreen("Plan")}>
+            <TouchableOpacity
+              onPress={() => goToScreen("Plan")}
+              disabled={props.isLinkedInAnyAccount}
+              style={{ opacity: props.isLinkedInAnyAccount ? 0.3 : 1 }}
+            >
               <HStack alignItems="center" justifyContent="space-between">
                 <Text>Meu plano</Text>
                 <CreditCard color={theme?.text} size={20} />
