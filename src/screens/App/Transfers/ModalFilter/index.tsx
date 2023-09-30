@@ -5,28 +5,24 @@ import { IThemeProvider } from "../../../../styles/baseTheme";
 import { useTheme } from "styled-components";
 import { FormTextInputCalendar } from "../../../../components/Inputs/TextInputCalendar";
 import { FormTextInput } from "../../../../components/Inputs/TextInput";
-import { FormSelectInputModality } from "../../../../components/Inputs/SelectInputModality";
 import { TouchableWithoutFeedback } from "react-native";
 import { Keyboard } from "react-native";
-import { ModalFilterProps } from "./types";
-import { FormSelectInputType } from "../../../../components/Inputs/SelectInputType";
+import { FilterFields, ModalFilterProps } from "./types";
 import When from "../../../../components/When";
 import { sleep } from "../../../../utils/query.helper";
-import { FormFetchableSelectInputSegment } from "../../../../components/Inputs/FetchableSelectInputSegment";
+import { FormFetchableSelectInputAccount } from "../../../../components/Inputs/FetchableSelectInputAccount";
 import { StyledKeyboardAvoidingView } from "../../../../styles/general";
 
-const defaultValues = {
+const defaultValues: FilterFields = {
   client: {
-    description: null,
     initial_value: null,
     final_value: null,
   },
   server: {
     initial_date: null,
     final_date: null,
-    type: null,
-    modality: null,
-    segment: null,
+    origin_account: null,
+    destination_account: null,
   },
 };
 
@@ -90,21 +86,14 @@ export const ModalFilter = (props: ModalFilterProps) => {
                 />
               </VStack>
             </HStack>
-            <FormTextInput
-              placeholder="Descrição"
-              name="client.description"
+            <FormFetchableSelectInputAccount
+              name="server.origin_account"
+              placeholder="Conta de origem"
               control={filterMethods.control}
             />
-            <FormSelectInputType
-              name="server.type"
-              control={filterMethods.control}
-            />
-            <FormSelectInputModality
-              name="server.modality"
-              control={filterMethods.control}
-            />
-            <FormFetchableSelectInputSegment
-              name="server.segment"
+            <FormFetchableSelectInputAccount
+              name="server.destination_account"
+              placeholder="Conta de destino"
               control={filterMethods.control}
             />
             <HStack w="100%" justifyContent="space-between">

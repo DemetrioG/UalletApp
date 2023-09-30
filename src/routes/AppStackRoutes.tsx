@@ -31,6 +31,8 @@ import { Account } from "../screens/App/Configurations/Records/Account";
 import { AccountForm } from "../screens/App/Configurations/Records/Account/Form";
 import { LinkedAccount } from "../screens/App/Configurations/LinkedAccount";
 import { LinkedAccountForm } from "../screens/App/Configurations/LinkedAccount/Form";
+import { Transfers } from "../screens/App/Transfers";
+import { TransfersForm } from "../screens/App/Transfers/Form";
 
 const {
   Navigator: StackNavigator,
@@ -81,6 +83,11 @@ export const AppStackRoutes = () => {
           <StackScreen name="Lancamentos" component={Entries} />
           <StackScreen name="Lancamentos/Form" component={FormEntries} />
           {/* !Lançamentos */}
+
+          {/* Transferências */}
+          <StackScreen name="Transfers" component={Transfers} />
+          <StackScreen name="Transfers/Form" component={TransfersForm} />
+          {/* !Tranferências */}
 
           {/* Configuracoes */}
           <StackScreen name="Configuracoes" component={ConfiguracoesScreen} />

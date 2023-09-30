@@ -25,9 +25,8 @@ export const SelectInput = (props: SelectInputProps) => {
   }, [errors]);
 
   return (
-    <FormControl isInvalid={isInvalid}>
+    <FormControl isInvalid={isInvalid} style={{ marginBottom: 15 }}>
       <Select
-        mb={15}
         selectedValue={value}
         onValueChange={(value) => setValue(value)}
         _selectedItem={{

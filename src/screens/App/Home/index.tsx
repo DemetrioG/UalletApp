@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import {
+  ArrowRightLeft,
   Edit3,
   Heart,
   Landmark,
@@ -61,24 +62,31 @@ export const Home = () => {
       >
         <Header />
         <Stack space={5}>
-          <HStack justifyContent="space-evenly">
-            <Action
-              text="Lançamentos"
-              Icon={Edit3}
-              onPress={() => navigate("Lancamentos")}
-            />
-            <Action
-              text="Contas"
-              Icon={Landmark}
-              onPress={() => navigate("Configuracoes/Records/Account")}
-            />
-            <Action
-              text="Conta conjunta"
-              Icon={Heart}
-              onPress={() => navigate("Configuracoes/LinkedAccount")}
-            />
-            <Action text="Menu" Icon={MoreHorizontal} onPress={menu.onOpen} />
-          </HStack>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <HStack space={4}>
+              <Action
+                text="Lançamentos"
+                Icon={Edit3}
+                onPress={() => navigate("Lancamentos")}
+              />
+              <Action
+                text="Transferências"
+                Icon={ArrowRightLeft}
+                onPress={() => navigate("Transfers")}
+              />
+              <Action
+                text="Contas"
+                Icon={Landmark}
+                onPress={() => navigate("Configuracoes/Records/Account")}
+              />
+              <Action
+                text="Conta conjunta"
+                Icon={Heart}
+                onPress={() => navigate("Configuracoes/LinkedAccount")}
+              />
+              <Action text="Menu" Icon={MoreHorizontal} onPress={menu.onOpen} />
+            </HStack>
+          </ScrollView>
           <Linked />
           <Internet />
           <Entries />
