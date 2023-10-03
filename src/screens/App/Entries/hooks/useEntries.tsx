@@ -90,7 +90,9 @@ export const useFormEntries = (params: ListEntries, id?: number) => {
       return handleUpdate(formData, params, id);
     } else {
       const date = formData.date;
-      const isCurrentMonth = !!date ? isThisMonth(parseISO(date)) : false;
+      const isCurrentMonth = !!date
+        ? checkCurrentMonth({ month: data.month, year: data.year }, date)
+        : false;
 
       if (!isCurrentMonth) return handleConfirmCreate(formData);
       return handleCreate(formData);
@@ -117,7 +119,7 @@ export const useHandleConfirmCreateEntrie = () => {
 
   function execute(formData: NewEntrieDTO) {
     setConfirm(() => ({
-      title: "A data do lançamento não é do mês atual, está correto?",
+      title: `A data do lançamento (${formData.date}) não é do mês atual, está correto?`,
       visibility: true,
       callbackFunction: () => handleExecute(formData),
     }));
@@ -295,3 +297,13 @@ export const useGetEntries = (props: ListEntriesProps) => {
     handleGetData: execute,
   };
 };
+
+function checkCurrentMonth(
+  contextDate: { month: number; year: number },
+  entryDate: string
+) {
+  const month = Number(entryDate.slice(3, 5));
+  const year = Number(entryDate.slice(6, 10));
+
+  return month === contextDate.month && year === contextDate.year;
+}
