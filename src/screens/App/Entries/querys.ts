@@ -142,7 +142,9 @@ export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
       id: id,
       date: convertDateToDatabase(registerDate),
       type: type,
-      description: description,
+      description: quantity
+        ? `${description} ${index + 1}/${repeatQuantity}`
+        : description,
       modality: modality,
       account: account,
       value: realToNumber(value),
