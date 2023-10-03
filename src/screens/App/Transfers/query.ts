@@ -137,7 +137,22 @@ export async function createTransfer(formData: ValidatedTransfersDTO) {
   await setDoc(balanceRef, balanceUpdate);
 }
 
-export async function updateTransfer(formData: ValidatedTransfersDTO) {}
+export async function updateTransfer(
+  formData: ValidatedTransfersDTO,
+  id: number
+) {
+  const user = await currentUser();
+  if (!user) return Promise.reject();
+
+  const transferSnapshot = await getDoc(
+    doc(db, "transfers", user.uid, "Real", id.toString())
+  );
+  const data = transferSnapshot.data() as ListTransfers;
+  if (!data) return Promise.reject("Transferência não encontrado");
+
+  await deleteTransfer(data);
+  return await createTransfer(formData);
+}
 
 export async function deleteTransfer(formData: ListTransfers) {
   const user = await currentUser();
