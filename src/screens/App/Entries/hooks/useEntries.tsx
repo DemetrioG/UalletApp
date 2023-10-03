@@ -25,7 +25,6 @@ import { ConfirmContext } from "../../../../context/ConfirmDialog/confirmContext
 import { handleToast } from "../../../../utils/functions.helper";
 import { QueryDocumentSnapshot } from "firebase/firestore";
 import { sortBy } from "lodash";
-import { isThisMonth, parseISO } from "date-fns";
 
 const defaultValues: NewEntrieDTO = {
   date: null,
