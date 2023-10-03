@@ -53,6 +53,8 @@ export const Entries = () => {
     lastVisible,
     isLastPage,
     handleGetData,
+    totalCredits, 
+    totalDebits
   } = useGetEntries({
     server: { filters: serverFilters as ServerFilterFields },
   });
@@ -62,11 +64,6 @@ export const Entries = () => {
   }, [data.modality, data.month, data.year, data.trigger, isFocused]);
 
   const filtered = list.filter(clientFilters);
-
-  const credits = filtered.filter((item) => item.type === "Receita");
-  const debits = filtered.filter((item) => item.type === "Despesa");
-  const totalCredits = credits.reduce((total, item) => total + item.value, 0);
-  const totalDebits = debits.reduce((total, item) => total + item.value, 0);
 
   return (
     <BackgroundContainer>

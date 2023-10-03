@@ -7,7 +7,11 @@ import {
   updateEntry,
 } from "../querys";
 import { DataContext } from "../../../../context/Data/dataContext";
-import { ListEntries, ListEntriesProps, NewEntrieDTO } from "../types";
+import {
+  ListEntries,
+  ListEntriesProps,
+  NewEntrieDTO,
+} from "../types";
 import * as yup from "yup";
 import {
   convertDateFromDatabase,
@@ -261,10 +265,12 @@ export const useGetEntries = (props: ListEntriesProps) => {
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot | null>(
     null
   );
+  const [totalCredits, setTotalCredits] = useState(0);
+  const [totalDebits, setTotalDebits] = useState(0);
 
   async function execute(lastVisible?: QueryDocumentSnapshot | null) {
     if (lastVisible) setIsLoadingMore(true);
-    const snapshot = await handleExecute({
+    const { docs, totalCredits, totalDebits } = await handleExecute({
       ...data,
       filters: props.server?.filters,
       pagination: {
@@ -272,6 +278,7 @@ export const useGetEntries = (props: ListEntriesProps) => {
       },
     });
 
+    const snapshot = await docs;
     if (!snapshot.docs.length) setEmpty(true);
     const last = snapshot.docs[snapshot.docs.length - 1];
     const list = snapshot.docs.map((doc) => doc.data()) as ListEntries[];
@@ -282,6 +289,8 @@ export const useGetEntries = (props: ListEntriesProps) => {
       setList((rest) => [...rest, ...sorted]);
     } else {
       setList(sorted);
+      setTotalCredits(totalCredits);
+      setTotalDebits(totalDebits);
     }
     setIsLastPage(!Boolean(list[24]));
     return setLastVisible(last);
@@ -295,6 +304,8 @@ export const useGetEntries = (props: ListEntriesProps) => {
     lastVisible,
     data: list ?? [],
     handleGetData: execute,
+    totalCredits,
+    totalDebits
   };
 };
 

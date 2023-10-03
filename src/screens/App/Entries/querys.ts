@@ -1,4 +1,6 @@
 import {
+  DocumentData,
+  Query,
   QuerySnapshot,
   collection,
   deleteDoc,
@@ -50,6 +52,30 @@ export async function returnLastId(modality: "Real" | "Projetado") {
   return id;
 }
 
+export const getTotal = async (
+  baseQuery: Query<DocumentData, DocumentData>
+) => {
+  const creditsQuery = query(baseQuery, where("type", "==", "Receita"));
+  const debitsQuery = query(baseQuery, where("type", "==", "Despesa"));
+
+  const [creditsSnapshot, debitsSnapshot] = await Promise.all([
+    getDocs(creditsQuery),
+    getDocs(debitsQuery),
+  ]);
+
+  const creditsData = creditsSnapshot.docs.map((doc) =>
+    doc.data()
+  ) as ListEntries[];
+  const debitsData = debitsSnapshot.docs.map((doc) =>
+    doc.data()
+  ) as ListEntries[];
+
+  const credits = creditsData.reduce((total, item) => total + item.value, 0);
+  const debits = debitsData.reduce((total, item) => total + item.value, 0);
+
+  return { credits, debits };
+};
+
 export const getEntries = async ({
   month,
   year,
@@ -100,6 +126,8 @@ export const getEntries = async ({
   }
 
   let orderedQuery;
+  let totalCredits = 0;
+  let totalDebits = 0;
 
   if (pagination.lastVisible) {
     orderedQuery = query(
@@ -110,9 +138,13 @@ export const getEntries = async ({
     );
   } else {
     orderedQuery = query(baseQuery, orderBy("date", "desc"), limit(25));
+
+    const { credits, debits } = await getTotal(orderedQuery);
+    totalCredits = credits;
+    totalDebits = debits;
   }
 
-  return getDocs(orderedQuery);
+  return { docs: getDocs(orderedQuery), totalCredits, totalDebits };
 };
 
 export async function registerNewEntry(props: ValidatedNewEntrieDTO) {
