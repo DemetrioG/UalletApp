@@ -7,11 +7,7 @@ import {
   updateEntry,
 } from "../querys";
 import { DataContext } from "../../../../context/Data/dataContext";
-import {
-  ListEntries,
-  ListEntriesProps,
-  NewEntrieDTO,
-} from "../types";
+import { ListEntries, ListEntriesProps, NewEntrieDTO } from "../types";
 import * as yup from "yup";
 import {
   convertDateFromDatabase,
@@ -122,7 +118,7 @@ export const useHandleConfirmCreateEntrie = () => {
 
   function execute(formData: NewEntrieDTO) {
     setConfirm(() => ({
-      title: `A data do lançamento (${formData.date}) não é do mês atual, está correto?`,
+      title: `A data do lançamento (${formData.date}) não é do mês de referência selecionado, está correto?`,
       visibility: true,
       callbackFunction: () => handleExecute(formData),
     }));
@@ -254,7 +250,7 @@ const useDeleteEntrie = () => {
 };
 
 export const useGetEntries = (props: ListEntriesProps) => {
-  const { isLoading, handleExecute } = usePromise(getEntries);
+  const { isLoading, handleExecute } = usePromise(execute);
   const { data } = useContext(DataContext);
 
   const [empty, setEmpty] = useState(false);
@@ -269,7 +265,7 @@ export const useGetEntries = (props: ListEntriesProps) => {
 
   async function execute(lastVisible?: QueryDocumentSnapshot | null) {
     if (lastVisible) setIsLoadingMore(true);
-    const { docs, totalCredits, totalDebits } = await handleExecute({
+    const { docs, totalCredits, totalDebits } = await getEntries({
       ...data,
       filters: props.server?.filters,
       pagination: {
@@ -302,9 +298,9 @@ export const useGetEntries = (props: ListEntriesProps) => {
     isEmpty: empty,
     lastVisible,
     data: list ?? [],
-    handleGetData: execute,
+    handleGetData: handleExecute,
     totalCredits,
-    totalDebits
+    totalDebits,
   };
 };
 

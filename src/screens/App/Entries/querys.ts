@@ -1,7 +1,7 @@
 import {
   DocumentData,
   Query,
-  QuerySnapshot,
+  QueryDocumentSnapshot,
   collection,
   deleteDoc,
   doc,
@@ -31,7 +31,7 @@ type TEntriesList = {
   modality: string;
   filters?: ServerFilterFields;
   pagination: {
-    lastVisible?: QuerySnapshot;
+    lastVisible?: QueryDocumentSnapshot | null;
   };
 };
 
