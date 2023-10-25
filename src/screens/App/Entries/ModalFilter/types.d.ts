@@ -13,6 +13,7 @@ export interface ServerFilterFields {
   modality?: string;
   segment?: string;
   type?: TEntrieType;
+  period?: "period" | "all";
 }
 
 export interface ClientFilterFields {

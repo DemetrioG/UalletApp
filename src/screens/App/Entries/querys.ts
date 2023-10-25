@@ -107,22 +107,24 @@ export const getEntries = async ({
       where("type", "==", filters?.type)
     );
 
-  if (filters?.initial_date) {
-    baseQuery = query(
-      baseQuery,
-      where("date", ">=", convertDateToDatabase(filters?.initial_date))
-    );
-  } else {
-    baseQuery = query(baseQuery, where("date", ">=", initialDate));
-  }
+  if (filters?.period === "period") {
+    if (filters?.initial_date) {
+      baseQuery = query(
+        baseQuery,
+        where("date", ">=", convertDateToDatabase(filters?.initial_date))
+      );
+    } else {
+      baseQuery = query(baseQuery, where("date", ">=", initialDate));
+    }
 
-  if (filters?.final_date) {
-    baseQuery = query(
-      baseQuery,
-      where("date", "<=", convertDateToDatabase(filters?.final_date))
-    );
-  } else {
-    baseQuery = query(baseQuery, where("date", "<=", finalDate));
+    if (filters?.final_date) {
+      baseQuery = query(
+        baseQuery,
+        where("date", "<=", convertDateToDatabase(filters?.final_date))
+      );
+    } else {
+      baseQuery = query(baseQuery, where("date", "<=", finalDate));
+    }
   }
 
   let orderedQuery;

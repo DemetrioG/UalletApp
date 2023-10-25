@@ -35,6 +35,7 @@ import { useFilters } from "../../../hooks/useFilters";
 import { ServerFilterFields } from "./ModalFilter/types";
 import { Item } from "./Item";
 import { Toggle } from "../../../components/Toggle";
+import { useWatch } from "react-hook-form";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -44,7 +45,16 @@ export const Entries = () => {
   const isFocused = useIsFocused();
   const filterModal = useDisclose();
   const { filterMethods, clientFilters, serverFilters, hasFilter } =
-    useFilters<ListEntries>();
+    useFilters<ListEntries>({
+      server: {
+        period: "period",
+      },
+    });
+
+  const period = useWatch({
+    control: filterMethods.control,
+    name: "server.period",
+  });
 
   const {} = useGetBalance();
   const {
@@ -62,7 +72,7 @@ export const Entries = () => {
 
   useEffect(() => {
     handleGetData();
-  }, [data.modality, data.month, data.year, data.trigger, isFocused]);
+  }, [data.modality, data.month, data.year, data.trigger, isFocused, period]);
 
   const filtered = list.filter(clientFilters);
 
@@ -89,7 +99,15 @@ export const Entries = () => {
           </Pressable>
         </HStack>
         <HStack space={2} justifyContent="space-between">
-          <Toggle labels={{ firstLabel: "PERÍODO", secondLabel: "TODOS" }} />
+          <Toggle
+            labels={{ firstLabel: "PERÍODO", secondLabel: "TODOS" }}
+            onToggle={(value) => {
+              filterMethods.setValue(
+                "server.period",
+                value === 1 ? "period" : "all"
+              );
+            }}
+          />
           <Button
             variant="outline"
             minW="0px"

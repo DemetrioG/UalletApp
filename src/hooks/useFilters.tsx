@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import { realToNumber } from "../utils/number.helper";
 
-export function useFilters<T>() {
-  const filterMethods = useForm();
+export function useFilters<T>(defaultValues?: { client?: any; server?: any }) {
+  const filterMethods = useForm({
+    defaultValues,
+  });
   const values = filterMethods.watch();
   const serverFilters = getFilters(values["server"]);
   const clientFilters = getFilters(values["client"]);
