@@ -34,6 +34,7 @@ import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
 import { ServerFilterFields } from "./ModalFilter/types";
 import { Item } from "./Item";
+import { Toggle } from "../../../components/Toggle";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -53,8 +54,8 @@ export const Entries = () => {
     lastVisible,
     isLastPage,
     handleGetData,
-    totalCredits, 
-    totalDebits
+    totalCredits,
+    totalDebits,
   } = useGetEntries({
     server: { filters: serverFilters as ServerFilterFields },
   });
@@ -87,7 +88,8 @@ export const Entries = () => {
             </Tooltip>
           </Pressable>
         </HStack>
-        <HStack space={2} justifyContent="flex-end">
+        <HStack space={2} justifyContent="space-between">
+          <Toggle labels={{ firstLabel: "PERÍODO", secondLabel: "TODOS" }} />
           <Button
             variant="outline"
             minW="0px"
