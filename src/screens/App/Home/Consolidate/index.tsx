@@ -99,7 +99,7 @@ const Consolidate = (props: ReturnUseDisclosure) => {
   );
 };
 
-const ItemList = ({ item }: ListProps) => {
+export const ItemList = ({ item }: ListProps) => {
   const { theme }: IThemeProvider = useTheme();
   const formMethods = useFormContext<ConsolidateDTO>();
 
