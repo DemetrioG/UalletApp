@@ -36,12 +36,14 @@ import { ServerFilterFields } from "./ModalFilter/types";
 import { Item } from "./Item";
 import { Toggle } from "../../../components/Toggle";
 import { useWatch } from "react-hook-form";
+import { ReproduceData } from "./ReproduceData";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
   const { data } = useContext(DataContext);
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<any>>();
 
+  const reproduceModal = useDisclose();
   const isFocused = useIsFocused();
   const filterModal = useDisclose();
   const { filterMethods, clientFilters, serverFilters, hasFilter } =
@@ -134,6 +136,13 @@ export const Entries = () => {
             <When is={!filtered.length}>
               <Center flex={1}>
                 <Text>Não há lançamentos para visualizar</Text>
+                <When is={data.modality === "Projetado"}>
+                  <Button variant="outline" onPress={reproduceModal.onOpen}>
+                    <Text fontWeight="bold" color={theme?.blue}>
+                      Copiar dados anteriores
+                    </Text>
+                  </Button>
+                </When>
               </Center>
             </When>
             <When is={!!filtered.length}>
@@ -239,6 +248,7 @@ export const Entries = () => {
         onSubmit={handleGetData}
         {...filterModal}
       />
+      <ReproduceData {...reproduceModal} />
     </BackgroundContainer>
   );
 };
