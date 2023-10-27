@@ -5,11 +5,19 @@ import { usePromise } from "../../../../../hooks/usePromise";
 import { handleToast } from "../../../../../utils/functions.helper";
 import { useEffect, useState } from "react";
 import { reproduceData, getData } from "../query";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  monthRef: yup.string().nullable().required("Informe o período de referência"),
+});
 
 export const useFormReproduceData = (
   onClose: ReturnUseDisclosure["onClose"]
 ) => {
-  const formMethods = useForm<ReproduceDataDTO>();
+  const formMethods = useForm<ReproduceDataDTO & { monthRef: string }>({
+    resolver: yupResolver(schema),
+  });
 
   const { handleReproduceData, isLoadingCreate } =
     useCreateReproduceData(onClose);
@@ -26,16 +34,21 @@ export const useCreateReproduceData = (
 ) => {
   const { isLoading, handleExecute } = usePromise(reproduceData);
 
-  async function execute(formData: ReproduceDataDTO, list: ItemListType[]) {
+  async function execute(
+    formData: ReproduceDataDTO & { monthRef: string },
+    list: ItemListType[]
+  ) {
+    const { monthRef, ...formItems } = formData;
+
     const hasCheckedFiles = list
-      .filter((obj) => formData.hasOwnProperty(obj.id.toString()))
+      .filter((obj) => formItems.hasOwnProperty(obj.id.toString()))
       .map((obj) => {
-        return { ...obj, checked: formData[obj.id.toString()] };
+        return { ...obj, checked: formItems[obj.id.toString()] };
       });
 
     const data = [
       ...hasCheckedFiles,
-      ...list.filter((obj) => !formData.hasOwnProperty(obj.id.toString())),
+      ...list.filter((obj) => !formItems.hasOwnProperty(obj.id.toString())),
     ];
 
     handleExecute(data)
@@ -72,7 +85,7 @@ export const useGetReproduceData = (monthRef: string) => {
 
   useEffect(() => {
     if (monthRef) execute();
-  }, []);
+  }, [monthRef]);
 
   return {
     isLoading,
