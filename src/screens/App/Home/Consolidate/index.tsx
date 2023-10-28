@@ -28,15 +28,17 @@ import {
 import WRITE from "../../../../../assets/icons/write.json";
 import { FormProvider, useFormContext } from "react-hook-form";
 import { FormCheckboxInput } from "../../../../components/Inputs/CheckboxInput";
+import { pickBy } from "lodash";
+import { Loading } from "../../../../components/Loading";
 
 const Consolidate = (props: ReturnUseDisclosure) => {
   const { theme }: IThemeProvider = useTheme();
   const [page, setPage] = useState(1);
   const { formMethods } = useFormConsolidate();
   const { isLoading, handleConsolidate } = useCreateConsolidate(props.onClose);
-  const { list } = useGetConsolidate();
+  const { list, isLoading: isLoadingData } = useGetConsolidate();
 
-  const anySelectedEntrie = !!Object.keys(formMethods.watch()).length;
+  const anySelectedEntrie = !!Object.keys(pickBy(formMethods.watch())).length;
 
   return (
     <Modal {...props} ModalProps={{ swipeDirection: "down" }}>
@@ -77,12 +79,17 @@ const Consolidate = (props: ReturnUseDisclosure) => {
               Confirme os lançamentos que realmente aconteceram conforme você
               projetou
             </Text>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={list}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <ItemList item={item} />}
-            />
+            <When is={isLoadingData}>
+              <Loading />
+            </When>
+            <When is={!isLoadingData}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={list}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <ItemList item={item} />}
+              />
+            </When>
             <Button
               onPress={() => handleConsolidate(formMethods.getValues(), list)}
               isLoading={isLoading}

@@ -14,6 +14,8 @@ import { ItemList } from "../../Home/Consolidate";
 import { useState } from "react";
 import When from "../../../../components/When";
 import { FormSelectInput } from "../../../../components/Inputs/SelectInput";
+import { Loading } from "../../../../components/Loading";
+import { omit, pickBy } from "lodash";
 
 export const ReproduceData = (props: ReturnUseDisclosure) => {
   const { theme }: IThemeProvider = useTheme();
@@ -25,14 +27,24 @@ export const ReproduceData = (props: ReturnUseDisclosure) => {
     name: ["monthRef"],
   });
 
-  const { list } = useGetReproduceData(monthRef);
+  const { list, isLoading } = useGetReproduceData(monthRef);
 
   const [page, setPage] = useState(1);
 
-  const anySelectedEntrie = !!Object.keys(formMethods.watch()).length;
+  const anySelectedEntrie = !!Object.keys(
+    pickBy(omit(formMethods.watch(), "monthRef"))
+  ).length;
+
+  function handlePageChange() {
+    return setPage(2);
+  }
 
   return (
-    <Modal {...props} ModalProps={{ swipeDirection: "down" }}>
+    <Modal
+      {...props}
+      ModalProps={{ swipeDirection: "down" }}
+      ContainerProps={{ height: page === 1 ? "300px" : "85%" }}
+    >
       <FormProvider {...formMethods}>
         <HStack alignItems="center" space={3} mb={6}>
           <Pressable onPress={props.onClose}>
@@ -44,6 +56,7 @@ export const ReproduceData = (props: ReturnUseDisclosure) => {
           <VStack space={5} flex={1}>
             <Center flex={1}>
               <FormSelectInput
+                placeholder="Selecione o período"
                 control={formMethods.control}
                 name="monthRef"
                 isRequired
@@ -51,7 +64,11 @@ export const ReproduceData = (props: ReturnUseDisclosure) => {
                 options={refOptions}
               />
             </Center>
-            <Button onPress={() => formMethods.handleSubmit(() => setPage(2))}>
+            <Button
+              onPress={() => {
+                formMethods.handleSubmit(handlePageChange)();
+              }}
+            >
               <Text fontWeight="bold" color="white">
                 Prosseguir
               </Text>
@@ -64,12 +81,17 @@ export const ReproduceData = (props: ReturnUseDisclosure) => {
               Selecione os lançamentos anteriores que deseja reproduzir para o
               período atual
             </Text>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={list}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => <ItemList item={item} />}
-            />
+            <When is={isLoading}>
+              <Loading />
+            </When>
+            <When is={!isLoading}>
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={list}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => <ItemList item={item} />}
+              />
+            </When>
             <Button
               onPress={() => handleReproduceData(formMethods.getValues(), list)}
               isLoading={isLoadingCreate}
