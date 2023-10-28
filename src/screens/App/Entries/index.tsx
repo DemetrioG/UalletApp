@@ -12,7 +12,7 @@ import {
   useDisclose,
 } from "native-base";
 import { ChevronLeft, Filter, InfoIcon } from "lucide-react-native";
-import LottieView from "lottie-react-native";
+
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
@@ -29,7 +29,6 @@ import { BackgroundContainer } from "../../../styles/general";
 import { metrics } from "../../../styles";
 import { IThemeProvider } from "../../../styles/baseTheme";
 
-import LoadingAnimation from "../../../../assets/icons/blueLoading.json";
 import { ModalFilter } from "./ModalFilter";
 import { useFilters } from "../../../hooks/useFilters";
 import { ServerFilterFields } from "./ModalFilter/types";
@@ -37,6 +36,7 @@ import { Item } from "./Item";
 import { Toggle } from "../../../components/Toggle";
 import { useWatch } from "react-hook-form";
 import { ReproduceData } from "./ReproduceData";
+import { Loading } from "../../../components/Loading";
 
 export const Entries = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -135,14 +135,16 @@ export const Entries = () => {
           <VStack height="68%">
             <When is={!filtered.length}>
               <Center flex={1}>
-                <Text>Não há lançamentos para visualizar</Text>
-                <When is={data.modality === "Projetado"}>
-                  <Button variant="outline" onPress={reproduceModal.onOpen}>
-                    <Text fontWeight="bold" color={theme?.blue}>
-                      Copiar dados anteriores
-                    </Text>
-                  </Button>
-                </When>
+                <VStack alignItems="center" space={5} width="280px">
+                  <Text>Não há lançamentos para visualizar</Text>
+                  <When is={data.modality === "Projetado"}>
+                    <Button variant="outline" onPress={reproduceModal.onOpen}>
+                      <Text fontWeight="bold" color={theme?.blue}>
+                        Copiar dados anteriores
+                      </Text>
+                    </Button>
+                  </When>
+                </VStack>
               </Center>
             </When>
             <When is={!!filtered.length}>
@@ -168,14 +170,7 @@ export const Entries = () => {
           </VStack>
         </When>
         <When is={isLoading}>
-          <Center flex={1}>
-            <LottieView
-              source={LoadingAnimation}
-              autoPlay={true}
-              loop={true}
-              style={{ width: 50 }}
-            />
-          </Center>
+          <Loading />
         </When>
         <HStack
           zIndex={1}
@@ -248,7 +243,9 @@ export const Entries = () => {
         onSubmit={handleGetData}
         {...filterModal}
       />
-      <ReproduceData {...reproduceModal} />
+      <When is={reproduceModal.isOpen}>
+        <ReproduceData {...reproduceModal} />
+      </When>
     </BackgroundContainer>
   );
 };
