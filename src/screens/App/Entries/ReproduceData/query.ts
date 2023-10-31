@@ -9,7 +9,9 @@ import {
   setDoc,
 } from "firebase/firestore";
 import {
+  ITimestamp,
   convertDateFromDatabase,
+  convertDateToDatabase,
   getMonthDate,
 } from "../../../../utils/date.helper";
 import {
@@ -20,7 +22,13 @@ import { db } from "../../../../services/firebase";
 import { ItemListType } from "./types";
 import { ListEntries } from "../../Entries/types";
 
-export async function reproduceData(data: ItemListType[]) {
+interface ReproduceDataProps {
+  data: ItemListType[];
+  month: number;
+  year: number;
+}
+
+export async function reproduceData(props: ReproduceDataProps) {
   const user = await currentUser();
   if (!user) return Promise.reject(false);
 
@@ -38,14 +46,16 @@ export async function reproduceData(data: ItemListType[]) {
       newId += doc.data().id;
     });
 
-    for (const item of data) {
+    for (const item of props.data) {
       const { date, description, segment, type, value, checked, account } =
         item;
+
+      const dateRef = getDateToNewEntrie(date, props.month, props.year);
 
       if (checked) {
         const item: ListEntries = {
           id: newId,
-          date: date,
+          date: convertDateToDatabase(dateRef),
           type: type,
           description: description,
           modality: "Projetado",
@@ -60,8 +70,8 @@ export async function reproduceData(data: ItemListType[]) {
         await setDoc(doc(projetadoCollectionRef, newId.toString()), item);
 
         const docRef = `${Number(
-          convertDateFromDatabase(date).slice(3, 5)
-        ).toString()}_${convertDateFromDatabase(date).slice(6, 10)}`;
+          dateRef.slice(3, 5)
+        ).toString()}_${dateRef.slice(6, 10)}`;
 
         await updateCurrentBalance({
           modality: "Projetado",
@@ -101,4 +111,17 @@ export async function getData(monthRef: string) {
   } catch (error) {
     return Promise.reject("Erro ao buscar os dados");
   }
+}
+
+function getDateToNewEntrie(
+  entrieDate: ITimestamp,
+  monthRef: number,
+  yearRef: number
+) {
+  const dateFormatted = convertDateFromDatabase(entrieDate);
+  const [day] = dateFormatted.split("/");
+  const formattedMonth = monthRef.toString().padStart(2, "0");
+  const formattedYear = yearRef.toString();
+  const dateRef = `${day}/${formattedMonth}/${formattedYear}`;
+  return dateRef;
 }

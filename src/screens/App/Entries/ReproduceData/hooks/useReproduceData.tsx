@@ -3,10 +3,11 @@ import { ItemListType, ReproduceDataDTO } from "../types";
 import { ReturnUseDisclosure } from "../../../../../types/types";
 import { usePromise } from "../../../../../hooks/usePromise";
 import { handleToast } from "../../../../../utils/functions.helper";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { reproduceData, getData } from "../query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { DataContext } from "../../../../../context/Data/dataContext";
 
 const schema = yup.object({
   monthRef: yup.string().nullable().required("Informe o período de referência"),
@@ -33,6 +34,10 @@ export const useCreateReproduceData = (
   onClose: ReturnUseDisclosure["onClose"]
 ) => {
   const { isLoading, handleExecute } = usePromise(reproduceData);
+  const {
+    data: { month, year },
+    setData,
+  } = useContext(DataContext);
 
   async function execute(
     formData: ReproduceDataDTO & { monthRef: string },
@@ -51,8 +56,12 @@ export const useCreateReproduceData = (
       ...list.filter((obj) => !formItems.hasOwnProperty(obj.id.toString())),
     ];
 
-    handleExecute(data)
+    handleExecute({ data, month, year })
       .then(() => {
+        setData((rest) => ({
+          ...rest,
+          trigger: Math.random(),
+        }));
         onClose();
         return handleToast({
           type: "success",
@@ -78,7 +87,7 @@ export const useGetReproduceData = (monthRef: string) => {
   const [list, setList] = useState<ItemListType[]>([]);
 
   async function execute() {
-    handleExecute()
+    handleExecute(monthRef)
       .then(setList)
       .catch(() => setList([]));
   }
