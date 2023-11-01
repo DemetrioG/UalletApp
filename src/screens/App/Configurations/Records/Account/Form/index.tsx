@@ -56,7 +56,9 @@ export const AccountForm = ({ route: { params } }: AccountFormParams) => {
             <Pressable onPress={goBack}>
               <ChevronLeft color={theme?.text} />
             </Pressable>
-            <Text fontWeight={700}>Cadastrar Conta Bancária</Text>
+            <Text fontWeight={700}>
+              {!!id ? "Atualizar" : "Cadastrar"} Conta Bancária
+            </Text>
           </HStack>
           <Center flex={1}>
             <VStack space={5}>

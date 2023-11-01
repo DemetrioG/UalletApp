@@ -58,7 +58,9 @@ export const TransfersForm = ({ route: { params } }: TransfersFormParams) => {
               <Pressable onPress={goBack}>
                 <ChevronLeft color={theme?.text} />
               </Pressable>
-              <Text fontWeight={700}>Cadastrar Transferência</Text>
+              <Text fontWeight={700}>
+                {!!id ? "Atualizar" : "Cadastrar"} Transferência
+              </Text>
             </HStack>
             <Center flex={1}>
               <FormTextInputCalendar

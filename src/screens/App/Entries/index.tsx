@@ -135,7 +135,7 @@ export const Entries = () => {
           <VStack height="68%">
             <When is={!filtered.length}>
               <Center flex={1}>
-                <VStack alignItems="center" space={5} width="280px">
+                <VStack alignItems="center" space={5} width="290px">
                   <Text>Não há lançamentos para visualizar</Text>
                   <When is={data.modality === "Projetado"}>
                     <Button variant="outline" onPress={reproduceModal.onOpen}>
