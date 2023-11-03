@@ -29,11 +29,12 @@ export const Plan = () => {
           </Pressable>
           <Text fontWeight={700}>Meu plano</Text>
         </HStack>
-        {plans.map((plan) => {
+        {plans.map((plan, i) => {
           const isActive = plan?.status === "active";
           const isFree = plan?.items[0]?.price?.product?.name.includes("free");
           return (
             <VStack
+              key={i}
               backgroundColor={theme?.primary}
               p={5}
               space={6}
