@@ -13,9 +13,9 @@ import {
 import { ItemList } from "../../Home/Consolidate";
 import { useState } from "react";
 import When from "../../../../components/When";
-import { FormSelectInput } from "../../../../components/Inputs/SelectInput";
 import { Loading } from "../../../../components/Loading";
 import { omit, pickBy } from "lodash";
+import { FormFetchableSelectInputReprocuce } from "../../../../components/Inputs/FetchableSelectInputReproduce";
 
 export const ReproduceData = (props: ReturnUseDisclosure) => {
   const { theme }: IThemeProvider = useTheme();
@@ -55,13 +55,11 @@ export const ReproduceData = (props: ReturnUseDisclosure) => {
         <When is={page === 1}>
           <VStack space={5} flex={1}>
             <Center flex={1}>
-              <FormSelectInput
-                placeholder="Selecione o período"
+              <FormFetchableSelectInputReprocuce
                 control={formMethods.control}
                 name="monthRef"
                 isRequired
                 errors={formMethods.formState.errors.monthRef}
-                options={refOptions}
               />
             </Center>
             <Button
@@ -107,54 +105,3 @@ export const ReproduceData = (props: ReturnUseDisclosure) => {
     </Modal>
   );
 };
-
-const refOptions = [
-  {
-    value: "1/2023",
-    label: "Janeiro/2023",
-  },
-  {
-    value: "2/2023",
-    label: "Fevereiro/2023",
-  },
-  {
-    value: "3/2023",
-    label: "Março/2023",
-  },
-  {
-    value: "4/2023",
-    label: "Abril/2023",
-  },
-  {
-    value: "5/2023",
-    label: "Maio/2023",
-  },
-  {
-    value: "6/2023",
-    label: "Junho/2023",
-  },
-  {
-    value: "7/2023",
-    label: "Julho/2023",
-  },
-  {
-    value: "8/2023",
-    label: "Agosto/2023",
-  },
-  {
-    value: "9/2023",
-    label: "Setembro/2023",
-  },
-  {
-    value: "10/2023",
-    label: "Outubro/2023",
-  },
-  {
-    value: "11/2023",
-    label: "Novembro/2023",
-  },
-  {
-    value: "12/2023",
-    label: "Dezembro/2023",
-  },
-];
