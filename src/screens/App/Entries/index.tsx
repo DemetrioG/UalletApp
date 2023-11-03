@@ -189,7 +189,7 @@ export const Entries = () => {
           <HStack alignItems="center" justifyContent="space-between" w="100%">
             <HStack space={2}>
               <Text>Total débito:</Text>
-              <Text>{numberToReal(totalDebits)}</Text>
+              <Text fontWeight={600}>{numberToReal(totalDebits)}</Text>
             </HStack>
             <VStack
               backgroundColor={theme?.primary}
@@ -221,7 +221,7 @@ export const Entries = () => {
         >
           <HStack space={2}>
             <Text>Total crédito:</Text>
-            <Text>{numberToReal(totalCredits)}</Text>
+            <Text fontWeight={600}>{numberToReal(totalCredits)}</Text>
           </HStack>
           <VStack
             backgroundColor={theme?.tertiary}

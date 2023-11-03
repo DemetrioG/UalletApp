@@ -63,7 +63,7 @@ export const Home = () => {
         <Header />
         <Stack space={5}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <HStack space={4}>
+            <HStack space={4} paddingX={4}>
               <Action
                 text="Lançamentos"
                 Icon={Edit3}

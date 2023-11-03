@@ -60,7 +60,7 @@ export const Toggle = (props: ToggleProps) => {
           ],
         }}
       >
-        <Text fontSize="12px">
+        <Text fontSize="12px" color="white">
           {active === 1 ? props.labels.firstLabel : props.labels.secondLabel}
         </Text>
       </Animated.View>

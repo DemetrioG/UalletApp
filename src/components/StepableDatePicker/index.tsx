@@ -29,6 +29,7 @@ import { TouchableOpacity } from "react-native";
 import { setStorage } from "../../utils/storage.helper";
 import { Modal } from "../Modal";
 import When from "../When";
+import { capitalize } from "lodash";
 
 export const StepableDatePicker = (props: StepableDatePickerProps) => {
   const { theme }: IThemeProvider = useTheme();
@@ -199,8 +200,6 @@ const years = eachMonthOfInterval({
   start: startOfYear(new Date(startYear, 0)),
   end: endOfYear(new Date(futureYear, 6)),
 });
-
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const actionSheetOptions = years.map((year) => ({
   label: capitalize(format(year, "MMM yyyy", { locale: ptBR })),
