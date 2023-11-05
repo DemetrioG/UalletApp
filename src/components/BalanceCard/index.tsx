@@ -9,11 +9,8 @@ import { metrics } from "../../styles";
 import { useContext } from "react";
 import { useBalanceCards } from "./hooks/useBalanceCards";
 import When from "../When";
-
-const test = [
-  { name: "Total das contas", value: 10, color: "#6499E3" },
-  { name: "Carteira", value: 10, color: "white" },
-];
+import { useSelectedIsPastMonth } from "../../hooks/useRefs";
+import { getDate, lastDayOfMonth, setMonth } from "date-fns";
 
 export const BalanceCards = () => {
   const { theme }: IThemeProvider = useTheme();
@@ -48,8 +45,22 @@ export const BalanceCards = () => {
 
 const Card = (props: CardProps) => {
   const { theme }: IThemeProvider = useTheme();
+  const {
+    data: { month, modality },
+  } = useContext(DataContext);
+  const { isPast } = useSelectedIsPastMonth();
   const totalBalance = numberToReal(props.value);
   const [balanceInteger, balanceCents] = totalBalance.split(",");
+
+  const lastDayOfCurrentMonth = getDate(
+    lastDayOfMonth(setMonth(new Date(), month - 1))
+  );
+
+  const balanceText =
+    !isPast || modality === "Projetado"
+      ? "Saldo atual"
+      : `Saldo em ${lastDayOfCurrentMonth}/${month}`;
+
   return (
     <VStack
       p={5}
@@ -75,7 +86,7 @@ const Card = (props: CardProps) => {
         </Text>
       </HStack>
       <VStack alignItems="center">
-        <Text opacity={0.5}>Saldo atual</Text>
+        <Text opacity={0.5}>{balanceText}</Text>
       </VStack>
     </VStack>
   );

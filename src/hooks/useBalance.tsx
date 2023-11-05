@@ -3,12 +3,14 @@ import { BalanceProps, DataContext } from "../context/Data/dataContext";
 import { currentUser } from "../utils/query.helper";
 import { collection, doc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { useSelectedIsPastMonth } from "./useRefs";
 
 export const useGetBalance = () => {
   const {
     data: { month, year, modality, trigger },
     setData,
   } = useContext(DataContext);
+  const { isPast } = useSelectedIsPastMonth();
 
   let unsubscribe: () => void;
 
@@ -17,8 +19,9 @@ export const useGetBalance = () => {
     const user = await currentUser();
     if (!user) return "R$0,00";
 
+    const getBalanceRef = !isPast && modality !== "Projetado";
     const balanceCollectionRef = collection(db, "balance", user.uid, modality);
-    const collectionRef = modality === "Real" ? "balance" : `${month}_${year}`;
+    const collectionRef = getBalanceRef ? "balance" : `${month}_${year}`;
     const balanceDocRef = doc(balanceCollectionRef, collectionRef);
 
     unsubscribe = onSnapshot(balanceDocRef, async (snapshot) => {
