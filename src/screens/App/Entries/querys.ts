@@ -101,13 +101,16 @@ export const getEntries = async ({
   if (filters?.segment)
     baseQuery = query(baseQuery, where("segment", "==", filters?.segment));
 
+  if (filters?.account)
+    baseQuery = query(baseQuery, where("account", "==", filters?.account));
+
   if (filters?.type)
     baseQuery = baseQuery = query(
       baseQuery,
       where("type", "==", filters?.type)
     );
 
-  if (filters?.period === "period") {
+  if (filters?.period !== "all") {
     if (filters?.initial_date) {
       baseQuery = query(
         baseQuery,

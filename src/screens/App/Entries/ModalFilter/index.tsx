@@ -14,6 +14,7 @@ import When from "../../../../components/When";
 import { sleep } from "../../../../utils/query.helper";
 import { FormFetchableSelectInputSegment } from "../../../../components/Inputs/FetchableSelectInputSegment";
 import { StyledKeyboardAvoidingView } from "../../../../styles/general";
+import { FormFetchableSelectInputAccount } from "../../../../components/Inputs/FetchableSelectInputAccount";
 
 const defaultValues = {
   client: {
@@ -27,6 +28,7 @@ const defaultValues = {
     type: null,
     modality: null,
     segment: null,
+    account: null,
   },
 };
 
@@ -105,6 +107,10 @@ export const ModalFilter = (props: ModalFilterProps) => {
             />
             <FormFetchableSelectInputSegment
               name="server.segment"
+              control={filterMethods.control}
+            />
+            <FormFetchableSelectInputAccount
+              name="server.account"
               control={filterMethods.control}
             />
             <HStack w="100%" justifyContent="space-between">

@@ -21,6 +21,7 @@ export const StyledKeyboardAvoidingView = styled(KeyboardAvoidingView).attrs(
   })
 )`
   flex: 1;
+  background-color: ${({ theme: { theme } }) => theme.primary};
 `;
 
 export const Slider = styled(NativeSlider).attrs<{ colorVariant?: string }>(
