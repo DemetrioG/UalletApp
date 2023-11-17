@@ -155,7 +155,7 @@ export const Entries = () => {
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
-                onEndReachedThreshold={0.2}
+                onEndReachedThreshold={0.01}
                 onEndReached={() => {
                   if (!isLastPage && !isLoadingMore) handleGetData(lastVisible);
                 }}

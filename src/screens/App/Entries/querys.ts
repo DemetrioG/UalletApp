@@ -24,6 +24,7 @@ import { realToNumber } from "../../../utils/number.helper";
 import { currentUser, updateCurrentBalance } from "../../../utils/query.helper";
 import { ServerFilterFields } from "./ModalFilter/types";
 import { ListEntries, ValidatedNewEntrieDTO } from "./types";
+import { ITEMS_PER_PAGE } from "./hooks/useEntries";
 
 type TEntriesList = {
   month: number;
@@ -139,10 +140,14 @@ export const getEntries = async ({
       baseQuery,
       orderBy("date", "desc"),
       startAfter(pagination.lastVisible),
-      limit(25)
+      limit(ITEMS_PER_PAGE)
     );
   } else {
-    orderedQuery = query(baseQuery, orderBy("date", "desc"), limit(25));
+    orderedQuery = query(
+      baseQuery,
+      orderBy("date", "desc"),
+      limit(ITEMS_PER_PAGE)
+    );
 
     const { credits, debits } = await getTotal(orderedQuery);
     totalCredits = credits;

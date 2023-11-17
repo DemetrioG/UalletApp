@@ -287,7 +287,7 @@ export const useGetEntries = (props: ListEntriesProps) => {
       setTotalCredits(totalCredits);
       setTotalDebits(totalDebits);
     }
-    setIsLastPage(!Boolean(list[24]));
+    setIsLastPage(!Boolean(list[ITEMS_PER_PAGE - 1]));
     return setLastVisible(last);
   }
 
@@ -313,3 +313,5 @@ function checkCurrentMonth(
 
   return month === contextDate.month && year === contextDate.year;
 }
+
+export const ITEMS_PER_PAGE = 5;
